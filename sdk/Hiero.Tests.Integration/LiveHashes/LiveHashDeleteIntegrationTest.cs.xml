@@ -1,0 +1,8 @@
+<docs>
+  <member name="T:Hiero.Tests.Integration.LiveHashDeleteIntegrationTest">
+    <summary>TODO: Describe LiveHashDeleteIntegrationTest.</summary>
+  </member>
+  <member name="M:Hiero.Tests.Integration.LiveHashDeleteIntegrationTest.CannotDeleteLiveHashBecauseItsNotSupported">
+    <summary>TODO: Describe CannotDeleteLiveHashBecauseItsNotSupported.</summary>
+  </member>
+</docs>

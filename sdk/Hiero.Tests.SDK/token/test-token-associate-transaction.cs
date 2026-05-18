@@ -1,0 +1,133 @@
+﻿// SPDX-License-Identifier: Apache-2.0
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+using Hiero.SDK;
+using Hiero.SDK.Token;
+using Hiero.SDK.Cryptography;
+using Hiero.SDK.Cryptocurrency;
+using Hiero.SDK.Transactions;
+
+using VerifyXunit;
+using Hiero.SDK.Core;
+
+namespace Hiero.Tests.SDK.Token
+{
+    /// <include file="test-token-associate-transaction.ts.cs.xml" path='docs/member[@name="T:Hiero.Tests.SDK.Token.TokenAssociateTransactionTest"]' />
+    public class TokenAssociateTransactionTest
+    {
+        private static readonly PrivateKey unusedPrivateKey = PrivateKey.FromString("302e020100300506032b657004220420db484b828e64b2d8f12ce3c0a0e93a0b8cce7af1bb8f39c97732394482538e10");
+        private static readonly AccountId accountId = AccountId.FromString("1.2.3");
+        private static readonly List<TokenId> tokenIds = [TokenId.FromString("4.5.6"), TokenId.FromString("7.8.9"), TokenId.FromString("10.11.12")];
+        private readonly DateTimeOffset validStart = DateTimeOffset.FromUnixTimeMilliseconds(1554158542);
+
+        public virtual void ShouldSerialize()
+        {
+            Verifier.Verify(SpawnTestTransaction().ToString());
+        }
+
+        [Fact]
+        /// <include file="test-token-associate-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Token.TokenAssociateTransactionTest.ShouldBytesNoSetters"]' />
+        public virtual void ShouldBytesNoSetters()
+        {
+            var tx = new TokenAssociateTransaction();
+            var tx2 = Transaction.FromBytes<TokenAssociateTransaction>(tx.ToBytes());
+            Assert.Equal(tx2.ToString(), tx.ToString());
+        }
+
+        private TokenAssociateTransaction SpawnTestTransaction()
+        {
+            return new TokenAssociateTransaction
+            {
+				NodeAccountIds = new (AccountId.FromString("0.0.5005"), AccountId.FromString("0.0.5006")),
+				TransactionId = TransactionId.WithValidStart(AccountId.FromString("0.0.5006"), validStart),
+				AccountId = AccountId.FromString("0.0.222"),
+				TokenIds = [TokenId.FromString("0.0.666")],
+				MaxTransactionFee = new Hbar(1),
+			}
+            .Freeze()
+            .Sign(unusedPrivateKey);
+        }
+
+        [Fact]
+        /// <include file="test-token-associate-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Token.TokenAssociateTransactionTest.ShouldBytes"]' />
+        public virtual void ShouldBytes()
+        {
+            var tx = SpawnTestTransaction();
+            var tx2 = Transaction.FromBytes<TokenAssociateTransaction>(tx.ToBytes());
+            Assert.Equal(tx2.ToString(), tx.ToString());
+        }
+
+        [Fact]
+        /// <include file="test-token-associate-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Token.TokenAssociateTransactionTest.FromScheduledTransaction"]' />
+        public virtual void FromScheduledTransaction()
+        {
+            var transactionBody = new Proto.Services.SchedulableTransactionBody
+            {
+                TokenAssociate = new Proto.Services.TokenAssociateTransactionBody()
+            };
+            var tx = Transaction.FromScheduledTransaction<TokenAssociateTransaction>(transactionBody);
+            Assert.IsType<TokenAssociateTransaction>(tx);
+        }
+
+        [Fact]
+        /// <include file="test-token-associate-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Token.TokenAssociateTransactionTest.ConstructTokenDeleteTransactionFromTransactionBodyProtobuf"]' />
+        public virtual void ConstructTokenDeleteTransactionFromTransactionBodyProtobuf()
+        {
+            var transactionBody = new Proto.Services.TokenAssociateTransactionBody
+            {
+				Account = accountId.ToProtobuf(),
+
+            };
+            transactionBody.Tokens.AddRange(tokenIds.Select(_ => _.ToProtobuf()));
+
+            var txBody = new Proto.Services.TransactionBody
+            {
+				TokenAssociate = transactionBody
+			};
+            var tokenAssociateTransaction = new TokenAssociateTransaction(txBody);
+            Assert.Equal(tokenAssociateTransaction.AccountId, accountId);
+
+            Assert.Equal(tokenAssociateTransaction.TokenIds.Count, tokenIds.Count);
+        }
+
+        [Fact]
+        /// <include file="test-token-associate-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Token.TokenAssociateTransactionTest.GetSetAccountId"]' />
+        public virtual void GetSetAccountId()
+        {
+            var transaction = new TokenAssociateTransaction
+            {
+				AccountId = accountId,
+			};
+            Assert.Equal(transaction.AccountId, accountId);
+        }
+
+        [Fact]
+        /// <include file="test-token-associate-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Token.TokenAssociateTransactionTest.GetSetAccountIdFrozen"]' />
+        public virtual void GetSetAccountIdFrozen()
+        {
+            var transaction = SpawnTestTransaction();
+            Assert.Throws<InvalidOperationException>(() => transaction.AccountId = accountId);
+        }
+
+        [Fact]
+        /// <include file="test-token-associate-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Token.TokenAssociateTransactionTest.GetSetTokenIds"]' />
+        public virtual void GetSetTokenIds()
+        {
+            var transaction = new TokenAssociateTransaction
+            {
+				TokenIds = tokenIds
+			};
+            Assert.Equal(transaction.TokenIds, tokenIds);
+        }
+
+        [Fact]
+        /// <include file="test-token-associate-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Token.TokenAssociateTransactionTest.GetSetTokenIdFrozen"]' />
+        public virtual void GetSetTokenIdFrozen()
+        {
+            var transaction = SpawnTestTransaction();
+            Assert.Throws<InvalidOperationException>(() => transaction.TokenIds = tokenIds);
+        }
+    }
+}

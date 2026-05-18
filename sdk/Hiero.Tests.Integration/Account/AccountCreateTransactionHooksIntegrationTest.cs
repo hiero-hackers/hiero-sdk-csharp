@@ -1,0 +1,117 @@
+﻿// SPDX-License-Identifier: Apache-2.0
+using Hiero.SDK.Hook;
+using Hiero.SDK.Cryptography;
+using Hiero.SDK;
+using Hiero.SDK.Cryptocurrency;
+using Hiero.SDK.Contract;
+using Hiero.SDK.Exceptions;
+
+namespace Hiero.Tests.Integration.Account
+{
+    /// <include file="AccountCreateTransactionHooksIntegrationTest.cs.xml" path='docs/member[@name="T:Hiero.Tests.Integration.AccountCreateTransactionHooksIntegrationTest"]' />
+    public class AccountCreateTransactionHooksIntegrationTest
+    {
+        [Fact]
+        /// <include file="AccountCreateTransactionHooksIntegrationTest.cs.xml" path='docs/member[@name="M:Hiero.Tests.Integration.AccountCreateTransactionHooksIntegrationTest.AccountCreateWithBasicLambdaHookSucceeds"]' />
+        public virtual void AccountCreateWithBasicLambdaHookSucceeds()
+        {
+            using (var testEnv = new IntegrationTestEnv(1))
+            {
+
+                // Deploy a simple contract to act as the lambda hook target
+                ContractId hookContractId = EntityHelper.CreateContract(testEnv, testEnv.OperatorKey);
+
+                // Build a basic EVM hook (no admin key, no storage updates)
+                var lambdaHook = new EvmHook(hookContractId);
+                var hookDetails = new HookCreationDetails(HookExtensionPoint.AccountAllowanceHook, 1, lambdaHook);
+                var response = new AccountCreateTransaction
+                {
+                    InitialBalance = new Hbar(1),
+                    MaxTransactionFee = Hbar.From(10),
+					Key = PrivateKey.GenerateED25519(),
+                    HookCreationDetails = hookDetails,
+                
+                }.Execute(testEnv.Client);
+
+                var receipt = response.GetReceipt(testEnv.Client);
+
+                Assert.Equal(receipt.Status, ResponseStatus.Success);
+            }
+        }
+        [Fact]
+        /// <include file="AccountCreateTransactionHooksIntegrationTest.cs.xml" path='docs/member[@name="M:Hiero.Tests.Integration.AccountCreateTransactionHooksIntegrationTest.AccountCreateWithLambdaHookAndStorageUpdatesSucceeds"]' />
+        public virtual void AccountCreateWithLambdaHookAndStorageUpdatesSucceeds()
+        {
+            using (var testEnv = new IntegrationTestEnv(1))
+            {
+                ContractId hookContractId = EntityHelper.CreateContract(testEnv, testEnv.OperatorKey);
+                var storageSlot = new EvmHookStorageSlot(new byte[] { 0x01 }, new byte[] { 0x02 });
+                var mappingEntries = new EvmHookMappingEntries(new byte[] { 0x10 }, [EvmHookMappingEntry.OfKey(new byte[] { 0x11 }, new byte[] { 0x12 })]);
+                var lambdaHook = new EvmHook(hookContractId, [storageSlot, mappingEntries]);
+                var hookDetails = new HookCreationDetails(HookExtensionPoint.AccountAllowanceHook, 2, lambdaHook);
+                var response = new AccountCreateTransaction
+                {
+                    MaxTransactionFee = Hbar.From(10),
+                    InitialBalance = new Hbar(1),
+                    Key = PrivateKey.GenerateED25519(),
+                    HookCreationDetails = hookDetails,
+                
+                }.Execute(testEnv.Client);
+
+                var receipt = response.GetReceipt(testEnv.Client);
+
+                Assert.Equal(receipt.Status, ResponseStatus.Success);
+            }
+        }
+        [Fact]
+        /// <include file="AccountCreateTransactionHooksIntegrationTest.cs.xml" path='docs/member[@name="M:Hiero.Tests.Integration.AccountCreateTransactionHooksIntegrationTest.AccountCreateWithDuplicateHookIdsFailsPrecheck"]' />
+        public virtual void AccountCreateWithDuplicateHookIdsFailsPrecheck()
+        {
+            using (var testEnv = new IntegrationTestEnv(1))
+            {
+                ContractId hookContractId = EntityHelper.CreateContract(testEnv, testEnv.OperatorKey);
+                var lambdaHook = new EvmHook(hookContractId);
+                var hookDetails1 = new HookCreationDetails(HookExtensionPoint.AccountAllowanceHook, 4, lambdaHook);
+                var hookDetails2 = new HookCreationDetails(HookExtensionPoint.AccountAllowanceHook, 4, lambdaHook);
+                PrecheckStatusException exception = Assert.Throws<PrecheckStatusException>(() =>
+                {
+                    new AccountCreateTransaction
+                    {
+                        InitialBalance = new Hbar(1),
+                        MaxTransactionFee = Hbar.From(10),
+                        Key = PrivateKey.GenerateED25519(),
+                        HookCreationDetails = new (hookDetails1, hookDetails2),
+                    }
+                    .Execute(testEnv.Client)
+                    .GetReceipt(testEnv.Client);
+
+				}); Assert.Contains(ResponseStatus.HookIdRepeatedInCreationDetails.ToString(), exception.Message);
+            }
+        }
+        [Fact]
+        /// <include file="AccountCreateTransactionHooksIntegrationTest.cs.xml" path='docs/member[@name="M:Hiero.Tests.Integration.AccountCreateTransactionHooksIntegrationTest.AccountCreateWithLambdaHookAndAdminKeySucceeds"]' />
+        public virtual void AccountCreateWithLambdaHookAndAdminKeySucceeds()
+        {
+            using (var testEnv = new IntegrationTestEnv(1))
+            {
+                ContractId hookContractId = EntityHelper.CreateContract(testEnv, testEnv.OperatorKey);
+                var adminKey = PrivateKey.GenerateED25519();
+                var lambdaHook = new EvmHook(hookContractId);
+                var hookDetails = new HookCreationDetails(HookExtensionPoint.AccountAllowanceHook, 5, lambdaHook, adminKey.GetPublicKey());
+                var tx = new AccountCreateTransaction
+                {
+					MaxTransactionFee = Hbar.From(10),
+					InitialBalance = new Hbar(1),
+                    Key = PrivateKey.GenerateED25519(),
+                    HookCreationDetails = hookDetails,
+                
+                }.FreezeWith(testEnv.Client)
+                .Sign(adminKey);
+
+                var receipt = tx.Execute(testEnv.Client).GetReceipt(testEnv.Client);
+
+                Assert.Equal(receipt.Status, ResponseStatus.Success);
+            }
+        }
+    }
+}

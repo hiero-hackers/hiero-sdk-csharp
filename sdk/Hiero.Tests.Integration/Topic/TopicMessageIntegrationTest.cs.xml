@@ -1,0 +1,14 @@
+<docs>
+  <member name="T:Hiero.Tests.Integration.TopicMessageIntegrationTest">
+    <summary>TODO: Describe TopicMessageIntegrationTest.</summary>
+  </member>
+  <member name="M:Hiero.Tests.Integration.TopicMessageIntegrationTest.CanReceiveATopicMessage">
+    <summary>TODO: Describe CanReceiveATopicMessage.</summary>
+  </member>
+  <member name="M:Hiero.Tests.Integration.TopicMessageIntegrationTest.CanReceiveALargeTopicMessage">
+    <summary>TODO: Describe CanReceiveALargeTopicMessage.</summary>
+  </member>
+  <member name="M:Hiero.Tests.Integration.TopicMessageIntegrationTest.UnsubscribingDoesNotLogRetryWarnings">
+    <summary>TODO: Describe UnsubscribingDoesNotLogRetryWarnings.</summary>
+  </member>
+</docs>

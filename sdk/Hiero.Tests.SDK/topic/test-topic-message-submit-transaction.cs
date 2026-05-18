@@ -1,0 +1,223 @@
+﻿// SPDX-License-Identifier: Apache-2.0
+using Google.Protobuf;
+
+using Hiero.SDK.Core;
+using Hiero.SDK.Cryptocurrency;
+using Hiero.SDK.Fee;
+using Hiero.SDK.Cryptography;
+using Hiero.SDK.Token;
+using Hiero.SDK.Consensus;
+using Hiero.SDK.Transactions;
+
+using System;
+using System.Collections.Generic;
+
+namespace Hiero.Tests.SDK.Topic
+{
+    /// <include file="test-topic-message-submit-transaction.ts.cs.xml" path='docs/member[@name="T:Hiero.Tests.SDK.Topic.TopicMessageSubmitTransactionTest"]' />
+    public class TopicMessageSubmitTransactionTest
+    {
+        private static readonly PrivateKey unusedPrivateKey = PrivateKey.FromString("302e020100300506032b657004220420db484b828e64b2d8f12ce3c0a0e93a0b8cce7af1bb8f39c97732394482538e10");
+        private static readonly TopicId testTopicId = new (0, 6, 9);
+        private static readonly byte[] testMessageBytes = [ 0x04, 0x05, 0x06 ];
+        private static readonly DateTimeOffset validStart = DateTimeOffset.FromUnixTimeMilliseconds(1554158542);
+
+        private TopicMessageSubmitTransaction SpawnTestTransactionString()
+        {
+            return new TopicMessageSubmitTransaction
+            {
+                NodeAccountIds = new (AccountId.FromString("0.0.5005"), AccountId.FromString("0.0.5006")),
+                TransactionId = TransactionId.WithValidStart(AccountId.FromString("0.0.5006"), validStart),
+                TopicId = testTopicId,
+                Message = ByteString.CopyFrom(testMessageBytes),
+            }
+            .Freeze()
+            .Sign(unusedPrivateKey);
+        }
+
+        private TopicMessageSubmitTransaction SpawnTestTransactionBytes()
+        {
+            return new TopicMessageSubmitTransaction
+            {
+                NodeAccountIds = new (AccountId.FromString("0.0.5005"), AccountId.FromString("0.0.5006")),
+                TransactionId = TransactionId.WithValidStart(AccountId.FromString("0.0.5006"), validStart),
+                TopicId = testTopicId,
+                Message = ByteString.CopyFrom(testMessageBytes),
+            }
+            .Freeze()
+            .Sign(unusedPrivateKey);
+        }
+        [Fact]
+        /// <include file="test-topic-message-submit-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Topic.TopicMessageSubmitTransactionTest.ShouldBytesNoSetters"]' />
+        public virtual void ShouldBytesNoSetters()
+        {
+            var tx = new TopicMessageSubmitTransaction();
+            var tx2 = ITransaction.FromBytes(tx.ToBytes());
+
+            Assert.Equal(tx2.ToString(), tx.ToString());
+        }
+        [Fact]
+        /// <include file="test-topic-message-submit-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Topic.TopicMessageSubmitTransactionTest.FromScheduledTransaction"]' />
+        public virtual void FromScheduledTransaction()
+        {
+            var transactionBody = new Proto.Services.SchedulableTransactionBody
+            {
+                ConsensusSubmitMessage = new Proto.Services.ConsensusSubmitMessageTransactionBody { }
+            };
+
+            var tx = Transaction.FromScheduledTransaction(transactionBody);
+            Assert.IsType<TopicMessageSubmitTransaction>(tx);
+        }
+        [Fact]
+        /// <include file="test-topic-message-submit-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Topic.TopicMessageSubmitTransactionTest.ConstructTopicMessageSubmitTransactionFromTransactionBodyProtobuf"]' />
+        public virtual void ConstructTopicMessageSubmitTransactionFromTransactionBodyProtobuf()
+        {
+            var transactionBody = new Proto.Services.ConsensusSubmitMessageTransactionBody
+            {
+                TopicId = testTopicId.ToProtobuf(),
+                Message = ByteString.CopyFrom(testMessageBytes),
+            };
+            var tx = new Proto.Services.TransactionBody
+            {
+                ConsensusSubmitMessage = transactionBody
+            };
+
+            var topicSubmitMessageTransaction = new TopicMessageSubmitTransaction(tx);
+            Assert.Equal(topicSubmitMessageTransaction.TopicId, testTopicId);
+        }
+        [Fact]
+        /// <include file="test-topic-message-submit-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Topic.TopicMessageSubmitTransactionTest.GetSetTopicId"]' />
+        public virtual void GetSetTopicId()
+        {
+            var topicSubmitMessageTransaction = new TopicMessageSubmitTransaction
+            {
+                TopicId = testTopicId
+            };
+
+            Assert.Equal(topicSubmitMessageTransaction.TopicId, testTopicId);
+        }
+        [Fact]
+        /// <include file="test-topic-message-submit-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Topic.TopicMessageSubmitTransactionTest.GetSetTopicIdFrozen"]' />
+        public virtual void GetSetTopicIdFrozen()
+        {
+            var tx = SpawnTestTransactionString();
+            Assert.Throws<InvalidOperationException>(() => tx.TopicId = testTopicId);
+        }
+        [Fact]
+        /// <include file="test-topic-message-submit-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Topic.TopicMessageSubmitTransactionTest.GetSetMessage"]' />
+        public virtual void GetSetMessage()
+        {
+            var topicSubmitMessageTransactionString = new TopicMessageSubmitTransaction
+            {
+                Message = ByteString.CopyFrom(testMessageBytes)
+            };
+            var topicSubmitMessageTransactionBytes = new TopicMessageSubmitTransaction
+            {
+                Message = ByteString.CopyFrom(testMessageBytes)
+            };
+
+            Assert.Equal(topicSubmitMessageTransactionString.Message.ToByteArray(), testMessageBytes);
+            Assert.Equal(topicSubmitMessageTransactionBytes.Message.ToByteArray(), testMessageBytes);
+        }
+        [Fact]
+        /// <include file="test-topic-message-submit-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Topic.TopicMessageSubmitTransactionTest.GetSetMessageFrozen"]' />
+        public virtual void GetSetMessageFrozen()
+        {
+            var topicSubmitMessageTransactionString = SpawnTestTransactionString();
+            var topicSubmitMessageTransactionBytes = SpawnTestTransactionBytes();
+
+            Assert.Throws<InvalidOperationException>(() => topicSubmitMessageTransactionString.Message = ByteString.CopyFrom(testMessageBytes));
+            Assert.Throws<InvalidOperationException>(() => topicSubmitMessageTransactionBytes.Message = ByteString.CopyFrom(testMessageBytes));
+        }
+        [Fact]
+        /// <include file="test-topic-message-submit-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Topic.TopicMessageSubmitTransactionTest.ShouldSetCustomFeeLimits"]' />
+        public virtual void ShouldSetCustomFeeLimits()
+        {
+            var customFeeLimits = new List<CustomFeeLimit>
+            {
+                new ()
+                {
+                    PayerId = new AccountId(0, 0, 1),
+                    CustomFees = [ new CustomFixedFee
+                    {
+                        Amount = 1,
+                        DenominatingTokenId = new TokenId(0, 0, 1)
+                    } ]
+                },
+                new ()
+                {
+                    PayerId = new AccountId(0, 0, 2),
+                    CustomFees = [ new CustomFixedFee
+                    {
+                        Amount = 1,
+                        DenominatingTokenId = new TokenId(0, 0, 2)
+                    } ]
+                }
+            };
+            var topicMessageSubmitTransaction = new TopicMessageSubmitTransaction { CustomFeeLimits = customFeeLimits };
+            Assert.Equal(topicMessageSubmitTransaction.CustomFeeLimits, customFeeLimits);
+        }
+        [Fact]
+        /// <include file="test-topic-message-submit-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Topic.TopicMessageSubmitTransactionTest.ShouldAddCustomFeeLimitToList"]' />
+        public virtual void ShouldAddCustomFeeLimitToList()
+        {
+            var customFeeLimits = new List<CustomFeeLimit>
+            {
+                new ()
+                {
+                    PayerId = new AccountId(0, 0, 1),
+                    CustomFees = [ new CustomFixedFee
+                    {
+                        Amount = 1,
+                        DenominatingTokenId = new TokenId(0, 0, 1)
+                    } ]
+                },
+                new ()
+                {
+                    PayerId = new AccountId(0, 0, 2),
+                    CustomFees = [ new CustomFixedFee
+                    {
+                        Amount = 1,
+                        DenominatingTokenId = new TokenId(0, 0, 2)
+                    } ]
+                }
+            };
+
+            var customFeeLimitToBeAdded = new CustomFeeLimit
+            {
+                PayerId = new AccountId(0, 0, 3),
+                CustomFees = [ new CustomFixedFee
+                {
+                    Amount = 3,
+                    DenominatingTokenId = new TokenId(0, 0, 3)
+                } ]
+            };
+
+            List<CustomFeeLimit> expectedCustomFeeLimits = [.. customFeeLimits];
+            expectedCustomFeeLimits.Add(customFeeLimitToBeAdded);
+            var topicMessageSubmitTransaction = new TopicMessageSubmitTransaction
+            {
+                CustomFeeLimits = new([.. customFeeLimits, customFeeLimitToBeAdded])
+            };
+
+            Assert.Equal(topicMessageSubmitTransaction.CustomFeeLimits, expectedCustomFeeLimits);
+        }
+        [Fact]
+        /// <include file="test-topic-message-submit-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Topic.TopicMessageSubmitTransactionTest.ShouldAddCustomFeeLimitToEmptyList"]' />
+        public virtual void ShouldAddCustomFeeLimitToEmptyList()
+        {
+            var customFeeLimitToBeAdded = new CustomFeeLimit
+            {
+                PayerId = new AccountId(0, 0, 3),
+                CustomFees = [ new CustomFixedFee
+                {
+                    Amount = 3,
+                    DenominatingTokenId = new TokenId(0, 0, 3)
+                } ]
+            };
+            var topicMessageSubmitTransaction = new TopicMessageSubmitTransaction { CustomFeeLimits = customFeeLimitToBeAdded };
+
+            Assert.Equal(topicMessageSubmitTransaction.CustomFeeLimits, [customFeeLimitToBeAdded]);
+        }
+    }
+}

@@ -1,0 +1,70 @@
+// SPDX-License-Identifier: Apache-2.0
+using Google.Protobuf.Reflection;
+
+using Hiero.SDK.Cryptocurrency;
+
+using System;
+using System.Threading.Tasks;
+
+namespace Hiero.SDK.Schedule
+{
+    /// <include file="ScheduleInfoQuery.cs.xml" path='docs/member[@name="T:ScheduleInfoQuery"]' />
+    public class ScheduleInfoQuery : Query<ScheduleInfo, ScheduleInfoQuery>
+    {
+        /// <include file="ScheduleInfoQuery.cs.xml" path='docs/member[@name="P:ScheduleInfoQuery.ScheduleId"]' />
+        public virtual ScheduleId? ScheduleId { get; set; }
+
+		public override void ValidateChecksums(Client client)
+        {
+            ScheduleId?.ValidateChecksum(client);
+        }
+
+        public override void OnMakeRequest(Proto.Services.Query queryBuilder, Proto.Services.QueryHeader header)
+        {
+            var builder = new Proto.Services.ScheduleGetInfoQuery()
+            {
+                Header = header
+            };
+
+            if (ScheduleId != null)
+            {
+                builder.ScheduleId = ScheduleId.ToProtobuf();
+            }
+
+            queryBuilder.ScheduleGetInfo = builder;
+        }
+
+        public override Proto.Services.ResponseHeader MapResponseHeader(Proto.Services.Response response)
+        {
+            return response.ScheduleGetInfo.Header;
+        }
+        public override Proto.Services.QueryHeader MapRequestHeader(Proto.Services.Query request)
+        {
+            return request.ScheduleGetInfo.Header;
+        }
+
+        public override ScheduleInfo MapResponse(Proto.Services.Response response, AccountId nodeId, Proto.Services.Query request)
+        {
+            return ScheduleInfo.FromProtobuf(response.ScheduleGetInfo.ScheduleInfo);
+        }
+
+		public override MethodDescriptor GetMethodDescriptor()
+		{
+			string methodname = nameof(Proto.Services.ScheduleService.ScheduleServiceClient.getScheduleInfo);
+
+			return Proto.Services.ScheduleService.Descriptor.FindMethodByName(methodname);
+		}
+
+		public override async Task<Hbar> GetCostAsync(Client client)
+		{
+			// deleted accounts return a COST_ANSWER of zero which triggers `INSUFFICIENT_TX_FEE`
+			// if you set that as the query payment; 25 tinybar seems to be enough to get
+			// `Token_DELETED` back instead.
+
+			Hbar cost = await base.GetCostAsync(client);
+
+			return Hbar.FromTinybars(Math.Max(cost.ToTinybars(), 25));
+
+		}
+	}
+}

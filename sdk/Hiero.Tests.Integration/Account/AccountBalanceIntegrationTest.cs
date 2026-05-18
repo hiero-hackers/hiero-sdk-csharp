@@ -1,0 +1,251 @@
+﻿// SPDX-License-Identifier: Apache-2.0
+using System;
+
+using Hiero.SDK.Cryptocurrency;
+using Hiero.SDK;
+using Hiero.SDK.Token;
+using Hiero.SDK.Exceptions;
+using System.Linq;
+
+namespace Hiero.Tests.Integration.Account
+{
+    /// <include file="AccountBalanceIntegrationTest.cs.xml" path='docs/member[@name="T:Hiero.Tests.Integration.AccountBalanceIntegrationTest"]' />
+    public class AccountBalanceIntegrationTest
+    {
+        [Fact]
+        /// <include file="AccountBalanceIntegrationTest.cs.xml" path='docs/member[@name="M:Hiero.Tests.Integration.AccountBalanceIntegrationTest.CanConnectToPreviewnetWithTLS"]' />
+        public virtual void CanConnectToPreviewnetWithTLS()
+        {
+            var client = Client.ForPreviewnet(client => client.TransportSecurity = true);
+            bool succeededAtLeastOnce = false;
+            foreach (var entry in client.Network_.Network_Read)
+            {
+                Assert.True(entry.Key.ToString().EndsWith(":50212"));
+                try
+                {
+                    new AccountBalanceQuery()
+                    {
+						MaxAttempts = 1,
+						NodeAccountIds = new (entry.Value.Select(_ => _.AccountId)),
+						AccountId = entry.Key,
+					}
+                    .Execute(client);
+                    Console.WriteLine("succeeded for " + entry);
+                    succeededAtLeastOnce = true;
+                }
+                catch (Exception error)
+                {
+                    Console.WriteLine("failed for " + entry);
+                }
+            }
+
+            client.Dispose();
+            Assert.True(succeededAtLeastOnce);
+        }
+        [Fact]
+        /// <include file="AccountBalanceIntegrationTest.cs.xml" path='docs/member[@name="M:Hiero.Tests.Integration.AccountBalanceIntegrationTest.CanConnectToTestnetWithTLS"]' />
+        public virtual void CanConnectToTestnetWithTLS()
+        {
+            var client = Client.ForPreviewnet(client => client.TransportSecurity = true);
+			bool succeededAtLeastOnce = false;
+            foreach (var entry in client.Network_.Network_Read)
+            {
+                Assert.True(entry.Key.ToString().EndsWith(":50212"));
+                try
+                {
+                    new AccountBalanceQuery()
+                    {
+						MaxAttempts = 1,
+						NodeAccountIds = new (entry.Value.Select(_ => _.AccountId)),
+						AccountId = entry.Key,
+					}
+                    .Execute(client);
+                    Console.WriteLine("succeeded for " + entry);
+                    succeededAtLeastOnce = true;
+                }
+                catch (Exception error)
+                {
+                    Console.WriteLine("failed for " + entry);
+                }
+            }
+
+            client.Dispose();
+            Assert.True(succeededAtLeastOnce);
+        }
+        [Fact]
+        /// <include file="AccountBalanceIntegrationTest.cs.xml" path='docs/member[@name="M:Hiero.Tests.Integration.AccountBalanceIntegrationTest.CanConnectToMainnetWithTLS"]' />
+        public virtual void CanConnectToMainnetWithTLS()
+        {
+            var client = Client.ForPreviewnet(client => client.TransportSecurity = true);
+			bool succeededAtLeastOnce = false;
+            foreach (var entry in client.Network_.Network_Read)
+            {
+                Assert.True(entry.Key.ToString().EndsWith(":50212"));
+                try
+                {
+                    new AccountBalanceQuery()
+                    {
+						MaxAttempts = 1,
+						NodeAccountIds = new(entry.Value.Select(_ => _.AccountId)),
+						AccountId = entry.Key,
+					}
+                    .Execute(client);
+                    Console.WriteLine("succeeded for " + entry);
+                    succeededAtLeastOnce = true;
+                }
+                catch (Exception error)
+                {
+                    Console.WriteLine("failed for " + entry);
+                    Console.WriteLine(error);
+                }
+            }
+
+            client.Dispose();
+            Assert.True(succeededAtLeastOnce);
+        }
+        [Fact]
+        /// <include file="AccountBalanceIntegrationTest.cs.xml" path='docs/member[@name="M:Hiero.Tests.Integration.AccountBalanceIntegrationTest.CannotConnectToPreviewnetWhenNetworkNameIsNullAndCertificateVerificationIsEnabled"]' />
+        public virtual void CannotConnectToPreviewnetWhenNetworkNameIsNullAndCertificateVerificationIsEnabled()
+        {
+            var client = Client.ForPreviewnet(client =>
+            {
+                client.TransportSecurity = true;
+                client.VerifyCertificates = true;
+                // client.NetworkName = null;  
+            });
+
+            Assert.NotEmpty(client.Network_.Network_Read);
+
+            foreach (var entry in client.Network_.Network_Read)
+            {
+                Assert.True(entry.Key.ToString().EndsWith(":50212"));
+                InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() =>
+                {
+                    new AccountBalanceQuery()
+					{
+						NodeAccountIds = new(entry.Value.Select(_ => _.AccountId)),
+						AccountId = entry.Key,
+
+					}.Execute(client);
+                });
+            }
+
+            client.Dispose();
+        }
+        [Fact]
+        /// <include file="AccountBalanceIntegrationTest.cs.xml" path='docs/member[@name="M:Hiero.Tests.Integration.AccountBalanceIntegrationTest.CanFetchBalanceForClientOperator"]' />
+        public virtual void CanFetchBalanceForClientOperator()
+        {
+            using (IntegrationTestEnv testEnv = new IntegrationTestEnv(1))
+            {
+                var balance = new AccountBalanceQuery
+                {
+					AccountId = testEnv.OperatorId
+				
+                }.Execute(testEnv.Client);
+
+                Assert.True(balance.Hbars.ToTinybars() > 0);
+            }
+        }
+        [Fact]
+        /// <include file="AccountBalanceIntegrationTest.cs.xml" path='docs/member[@name="M:Hiero.Tests.Integration.AccountBalanceIntegrationTest.GetCostBalanceForClientOperator"]' />
+        public virtual void GetCostBalanceForClientOperator()
+        {
+            using (IntegrationTestEnv testEnv = new IntegrationTestEnv(1))
+            {
+                var balance = new AccountBalanceQuery
+                {
+					AccountId = testEnv.OperatorId,
+					MaxQueryPayment = new Hbar(1),
+				};
+                var cost = balance.GetCost(testEnv.Client);
+				balance.QueryPayment = cost;
+				var accBalance = balance.Execute(testEnv.Client);
+				Assert.True(accBalance.Hbars.ToTinybars() > 0);
+                Assert.Equal(0, cost.ToTinybars());
+            }
+        }
+        [Fact]
+        /// <include file="AccountBalanceIntegrationTest.cs.xml" path='docs/member[@name="M:Hiero.Tests.Integration.AccountBalanceIntegrationTest.GetCostBigMaxBalanceForClientOperator"]' />
+        public virtual void GetCostBigMaxBalanceForClientOperator()
+        {
+            using (IntegrationTestEnv testEnv = new IntegrationTestEnv(1))
+            {
+                var balance = new AccountBalanceQuery
+                {
+					AccountId = testEnv.OperatorId,
+					MaxQueryPayment = new Hbar(1000000),
+				};
+                var cost = balance.GetCost(testEnv.Client);
+                balance.QueryPayment = cost;
+                var accBalance = balance.Execute(testEnv.Client);
+                Assert.True(accBalance.Hbars.ToTinybars() > 0);
+            }
+        }
+        [Fact]
+        /// <include file="AccountBalanceIntegrationTest.cs.xml" path='docs/member[@name="M:Hiero.Tests.Integration.AccountBalanceIntegrationTest.GetCostSmallMaxBalanceForClientOperator"]' />
+        public virtual void GetCostSmallMaxBalanceForClientOperator()
+        {
+            using (IntegrationTestEnv testEnv = new IntegrationTestEnv(1))
+            {
+                var balance = new AccountBalanceQuery
+                {
+					AccountId = testEnv.OperatorId,
+					MaxQueryPayment = Hbar.FromTinybars(1)
+				};
+                var cost = balance.GetCost(testEnv.Client);
+                balance.QueryPayment = cost;
+                var accBalance = balance.Execute(testEnv.Client);
+                
+                Assert.True(accBalance.Hbars.ToTinybars() > 0);
+            }
+        }
+        [Fact]
+        /// <include file="AccountBalanceIntegrationTest.cs.xml" path='docs/member[@name="M:Hiero.Tests.Integration.AccountBalanceIntegrationTest.CanNotFetchBalanceForInvalidAccountId"]' />
+        public virtual void CanNotFetchBalanceForInvalidAccountId()
+        {
+            using (IntegrationTestEnv testEnv = new IntegrationTestEnv(1))
+            {
+                PrecheckStatusException exception = Assert.Throws<PrecheckStatusException>(() =>
+                {
+                    new AccountBalanceQuery
+                    {
+						AccountId = AccountId.FromString("1.0.3")
+
+					}.Execute(testEnv.Client);
+
+                }); Assert.Contains(ResponseStatus.InvalidAccountId.ToString(), exception.Message);
+            }
+        }
+        [Fact]
+        /// <include file="AccountBalanceIntegrationTest.cs.xml" path='docs/member[@name="M:Hiero.Tests.Integration.AccountBalanceIntegrationTest.CanFetchTokenBalancesForClientOperator"]' />
+        public virtual void CanFetchTokenBalancesForClientOperator()
+        {
+            using (var testEnv = new IntegrationTestEnv(1).UseThrowawayAccount())
+            {
+                var response = new TokenCreateTransaction
+                {
+                    TokenName = "ffff",
+                    TokenSymbol = "F",
+                    InitialSupply = 10000,
+                    Decimals = 50,
+                    TreasuryAccountId = testEnv.OperatorId,
+                    AdminKey = testEnv.OperatorKey,
+                    SupplyKey = testEnv.OperatorKey,
+                    FreezeDefault = false
+                
+                }.Execute(testEnv.Client);
+                var tokenId = response.GetReceipt(testEnv.Client).TokenId;
+                var query = new AccountBalanceQuery
+                {
+					AccountId = testEnv.OperatorId
+				};
+                var balance = query.Execute(testEnv.Client);
+                Assert.Equal<ulong>(balance.Tokens[tokenId], 10000);
+                Assert.Equal<uint>(balance.TokenDecimals[tokenId], 50);
+                Assert.NotEmpty(query.ToString());
+                Assert.Null(query.PaymentTransactionId);
+            }
+        }
+    }
+}

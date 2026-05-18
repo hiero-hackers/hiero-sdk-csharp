@@ -1,0 +1,28 @@
+using Google.Protobuf;
+
+using System;
+
+namespace Hiero.SDK.Contract
+{
+	public sealed partial class ContractFunctionParameters
+	{
+		public sealed class Argument
+		{
+			public readonly string Type;
+			public readonly bool IsDynamic;
+			public readonly ByteString Value;
+
+			public Argument(string type, string value, bool isDynamic) : this(type, ByteString.CopyFromUtf8(value), isDynamic) { }
+			public Argument(string type, ByteString value, bool isDynamic)
+			{
+				Type = type;
+
+				if (!isDynamic && value.Length != 32)
+					throw new ArgumentException("value argument that was not 32 bytes");
+
+				Value = value;
+				IsDynamic = isDynamic;
+			}
+		}
+	}
+}

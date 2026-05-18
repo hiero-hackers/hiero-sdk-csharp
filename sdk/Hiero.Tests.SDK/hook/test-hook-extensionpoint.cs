@@ -1,0 +1,41 @@
+﻿// SPDX-License-Identifier: Apache-2.0
+using Hiero.SDK.Hook;
+
+using System;
+
+namespace Hiero.Tests.SDK.Hook
+{
+    /// <include file="test-hook-extensionpoint.cs.xml" path='docs/member[@name="T:Hiero.Tests.SDK.Hook.HookExtensionPointTest"]' />
+    public class HookExtensionPointTest
+    {
+        [Fact]
+        /// <include file="test-hook-extensionpoint.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Hook.HookExtensionPointTest.RoundTripAllEnumValues"]' />
+        public virtual void RoundTripAllEnumValues()
+        {
+            foreach (HookExtensionPoint value in Enum.GetValues<HookExtensionPoint>())
+            {
+                var proto = (Proto.Services.HookExtensionPoint)value;
+                
+                Assert.NotNull(proto);
+
+                var restored =  (HookExtensionPoint)proto;
+
+                Assert.Equal(value, restored);
+                //Assert.Equal(value, restored, "Round-trip mismatch for " + value.ToString());
+            }
+        }
+        [Fact]
+        /// <include file="test-hook-extensionpoint.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Hook.HookExtensionPointTest.ProtoValuesAreStable"]' />
+        public virtual void ProtoValuesAreStable()
+        {
+			foreach (HookExtensionPoint value in Enum.GetValues<HookExtensionPoint>())
+			{
+				var proto = (Proto.Services.HookExtensionPoint)value;
+
+				// basic sanity: ordinal-like mapping should not be negative
+				Assert.True((int)proto >= 0);
+                Assert.True(value.ToString().Length > 0);
+            }
+        }
+    }
+}

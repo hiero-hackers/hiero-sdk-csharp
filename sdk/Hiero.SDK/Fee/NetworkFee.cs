@@ -1,0 +1,30 @@
+// SPDX-License-Identifier: Apache-2.0
+using System;
+using System.Text.Json.Nodes;
+
+namespace Hiero.SDK.Fee
+{
+    public sealed class NetworkFee
+    {
+        internal NetworkFee(int multiplier, long subtotal)
+        {
+            Multiplier = multiplier;
+            Subtotal = subtotal;
+        }
+
+        internal static NetworkFee FromJson(string json)
+        {
+            return FromJson(JsonNode.Parse(json) ?? throw new ArgumentException(null, nameof(json)));
+        }
+        internal static NetworkFee FromJson(JsonNode jsonnode)
+        {
+            return new NetworkFee(
+				jsonnode["multiplier"]?.GetValue<int>() ?? throw new ArgumentException(null, "multiplier"),
+				jsonnode["subtotal"]?.GetValue<long>() ?? throw new ArgumentException(null, "subtotal"));
+        }
+
+        /// <include file="NetworkFee.cs.xml" path='docs/member[@name="P:.Multiplier"]' />
+        public int Multiplier { get; }
+        public long Subtotal { get; }
+    }
+}

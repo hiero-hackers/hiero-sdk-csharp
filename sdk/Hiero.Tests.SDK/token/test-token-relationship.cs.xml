@@ -1,0 +1,8 @@
+<docs>
+  <member name="T:Hiero.Tests.SDK.Token.TokenRelationshipTest">
+    <summary>TODO: Describe TokenRelationshipTest.</summary>
+  </member>
+  <member name="M:Hiero.Tests.SDK.Token.TokenRelationshipTest.ShouldSerializeTokenRelationship">
+    <summary>TODO: Describe ShouldSerializeTokenRelationship.</summary>
+  </member>
+</docs>

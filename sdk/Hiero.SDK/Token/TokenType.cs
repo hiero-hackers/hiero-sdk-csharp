@@ -1,0 +1,14 @@
+// SPDX-License-Identifier: Apache-2.0
+
+namespace Hiero.SDK.Token
+{
+    /// <include file="TokenType.cs.xml" path='docs/member[@name="T:TokenType"]' />
+    public enum TokenType
+    {
+        /// <include file="TokenType.cs.xml" path='docs/member[@name="M:TokenType.properties(e.g. serial)"]' />
+        FungibleCommon = Proto.Services.TokenType.FungibleCommon,
+
+		/// <include file="TokenType.cs.xml" path='docs/member[@name="T:TokenType_2"]' />
+		NonFungibleUnique = Proto.Services.TokenType.NonFungibleUnique,
+    }
+}

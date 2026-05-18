@@ -1,0 +1,982 @@
+// SPDX-License-Identifier: Apache-2.0
+using Google.Protobuf;
+using Google.Protobuf.Reflection;
+
+using Grpc.Core;
+
+using Hiero.SDK.Cryptocurrency;
+using Hiero.SDK.Exceptions;
+using Hiero.SDK.Fee;
+using Hiero.SDK.Cryptography;
+using Hiero.SDK.Schedule;
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
+using Hiero.SDK.Transactions;
+
+namespace Hiero.SDK.Core
+{	
+	/// <include file="Transaction.cs.xml" path='docs/member[@name="T:Transaction"]' />
+	public abstract partial class Transaction<T> : Executable<T, Proto.Services.Transaction, Proto.Services.TransactionResponse, TransactionResponse>, ITransaction where T : Transaction<T>
+    {		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="T:Transaction_2"]' />
+		internal Hbar DefaultMaxTransactionFee = new (2);
+        
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.#ctor"]' />
+        protected bool? regenerateTransactionId = null;
+        private string Memo = "";
+        protected IList<CustomFeeLimit> customFeeLimits = [];
+
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.#ctor_2"]' />
+		protected Transaction()
+        {
+            TransactionValidDuration = Transaction.DEFAULT_TRANSACTION_VALID_DURATION;
+            SourceTransactionBody = new Proto.Services.TransactionBody();
+            TransactionIds = [];
+        }
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.#ctor(Proto.Services.TransactionBody)"]' />
+		internal Transaction(Proto.Services.TransactionBody txBody)
+		{
+			TransactionValidDuration = Transaction.DEFAULT_TRANSACTION_VALID_DURATION;
+			MaxTransactionFee = Hbar.FromTinybars((long)txBody.TransactionFee);
+			TransactionMemo = txBody.Memo;
+			SourceTransactionBody = txBody;
+            TransactionIds = [];
+        }
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.#ctor(DictionaryLinked{TransactionId,DictionaryLinked{AccountId,Proto.Services.Transaction}})"]' />
+		internal Transaction(DictionaryLinked<TransactionId, DictionaryLinked<AccountId, Proto.Services.Transaction>> txs)
+        {
+			TransactionIds = [];
+
+			DictionaryLinked<AccountId, Proto.Services.Transaction> transactionMap = txs.First().Value;
+
+            if (transactionMap.Count != 0 && transactionMap.Keys.First().Equals(Transaction.DUMMY_ACCOUNT_ID) && BatchKey != null)
+            {
+                // If the first account ID is a dummy account ID, then only the source TransactionBody needs to be copied.
+                var signedTransaction = Proto.Services.SignedTransaction.Parser.ParseFrom(transactionMap.Values.First().SignedTransactionBytes);
+                SourceTransactionBody = Transaction.ParseTransactionBody(signedTransaction.BodyBytes);
+            }
+            else
+            {
+                var txCount = txs.Keys.Count;
+                var nodeCount = txs.Values.First().Count;
+
+                NodeAccountIds.EnsureCapacity(nodeCount);
+                
+				SigPairLists = new List<Proto.Services.SignatureMap>(nodeCount * txCount);
+                OuterTransactions = new List<Proto.Services.Transaction>(nodeCount * txCount);
+                InnerSignedTransactions = new List<Proto.Services.SignedTransaction>(nodeCount * txCount);
+
+                TransactionIds.EnsureCapacity(txCount);
+
+                foreach (var transactionEntry in txs)
+                {
+                    if (!transactionEntry.Key.Equals(Transaction.DUMMY_TRANSACTION_ID))
+                    {
+                        TransactionIds.Operate(_ => _.Add(transactionEntry.Key));
+                    }
+
+                    foreach (var nodeEntry in transactionEntry.Value)
+                    {
+                        if (NodeAccountIds.Count != nodeCount)
+							NodeAccountIds.Operate(_ => _.Add(nodeEntry.Key));
+
+						var transaction = Proto.Services.SignedTransaction.Parser.ParseFrom(nodeEntry.Value.SignedTransactionBytes);
+                        OuterTransactions.Add(nodeEntry.Value);
+                        SigPairLists.Add(transaction.SigMap);
+                        InnerSignedTransactions.Add(transaction);
+                        if (PublicKeys.Count == 0 && transaction.SigMap is not null)
+                            foreach (var sigPair in transaction.SigMap.SigPair)
+                            {
+                                PublicKeys.Add(PublicKey.FromBytes(sigPair.PubKeyPrefix.ToByteArray()));
+                                Signers.Add(null);
+                            }
+                    }
+                }
+
+                NodeAccountIds.Operate(_ => _.Remove(new AccountId(0, 0, 0)));
+
+                // Verify that transaction bodies match
+                for (int i = 0; i < txCount; i++)
+                {
+                    Proto.Services.TransactionBody? firstTxBody = null;
+                    for (int j = 0; j < nodeCount; j++)
+                    {
+                        int k = i * nodeCount + j;
+                        var txBody = Transaction.ParseTransactionBody(InnerSignedTransactions[k].BodyBytes);
+                        if (firstTxBody == null)
+							firstTxBody = txBody;
+						else Transaction.RequireProtoMatches(firstTxBody, txBody, ["NodeAccountID"], "TransactionBody");
+					}
+                }
+
+                SourceTransactionBody = Transaction.ParseTransactionBody(InnerSignedTransactions[0].BodyBytes);
+            }
+
+            TransactionValidDuration = SourceTransactionBody.TransactionValidDuration.ToTimeSpan();
+            MaxTransactionFee = Hbar.FromTinybars(SourceTransactionBody.TransactionFee);
+            TransactionMemo = SourceTransactionBody.Memo;
+            
+			customFeeLimits = [.. SourceTransactionBody.MaxCustomFees.Select(_ => CustomFeeLimit.FromProtobuf(_))];
+            BatchKey = Key.FromProtobufKey(SourceTransactionBody.BatchKey);
+
+			// The presence of signatures implies the Transaction should be frozen.
+			if (PublicKeys.Count != 0)
+				FrozenBodyBuilder = SourceTransactionBody;
+		}
+
+        
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.RequireNotFrozen"]' />
+        public Hbar? MaxTransactionFee
+        {
+            get;
+            set
+			{
+				RequireNotFrozen();
+				field = value;
+			}
+		}
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.RequireNotFrozen_2"]' />
+		public string TransactionMemo
+		{
+			get;
+			set
+			{
+				RequireNotFrozen();
+				field = value;
+			}
+		}
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.RequireNotFrozen_3"]' />
+		public TimeSpan TransactionValidDuration
+		{
+			get;
+			set
+			{
+				RequireNotFrozen();
+				field = value;
+			}
+		}
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="P:Transaction.SourceTransactionBody"]' />
+		public Proto.Services.TransactionBody SourceTransactionBody { get; internal set; }
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="P:Transaction.FrozenBodyBuilder"]' />
+		public Proto.Services.TransactionBody? FrozenBodyBuilder { get; internal set; }
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.RequireNotFrozen_4"]' />
+		public Key? BatchKey 
+		{ 
+			get;
+			set 
+			{ 
+				RequireNotFrozen(); 
+				field = value; 
+			} 
+		}
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="P:Transaction.ShouldRegenerateTransactionId"]' />
+		public bool ShouldRegenerateTransactionId { get; set; }
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="T:Transaction_3"]' />
+		public TransactionId TransactionId
+		{
+			get
+			{
+				if (TransactionIds.Count == 0 || !IsFrozen())
+				{
+					throw new InvalidOperationException("No transaction ID generated yet. Try freezing the transaction or manually setting the transaction ID.");
+				}
+
+				TransactionIds.IsLocked = true;
+				return TransactionIds.Current;
+			}
+			set
+			{
+				TransactionIds.Operate(_ => [value]);
+				TransactionIds.IsLocked = true;
+			}
+		}
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="P:Transaction.OuterTransactions"]' />
+		public List<Proto.Services.Transaction> OuterTransactions { get; internal set; }
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="P:Transaction.InnerSignedTransactions"]' />
+		public List<Proto.Services.SignedTransaction> InnerSignedTransactions { get; internal set; }
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="P:Transaction.SigPairLists"]' />
+		public List<Proto.Services.SignatureMap> SigPairLists { get; internal set; }
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="P:Transaction.TransactionIds"]' />
+		public ListGuarded<TransactionId> TransactionIds { get; internal set; }
+
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="P:Transaction.PublicKeys"]' />
+		public IList<PublicKey> PublicKeys { get; internal set; } = [];
+
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.freezeWith(Client)"]' />
+		public List<Func<byte[], byte[]>?> Signers { get; internal set; } = [];
+
+		public override TransactionId TransactionIdInternal
+		{
+			get => TransactionIds.Current;
+		}
+
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.OnFreeze(Proto.Services.TransactionBody)"]' />
+		public abstract void OnFreeze(Proto.Services.TransactionBody bodyBuilder);
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.OnScheduled(Proto.Services.SchedulableTransactionBody)"]' />
+		public abstract void OnScheduled(Proto.Services.SchedulableTransactionBody scheduled);
+		public abstract void ValidateChecksums(Client client);
+
+		protected override bool IsBatchedAndNotBatchTransaction()
+		{
+			return BatchKey != null && this is not BatchTransaction;
+		}
+
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.DoSchedule(Proto.Services.TransactionBody)"]' />
+		protected virtual ScheduleCreateTransaction DoSchedule(Proto.Services.TransactionBody bodyBuilder)
+		{
+			Proto.Services.SchedulableTransactionBody proto = new ()
+			{
+				TransactionFee = bodyBuilder.TransactionFee,
+				Memo = bodyBuilder.Memo,
+			};
+
+            proto.MaxCustomFees.AddRange(bodyBuilder.MaxCustomFees);
+
+			OnScheduled(proto);
+
+			var scheduled = new ScheduleCreateTransaction
+			{
+				ScheduledTransactionBody = proto
+			};
+
+			if (TransactionIds.Count > 0)
+				scheduled.TransactionId = TransactionIds[0];
+
+			return scheduled;
+		}
+		protected virtual Dictionary<AccountId, Dictionary<PublicKey, byte[]>> GetSignaturesAtOffset(int offset)
+		{
+			var map = new Dictionary<AccountId, Dictionary<PublicKey, byte[]>>(NodeAccountIds.Count);
+
+			for (int i = 0; i < NodeAccountIds.Count; i++)
+			{
+				var sigMap = SigPairLists[i + offset];
+				var nodeAccountId = NodeAccountIds[i];
+				var keyMap = map.TryGetValue(nodeAccountId, out Dictionary<PublicKey, byte[]>? value) 
+					? value 
+					: new Dictionary<PublicKey, byte[]>();
+				
+				map.Add(nodeAccountId, keyMap);
+
+				foreach (var sigPair in sigMap.SigPair)
+				{
+					keyMap.Add(PublicKey.FromBytes(sigPair.PubKeyPrefix.ToByteArray()), sigPair.Ed25519.ToByteArray());
+				}
+			}
+
+			return map;
+		}
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.KeyAlreadySigned(PublicKey)"]' />
+		protected virtual bool KeyAlreadySigned(PublicKey key)
+		{
+			return PublicKeys.Contains(key);
+		}
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.RequireNotFrozen_5"]' />
+		internal virtual void RequireNotFrozen()
+		{
+			if (IsFrozen())
+			{
+				throw new InvalidOperationException("transaction is immutable; it has at least one signature or has been explicitly frozen");
+			}
+		}
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.RequireOneNodeAccountId"]' />
+		internal virtual void RequireOneNodeAccountId()
+		{
+			if (NodeAccountIds.Count != 1)
+				throw new InvalidOperationException("transaction did not have exactly one node ID set");
+		}
+		protected virtual Proto.Services.TransactionBody SpawnBodyBuilder(Client? client, Action<Proto.Services.TransactionBody>? oninit = null)
+		{
+			var builder = new Proto.Services.TransactionBody
+			{
+				Memo = Memo,
+				TransactionFee = (ulong)(MaxTransactionFee ?? client?.DefaultMaxTransactionFee ?? DefaultMaxTransactionFee).ToTinybars(),
+				TransactionValidDuration = TransactionValidDuration.ToProtoDuration(),
+			};
+
+			if (BatchKey is not null)
+				builder.BatchKey = BatchKey.ToProtobufKey();
+
+			builder.MaxCustomFees.AddRange(customFeeLimits.Select(_ => _.ToProtobuf()));
+
+			oninit?.Invoke(builder);
+
+            return builder;
+		}
+
+        protected virtual ListGuarded<TType> GenerateListGuarded<TType>(ListGuarded<TType>? list = null)
+        {
+			list ??= [];
+			list.OnRequireNotFrozen = RequireNotFrozen;
+
+			return list;
+        }
+
+        /// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.AddSignature(PublicKey,System.Byte[])"]' />
+        public virtual T AddSignature(PublicKey publicKey, byte[] signature)
+		{
+			RequireOneNodeAccountId();
+
+			if (!IsFrozen())
+				Freeze();
+
+			if (KeyAlreadySigned(publicKey))
+			{
+				// noinspection unchecked
+				return (T)this;
+			}
+
+			TransactionIds.IsLocked = true;
+			NodeAccountIds.IsLocked = true;
+
+			for (int i = 0; i < OuterTransactions.Count; i++)
+				OuterTransactions[i] = null;
+
+			PublicKeys.Add(publicKey);
+			Signers.Add(null);
+			SigPairLists[0].SigPair.Add(publicKey.ToSignaturePairProtobuf(signature));
+
+			// noinspection unchecked
+			return (T)this;
+		}
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.AddSignature(PublicKey,System.Byte[],TransactionId,AccountId)"]' />
+		public virtual T AddSignature(PublicKey publicKey, byte[] signature, TransactionId transactionID, AccountId nodeId)
+		{
+			if (InnerSignedTransactions.Count == 0)
+			{
+				// noinspection unchecked
+				return (T)this;
+			}
+
+			TransactionIds.IsLocked = true;
+
+			for (int index = 0; index < InnerSignedTransactions.Count; index++)
+				if (ProcessedSignatureForTransaction(index, publicKey, signature, transactionID, nodeId))
+					UpdateTransactionState(publicKey);
+
+
+			// noinspection unchecked
+			return (T)this;
+		}
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.BuildAllTransactions"]' />
+		public virtual void BuildAllTransactions()
+        {
+            TransactionIds.IsLocked = true;
+            NodeAccountIds.IsLocked = true;
+
+            for (var i = 0; i < InnerSignedTransactions.Count; ++i)
+				BuildTransaction(i);
+		}
+        
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.BuildTransaction(System.Int32)"]' />
+        public virtual void BuildTransaction(int index)
+        {
+            // Check if transaction is already built.
+            // Every time a signer is added via sign() or signWith(), all outerTransactions are nullified.
+            if (OuterTransactions[index] != null && OuterTransactions[index].SignedTransactionBytes.Length != 0)
+				return;
+
+			SignTransaction(index);
+
+            OuterTransactions[index] = new Proto.Services.Transaction
+			{
+				SigMap = SigPairLists[index],
+				SignedTransactionBytes = InnerSignedTransactions[index].ToByteString(),
+			};
+        }
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.Freeze"]' />
+		public virtual T Freeze()
+		{
+			return FreezeWith(null);
+		}
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.FreezeWith(Client)"]' />
+		public virtual T FreezeWith(Client? client)
+		{
+			if (IsFrozen())
+			{
+				// noinspection unchecked
+				return (T)this;
+			}
+
+			if (TransactionIds.Count == 0)
+			{
+				if (client != null)
+				{
+					var @operator = client.Operator_;
+
+					if (@operator != null)
+					{
+						// Set a default transaction ID, generated from the operator account ID
+						TransactionIds.Operate(_ => [TransactionId.Generate(@operator.AccountId)]);
+					}
+					else
+					{
+						// no client means there must be an explicitly set node ID and transaction ID
+						throw new InvalidOperationException("`client` must have an `operator` or `transactionId` must be set");
+					}
+				}
+				else
+				{
+					throw new InvalidOperationException("Transaction ID must be set, or operator must be provided via freezeWith()");
+				}
+			}
+
+			if (NodeAccountIds.Count == 0)
+			{
+				if (client == null)
+					throw new InvalidOperationException("`client` must be provided or both `nodeId` and `transactionId` must be set");
+
+				try
+				{
+					if (BatchKey == null)
+						NodeAccountIds.Operate(_ => client.Network_.GetNodeAccountIdsForExecute());
+					else 
+						NodeAccountIds.Operate(_ => [AccountId.FromString(Transaction.ATOMIC_BATCH_NODE_ACCOUNT_ID)]);
+				}
+				catch (ThreadInterruptedException e)
+				{
+					throw new Exception(string.Empty, e);
+				}
+			}
+
+            FrozenBodyBuilder = SpawnBodyBuilder(client, builder =>
+			{
+				builder.TransactionId = TransactionIds[0].ToProtobuf();
+            });
+
+			OnFreeze(FrozenBodyBuilder);
+
+			int requiredChunks = GetRequiredChunks();
+			
+			GenerateTransactionIds(TransactionIds[0], requiredChunks);
+			WipeTransactionLists(requiredChunks);
+
+			regenerateTransactionId = regenerateTransactionId != null ? regenerateTransactionId : client?.DefaultRegenerateTransactionId;
+
+			// noinspection unchecked
+			return (T)this;
+		}
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.GetRequiredChunks"]' />
+		public virtual int GetRequiredChunks()
+		{
+			return 1;
+		}
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.GetSignatures"]' />
+		public virtual Dictionary<AccountId, Dictionary<PublicKey, byte[]>> GetSignatures()
+		{
+			if (!IsFrozen())
+				throw new InvalidOperationException("Transaction must be frozen in order to have signatures.");
+
+			if (PublicKeys.Count == 0)
+				return [];
+
+			BuildAllTransactions();
+
+			return GetSignaturesAtOffset(0);
+		}
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.GetSignableNodeBodyBytesList"]' />
+		public virtual List<Transaction.SignableNodeTransactionBodyBytes> GetSignableNodeBodyBytesList()
+		{
+			if (!IsFrozen())
+				throw new Exception("Transaction is not frozen");
+
+			List<Transaction.SignableNodeTransactionBodyBytes> signableNodeTransactionBodyBytesList = new();
+
+			for (int i = 0; i < InnerSignedTransactions.Count; i++)
+			{
+				Proto.Services.SignedTransaction signableNodeTransactionBodyBytes = InnerSignedTransactions[i];
+				Proto.Services.TransactionBody body = Transaction.ParseTransactionBody(signableNodeTransactionBodyBytes.BodyBytes);
+				
+				AccountId nodeId = AccountId.FromProtobuf(body.NodeAccountId);
+				TransactionId transactionId = TransactionId.FromProtobuf(body.TransactionId);
+
+				signableNodeTransactionBodyBytesList.Add(new Transaction.SignableNodeTransactionBodyBytes(nodeId, transactionId, signableNodeTransactionBodyBytes.BodyBytes.ToByteArray()));
+			}
+
+			return signableNodeTransactionBodyBytesList;
+		}
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.GetTransactionSize"]' />
+		public virtual int GetTransactionSize()
+		{
+			if (!IsFrozen())
+			{
+				throw new InvalidOperationException("transaction must have been frozen before getting it's size, try calling `freeze`");
+			}
+
+			return MakeRequest().CalculateSize();
+		}
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.GetTransactionBodySize"]' />
+		public virtual int GetTransactionBodySize()
+		{
+			if (!IsFrozen())
+				throw new InvalidOperationException("transaction must have been frozen before getting it's body size, try calling `freeze`");
+
+			return FrozenBodyBuilder?.CalculateSize() ?? 0;
+		}
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.GetTransactionHash"]' />
+		public virtual byte[] GetTransactionHash()
+		{
+			if (!IsFrozen())
+			{
+				throw new InvalidOperationException("transaction must have been frozen before calculating the hash will be stable, try calling `freeze`");
+			}
+
+			TransactionIds.IsLocked = true;
+			NodeAccountIds.IsLocked = true;
+
+			var index = TransactionIds.Index * NodeAccountIds.Count + NodeAccountIds.Index;
+
+			BuildTransaction(index);
+
+			return Transaction.GenerateHash(OuterTransactions[index].SignedTransactionBytes.ToByteArray());
+		}
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.GetTransactionHashPerNode"]' />
+		public virtual Dictionary<AccountId, byte[]> GetTransactionHashPerNode()
+		{
+			if (!IsFrozen())
+			{
+				throw new InvalidOperationException("transaction must have been frozen before calculating the hash will be stable, try calling `freeze`");
+			}
+
+			BuildAllTransactions();
+			var hashes = new Dictionary<AccountId, byte[]>();
+			for (var i = 0; i < OuterTransactions.Count; i++)
+			{
+				hashes.Add(NodeAccountIds[i], Transaction.GenerateHash(OuterTransactions[i].SignedTransactionBytes.ToByteArray()));
+			}
+
+			return hashes;
+		}
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.GenerateTransactionIds(TransactionId,System.Int32)"]' />
+		public virtual void GenerateTransactionIds(TransactionId initialTransactionId, int count)
+		{
+			var locked = TransactionIds.IsLocked;
+
+			TransactionIds.IsLocked = false;
+
+			if (count == 1)
+			{
+				TransactionIds.Operate(_ => [initialTransactionId]);
+				return;
+			}
+
+			var nextTransactionId = initialTransactionId.ToProtobuf();
+			TransactionIds.EnsureCapacity(count);
+			TransactionIds.Clear();
+			for (int i = 0; i < count; i++)
+			{
+				TransactionIds.Operate(_ => _.Add(TransactionId.FromProtobuf(nextTransactionId)));
+
+				// add 1 ns to the validStart to make cascading transaction IDs
+				var nextValidStart = nextTransactionId.TransactionValidStart;
+				nextValidStart.Nanos = nextValidStart.Nanos + 1;
+				nextTransactionId.TransactionValidStart = nextValidStart;
+			}
+
+			TransactionIds.IsLocked = locked;
+		}
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.IsFrozen"]' />
+		public virtual bool IsFrozen()
+		{
+			return FrozenBodyBuilder != null;
+		}
+		public override TransactionResponse MapResponse(Proto.Services.TransactionResponse transactionResponse, AccountId nodeId, Proto.Services.Transaction request)
+		{
+			var transactionId = TransactionIdInternal;
+			var hash = Transaction.GenerateHash(request.SignedTransactionBytes.ToByteArray());
+
+			// advance is needed for chunked transactions
+			TransactionIds.Advance();
+
+			return TransactionResponse.Init(nodeId, transactionId, hash, null, this);
+		}		
+		public override ResponseStatus MapResponseStatus(Proto.Services.TransactionResponse transactionResponse)
+		{
+			return (ResponseStatus)transactionResponse.NodeTransactionPrecheckCode;
+		}
+
+		public virtual Transaction<T> RegenerateTransactionId(Client client)
+		{
+			ArgumentNullException.ThrowIfNull(client.OperatorAccountId);
+			TransactionIds.IsLocked = false;
+			var newTransactionId = TransactionId.Generate(client.OperatorAccountId);
+			TransactionIds[TransactionIds.Index] = newTransactionId;
+			TransactionIds.IsLocked = true;
+			return this;
+		}
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.Schedule"]' />
+		public virtual ScheduleCreateTransaction Schedule(Action<ScheduleCreateTransaction>? onCreate = null)
+		{
+			RequireNotFrozen();
+			if (NodeAccountIds.Count != 0)
+			{
+				throw new InvalidOperationException("The underlying transaction for a scheduled transaction cannot have node account IDs set");
+			}
+
+			var bodyBuilder = SpawnBodyBuilder(null);
+			OnFreeze(bodyBuilder);
+
+			ScheduleCreateTransaction scheduleCreateTransaction = DoSchedule(bodyBuilder);
+			onCreate?.Invoke(scheduleCreateTransaction);
+			return scheduleCreateTransaction;
+		}
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.SignTransaction(System.Int32)"]' />
+		public virtual void SignTransaction(int index)
+        {
+            var bodyBytes = InnerSignedTransactions[index].BodyBytes.ToByteArray();
+            var thisSigPairList = SigPairLists[index].SigPair;
+            for (var i = 0; i < PublicKeys.Count; i++)
+            {
+                if (Signers[i] == null)
+                {
+                    continue;
+                }
+
+                if (Transaction.PublicKeyIsInSigPairList(ByteString.CopyFrom(PublicKeys[i].ToBytesRaw()), thisSigPairList))
+                {
+                    continue;
+                }
+
+                var signatureBytes = Signers[i].Invoke(bodyBytes);
+                SigPairLists[index].SigPair.Add(PublicKeys[i].ToSignaturePairProtobuf(signatureBytes));
+            }
+        }
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.SignWithOperator(Client)"]' />
+		public virtual T SignWithOperator(Client client)
+		{
+			if (client.Operator_ == null)
+				throw new InvalidOperationException("`client` must have an `operator` to sign with the operator");
+
+			if (!IsFrozen())
+				FreezeWith(client);
+
+			return SignWith(client.Operator_.PublicKey, client.Operator_.TransactionSigner);
+		}
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.SignWith(PublicKey,System.Func{System.Byte[],System.Byte[]})"]' />
+		public virtual T SignWith(PublicKey publicKey, Func<byte[], byte[]> transactionSigner)
+		{
+			if (!IsFrozen())
+			{
+				throw new InvalidOperationException("Signing requires transaction to be frozen");
+			}
+
+			if (KeyAlreadySigned(publicKey))
+			{
+
+				// noinspection unchecked
+				return (T)this;
+			}
+
+			for (int i = 0; i < OuterTransactions.Count; i++)
+			{
+				OuterTransactions[i] = null;
+			}
+
+			PublicKeys.Add(publicKey);
+			Signers.Add(transactionSigner);
+
+			// noinspection unchecked
+			return (T)this;
+		}
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.ToBytes"]' />
+		public virtual byte[] ToBytes()
+		{
+			var list = new Proto.SDK.TransactionList();
+
+			// If no nodes have been selected yet,
+			// the new TransactionBody can be used to build a Transaction protobuf object.
+			if (NodeAccountIds.Count == 0)
+			{
+				var bodyBuilder = SpawnBodyBuilder(null);
+				if (TransactionIds.Count != 0)
+				{
+					bodyBuilder.TransactionId = TransactionIds[0].ToProtobuf();
+				}
+
+				OnFreeze(bodyBuilder);
+
+				list.TransactionList_.Add(new Proto.Services.Transaction
+				{
+					SignedTransactionBytes = new Proto.Services.SignedTransaction
+					{
+						BodyBytes = bodyBuilder.ToByteString()
+
+					}.ToByteString()
+				});
+			}
+			else
+			{
+
+				// Generate the SignedTransaction protobuf objects if the Transaction's not frozen.
+				if (!IsFrozen())
+				{
+					FrozenBodyBuilder = SpawnBodyBuilder(null);
+					if (TransactionIds.Count != 0)
+					{
+						FrozenBodyBuilder.TransactionId = TransactionIds[0].ToProtobuf();
+					}
+
+					OnFreeze(FrozenBodyBuilder);
+					int requiredChunks = GetRequiredChunks();
+					if (TransactionIds.Count != 0)
+					{
+						GenerateTransactionIds(TransactionIds[0], requiredChunks);
+					}
+
+					WipeTransactionLists(requiredChunks);
+				}
+
+
+				// Build all the Transaction protobuf objects and add them to the TransactionList protobuf object.
+				BuildAllTransactions();
+
+				foreach (var transaction in OuterTransactions)
+					list.TransactionList_.Add(transaction);
+			}
+
+			return list.ToByteArray();
+		}
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.WipeTransactionLists(System.Int32)"]' />
+		public virtual void WipeTransactionLists(int requiredChunks)
+		{
+			if (TransactionIds.Count != 0)
+				FrozenBodyBuilder.TransactionId = TransactionIdInternal.ToProtobuf();
+
+			OuterTransactions = new List<Proto.Services.Transaction>(NodeAccountIds.Count);
+			SigPairLists = new List<Proto.Services.SignatureMap>(NodeAccountIds.Count);
+			InnerSignedTransactions = new List<Proto.Services.SignedTransaction>(NodeAccountIds.Count);
+
+			foreach (AccountId nodeId in NodeAccountIds)
+			{
+				FrozenBodyBuilder.NodeAccountId = nodeId.ToProtobuf();
+
+				SigPairLists.Add(new Proto.Services.SignatureMap());
+				OuterTransactions.Add(null);
+				InnerSignedTransactions.Add(new Proto.Services.SignedTransaction
+				{
+					BodyBytes = FrozenBodyBuilder.ToByteString()
+				});
+			}
+		}
+
+		public override Method<Proto.Services.Transaction, Proto.Services.TransactionResponse> GetMethod()
+		{
+			MethodDescriptor methoddescriptor = GetMethodDescriptor();
+
+			IMessage input = (IMessage)Activator.CreateInstance(methoddescriptor.InputType.ClrType)!;
+			IMessage output = (IMessage)Activator.CreateInstance(methoddescriptor.OutputType.ClrType)!;
+
+			return new Method<Proto.Services.Transaction, Proto.Services.TransactionResponse>(
+				type: MethodType.Unary,
+				name: methoddescriptor.Name,
+				serviceName: methoddescriptor.Service.FullName,
+				requestMarshaller: Marshallers.Create(r => r.ToByteArray(), data => Proto.Services.Transaction.Parser.ParseFrom(data)),
+				responseMarshaller: Marshallers.Create(r => r.ToByteArray(), data => Proto.Services.TransactionResponse.Parser.ParseFrom(data)));
+		}
+
+		public override ExecutionState GetExecutionState(ResponseStatus status, Proto.Services.TransactionResponse response)
+		{
+			if (status == ResponseStatus.TransactionExpired)
+			{
+				if (regenerateTransactionId ?? false || TransactionIds.IsLocked)
+					return ExecutionState.RequestError;
+				else
+				{
+					var firstTransactionId = TransactionIds[0];
+					var accountId = firstTransactionId.AccountId;
+
+					GenerateTransactionIds(TransactionId.Generate(accountId), TransactionIds.Count);
+					WipeTransactionLists(TransactionIds.Count);
+					
+					return ExecutionState.Retry;
+				}
+			}
+
+			return base.GetExecutionState(status, response);
+		}
+		public override void OnExecute(Client client)
+		{
+			if (!IsFrozen())
+				FreezeWith(client);
+
+			var accountId = TransactionIds[0].AccountId;
+
+			if (client.AutoValidateChecksums)
+				try
+				{
+					accountId.ValidateChecksum(client);
+					ValidateChecksums(client);
+				}
+				catch (BadEntityIdException exc)
+				{
+					throw new ArgumentException(exc.Message);
+				}
+
+			var operatorId = client.OperatorAccountId;
+
+			if (operatorId != null && operatorId.Equals(accountId))
+			{
+				// on execute, sign each transaction with the operator, if present
+				// and we are signing a transaction that used the default transaction ID
+				SignWithOperator(client);
+			}
+		}
+		public override Task OnExecuteAsync(Client client)
+		{
+			OnExecute(client);
+
+			return Task.CompletedTask;
+		}
+		public override Proto.Services.Transaction MakeRequest()
+        {
+            var index = NodeAccountIds.Index + (TransactionIds.Index * NodeAccountIds.Count);
+
+            BuildTransaction(index);
+            return OuterTransactions[index];
+        }
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.SetNodeAccountIds(System.Collections.Generic.IEnumerable{AccountId})"]' />
+		public virtual T SetNodeAccountIds(IEnumerable<AccountId> nodeaccountids)
+		{
+			RequireNotFrozen();
+
+			NodeAccountIds = new (nodeaccountids);
+
+			return (T)this;
+		}
+		public override string ToString()
+		{
+			// NOTE: regex is for removing the instance address from the default debug output
+			Proto.Services.TransactionBody body = SpawnBodyBuilder(null);
+			
+			if (TransactionIds.Count != 0)
+				body.TransactionId = TransactionIds[0].ToProtobuf();
+
+			if (NodeAccountIds.Count != 0)
+				body.NodeAccountId = NodeAccountIds[0].ToProtobuf();
+
+			OnFreeze(body);
+
+			return Regex.Replace(body.ToString(), "@[A-Za-z0-9]+", string.Empty);
+		}
+
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.Batchify(Client,Key)"]' />
+		public T Batchify(Client client, Key batchKey)
+		{
+			RequireNotFrozen();
+			ArgumentNullException.ThrowIfNull(batchKey);
+			this.BatchKey = batchKey;
+			SignWithOperator(client);
+
+			// noinspection unchecked
+			return (T)this;
+		}
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.Sign(PrivateKey)"]' />
+		public T Sign(PrivateKey privateKey)
+		{
+			return SignWith(privateKey.GetPublicKey(), privateKey.Sign);
+		}
+
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.AddSignatureIfNotExists(System.Int32,PublicKey,System.Byte[])"]' />
+		private bool AddSignatureIfNotExists(int index, PublicKey publicKey, byte[] signature)
+		{
+			Proto.Services.SignatureMap sigMapBuilder = SigPairLists[index];
+
+			// Check if the signature is already in the signature map
+			if (IsSignatureAlreadyPresent(sigMapBuilder, publicKey))
+				return false;
+
+			// Add the signature to the signature map
+			Proto.Services.SignaturePair newSigPair = publicKey.ToSignaturePairProtobuf(signature);
+			sigMapBuilder.SigPair.Add(newSigPair);
+
+			return true;
+		}
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.IsSignatureAlreadyPresent(Proto.Services.SignatureMap,PublicKey)"]' />
+		private bool IsSignatureAlreadyPresent(Proto.Services.SignatureMap sigMapBuilder, PublicKey publicKey)
+		{
+			foreach (Proto.Services.SignaturePair sig in sigMapBuilder.SigPair)
+				if (Equals(sig.PubKeyPrefix.ToByteArray(), publicKey.ToBytesRaw()))
+					return true;
+
+			return false;
+		}
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.MatchesTargetTransactionAndNode(Proto.Services.TransactionBody,TransactionId,AccountId)"]' />
+		private bool MatchesTargetTransactionAndNode(Proto.Services.TransactionBody body, TransactionId targetTransactionID, AccountId targetNodeId)
+        {
+            TransactionId bodyTxId = TransactionId.FromProtobuf(body.TransactionId);
+            AccountId bodyNodeId = AccountId.FromProtobuf(body.NodeAccountId);
+
+            return bodyTxId.ToString().Equals(targetTransactionID.ToString()) && bodyNodeId.ToString().Equals(targetNodeId.ToString());
+        }
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.ProcessedSignatureForTransaction(System.Int32,PublicKey,System.Byte[],TransactionId,AccountId)"]' />
+		private bool ProcessedSignatureForTransaction(int index, PublicKey publicKey, byte[] signature, TransactionId transactionID, AccountId nodeId)
+		{
+			Proto.Services.SignedTransaction temp = InnerSignedTransactions[index];
+			Proto.Services.TransactionBody body = Transaction.ParseTransactionBody(temp);
+
+			if (body == null)
+				return false;
+
+			if (!MatchesTargetTransactionAndNode(body, transactionID, nodeId))
+				return false;
+
+			return AddSignatureIfNotExists(index, publicKey, signature);
+		}
+		
+		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.UpdateTransactionState(PublicKey)"]' />
+		private void UpdateTransactionState(PublicKey publicKey)
+        {
+            PublicKeys.Add(publicKey);
+            Signers.Add(null);
+        }
+    }
+}

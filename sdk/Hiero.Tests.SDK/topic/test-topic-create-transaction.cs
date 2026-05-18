@@ -1,0 +1,188 @@
+﻿// SPDX-License-Identifier: Apache-2.0
+using System;
+using System.Collections.Generic;
+
+using Hiero.SDK.Cryptography;
+using Hiero.SDK.Consensus;
+using Hiero.SDK.Cryptocurrency;
+using Hiero.SDK.Transactions;
+using Hiero.SDK.Fee;
+using Hiero.SDK.Token;
+
+using VerifyXunit;
+using Hiero.SDK;
+using Hiero.SDK.Core;
+
+namespace Hiero.Tests.SDK.Topic
+{
+    /// <include file="test-topic-create-transaction.ts.cs.xml" path='docs/member[@name="T:Hiero.Tests.SDK.Topic.TopicCreateTransactionTest"]' />
+    public class TopicCreateTransactionTest
+    {
+        private static readonly PrivateKey unusedPrivateKey = PrivateKey.FromString("302e020100300506032b657004220420db484b828e64b2d8f12ce3c0a0e93a0b8cce7af1bb8f39c97732394482538e10");
+        private readonly DateTimeOffset validStart = DateTimeOffset.FromUnixTimeMilliseconds(1554158542);
+        
+        public virtual void ShouldSerialize()
+        {
+            Verifier.Verify(SpawnTestTransaction().ToString());
+        }
+        [Fact]
+        /// <include file="test-topic-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Topic.TopicCreateTransactionTest.ShouldBytesNoSetters"]' />
+        public virtual void ShouldBytesNoSetters()
+        {
+            var tx = new TopicCreateTransaction();
+            var tx2 = Transaction.FromBytes<TopicCreateTransaction>(tx.ToBytes());
+            Assert.Equal(tx2.ToString(), tx.ToString());
+        }
+
+        private TopicCreateTransaction SpawnTestTransaction()
+        {
+            return new TopicCreateTransaction
+            {
+                NodeAccountIds = new (AccountId.FromString("0.0.5005"), AccountId.FromString("0.0.5006")),
+                TransactionId = TransactionId.WithValidStart(AccountId.FromString("0.0.5006"), validStart),
+                SubmitKey = unusedPrivateKey,
+                AdminKey = unusedPrivateKey,
+                AutoRenewAccountId = AccountId.FromString("0.0.5007"),
+                AutoRenewPeriod = TimeSpan.FromHours(24),
+                MaxTransactionFee = Hbar.FromTinybars(100000),
+                TopicMemo = "hello memo",
+            }
+            .Freeze()
+            .Sign(unusedPrivateKey);
+        }
+        [Fact]
+        /// <include file="test-topic-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Topic.TopicCreateTransactionTest.ShouldBytes"]' />
+        public virtual void ShouldBytes()
+        {
+            var tx = SpawnTestTransaction();
+            var tx2 = Transaction.FromBytes<TopicCreateTransaction>(tx.ToBytes());
+            Assert.Equal(tx2.ToString(), tx.ToString());
+        }
+        [Fact]
+        /// <include file="test-topic-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Topic.TopicCreateTransactionTest.FromScheduledTransaction"]' />
+        public virtual void FromScheduledTransaction()
+        {
+            var transactionBody = new Proto.Services.SchedulableTransactionBody
+            {
+                ConsensusCreateTopic = new Proto.Services.ConsensusCreateTopicTransactionBody()
+            };
+            var tx = Transaction.FromScheduledTransaction(transactionBody);
+            Assert.IsType<TopicCreateTransaction>(tx);
+        }
+        [Fact]
+        /// <include file="test-topic-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Topic.TopicCreateTransactionTest.ShouldSetFeeScheduleKey"]' />
+        public virtual void ShouldSetFeeScheduleKey()
+        {
+            PrivateKey feeScheduleKey = PrivateKey.GenerateECDSA();
+            TopicCreateTransaction topicCreateTransaction = new () { FeeScheduleKey = feeScheduleKey };
+            Assert.Equal(topicCreateTransaction.FeeScheduleKey.ToString(), feeScheduleKey.ToString());
+        }
+        [Fact]
+        /// <include file="test-topic-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Topic.TopicCreateTransactionTest.ShouldSetFeeExemptKeys"]' />
+        public virtual void ShouldSetFeeExemptKeys()
+        {
+            Key feeExemptKey1 = PrivateKey.GenerateECDSA();
+            Key feeExemptKey2 = PrivateKey.GenerateECDSA();
+            List<Key> feeExemptKeys = [feeExemptKey1, feeExemptKey2];
+            TopicCreateTransaction topicCreateTransaction = new () { FeeExemptKeys = feeExemptKeys };
+            List<Key> retrievedKeys = topicCreateTransaction.FeeExemptKeys;
+            for (int i = 0; i < feeExemptKeys.Count; i++)
+            {
+                Assert.Equal(retrievedKeys[i].ToString(), feeExemptKeys[i].ToString());
+            }
+        }
+        [Fact]
+        /// <include file="test-topic-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Topic.TopicCreateTransactionTest.ShouldAddFeeExemptKeyToEmptyList"]' />
+        public virtual void ShouldAddFeeExemptKeyToEmptyList()
+        {
+            TopicCreateTransaction topicCreateTransaction = new ();
+            PrivateKey feeExemptKeyToBeAdded = PrivateKey.GenerateECDSA();
+            topicCreateTransaction.FeeExemptKeys.Operate(_ => _.Add(feeExemptKeyToBeAdded));
+
+            Assert.Equal(topicCreateTransaction.FeeExemptKeys, [feeExemptKeyToBeAdded]);
+        }
+        [Fact]
+        /// <include file="test-topic-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Topic.TopicCreateTransactionTest.ShouldAddFeeExemptKeyToList"]' />
+        public virtual void ShouldAddFeeExemptKeyToList()
+        {
+            PrivateKey feeExemptKey = PrivateKey.GenerateECDSA();
+            TopicCreateTransaction topicCreateTransaction = new () { FeeExemptKeys = feeExemptKey };
+            Key feeExemptKeyToBeAdded = PrivateKey.GenerateECDSA();
+            topicCreateTransaction.FeeExemptKeys.Operate(_ => _.Add(feeExemptKeyToBeAdded));
+
+            Assert.Equal(topicCreateTransaction.FeeExemptKeys, [feeExemptKey, feeExemptKeyToBeAdded]);
+        }
+        [Fact]
+        /// <include file="test-topic-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Topic.TopicCreateTransactionTest.ShouldSetTopicCustomFees"]' />
+        public virtual void ShouldSetTopicCustomFees()
+        {
+            List<CustomFixedFee> customFixedFees =
+            [
+                new CustomFixedFee
+                {
+                    Amount = 1,
+                    DenominatingTokenId = new TokenId(0, 0, 0)
+                },
+                new CustomFixedFee
+                {
+                    Amount = 2,
+                    DenominatingTokenId = new TokenId(0, 0, 1)
+                },
+                new CustomFixedFee
+                {
+                    Amount = 3,
+                    DenominatingTokenId = new TokenId(0, 0, 2)
+                },
+            ];
+            TopicCreateTransaction topicCreateTransaction = new () { CustomFees = customFixedFees };
+            Assert.Equal(topicCreateTransaction.CustomFees, customFixedFees);
+        }
+        [Fact]
+        /// <include file="test-topic-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Topic.TopicCreateTransactionTest.ShouldAddTopicCustomFeeToList"]' />
+        public virtual void ShouldAddTopicCustomFeeToList()
+        {
+            List<CustomFixedFee> customFixedFees =
+            [
+                new CustomFixedFee
+                {
+                    Amount = 1,
+                    DenominatingTokenId = new TokenId(0, 0, 0)
+                },
+                new CustomFixedFee
+                {
+                    Amount = 2,
+                    DenominatingTokenId = new TokenId(0, 0, 1)
+                },
+                new CustomFixedFee
+                {
+                    Amount = 3,
+                    DenominatingTokenId = new TokenId(0, 0, 2)
+                },
+            ];
+
+            CustomFixedFee customFixedFeeToBeAdded = new CustomFixedFee
+            {
+                Amount = 4,
+                DenominatingTokenId = new TokenId(0, 0, 3)
+            };
+            List<CustomFixedFee> expectedCustomFees = [ .. customFixedFees, customFixedFeeToBeAdded];
+            TopicCreateTransaction topicCreateTransaction = new () { CustomFees = customFixedFees };
+            topicCreateTransaction.CustomFees.Operate(_ => _.Add(customFixedFeeToBeAdded));
+            Assert.Equal(topicCreateTransaction.CustomFees, expectedCustomFees);
+        }
+        [Fact]
+        /// <include file="test-topic-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Topic.TopicCreateTransactionTest.ShouldAddTopicCustomFeeToEmptyList"]' />
+        public virtual void ShouldAddTopicCustomFeeToEmptyList()
+        {
+            CustomFixedFee customFixedFeeToBeAdded = new()
+            {
+                Amount = 4,
+                DenominatingTokenId = new TokenId(0, 0, 3)
+            };
+            TopicCreateTransaction topicCreateTransaction = new();
+            topicCreateTransaction.CustomFees.Operate(_ => _.Add(customFixedFeeToBeAdded));
+
+            Assert.Equal(topicCreateTransaction.CustomFees, [customFixedFeeToBeAdded]);
+        }
+    }
+}

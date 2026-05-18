@@ -1,0 +1,8 @@
+<docs>
+  <member name="T:Hiero.Tests.Integration.AccountRecordsIntegrationTest">
+    <summary>TODO: Describe AccountRecordsIntegrationTest.</summary>
+  </member>
+  <member name="M:Hiero.Tests.Integration.AccountRecordsIntegrationTest.CanQueryAccountRecords">
+    <summary>TODO: Describe CanQueryAccountRecords.</summary>
+  </member>
+</docs>

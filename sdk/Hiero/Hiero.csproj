@@ -23,9 +23,21 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+			<_Parameter1>Hiero.SDK</_Parameter1>
+		</AssemblyAttribute>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+			<_Parameter1>Hiero.Tests.SDK</_Parameter1>
+		</AssemblyAttribute>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+			<_Parameter1>Hiero.Tests.Integration</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Google.Protobuf" Version="3.34.1" />
 	</ItemGroup>
-		
+
 	<ItemGroup>
 		<None Remove="Resources\AddressBook\mainnet.pb" />
 		<None Remove="Resources\AddressBook\previewnet.pb" />

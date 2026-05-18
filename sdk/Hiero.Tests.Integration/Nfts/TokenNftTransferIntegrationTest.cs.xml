@@ -1,0 +1,11 @@
+<docs>
+  <member name="T:Hiero.Tests.Integration.TokenNftTransferIntegrationTest">
+    <summary>TODO: Describe TokenNftTransferIntegrationTest.</summary>
+  </member>
+  <member name="M:Hiero.Tests.Integration.TokenNftTransferIntegrationTest.CanTransferNfts">
+    <summary>TODO: Describe CanTransferNfts.</summary>
+  </member>
+  <member name="M:Hiero.Tests.Integration.TokenNftTransferIntegrationTest.CannotTransferUnownedNfts">
+    <summary>TODO: Describe CannotTransferUnownedNfts.</summary>
+  </member>
+</docs>

@@ -1,0 +1,128 @@
+﻿// SPDX-License-Identifier: Apache-2.0
+using System;
+
+using Hiero.SDK;
+using Hiero.SDK.Token;
+using Hiero.SDK.Cryptocurrency;
+using Hiero.SDK.Transactions;
+using Hiero.SDK.Cryptography;
+
+using VerifyXunit;
+using Hiero.SDK.Core;
+
+namespace Hiero.Tests.SDK.Token
+{
+    /// <include file="test-token-grant-kyc-transaction.ts.cs.xml" path='docs/member[@name="T:Hiero.Tests.SDK.Token.TokenGrantKycTransactionTest"]' />
+    public class TokenGrantKycTransactionTest
+    {
+        private static readonly PrivateKey unusedPrivateKey = PrivateKey.FromString("302e020100300506032b657004220420db484b828e64b2d8f12ce3c0a0e93a0b8cce7af1bb8f39c97732394482538e10");
+        private static readonly TokenId testTokenId = TokenId.FromString("4.2.0");
+        private static readonly AccountId testAccountId = AccountId.FromString("6.9.0");
+        private readonly DateTimeOffset validStart = DateTimeOffset.FromUnixTimeMilliseconds(1554158542);
+
+        public virtual void ShouldSerialize()
+        {
+            Verifier.Verify(SpawnTestTransaction().ToString());
+        }
+
+        private TokenGrantKycTransaction SpawnTestTransaction()
+        {
+            return new TokenGrantKycTransaction
+            {
+				NodeAccountIds = new (AccountId.FromString("0.0.5005"), AccountId.FromString("0.0.5006")),
+				TransactionId = TransactionId.WithValidStart(AccountId.FromString("0.0.5006"), validStart),
+				AccountId = testAccountId,
+				TokenId = testTokenId,
+				MaxTransactionFee = new Hbar(1),
+			}
+            .Freeze()
+            .Sign(unusedPrivateKey);
+        }
+        [Fact]
+        /// <include file="test-token-grant-kyc-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Token.TokenGrantKycTransactionTest.ShouldBytes"]' />
+        public virtual void ShouldBytes()
+        {
+            var tx = SpawnTestTransaction();
+            var tx2 = Transaction.FromBytes<TokenGrantKycTransaction>(tx.ToBytes());
+
+            Assert.Equal(tx2.ToString(), tx.ToString());
+        }
+        [Fact]
+        /// <include file="test-token-grant-kyc-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Token.TokenGrantKycTransactionTest.ShouldBytesNoSetters"]' />
+        public virtual void ShouldBytesNoSetters()
+        {
+            var tx = new TokenGrantKycTransaction();
+            var tx2 = Transaction.FromBytes<TokenGrantKycTransaction>(tx.ToBytes());
+
+            Assert.Equal(tx2.ToString(), tx.ToString());
+        }
+        [Fact]
+        /// <include file="test-token-grant-kyc-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Token.TokenGrantKycTransactionTest.FromScheduledTransaction"]' />
+        public virtual void FromScheduledTransaction()
+        {
+            var transactionBody = new Proto.Services.SchedulableTransactionBody
+            {
+                TokenGrantKyc = new Proto.Services.TokenGrantKycTransactionBody()
+            };
+            
+            var tx = Transaction.FromScheduledTransaction<TokenGrantKycTransaction>(transactionBody);
+
+            Assert.IsType<TokenGrantKycTransaction>(tx);
+        }
+        [Fact]
+        /// <include file="test-token-grant-kyc-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Token.TokenGrantKycTransactionTest.ConstructTokenGrantKycTransactionFromTransactionBodyProtobuf"]' />
+        public virtual void ConstructTokenGrantKycTransactionFromTransactionBodyProtobuf()
+        {
+            var transactionBody = new Proto.Services.TokenGrantKycTransactionBody
+            {
+				Account = testAccountId.ToProtobuf(),
+				Token = testTokenId.ToProtobuf(),
+			};
+            var tx = new Proto.Services.TransactionBody
+            {
+				TokenGrantKyc = transactionBody
+			};
+            var tokenGrantKycTransaction = new TokenGrantKycTransaction(tx);
+            
+            Assert.Equal(tokenGrantKycTransaction.TokenId, testTokenId);
+        }
+        [Fact]
+        /// <include file="test-token-grant-kyc-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Token.TokenGrantKycTransactionTest.GetSetAccountId"]' />
+        public virtual void GetSetAccountId()
+        {
+            var tokenGrantKycTransaction = new TokenGrantKycTransaction
+            {
+				AccountId = testAccountId
+			};
+            
+            Assert.Equal(tokenGrantKycTransaction.AccountId, testAccountId);
+        }
+        [Fact]
+        /// <include file="test-token-grant-kyc-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Token.TokenGrantKycTransactionTest.GetSetAccountIdFrozen"]' />
+        public virtual void GetSetAccountIdFrozen()
+        {
+            var tx = SpawnTestTransaction();
+            
+            Assert.Throws<InvalidOperationException>(() => tx.AccountId = testAccountId);
+        }
+        [Fact]
+        /// <include file="test-token-grant-kyc-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Token.TokenGrantKycTransactionTest.GetSetTokenId"]' />
+        public virtual void GetSetTokenId()
+        {
+            var tokenGrantKycTransaction = new TokenGrantKycTransaction
+            {
+				TokenId = testTokenId
+			};
+
+            Assert.Equal(tokenGrantKycTransaction.TokenId, testTokenId);
+        }
+        [Fact]
+        /// <include file="test-token-grant-kyc-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Token.TokenGrantKycTransactionTest.GetSetTokenIdFrozen"]' />
+        public virtual void GetSetTokenIdFrozen()
+        {
+            var tx = SpawnTestTransaction();
+
+            Assert.Throws<InvalidOperationException>(() => tx.TokenId = testTokenId);
+        }
+    }
+}

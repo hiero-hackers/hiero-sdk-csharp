@@ -1,0 +1,164 @@
+﻿// SPDX-License-Identifier: Apache-2.0
+using Hiero.SDK.Exceptions;
+using Hiero.SDK.Token;
+using Hiero.SDK.Cryptocurrency;
+using Hiero.SDK;
+using Hiero.SDK.Cryptography;
+
+namespace Hiero.Tests.Integration.Token
+{
+    /// <include file="TokenFreezeIntegrationTest.cs.xml" path='docs/member[@name="T:Hiero.Tests.Integration.TokenFreezeIntegrationTest"]' />
+    public class TokenFreezeIntegrationTest
+    {
+        [Fact]
+        /// <include file="TokenFreezeIntegrationTest.cs.xml" path='docs/member[@name="M:Hiero.Tests.Integration.TokenFreezeIntegrationTest.CanFreezeAccountWithToken"]' />
+        public virtual void CanFreezeAccountWithToken()
+        {
+            using (var testEnv = new IntegrationTestEnv(1).UseThrowawayAccount())
+            {
+                var key = PrivateKey.GenerateED25519();
+                var response = new AccountCreateTransaction
+                {
+					Key = key,
+					InitialBalance = new Hbar(1),
+
+				}.Execute(testEnv.Client);
+                var accountId = response.GetReceipt(testEnv.Client).AccountId;
+                var tokenId = new TokenCreateTransaction
+                {
+					TokenName = "ffff",
+					TokenSymbol = "F",
+					Decimals = 3,
+					InitialSupply = 1000000,
+					TreasuryAccountId = testEnv.OperatorId,
+					AdminKey = testEnv.OperatorKey,
+					FreezeKey = testEnv.OperatorKey,
+					WipeKey = testEnv.OperatorKey,
+					KycKey = testEnv.OperatorKey,
+					SupplyKey = testEnv.OperatorKey,
+					FreezeDefault = false,
+
+				}.Execute(testEnv.Client).GetReceipt(testEnv.Client).TokenId;
+                
+                new TokenAssociateTransaction
+                {
+					AccountId = accountId,
+					TokenIds = [tokenId],
+
+				}.FreezeWith(testEnv.Client).Sign(key).Execute(testEnv.Client).GetReceipt(testEnv.Client);
+
+                new TokenFreezeTransaction
+                {
+					AccountId = accountId,
+					TokenId = tokenId,
+
+				}.FreezeWith(testEnv.Client).Sign(key).Execute(testEnv.Client).GetReceipt(testEnv.Client);
+            }
+        }
+        [Fact]
+        /// <include file="TokenFreezeIntegrationTest.cs.xml" path='docs/member[@name="M:Hiero.Tests.Integration.TokenFreezeIntegrationTest.CannotFreezeAccountOnTokenWhenTokenIDIsNotSet"]' />
+        public virtual void CannotFreezeAccountOnTokenWhenTokenIDIsNotSet()
+        {
+            using (var testEnv = new IntegrationTestEnv(1).UseThrowawayAccount())
+            {
+                var key = PrivateKey.GenerateED25519();
+                var response = new AccountCreateTransaction
+                {
+					Key = key,
+					InitialBalance = new Hbar(1),
+
+				}.Execute(testEnv.Client);
+                var accountId = response.GetReceipt(testEnv.Client).AccountId;
+
+                PrecheckStatusException exception = Assert.Throws<PrecheckStatusException>(() =>
+                {
+                    new TokenFreezeTransaction
+                    {
+						AccountId = accountId,
+
+					}.FreezeWith(testEnv.Client).Sign(key).Execute(testEnv.Client).GetReceipt(testEnv.Client);
+
+                }); Assert.Contains(ResponseStatus.InvalidTokenId.ToString(), exception.Message);
+            }
+        }
+        [Fact]
+        /// <include file="TokenFreezeIntegrationTest.cs.xml" path='docs/member[@name="M:Hiero.Tests.Integration.TokenFreezeIntegrationTest.CannotFreezeAccountOnTokenWhenAccountIDIsNotSet"]' />
+        public virtual void CannotFreezeAccountOnTokenWhenAccountIDIsNotSet()
+        {
+            using (var testEnv = new IntegrationTestEnv(1).UseThrowawayAccount())
+            {
+                var key = PrivateKey.GenerateED25519();
+                var response = new TokenCreateTransaction
+                {
+					TokenName = "ffff",
+					TokenSymbol = "F",
+					Decimals = 3,
+					InitialSupply = 1000000,
+					TreasuryAccountId = testEnv.OperatorId,
+					AdminKey = testEnv.OperatorKey,
+					FreezeKey = testEnv.OperatorKey,
+					WipeKey = testEnv.OperatorKey,
+					KycKey = testEnv.OperatorKey,
+					SupplyKey = testEnv.OperatorKey,
+					FreezeDefault = false,
+
+				}.Execute(testEnv.Client);
+                var tokenId = response.GetReceipt(testEnv.Client).TokenId;
+                PrecheckStatusException exception = Assert.Throws<PrecheckStatusException>(() =>
+                {
+                    new TokenFreezeTransaction
+                    {
+						TokenId = tokenId
+
+					}.FreezeWith(testEnv.Client).Sign(key).Execute(testEnv.Client).GetReceipt(testEnv.Client);
+
+                }); Assert.Contains(ResponseStatus.InvalidAccountId.ToString(), exception.Message);
+            }
+        }
+        [Fact]
+        /// <include file="TokenFreezeIntegrationTest.cs.xml" path='docs/member[@name="M:Hiero.Tests.Integration.TokenFreezeIntegrationTest.CannotFreezeAccountOnTokenWhenAccountWasNotAssociatedWith"]' />
+        public virtual void CannotFreezeAccountOnTokenWhenAccountWasNotAssociatedWith()
+        {
+            using (var testEnv = new IntegrationTestEnv(1).UseThrowawayAccount())
+            {
+                var key = PrivateKey.GenerateED25519();
+                var response = new AccountCreateTransaction
+                {
+					Key = key,
+					InitialBalance = new Hbar(1),
+
+				}.Execute(testEnv.Client);
+                var accountId = response.GetReceipt(testEnv.Client).AccountId;
+                var tokenId = new TokenCreateTransaction
+                {
+					TokenName = "ffff",
+					TokenSymbol = "F",
+					Decimals = 3,
+					InitialSupply = 1000000,
+					TreasuryAccountId = testEnv.OperatorId,
+					AdminKey = testEnv.OperatorKey,
+					FreezeKey = testEnv.OperatorKey,
+					WipeKey = testEnv.OperatorKey,
+					KycKey = testEnv.OperatorKey,
+					SupplyKey = testEnv.OperatorKey,
+					FreezeDefault = false,
+
+				}.Execute(testEnv.Client).GetReceipt(testEnv.Client).TokenId;
+
+                ReceiptStatusException exception = Assert.Throws<ReceiptStatusException>(() =>
+                {
+                    new TokenFreezeTransaction
+                    {
+						AccountId = accountId,
+						TokenId = tokenId,
+					}
+                    .FreezeWith(testEnv.Client)
+                    .Sign(key)
+                    .Execute(testEnv.Client)
+                    .GetReceipt(testEnv.Client);
+
+                }); Assert.Contains(ResponseStatus.TokenNotAssociatedToAccount.ToString(), exception.Message);
+            }
+        }
+    }
+}

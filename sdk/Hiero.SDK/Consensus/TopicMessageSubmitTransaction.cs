@@ -1,0 +1,130 @@
+// SPDX-License-Identifier: Apache-2.0
+using Google.Protobuf;
+using Google.Protobuf.Reflection;
+using Hiero.SDK.Core;
+using Hiero.SDK.Cryptocurrency;
+using Hiero.SDK.Fee;
+using Hiero.SDK.Transactions;
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Hiero.SDK.Consensus
+{
+    /// <include file="TopicMessageSubmitTransaction.cs.xml" path='docs/member[@name="T:TopicMessageSubmitTransaction"]' />
+    public sealed class TopicMessageSubmitTransaction : ChunkedTransaction<TopicMessageSubmitTransaction>
+    {
+		/// <include file="TopicMessageSubmitTransaction.cs.xml" path='docs/member[@name="M:TopicMessageSubmitTransaction.#ctor"]' />
+		public TopicMessageSubmitTransaction() { }
+		/// <include file="TopicMessageSubmitTransaction.cs.xml" path='docs/member[@name="M:TopicMessageSubmitTransaction.#ctor(Proto.Services.TransactionBody)"]' />
+		internal TopicMessageSubmitTransaction(Proto.Services.TransactionBody txBody) : base(txBody)
+		{
+			InitFromTransactionBody();
+		}
+		/// <include file="TopicMessageSubmitTransaction.cs.xml" path='docs/member[@name="M:TopicMessageSubmitTransaction.#ctor(DictionaryLinked{TransactionId,DictionaryLinked{AccountId,Proto.Services.Transaction}})"]' />
+		internal TopicMessageSubmitTransaction(DictionaryLinked<TransactionId, DictionaryLinked<AccountId, Proto.Services.Transaction>> txs) : base(txs)
+        {
+            InitFromTransactionBody();
+        }
+
+        /// <include file="TopicMessageSubmitTransaction.cs.xml" path='docs/member[@name="M:TopicMessageSubmitTransaction.RequireNotFrozen"]' />
+        public TopicId? TopicId
+        {
+            get; set { RequireNotFrozen(); field = value; }
+        }
+        /// <include file="TopicMessageSubmitTransaction.cs.xml" path='docs/member[@name="M:TopicMessageSubmitTransaction.RequireNotFrozen_2"]' />
+        public ByteString Message
+        {
+            get; set { RequireNotFrozen(); field = value; }
+
+        } = ByteString.Empty;
+		/// <include file="TopicMessageSubmitTransaction.cs.xml" path='docs/member[@name="M:TopicMessageSubmitTransaction.InitFromTransactionBody"]' />
+		public ListGuarded<CustomFeeLimit> CustomFeeLimits
+		{
+			init; get => field ??= new ListGuarded<CustomFeeLimit>
+			{
+				OnRequireNotFrozen = RequireNotFrozen
+			};
+		}
+
+		/// <include file="TopicMessageSubmitTransaction.cs.xml" path='docs/member[@name="M:TopicMessageSubmitTransaction.InitFromTransactionBody_2"]' />
+		void InitFromTransactionBody()
+        {
+            var body = SourceTransactionBody.ConsensusSubmitMessage;
+
+            if (body.TopicId is not null)
+				TopicId = TopicId.FromProtobuf(body.TopicId);
+
+			if (InnerSignedTransactions.Count != 0)
+            {
+                try
+                {
+                    for (var i = 0; i < InnerSignedTransactions.Count; i += NodeAccountIds.Count == 0 ? 1 : NodeAccountIds.Count)
+                    {
+						Data = Data.Concat(Proto.Services.TransactionBody.Parser.ParseFrom(InnerSignedTransactions[i].BodyBytes).ConsensusSubmitMessage.Message);
+                    }
+                }
+                catch (InvalidProtocolBufferException exc)
+                {
+                    throw new ArgumentException(exc.Message);
+                }
+            }
+            else
+            {
+				Data = body.Message;
+            }
+        }
+
+        /// <include file="TopicMessageSubmitTransaction.cs.xml" path='docs/member[@name="M:TopicMessageSubmitTransaction.ToProtobuf"]' />
+        public Proto.Services.ConsensusSubmitMessageTransactionBody ToProtobuf()
+        {
+            var builder = new Proto.Services.ConsensusSubmitMessageTransactionBody();
+
+            if (TopicId != null)
+				builder.TopicId = TopicId.ToProtobuf();
+
+			builder.Message = Data;
+            return builder;
+        }
+
+        public override void ValidateChecksums(Client client)
+        {
+            TopicId?.ValidateChecksum(client);
+        }
+        public override void OnFreeze(Proto.Services.TransactionBody bodyBuilder)
+        {
+            bodyBuilder.ConsensusSubmitMessage = ToProtobuf();
+        }
+		public override void OnScheduled(Proto.Services.SchedulableTransactionBody scheduled)
+		{
+			scheduled.ConsensusSubmitMessage = ToProtobuf();
+			scheduled.ConsensusSubmitMessage.Message = Data;
+		}
+        public override void OnFreezeChunk(Proto.Services.TransactionBody body, Proto.Services.TransactionID? initialTransactionId, int startIndex, int endIndex, int chunk, int total)
+        {
+            if (total == 1)
+            {
+                body.ConsensusSubmitMessage = ToProtobuf();
+                body.ConsensusSubmitMessage.Message = Data.Copy(startIndex, endIndex);
+            }
+            else
+            {
+                body.ConsensusSubmitMessage = ToProtobuf();
+				body.ConsensusSubmitMessage.Message = Data.Copy(startIndex, endIndex);
+                body.ConsensusSubmitMessage.ChunkInfo = new Proto.Services.ConsensusMessageChunkInfo
+                {
+					InitialTransactionId = initialTransactionId,
+					Number = chunk + 1,
+					Total = total,
+				};
+            }
+        }
+		public override MethodDescriptor GetMethodDescriptor()
+		{
+			string methodname = nameof(Proto.Services.ConsensusService.ConsensusServiceClient.submitMessage);
+
+			return Proto.Services.ConsensusService.Descriptor.FindMethodByName(methodname);
+		}
+    }
+}

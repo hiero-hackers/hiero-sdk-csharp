@@ -1,0 +1,139 @@
+﻿// SPDX-License-Identifier: Apache-2.0
+using Hiero.SDK.Transactions;
+using Hiero.SDK.Cryptography;
+using Hiero.SDK.Cryptocurrency;
+
+using System.Threading;
+using Hiero.SDK;
+using Hiero.SDK.Core;
+
+namespace Hiero.Tests.Integration.Account
+{
+    /// <include file="AccountIdPopulationIntegrationTest.cs.xml" path='docs/member[@name="T:Hiero.Tests.Integration.AccountIdPopulationIntegrationTest"]' />
+    public class AccountIdPopulationIntegrationTest
+    {
+        [Fact]
+        /// <include file="AccountIdPopulationIntegrationTest.cs.xml" path='docs/member[@name="M:Hiero.Tests.Integration.AccountIdPopulationIntegrationTest.CanPopulateAccountIdNumSync"]' />
+        public virtual void CanPopulateAccountIdNumSync()
+        {
+            using (var testEnv = new IntegrationTestEnv(1))
+            {
+                var privateKey = PrivateKey.GenerateECDSA();
+                var publicKey = privateKey.GetPublicKey();
+                var evmAddress = publicKey.ToEvmAddress();
+                var evmAddressAccount = AccountId.FromEvmAddress(evmAddress, 0, 0);
+                var tx = new TransferTransaction()
+                    .AddHbarTransfer(evmAddressAccount, new Hbar(1))
+                    .AddHbarTransfer(testEnv.OperatorId, new Hbar(-1))
+                    .Execute(testEnv.Client);
+
+                var receipt = new TransactionReceiptQuery
+                { 
+                    TransactionId = tx.TransactionId,
+                    IncludeChildren = true
+
+                }.Execute(testEnv.Client);
+
+				var newAccountId = receipt.Children[0].AccountId;
+				var idMirror = AccountId.FromEvmAddress(evmAddress, 0, 0);
+                
+                Thread.Sleep(5000);
+
+                var accountId = idMirror.PopulateAccountNum(testEnv.Client);
+                Assert.Equal(newAccountId.Num, accountId.Num);
+            }
+        }
+        [Fact]
+        /// <include file="AccountIdPopulationIntegrationTest.cs.xml" path='docs/member[@name="M:Hiero.Tests.Integration.AccountIdPopulationIntegrationTest.CanPopulateAccountIdNumAsync"]' />
+        public virtual void CanPopulateAccountIdNumAsync()
+        {
+            using (var testEnv = new IntegrationTestEnv(1))
+            {
+                var privateKey = PrivateKey.GenerateECDSA();
+                var publicKey = privateKey.GetPublicKey();
+                var evmAddress = publicKey.ToEvmAddress();
+                var evmAddressAccount = AccountId.FromEvmAddress(evmAddress, 0, 0);
+                var tx = new TransferTransaction()
+                    .AddHbarTransfer(evmAddressAccount, new Hbar(1))
+                    .AddHbarTransfer(testEnv.OperatorId, new Hbar(-1))
+                    .Execute(testEnv.Client);
+
+                var receipt = new TransactionReceiptQuery
+                { 
+                    TransactionId = tx.TransactionId,
+                    IncludeChildren = true
+                }
+                .Execute(testEnv.Client)
+                .ValidateStatus(true);
+
+				var newAccountId = receipt.Children[0].AccountId;
+				var idMirror = AccountId.FromEvmAddress(evmAddress, 0, 0);
+                
+                Thread.Sleep(5000);
+
+                var accountId = idMirror.PopulateAccountNumAsync(testEnv.Client).GetAwaiter().GetResult();
+                Assert.Equal(newAccountId.Num, accountId.Num);
+            }
+        }
+        [Fact]
+        /// <include file="AccountIdPopulationIntegrationTest.cs.xml" path='docs/member[@name="M:Hiero.Tests.Integration.AccountIdPopulationIntegrationTest.CanPopulateAccountIdEvmAddressSync"]' />
+        public virtual void CanPopulateAccountIdEvmAddressSync()
+        {
+            using (var testEnv = new IntegrationTestEnv(1))
+            {
+                var privateKey = PrivateKey.GenerateECDSA();
+                var publicKey = privateKey.GetPublicKey();
+                var evmAddress = publicKey.ToEvmAddress();
+                var evmAddressAccount = AccountId.FromEvmAddress(evmAddress, 0, 0);
+                var tx = new TransferTransaction()
+                    .AddHbarTransfer(evmAddressAccount, new Hbar(1))
+                    .AddHbarTransfer(testEnv.OperatorId, new Hbar(-1))
+                    .Execute(testEnv.Client);
+
+                var receipt = new TransactionReceiptQuery
+                { 
+                    TransactionId = tx.TransactionId,
+                    IncludeChildren = true
+
+                }.Execute(testEnv.Client);
+
+                var newAccountId = receipt.Children[0].AccountId;
+                
+                Thread.Sleep(5000);
+
+                var accountId = newAccountId.PopulateAccountEvmAddress(testEnv.Client);
+                Assert.Equal(evmAddressAccount.EvmAddress, accountId.EvmAddress);
+            }
+        }
+        [Fact]
+        /// <include file="AccountIdPopulationIntegrationTest.cs.xml" path='docs/member[@name="M:Hiero.Tests.Integration.AccountIdPopulationIntegrationTest.CanPopulateAccountIdEvmAddressAsync"]' />
+        public virtual void CanPopulateAccountIdEvmAddressAsync()
+        {
+            using (var testEnv = new IntegrationTestEnv(1))
+            {
+                var privateKey = PrivateKey.GenerateECDSA();
+                var publicKey = privateKey.GetPublicKey();
+                var evmAddress = publicKey.ToEvmAddress();
+                var evmAddressAccount = AccountId.FromEvmAddress(evmAddress, 0, 0);
+                var tx = new TransferTransaction()
+                    .AddHbarTransfer(evmAddressAccount, new Hbar(1))
+                    .AddHbarTransfer(testEnv.OperatorId, new Hbar(-1))
+                    .Execute(testEnv.Client);
+
+                var receipt = new TransactionReceiptQuery
+                {
+                    TransactionId = tx.TransactionId,
+                    IncludeChildren = true
+
+                }.Execute(testEnv.Client);
+				
+                var newAccountId = receipt.Children[0].AccountId;
+				
+                Thread.Sleep(5000);
+
+                var accountId = newAccountId.PopulateAccountEvmAddressAsync(testEnv.Client).GetAwaiter().GetResult();
+                Assert.Equal(evmAddressAccount.EvmAddress, accountId.EvmAddress);
+            }
+        }
+    }
+}

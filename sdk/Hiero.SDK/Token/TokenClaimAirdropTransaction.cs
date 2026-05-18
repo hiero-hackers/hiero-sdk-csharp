@@ -1,0 +1,71 @@
+// SPDX-License-Identifier: Apache-2.0
+using Google.Protobuf.Reflection;
+
+using Hiero.SDK.Cryptocurrency;
+using Hiero.SDK.Airdrops;
+
+using System.Collections.Generic;
+using Hiero.SDK.Core;
+
+namespace Hiero.SDK.Token
+{
+    /// <include file="TokenClaimAirdropTransaction.cs.xml" path='docs/member[@name="T:TokenClaimAirdropTransaction"]' />
+    public class TokenClaimAirdropTransaction : PendingAirdropLogic<TokenClaimAirdropTransaction>
+    {
+        /// <include file="TokenClaimAirdropTransaction.cs.xml" path='docs/member[@name="M:TokenClaimAirdropTransaction.#ctor"]' />
+        public TokenClaimAirdropTransaction()
+        {
+            DefaultMaxTransactionFee = Hbar.From(1);
+        }
+		/// <include file="TokenClaimAirdropTransaction.cs.xml" path='docs/member[@name="M:TokenClaimAirdropTransaction.#ctor(Proto.Services.TransactionBody)"]' />
+		internal TokenClaimAirdropTransaction(Proto.Services.TransactionBody txBody) : base(txBody)
+		{
+			InitFromTransactionBody();
+		}
+		/// <include file="TokenClaimAirdropTransaction.cs.xml" path='docs/member[@name="M:TokenClaimAirdropTransaction.#ctor(DictionaryLinked{TransactionId,DictionaryLinked{AccountId,Proto.Services.Transaction}})"]' />
+		internal TokenClaimAirdropTransaction(DictionaryLinked<TransactionId, DictionaryLinked<AccountId, Proto.Services.Transaction>> txs) : base(txs)
+        {
+            InitFromTransactionBody();
+        }
+
+        /// <include file="TokenClaimAirdropTransaction.cs.xml" path='docs/member[@name="M:TokenClaimAirdropTransaction.ToProtobuf"]' />
+        public virtual Proto.Services.TokenClaimAirdropTransactionBody ToProtobuf()
+        {
+            var builder = new Proto.Services.TokenClaimAirdropTransactionBody();
+
+            foreach (var pendingAirdropId in PendingAirdropIds)
+            {
+                builder.PendingAirdrops.Add(pendingAirdropId.ToProtobuf());
+            }
+
+            return builder;
+        }
+
+        /// <include file="TokenClaimAirdropTransaction.cs.xml" path='docs/member[@name="M:TokenClaimAirdropTransaction.InitFromTransactionBody"]' />
+        private void InitFromTransactionBody()
+        {
+            var body = SourceTransactionBody.TokenClaimAirdrop;
+
+            foreach (var pendingAirdropId in body.PendingAirdrops)
+            {
+                PendingAirdropIds.Operate(_ => _.Add(PendingAirdropId.FromProtobuf(pendingAirdropId)));
+            }
+        }
+
+        public override MethodDescriptor GetMethodDescriptor()
+        {
+            string methodname = nameof(Proto.Services.TokenService.TokenServiceClient.claimAirdrop);
+			
+            return Proto.Services.TokenService.Descriptor.FindMethodByName(methodname);
+		}
+
+        public override void OnFreeze(Proto.Services.TransactionBody bodyBuilder)
+        {
+            bodyBuilder.TokenClaimAirdrop = ToProtobuf();
+        }
+        public override void OnScheduled(Proto.Services.SchedulableTransactionBody scheduled)
+        {
+            scheduled.TokenClaimAirdrop = ToProtobuf();
+        }
+    }
+}

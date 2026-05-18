@@ -1,0 +1,8 @@
+<docs>
+  <member name="T:Hiero.Tests.SDK.Transactions.TransactionReceiptTest">
+    <summary>TODO: Describe TransactionReceiptTest.</summary>
+  </member>
+  <member name="M:Hiero.Tests.SDK.Transactions.TransactionReceiptTest.ShouldSerialize">
+    <summary>TODO: Describe ShouldSerialize.</summary>
+  </member>
+</docs>

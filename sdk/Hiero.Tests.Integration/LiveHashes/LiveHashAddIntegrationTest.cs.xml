@@ -1,0 +1,8 @@
+<docs>
+  <member name="T:Hiero.Tests.Integration.LiveHashAddIntegrationTest">
+    <summary>TODO: Describe LiveHashAddIntegrationTest.</summary>
+  </member>
+  <member name="M:Hiero.Tests.Integration.LiveHashAddIntegrationTest.CannotCreateLiveHashBecauseItsNotSupported">
+    <summary>TODO: Describe CannotCreateLiveHashBecauseItsNotSupported.</summary>
+  </member>
+</docs>

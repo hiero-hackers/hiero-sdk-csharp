@@ -1,0 +1,59 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<LangVersion>14</LangVersion>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<IsPackable>false</IsPackable>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Remove="_resources\addressbook\mainnet.pb" />
+	  <None Remove="_resources\addressbook\previewnet.pb" />
+	  <None Remove="_resources\addressbook\testnet.pb" />
+	  <None Remove="_resources\client-config-with-operator.json" />
+	  <None Remove="_resources\client-config-with-shard-realm.json" />
+	  <None Remove="_resources\client-config.json" />
+	  <None Remove="_resources\test-keystore.bin" />
+	  <None Remove="_resources\test-keystore2.bin" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="_resources\client-config-with-operator.json" />
+	  <EmbeddedResource Include="_resources\client-config-with-shard-realm.json" />
+	  <EmbeddedResource Include="_resources\client-config.json" />
+	  <EmbeddedResource Include="_resources\test-keystore.bin" />
+	  <EmbeddedResource Include="_resources\test-keystore2.bin" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="coverlet.collector" Version="8.0.1">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.3.0" />
+		<PackageReference Include="Moq" Version="4.20.72" />
+		<PackageReference Include="Verify.XunitV3" Version="31.14.0" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="3.1.5">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="xunit.v3" Version="3.2.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Hiero.SDK\Hiero.SDK.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Resource Include="_resources\addressbook\mainnet.pb" />
+	  <Resource Include="_resources\addressbook\previewnet.pb" />
+	  <Resource Include="_resources\addressbook\testnet.pb" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Using Include="Xunit" />
+	</ItemGroup>
+
+</Project>

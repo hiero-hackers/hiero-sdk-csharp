@@ -1,0 +1,8 @@
+<docs>
+  <member name="T:Hiero.Tests.Integration.ContractNonceInfoIntegrationTest">
+    <summary>TODO: Describe ContractNonceInfoIntegrationTest.</summary>
+  </member>
+  <member name="M:Hiero.Tests.Integration.ContractNonceInfoIntegrationTest.CanIncrementNonceThroughContractConstructor">
+    <summary>TODO: Describe CanIncrementNonceThroughContractConstructor.</summary>
+  </member>
+</docs>

@@ -1,0 +1,17 @@
+<docs>
+  <member name="T:Hiero.Tests.Integration.ContractExecuteIntegrationTest">
+    <summary>TODO: Describe ContractExecuteIntegrationTest.</summary>
+  </member>
+  <member name="M:Hiero.Tests.Integration.ContractExecuteIntegrationTest.CanExecuteContractMethods">
+    <summary>TODO: Describe CanExecuteContractMethods.</summary>
+  </member>
+  <member name="M:Hiero.Tests.Integration.ContractExecuteIntegrationTest.CannotExecuteContractWhenContractIDIsNotSet">
+    <summary>TODO: Describe CannotExecuteContractWhenContractIDIsNotSet.</summary>
+  </member>
+  <member name="M:Hiero.Tests.Integration.ContractExecuteIntegrationTest.CannotExecuteContractWhenContractFunctionParametersAreNotSet">
+    <summary>TODO: Describe CannotExecuteContractWhenContractFunctionParametersAreNotSet.</summary>
+  </member>
+  <member name="M:Hiero.Tests.Integration.ContractExecuteIntegrationTest.CannotExecuteContractWhenGasIsNotSet">
+    <summary>TODO: Describe CannotExecuteContractWhenGasIsNotSet.</summary>
+  </member>
+</docs>

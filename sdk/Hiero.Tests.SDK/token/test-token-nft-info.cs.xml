@@ -1,0 +1,11 @@
+<docs>
+  <member name="T:Hiero.Tests.SDK.Nfts.TokenNftInfoTest">
+    <summary>TODO: Describe TokenNftInfoTest.</summary>
+  </member>
+  <member name="M:Hiero.Tests.SDK.Nfts.TokenNftInfoTest.ShouldSerialize">
+    <summary>TODO: Describe ShouldSerialize.</summary>
+  </member>
+  <member name="M:Hiero.Tests.SDK.Nfts.TokenNftInfoTest.ShouldSerializeNullSpender">
+    <summary>TODO: Describe ShouldSerializeNullSpender.</summary>
+  </member>
+</docs>

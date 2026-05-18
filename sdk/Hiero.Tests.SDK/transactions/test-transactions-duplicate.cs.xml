@@ -1,0 +1,8 @@
+<docs>
+  <member name="T:Hiero.Tests.SDK.Transactions.DuplicateTransactionTest">
+    <summary>TODO: Describe DuplicateTransactionTest.</summary>
+  </member>
+  <member name="M:Hiero.Tests.SDK.Transactions.DuplicateTransactionTest.GenerateTransactionIds">
+    <summary>TODO: Describe GenerateTransactionIds.</summary>
+  </member>
+</docs>

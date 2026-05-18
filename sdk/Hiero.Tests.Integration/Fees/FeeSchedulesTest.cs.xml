@@ -1,0 +1,8 @@
+<docs>
+  <member name="T:Hiero.Tests.Integration.FeeSchedulesTest">
+    <summary>TODO: Describe FeeSchedulesTest.</summary>
+  </member>
+  <member name="M:Hiero.Tests.Integration.FeeSchedulesTest.CanFetchFeeSchedules">
+    <summary>TODO: Describe CanFetchFeeSchedules.</summary>
+  </member>
+</docs>

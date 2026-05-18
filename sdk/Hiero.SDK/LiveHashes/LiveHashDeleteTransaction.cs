@@ -1,0 +1,79 @@
+// SPDX-License-Identifier: Apache-2.0
+using Google.Protobuf;
+using Google.Protobuf.Reflection;
+using Hiero.SDK.Core;
+using Hiero.SDK.Cryptocurrency;
+
+using System;
+using System.Collections.Generic;
+
+namespace Hiero.SDK.LiveHashes
+{
+    /// <include file="LiveHashDeleteTransaction.cs.xml" path='docs/member[@name="M:Obsolete(&quot;Obsolete&quot;)"]' />
+    [Obsolete("Obsolete")]
+    public sealed class LiveHashDeleteTransaction : Transaction<LiveHashDeleteTransaction>
+    {
+        /// <include file="LiveHashDeleteTransaction.cs.xml" path='docs/member[@name="M:LiveHashDeleteTransaction"]' />
+        public LiveHashDeleteTransaction() { }
+        /// <include file="LiveHashDeleteTransaction.cs.xml" path='docs/member[@name="M:LiveHashDeleteTransaction(DictionaryLinked{TransactionId,DictionaryLinked{AccountId,Proto.Services.Transaction}})"]' />
+        internal LiveHashDeleteTransaction(DictionaryLinked<TransactionId, DictionaryLinked<AccountId, Proto.Services.Transaction>> txs) : base(txs)
+        {
+            InitFromTransactionBody();
+        }
+
+        /// <include file="LiveHashDeleteTransaction.cs.xml" path='docs/member[@name="M:RequireNotFrozen"]' />
+        public AccountId? AccountId { get; set { RequireNotFrozen(); field = value; } }
+		/// <include file="LiveHashDeleteTransaction.cs.xml" path='docs/member[@name="M:RequireNotFrozen_2"]' />
+		public byte[] Hash { get; set { RequireNotFrozen(); field = value.CopyArray(); } } = [];
+        /// <include file="LiveHashDeleteTransaction.cs.xml" path='docs/member[@name="M:InitFromTransactionBody"]' />
+        void InitFromTransactionBody()
+        {
+            var body = SourceTransactionBody.CryptoDeleteLiveHash;
+            if (body.AccountOfLiveHash is not null)
+            {
+                AccountId = AccountId.FromProtobuf(body.AccountOfLiveHash);
+            }
+
+            Hash = body.LiveHashToDelete.ToByteArray();
+        }
+
+		/// <include file="LiveHashDeleteTransaction.cs.xml" path='docs/member[@name="M:ToProtobuf"]' />
+		public Proto.Services.CryptoDeleteLiveHashTransactionBody ToProtobuf()
+        {
+            var builder = new Proto.Services.CryptoDeleteLiveHashTransactionBody();
+
+            if (AccountId != null)
+            {
+                builder.AccountOfLiveHash = AccountId.ToProtobuf();
+            }
+
+            builder.LiveHashToDelete = ByteString.CopyFrom(Hash);
+
+            return builder;
+        }
+
+        public override void ValidateChecksums(Client client)
+        {
+            if (AccountId != null)
+            {
+                AccountId.ValidateChecksum(client);
+            }
+        }
+
+		public override MethodDescriptor GetMethodDescriptor()
+		{
+			string methodname = nameof(Proto.Services.CryptoService.CryptoServiceClient.deleteLiveHash);
+
+			return Proto.Services.CryptoService.Descriptor.FindMethodByName(methodname);
+		}
+		public override void OnFreeze(Proto.Services.TransactionBody bodyBuilder)
+        {
+
+            bodyBuilder.CryptoDeleteLiveHash = ToProtobuf();
+        }
+        public override void OnScheduled(Proto.Services.SchedulableTransactionBody scheduled)
+        {
+            throw new NotSupportedException("Cannot schedule LiveHashDeleteTransaction");
+        }
+    }
+}

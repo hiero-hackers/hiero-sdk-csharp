@@ -1,0 +1,8 @@
+<docs>
+  <member name="T:Hiero.Tests.SDK.Token.TokenInfoQueryTest">
+    <summary>TODO: Describe TokenInfoQueryTest.</summary>
+  </member>
+  <member name="M:Hiero.Tests.SDK.Token.TokenInfoQueryTest.GetSetTokenId">
+    <summary>TODO: Describe GetSetTokenId.</summary>
+  </member>
+</docs>

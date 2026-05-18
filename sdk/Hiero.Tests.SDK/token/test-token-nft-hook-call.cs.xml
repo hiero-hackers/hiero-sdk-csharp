@@ -1,0 +1,11 @@
+<docs>
+  <member name="T:Hiero.Tests.SDK.Nfts.NftHookCallTest">
+    <summary>TODO: Describe NftHookCallTest.</summary>
+  </member>
+  <member name="M:Hiero.Tests.SDK.Nfts.NftHookCallTest.ConstructorWithNumericIdAndType">
+    <summary>TODO: Describe ConstructorWithNumericIdAndType.</summary>
+  </member>
+  <member name="M:Hiero.Tests.SDK.Nfts.NftHookCallTest.NftTransferSerializesSenderAndReceiverHooksByType">
+    <summary>TODO: Describe NftTransferSerializesSenderAndReceiverHooksByType.</summary>
+  </member>
+</docs>

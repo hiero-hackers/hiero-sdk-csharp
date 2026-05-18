@@ -1,5 +1,8 @@
 <Solution>
   <Project Path="forks.hashgraph.hedera-sdk-reference/Hiero.Reference.csproj" />
-  <Project Path="Hiero.SDK/Hiero.SDK.csproj" Id="ed90d9ef-66ca-44f0-87a2-3aaec1b1fa2f" />
+  <Project Path="forks.hiero-ledger.hiero-consensus-node/Hiero.Proto.csproj" />
+  <Project Path="Hiero.SDK/Hiero.SDK.csproj" />
+  <Project Path="Hiero.Tests.Integration/Hiero.Tests.Integration.csproj" />
+  <Project Path="Hiero.Tests.SDK/Hiero.Tests.SDK.csproj" />
   <Project Path="Hiero/Hiero.csproj" Id="36f754ee-b88a-4fe8-a2ec-c31cd4c73492" />
 </Solution>

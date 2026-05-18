@@ -1,0 +1,128 @@
+// SPDX-License-Identifier: Apache-2.0
+using Google.Protobuf;
+
+using Hiero.SDK.Ethereum;
+
+using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Math.EC.Rfc8032;
+
+using System;
+using System.IO;
+
+namespace Hiero.SDK.Cryptography
+{
+    /// <include file="PublicKeyED25519.cs.xml" path='docs/member[@name="T:PublicKeyED25519"]' />
+    public class PublicKeyED25519 : PublicKey
+    {
+        private readonly byte[] KeyData;
+
+        /// <include file="PublicKeyED25519.cs.xml" path='docs/member[@name="M:PublicKeyED25519.#ctor(System.Byte[])"]' />
+        private PublicKeyED25519(byte[] keyData)
+        {
+            KeyData = keyData;
+        }
+
+        /// <include file="PublicKeyED25519.cs.xml" path='docs/member[@name="M:PublicKeyED25519.FromBytesInternal(System.Byte[])"]' />
+        public static PublicKeyED25519 FromBytesInternal(byte[] publicKey)
+        {
+            if (publicKey.Length == Ed25519.PublicKeySize)
+            {
+                // Validate the key if it's not all zero public key, see HIP-540
+                if (!Equals(publicKey, new byte[32]))
+					// Will throw if the key is invalid
+					new Ed25519PublicKeyParameters(publicKey, 0);
+
+
+				// If this is a 32 byte string, assume an Ed25519 public key
+				return new PublicKeyED25519(publicKey);
+            }
+
+
+            // Assume a DER-encoded public key descriptor
+            return FromSubjectKeyInfoInternal(SubjectPublicKeyInfo.GetInstance(publicKey));
+        }
+        /// <include file="PublicKeyED25519.cs.xml" path='docs/member[@name="M:PublicKeyED25519.FromSubjectKeyInfoInternal(SubjectPublicKeyInfo)"]' />
+        public static PublicKeyED25519 FromSubjectKeyInfoInternal(SubjectPublicKeyInfo subjectPublicKeyInfo)
+        {
+            return new PublicKeyED25519(subjectPublicKeyInfo.PublicKey.GetBytes());
+        }
+		
+		public override bool IsECDSA()
+		{
+			return false;
+		}
+		public override bool IsED25519()
+		{
+			return true;
+		}
+		public override byte[] ToBytes()
+        {
+            return ToBytesRaw();
+        }
+        public override byte[] ToBytesRaw()
+        {
+            return KeyData;
+        }
+		public override byte[] ToBytesDER()
+		{
+			try
+			{
+				return new SubjectPublicKeyInfo(new AlgorithmIdentifier(ID_ED25519), KeyData)
+                    .GetEncoded("DER");
+			}
+			catch (IOException e)
+			{
+				throw new Exception(string.Empty, e);
+			}
+		}
+		public override EvmAddress ToEvmAddress()
+        {
+            throw new InvalidOperationException("unsupported operation on Ed25519PublicKey");
+        }
+		public override Proto.Services.Key ToProtobufKey()
+		{
+			return new Proto.Services.Key
+			{
+				Ed25519 = ByteString.CopyFrom(KeyData)
+			};
+		}
+		public override Proto.Services.SignaturePair ToSignaturePairProtobuf(byte[] signature)
+		{
+			return new Proto.Services.SignaturePair
+			{
+				PubKeyPrefix = ByteString.CopyFrom(KeyData),
+				Ed25519 = ByteString.CopyFrom(signature),
+			};
+		}
+
+		public override int GetHashCode()
+		{
+			return HashCode.Combine(KeyData);
+		}
+		public override bool Equals(object? o)
+		{
+			if (this == o)
+			{
+				return true;
+			}
+
+			if (o == null || GetType() != o?.GetType())
+			{
+				return false;
+			}
+
+			PublicKeyED25519 publicKey = (PublicKeyED25519)o;
+
+			return Equals(KeyData, publicKey.KeyData);
+		}
+		public override bool Verify(byte[] message, byte[] signature)
+		{
+			return Ed25519.Verify(signature, 0, KeyData, 0, message, 0, message.Length);
+		}
+		public override ByteString ExtractSignatureFromProtobuf(Proto.Services.SignaturePair pair)
+		{
+			return pair.Ed25519;
+		}
+	}
+}

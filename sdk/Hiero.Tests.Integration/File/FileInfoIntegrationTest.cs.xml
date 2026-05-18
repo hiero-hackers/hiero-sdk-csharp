@@ -1,0 +1,20 @@
+<docs>
+  <member name="T:Hiero.Tests.Integration.FileInfoIntegrationTest">
+    <summary>TODO: Describe FileInfoIntegrationTest.</summary>
+  </member>
+  <member name="M:Hiero.Tests.Integration.FileInfoIntegrationTest.CanQueryFileInfo">
+    <summary>TODO: Describe CanQueryFileInfo.</summary>
+  </member>
+  <member name="M:Hiero.Tests.Integration.FileInfoIntegrationTest.CanQueryFileInfoWithNoAdminKeyOrContents">
+    <summary>TODO: Describe CanQueryFileInfoWithNoAdminKeyOrContents.</summary>
+  </member>
+  <member name="M:Hiero.Tests.Integration.FileInfoIntegrationTest.GetCostBigMaxQueryFileInfo">
+    <summary>TODO: Describe GetCostBigMaxQueryFileInfo.</summary>
+  </member>
+  <member name="M:Hiero.Tests.Integration.FileInfoIntegrationTest.GetCostSmallMaxQueryFileInfo">
+    <summary>TODO: Describe GetCostSmallMaxQueryFileInfo.</summary>
+  </member>
+  <member name="M:Hiero.Tests.Integration.FileInfoIntegrationTest.GetCostInsufficientTxFeeQueryFileInfo">
+    <summary>TODO: Describe GetCostInsufficientTxFeeQueryFileInfo.</summary>
+  </member>
+</docs>
