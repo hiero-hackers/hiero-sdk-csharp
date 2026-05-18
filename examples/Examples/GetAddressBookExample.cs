@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: Apache-2.0
-using Hedera.Hashgraph.SDK;
-using Hedera.Hashgraph.SDK.File;
-using Hedera.Hashgraph.SDK.Networking;
+using Hiero.SDK;
+using Hiero.SDK.File;
+using Hiero.SDK.Networking;
 
 using System;
 
-namespace Hedera.Hashgraph.Examples
+namespace Hiero.Examples
 {
     /// <summary>
     /// How to get the network address book and then inspect node public keys, etc.

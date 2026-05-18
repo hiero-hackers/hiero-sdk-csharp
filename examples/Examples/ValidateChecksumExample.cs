@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: Apache-2.0
-using Hedera.Hashgraph.SDK;
-using Hedera.Hashgraph.SDK.Cryptocurrency;
-using Hedera.Hashgraph.SDK.Cryptography;
-using Hedera.Hashgraph.SDK.Exceptions;
-using Hedera.Hashgraph.SDK.Logging;
+using Hiero.SDK;
+using Hiero.SDK.Cryptocurrency;
+using Hiero.SDK.Cryptography;
+using Hiero.SDK.Exceptions;
+using Hiero.SDK.Logging;
 
 using System;
 
-namespace Hedera.Hashgraph.Examples
+namespace Hiero.Examples
 {
     public class ValidateChecksumExample
     {

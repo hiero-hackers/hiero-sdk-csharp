@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: Apache-2.0
 using Google.Protobuf;
 
-using Hedera.Hashgraph.SDK;
-using Hedera.Hashgraph.SDK.Core;
-using Hedera.Hashgraph.SDK.Cryptocurrency;
-using Hedera.Hashgraph.SDK.Cryptography;
-using Hedera.Hashgraph.SDK.File;
+using Hiero.SDK;
+using Hiero.SDK.Core;
+using Hiero.SDK.Cryptocurrency;
+using Hiero.SDK.Cryptography;
+using Hiero.SDK.File;
 
 using System;
 using System.Text;
 
-namespace Hedera.Hashgraph.Examples
+namespace Hiero.Examples
 {
     /// <summary>
     /// How to append to already created file.

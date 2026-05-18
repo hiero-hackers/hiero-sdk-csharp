@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: Apache-2.0
 using Google.Protobuf;
 
-using Hedera.Hashgraph.SDK;
-using Hedera.Hashgraph.SDK.Consensus;
-using Hedera.Hashgraph.SDK.Cryptocurrency;
-using Hedera.Hashgraph.SDK.Cryptography;
-using Hedera.Hashgraph.SDK.Transactions;
+using Hiero.SDK;
+using Hiero.SDK.Consensus;
+using Hiero.SDK.Cryptocurrency;
+using Hiero.SDK.Cryptography;
+using Hiero.SDK.Transactions;
 
 using System;
 using System.Text;
 using System.Threading;
 
-namespace Hedera.Hashgraph.Examples
+namespace Hiero.Examples
 {
     /// <summary>
     /// How to send large message to the private HCS topic and how to subscribe to the topic to receive it.

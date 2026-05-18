@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: Apache-2.0
-using Hedera.Hashgraph.SDK;
-using Hedera.Hashgraph.SDK.Core;
-using Hedera.Hashgraph.SDK.Cryptocurrency;
-using Hedera.Hashgraph.SDK.Cryptography;
-using Hedera.Hashgraph.SDK.Schedule;
-using Hedera.Hashgraph.SDK.Transactions;
+using Hiero.SDK;
+using Hiero.SDK.Core;
+using Hiero.SDK.Cryptocurrency;
+using Hiero.SDK.Cryptography;
+using Hiero.SDK.Schedule;
+using Hiero.SDK.Transactions;
 using System;
 
-namespace Hedera.Hashgraph.Examples
+namespace Hiero.Examples
 {
     /// <summary>
     /// How to schedule a transaction with a multi-sig account with a threshold.

@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: Apache-2.0
-using Hedera.Hashgraph.SDK;
-using Hedera.Hashgraph.SDK.Core;
-using Hedera.Hashgraph.SDK.Cryptocurrency;
-using Hedera.Hashgraph.SDK.Cryptography;
-using Hedera.Hashgraph.SDK.Logging;
-using Hedera.Hashgraph.SDK.Transactions;
+using Hiero.SDK;
+using Hiero.SDK.Core;
+using Hiero.SDK.Cryptocurrency;
+using Hiero.SDK.Cryptography;
+using Hiero.SDK.Logging;
+using Hiero.SDK.Transactions;
 using System;
 using System.Linq;
 
-namespace Hedera.Hashgraph.Examples
+namespace Hiero.Examples
 {
     /// <summary>
     /// How to transfer Hbar to an account with the receiver signature enabled.

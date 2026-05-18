@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: Apache-2.0
-using Hedera.Hashgraph.SDK.Cryptography;
-using Hedera.Hashgraph.SDK.Ethereum;
+using Hiero.SDK.Cryptography;
+using Hiero.SDK.Ethereum;
 
 using System;
 
-namespace Hedera.Hashgraph.Examples
+namespace Hiero.Examples
 {
     public class GenerateKeyExample
     {

@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: Apache-2.0
 using Google.Protobuf;
 
-using Hedera.Hashgraph.SDK;
-using Hedera.Hashgraph.SDK.Core;
-using Hedera.Hashgraph.SDK.Consensus;
-using Hedera.Hashgraph.SDK.Cryptocurrency;
-using Hedera.Hashgraph.SDK.Cryptography;
+using Hiero.SDK;
+using Hiero.SDK.Core;
+using Hiero.SDK.Consensus;
+using Hiero.SDK.Cryptocurrency;
+using Hiero.SDK.Cryptography;
 
 using System;
 
-namespace Hedera.Hashgraph.Examples
+namespace Hiero.Examples
 {
     /// <summary>
     /// How to create a public HCS topic and submit a message to it.

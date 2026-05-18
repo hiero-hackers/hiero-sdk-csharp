@@ -10,10 +10,10 @@
 	</PropertyGroup>
 	
 	<ItemGroup>
-		<PackageReference Include="Hiero" Version="0.0.0" />
-		<PackageReference Include="Hiero.Proto" Version="0.0.0" />
-		<PackageReference Include="Hiero.Reference" Version="0.0.0" />
-		<PackageReference Include="Hiero.SDK" Version="0.0.0" />
+		<PackageReference Include="Hiero" Version="*" />
+		<PackageReference Include="Hiero.Proto" Version="*" />
+		<PackageReference Include="Hiero.Reference" Version="*" />
+		<PackageReference Include="Hiero.SDK" Version="*" />
 	</ItemGroup>
 
 </Project>

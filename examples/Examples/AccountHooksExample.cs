@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: Apache-2.0
-using Hedera.Hashgraph.SDK;
-using Hedera.Hashgraph.SDK.Core;
-using Hedera.Hashgraph.SDK.Contract;
-using Hedera.Hashgraph.SDK.Cryptocurrency;
-using Hedera.Hashgraph.SDK.Cryptography;
-using Hedera.Hashgraph.SDK.File;
-using Hedera.Hashgraph.SDK.Hook;
+using Hiero.SDK;
+using Hiero.SDK.Core;
+using Hiero.SDK.Contract;
+using Hiero.SDK.Cryptocurrency;
+using Hiero.SDK.Cryptography;
+using Hiero.SDK.File;
+using Hiero.SDK.Hook;
 
 using System;
 using System.Text;
 
-namespace Hedera.Hashgraph.Examples
+namespace Hiero.Examples
 {
     public class AccountHooksExample
     {

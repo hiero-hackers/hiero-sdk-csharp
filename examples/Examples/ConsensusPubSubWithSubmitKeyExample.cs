@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: Apache-2.0
 using Google.Protobuf;
 
-using Hedera.Hashgraph.SDK;
-using Hedera.Hashgraph.SDK.Core;
-using Hedera.Hashgraph.SDK.Consensus;
-using Hedera.Hashgraph.SDK.Cryptocurrency;
-using Hedera.Hashgraph.SDK.Cryptography;
+using Hiero.SDK;
+using Hiero.SDK.Core;
+using Hiero.SDK.Consensus;
+using Hiero.SDK.Cryptocurrency;
+using Hiero.SDK.Cryptography;
 
 using System;
 using System.Text;
 using System.Threading;
 
-namespace Hedera.Hashgraph.Examples
+namespace Hiero.Examples
 {
     public class ConsensusPubSubWithSubmitKeyExample
     {
