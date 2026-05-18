@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="forks.hashgraph.hedera-sdk-reference/Hiero.Reference.csproj" />
+  <Project Path="Hiero.SDK/Hiero.SDK.csproj" Id="ed90d9ef-66ca-44f0-87a2-3aaec1b1fa2f" />
+  <Project Path="Hiero/Hiero.csproj" Id="36f754ee-b88a-4fe8-a2ec-c31cd4c73492" />
+</Solution>

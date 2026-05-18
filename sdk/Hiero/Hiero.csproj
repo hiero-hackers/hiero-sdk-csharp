@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<LangVersion>14</LangVersion>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<Authors>Hiero Hackers</Authors>
+		<Copyright>Copyright © $(Authors) $([System.DateTime]::Now.ToString('yyyy'))</Copyright>
+		<Description>Unofficial SDK base for the Hedera Hashgraph network</Description>
+		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+		<IncludeSymbols>False</IncludeSymbols>
+		<PackageId>Hiero</PackageId>
+		<PackageOutputPath>../../sdk-package</PackageOutputPath>
+		<PackageReleaseNotes>Unofficial and to be used for internal purposes</PackageReleaseNotes>
+		<PackageTags>hiero;ledger;c#;hedera;hashgraph;sdk</PackageTags>
+		<RepositoryUrl>https://github.com/hiero-hackers/hiero-sdk-csharp</RepositoryUrl>
+		<Title>$(AssemblyName)</Title>
+		<Version>0.0.0</Version>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Google.Protobuf" Version="3.34.1" />
+	</ItemGroup>
+		
+	<ItemGroup>
+		<None Remove="Resources\AddressBook\mainnet.pb" />
+		<None Remove="Resources\AddressBook\previewnet.pb" />
+		<None Remove="Resources\AddressBook\testnet.pb" />
+		<None Remove="Resources\bip39-english.txt" />
+		<None Remove="Resources\legacy-english.txt" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="Resources\AddressBook\mainnet.pb" />
+		<EmbeddedResource Include="Resources\AddressBook\previewnet.pb" />
+		<EmbeddedResource Include="Resources\AddressBook\testnet.pb" />
+		<EmbeddedResource Include="Resources\bip39-english.txt" />
+		<EmbeddedResource Include="Resources\legacy-english.txt" />
+	</ItemGroup>
+
+</Project>
