@@ -1,15 +1,14 @@
 // SPDX-License-Identifier: Apache-2.0
 using Google.Protobuf;
 using Google.Protobuf.Reflection;
-
+using Hiero.SDK.Core;
 using Hiero.SDK.Cryptocurrency;
-using Hiero.SDK.Fee;
 using Hiero.SDK.Cryptography;
+using Hiero.SDK.Fee;
 using Hiero.SDK.Transactions;
-
 using System;
 using System.Collections.Generic;
-using Hiero.SDK.Core;
+using System.Xml.Linq;
 
 namespace Hiero.SDK.Token
 {
@@ -171,17 +170,25 @@ namespace Hiero.SDK.Token
         {
             var builder = new Proto.Services.TokenCreateTransactionBody
 			{
-				Name = TokenName,
-				Symbol = TokenSymbol,
 				Decimals = Decimals,
 				InitialSupply = InitialSupply,
 				FreezeDefault = FreezeDefault,
-				Memo = TokenMemo,
 				TokenType = (Proto.Services.TokenType)TokenType,
 				SupplyType = (Proto.Services.TokenSupplyType)TokenSupplyType,
 				MaxSupply = MaxSupply,
-				Metadata = ByteString.CopyFrom(TokenMetadata),
 			};
+
+            if (TokenName != null)
+                builder.Name = TokenName;
+
+            if (TokenSymbol != null)
+                builder.Symbol = TokenSymbol;
+
+            if (TokenMemo != null)
+                builder.Memo = TokenMemo;
+
+			if (TokenMetadata != null)
+				builder.Metadata = ByteString.CopyFrom(TokenMetadata);
 
             if (TreasuryAccountId != null)
 				builder.Treasury = TreasuryAccountId.ToProtobuf();

@@ -35,7 +35,8 @@ namespace Hiero.SDK.Consensus
         {
             var body = SourceTransactionBody.ConsensusDeleteTopic;
 
-			TopicId = TopicId.FromProtobuf(body.TopicId);
+            if (body.TopicId is not null)
+			    TopicId = TopicId.FromProtobuf(body.TopicId);
 		}
 
         /// <include file="TopicDeleteTransaction.cs.xml" path='docs/member[@name="M:TopicDeleteTransaction.ToProtobuf"]' />

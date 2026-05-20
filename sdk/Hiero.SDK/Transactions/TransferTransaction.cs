@@ -49,8 +49,9 @@ namespace Hiero.SDK.Transactions
 		{
 			var body = SourceTransactionBody.CryptoTransfer;
 
-			foreach (var transfer in body.Transfers.AccountAmounts)
-				hbarTransfers.Add(HbarTransfer.FromProtobuf(transfer));
+            if (body.Transfers is not null)
+			    foreach (var transfer in body.Transfers.AccountAmounts)
+				    hbarTransfers.Add(HbarTransfer.FromProtobuf(transfer));
 
 			foreach (var tokenTransferList in body.TokenTransfers)
 			{

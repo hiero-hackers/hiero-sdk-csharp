@@ -43,13 +43,13 @@ namespace Hiero.SDK.Consensus
 		/// <include file="TopicUpdateTransaction.cs.xml" path='docs/member[@name="M:TopicUpdateTransaction.RequireNotFrozen_3"]' />
 		public Key? AdminKey 
         { 
-            get; 
+            get => field ?? new KeyList(); 
             set { RequireNotFrozen(); field = value; } 
         }
 		/// <include file="TopicUpdateTransaction.cs.xml" path='docs/member[@name="M:TopicUpdateTransaction.RequireNotFrozen_4"]' />
 		public Key? SubmitKey 
         { 
-            get; 
+            get => field ?? new KeyList(); 
             set { RequireNotFrozen(); field = value; } 
         }
         /// <include file="TopicUpdateTransaction.cs.xml" path='docs/member[@name="M:TopicUpdateTransaction.AutoRenewPeriod"]' />
@@ -61,7 +61,7 @@ namespace Hiero.SDK.Consensus
 		/// <include file="TopicUpdateTransaction.cs.xml" path='docs/member[@name="M:TopicUpdateTransaction.RequireNotFrozen_5"]' />
 		public AccountId? AutoRenewAccountId 
         { 
-            get; 
+            get => field ?? new AccountId(0, 0, 0); 
             set { RequireNotFrozen(); field = value; } 
         }
         /// <include file="TopicUpdateTransaction.cs.xml" path='docs/member[@name="M:TopicUpdateTransaction.RequireNotFrozen_6"]' />

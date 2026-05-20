@@ -18,14 +18,14 @@ namespace Hiero.Tests.SDK.Token
 
         public virtual void ToProtobuf()
         {
-            //Verifier.Verify((Proto.TokenSupplyType)tokenSupplyTypeInfinite, (Proto.TokenSupplyType)tokenSupplyTypeFinite);
+            //Verifier.Verify((Proto.Services.TokenSupplyType)tokenSupplyTypeInfinite, (Proto.Services.TokenSupplyType)tokenSupplyTypeFinite);
         }
         [Fact]
         /// <include file="test-token-type-supply.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Token.TokenSupplyTypeTest.TokenSupplyTestToString"]' />
         public virtual void TokenSupplyTestToString()
         {
-            Assert.Equal(TokenSupplyType.Infinite.ToString(), "INFINITE");
-            Assert.Equal(TokenSupplyType.Finite.ToString(), "FINITE");
+            Assert.Equal("INFINITE", TokenSupplyType.Infinite.ToString());
+            Assert.Equal("FINITE", TokenSupplyType.Finite.ToString());
         }
     }
 }

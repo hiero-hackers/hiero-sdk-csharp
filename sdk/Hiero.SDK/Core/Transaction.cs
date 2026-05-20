@@ -37,6 +37,9 @@ namespace Hiero.SDK.Core
             TransactionValidDuration = Transaction.DEFAULT_TRANSACTION_VALID_DURATION;
             SourceTransactionBody = new Proto.Services.TransactionBody();
             TransactionIds = [];
+            OuterTransactions = [];
+            InnerSignedTransactions = [];
+            SigPairLists = [];
         }
 		
 		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.#ctor(Proto.Services.TransactionBody)"]' />
@@ -47,13 +50,19 @@ namespace Hiero.SDK.Core
 			TransactionMemo = txBody.Memo;
 			SourceTransactionBody = txBody;
             TransactionIds = [];
+			OuterTransactions = [];
+			InnerSignedTransactions = [];
+			SigPairLists = [];
         }
 		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.#ctor(DictionaryLinked{TransactionId,DictionaryLinked{AccountId,Proto.Services.Transaction}})"]' />
 		internal Transaction(DictionaryLinked<TransactionId, DictionaryLinked<AccountId, Proto.Services.Transaction>> txs)
         {
 			TransactionIds = [];
+			OuterTransactions = [];
+			InnerSignedTransactions = [];
+			SigPairLists = [];
 
-			DictionaryLinked<AccountId, Proto.Services.Transaction> transactionMap = txs.First().Value;
+            DictionaryLinked<AccountId, Proto.Services.Transaction> transactionMap = txs.First().Value;
 
             if (transactionMap.Count != 0 && transactionMap.Keys.First().Equals(Transaction.DUMMY_ACCOUNT_ID) && BatchKey != null)
             {
@@ -942,10 +951,10 @@ namespace Hiero.SDK.Core
 		private bool IsSignatureAlreadyPresent(Proto.Services.SignatureMap sigMapBuilder, PublicKey publicKey)
 		{
 			foreach (Proto.Services.SignaturePair sig in sigMapBuilder.SigPair)
-				if (Equals(sig.PubKeyPrefix.ToByteArray(), publicKey.ToBytesRaw()))
-					return true;
+                if (sig.PubKeyPrefix.ToByteArray().SequenceEqual(publicKey.ToBytesRaw()))
+                    return true;
 
-			return false;
+            return false;
 		}
 		
 		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.MatchesTargetTransactionAndNode(Proto.Services.TransactionBody,TransactionId,AccountId)"]' />

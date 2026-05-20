@@ -280,7 +280,7 @@ namespace Hiero.Tests.SDK.Node
 			// gossip endpoint should now carry IP and no domain
 			Assert.Equal(rewritten.Address, serviceIp);
             Assert.Empty(rewritten.DomainName);
-            Assert.Equal(rewritten.Port, 50211);
+            Assert.Equal(50211, rewritten.Port);
         }
 		[Fact]
         /// <include file="test-node-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeCreateTransactionTest.BuildDoesNotRewriteGossipWhenIpPresent"]' />

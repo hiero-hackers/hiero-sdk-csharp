@@ -41,9 +41,7 @@ namespace Hiero.SDK.Cryptography
                 Proto.Services.Key.KeyOneofCase.ThresholdKey => KeyList.FromProtobuf(key.ThresholdKey.Keys, key.ThresholdKey.Threshold),
                 Proto.Services.Key.KeyOneofCase.ContractId => ContractId.FromProtobuf(key.ContractId),
                 Proto.Services.Key.KeyOneofCase.DelegatableContractId => DelegateContractId.FromProtobuf(key.DelegatableContractId),
-                Proto.Services.Key.KeyOneofCase.None or 
-                Proto.Services.Key.KeyOneofCase.RSA3072 or 
-                Proto.Services.Key.KeyOneofCase.ECDSA384 => null,
+                Proto.Services.Key.KeyOneofCase.None => null,
 
                 _ => throw new InvalidOperationException("Key#fromProtobuf: unhandled key case: " + key.KeyCase),
             };

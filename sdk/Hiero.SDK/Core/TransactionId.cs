@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
 using Google.Protobuf;
+
 using Hiero.SDK.Cryptocurrency;
 using Hiero.SDK.Exceptions;
-using Hiero.SDK.Transactions;
+
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,7 +30,6 @@ namespace Hiero.SDK.Core
 			// or if multiple threads attempt to generate a timestamp concurrently.
 			do
 			{
-
 				// Get the current time in nanoseconds and remove a few seconds to allow for some time drift
 				// between the client and the receiving node and prevented spurious INVALID_TRANSACTION_START.
 				currentTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() * NANOSECONDS_PER_MILLISECOND - NANOSECONDS_TO_REMOVE;
@@ -44,7 +44,7 @@ namespace Hiero.SDK.Core
 					currentTime = lastTime + TIMESTAMP_INCREMENT_NANOSECONDS;
 				}
 			}
-			while (Interlocked.CompareExchange(ref monotonicTime, lastTime, currentTime) != lastTime);
+            while (Interlocked.CompareExchange(ref monotonicTime, currentTime, lastTime) != lastTime);
 
 			return new TransactionId(accountId, DateTimeOffset.UtcNow.AddNanoseconds((int)(currentTime + Random.Shared.NextInt64(1000))));
 		}
@@ -53,7 +53,6 @@ namespace Hiero.SDK.Core
         {
 			return new TransactionId(accountId, validStart);
         }
-
         /// <include file="TransactionId.cs.xml" path='docs/member[@name="M:TransactionId.FromString(System.String)"]' />
         public static TransactionId FromString(string s)
         {
@@ -107,11 +106,13 @@ namespace Hiero.SDK.Core
         /// <include file="TransactionId.cs.xml" path='docs/member[@name="P:TransactionId.AccountId"]' />
         public AccountId? AccountId { get; } = accountId;
         /// <include file="TransactionId.cs.xml" path='docs/member[@name="P:TransactionId.ValidStart"]' />
-        public DateTimeOffset ValidStart { get; } = validStart ?? DateTimeOffset.UtcNow;
+        public DateTimeOffset? ValidStart { get; } = validStart;
 
         private string ToStringPostfix()
 		{
-			return "@" + ValidStart.ToUnixTimeSeconds() + "." + ValidStart.Nanosecond + (Scheduled ? "?scheduled" : "") + (Nonce != null ? "/" + Nonce : "");
+            if (ValidStart is null) throw new ArgumentNullException(nameof(ValidStart));
+
+            return "@" + ValidStart.Value.ToUnixTimeSeconds() + "." + ValidStart.Value.Nanosecond + (Scheduled ? "?scheduled" : "") + (Nonce != null ? "/" + Nonce : "");
 		}
 
 		/// <include file="TransactionId.cs.xml" path='docs/member[@name="M:TransactionId.GetReceipt(Client)"]' />
@@ -235,11 +236,24 @@ namespace Hiero.SDK.Core
 			if (Scheduled != o.Scheduled)
                 return Scheduled ? 1 : -1;
 
-            int accountIdComparison = AccountId.CompareTo(o.AccountId);
+            if (true switch
+            {
+                true when AccountId is null && o.AccountId is null => 0,
+                true when AccountId is not null && o.AccountId is null => 1,
 
-            if (accountIdComparison != 0) return accountIdComparison;
+                _ => AccountId?.CompareTo(o.AccountId) ?? -1,
+            
+            } is int accountIdComparison && accountIdComparison != 0) return accountIdComparison;
 
-            return ValidStart.CompareTo(o.ValidStart);
+
+            return true switch
+            {
+                true when ValidStart is null && o.ValidStart is null => 0,
+                true when ValidStart is not null && o.ValidStart is null => 1,
+                true when ValidStart is null && o.ValidStart is not null => -1,
+
+                _ => ValidStart!.Value.CompareTo(o.ValidStart!.Value),
+            };
 		}
 
 		/// <include file="TransactionId.cs.xml" path='docs/member[@name="M:TransactionId.ToBytes"]' />
@@ -250,18 +264,24 @@ namespace Hiero.SDK.Core
 		/// <include file="TransactionId.cs.xml" path='docs/member[@name="M:TransactionId.ToProtobuf"]' />
 		public Proto.Services.TransactionID ToProtobuf()
 		{
-			return new Proto.Services.TransactionID
+            Proto.Services.TransactionID proto = new ()
             {
-                AccountId = AccountId.ToProtobuf(),
                 Scheduled = Scheduled,
                 Nonce = Nonce ?? 0,
-                TransactionValidStart = ValidStart.ToProtoTimestamp()
             };
+
+            if (AccountId is not null)
+                proto.AccountId = AccountId.ToProtobuf();
+
+            if (ValidStart is not null)
+                proto.TransactionValidStart = ValidStart.Value.ToProtoTimestamp();
+
+            return proto;
         }
 		/// <include file="TransactionId.cs.xml" path='docs/member[@name="M:TransactionId.ToStringWithChecksum(Client)"]' />
 		public string ToStringWithChecksum(Client client)
 		{
-            return "" + AccountId.ToStringWithChecksum(client) + ToStringPostfix();
+            return "" + AccountId?.ToStringWithChecksum(client) + ToStringPostfix();
         }
 
 		public override int GetHashCode()
@@ -276,9 +296,9 @@ namespace Hiero.SDK.Core
         {
             return 
                 @object is TransactionId id && 
-                id.AccountId.Equals(AccountId) && 
                 id.ValidStart.Equals(ValidStart) && 
-                Scheduled == id.Scheduled;
+                Scheduled == id.Scheduled &&
+                ((AccountId is null && id.AccountId is null) || (id.AccountId?.Equals(AccountId) ?? false));
         }        
     }
 }

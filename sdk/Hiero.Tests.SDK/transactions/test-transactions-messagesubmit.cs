@@ -49,7 +49,7 @@ namespace Hiero.Tests.SDK.Transactions
 				TransactionId = TransactionId.WithValidStart(AccountId.FromString("0.0.5006"), validStart),
 				TopicId = TopicId.FromString("0.0.5007"),
 				Message = ByteString.CopyFromUtf8("hello"),
-				MaxTransactionFee = Hbar.FromTinybars(100000)
+				MaxTransactionFee = Hbar.FromTinybars(100000),
 			}
             .Freeze()
             .Sign(unusedPrivateKey);

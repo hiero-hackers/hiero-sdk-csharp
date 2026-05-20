@@ -231,6 +231,7 @@ namespace Hiero.Tests.SDK.Node
         public virtual void GetSetAccountIdFrozen()
         {
             var tx = SpawnTestTransaction();
+
             Assert.Throws<InvalidOperationException>(() => tx.AccountId = TEST_ACCOUNT_ID);
         }
         [Fact]

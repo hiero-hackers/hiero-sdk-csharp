@@ -80,7 +80,7 @@ namespace Hiero.SDK.Contract
 			ContractFunctionParametersBytes = inner.FunctionParameters.ToByteArray();
 			SenderAccountId = AccountId.FromProtobuf(inner.SenderId);
 			ContractNonces = inner.ContractNonces.Select(_ => ContractNonceInfo.FromProtobuf(_)).ToList();
-			SignerNonce = inner.SignerNonce.Value;
+			SignerNonce = inner.SignerNonce;
 		}
 
 		/// <include file="ContractFunctionResult.cs.xml" path='docs/member[@name="F:ContractFunctionResult.ContractId"]' />
@@ -110,7 +110,7 @@ namespace Hiero.SDK.Contract
         /// <include file="ContractFunctionResult.cs.xml" path='docs/member[@name="F:ContractFunctionResult.ContractNonces"]' />
         public List<ContractNonceInfo> ContractNonces { get; }
         /// <include file="ContractFunctionResult.cs.xml" path='docs/member[@name="F:ContractFunctionResult.SignerNonce"]' />
-        public long SignerNonce { get; }
+        public long? SignerNonce { get; }
         private readonly ByteString RawResult;
 
         /// <include file="ContractFunctionResult.cs.xml" path='docs/member[@name="M:ContractFunctionResult.AsBytes"]' />

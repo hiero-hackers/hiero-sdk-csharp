@@ -116,7 +116,7 @@ namespace Hiero.Tests.SDK.Contract
             var hookDetails = new HookCreationDetails(HookExtensionPoint.AccountAllowanceHook, 1, lambdaHook);
 
             InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => tx.HookCreationDetails_.Operate(_ => _.Add(hookDetails)));
-            Assert.Contains(exception.Message, "transaction is immutable");
+            Assert.Contains("transaction is immutable", exception.Message);
         }
         [Fact]
         /// <include file="test-contract-update-transaction-hooks.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Contract.ContractUpdateTransactionHooksTest.ShouldThrowWhenSettingHooksAfterFreeze"]' />
@@ -134,7 +134,7 @@ namespace Hiero.Tests.SDK.Contract
             var hookDetails = new HookCreationDetails(HookExtensionPoint.AccountAllowanceHook, 1, lambdaHook);
             
             InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => tx.HookCreationDetails_.Operate(_ => _.Add(hookDetails)));
-            Assert.Contains(exception.Message, "transaction is immutable");
+            Assert.Contains("transaction is immutable", exception.Message);
         }
         [Fact]
         /// <include file="test-contract-update-transaction-hooks.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Contract.ContractUpdateTransactionHooksTest.ShouldThrowWhenDeletingHookAfterFreeze"]' />
@@ -149,7 +149,7 @@ namespace Hiero.Tests.SDK.Contract
 			tx.Freeze();
             
             InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => tx.HookIdsToDelete.Operate(_ => _.Add(123)));
-            Assert.Contains(exception.Message, "transaction is immutable");
+            Assert.Contains("transaction is immutable", exception.Message);
         }
         [Fact]
         /// <include file="test-contract-update-transaction-hooks.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Contract.ContractUpdateTransactionHooksTest.ShouldThrowWhenDeletingHooksAfterFreeze"]' />
@@ -161,8 +161,10 @@ namespace Hiero.Tests.SDK.Contract
 				TransactionId = TransactionId.WithValidStart(AccountId.FromString("0.0.5006"), DateTimeOffset.FromUnixTimeMilliseconds(1554158542))
 			};
 
+            tx.Freeze();
+
             InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => tx.HookIdsToDelete.Operate(_ => _.AddRange(123, 456)));
-            Assert.Contains(exception.Message, "transaction is immutable");
+            Assert.Contains("transaction is immutable", exception.Message);
         }
         [Fact]
         /// <include file="test-contract-update-transaction-hooks.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Contract.ContractUpdateTransactionHooksTest.ShouldSerializeHooksInToProtobuf"]' />

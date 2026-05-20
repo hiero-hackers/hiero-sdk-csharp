@@ -90,6 +90,9 @@ namespace System.Collections.Generic
 
         public void Clear()
         {
+            OnRequireNotFrozen?.Invoke();
+            OnRequireNotLocked?.Invoke();
+
             _list.Clear();
         }
         public void Shuffle()

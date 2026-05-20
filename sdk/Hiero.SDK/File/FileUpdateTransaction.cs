@@ -114,10 +114,10 @@ namespace Hiero.SDK.File
 		/// <include file="FileUpdateTransaction.cs.xml" path='docs/member[@name="M:FileUpdateTransaction.ToProtobuf"]' />
 		public Proto.Services.FileUpdateTransactionBody ToProtobuf()
         {
-            var builder = new Proto.Services.FileUpdateTransactionBody
-			{
-				Contents = Contents
-			};
+            var builder = new Proto.Services.FileUpdateTransactionBody { };
+
+            if (Contents != null)
+				builder.Contents = Contents;
 
             if (FileId != null)
 				builder.FileId = FileId.ToProtobuf();

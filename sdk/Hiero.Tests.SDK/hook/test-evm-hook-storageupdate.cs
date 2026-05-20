@@ -75,10 +75,10 @@ namespace Hiero.Tests.SDK.Hook
         public virtual void EvmHookMappingEntriesValidation()
         {
             // mappingSlot cannot be null
-            Assert.Throws<NullReferenceException>(() => new EvmHookMappingEntries(null, []));
+            Assert.Throws<ArgumentNullException>(() => new EvmHookMappingEntries(null, []));
 
             // entries cannot be null
-            Assert.Throws<NullReferenceException>(() => new EvmHookMappingEntries(new byte[] { 0x01 }, null));
+            Assert.Throws<ArgumentNullException>(() => new EvmHookMappingEntries(new byte[] { 0x01 }, null));
 
             // current behavior: length > 32 is allowed
             new EvmHookMappingEntries(new byte[33], []);

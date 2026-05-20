@@ -44,7 +44,11 @@ namespace Hiero.SDK.Token
         /// <include file="TokenWipeTransaction.cs.xml" path='docs/member[@name="M:TokenWipeTransaction.InitFromTransactionBody"]' />
         public virtual ListGuarded<long> Serials
 		{
-			init; get => field ??= new ListGuarded<long>
+			init => field = new ListGuarded<long>(value)
+            {
+                OnRequireNotFrozen = RequireNotFrozen
+            }; 
+            get => field ??= new ListGuarded<long>
 			{
 				OnRequireNotFrozen = RequireNotFrozen
 			};

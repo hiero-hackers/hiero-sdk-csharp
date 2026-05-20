@@ -436,6 +436,7 @@ namespace Hiero.Tests.SDK.Transactions
             }.FreezeWith(client);
             transaction = transaction.AddSignature(mockPrivateKey.GetPublicKey(), mockSignature, testTransactionID, nodeAccountID1);
             transaction = transaction.AddSignature(mockPrivateKey.GetPublicKey(), mockSignature, testTransactionID, nodeAccountID1);
+
             Dictionary<AccountId, Dictionary<PublicKey, byte[]>> signatures = transaction.GetSignatures();
             Assert.Single(signatures);
             Assert.True(signatures.ContainsKey(nodeAccountID1));
@@ -524,6 +525,7 @@ namespace Hiero.Tests.SDK.Transactions
             .AddHbarTransfer(AccountId.FromString("0.0.2"), Hbar.From(-1))
             .AddHbarTransfer(AccountId.FromString("0.0.3"), Hbar.From(1))
             .FreezeWith(client);
+
             List<Transaction.SignableNodeTransactionBodyBytes> list = tx.GetSignableNodeBodyBytesList();
             Assert.Equal(2, tx.GetHbarTransfers().Count); // Should have two entries, one per node
             for (int i = 0; i < nodeAccountIDs.Count; i++)
@@ -535,6 +537,7 @@ namespace Hiero.Tests.SDK.Transactions
 
                 // Verify body contents
                 Proto.Services.TransactionBody body = Proto.Services.TransactionBody.Parser.ParseFrom(list[i].Body);
+
                 Assert.NotNull(body.CryptoTransfer);
                 Assert.Equal(AccountId.FromProtobuf(body.NodeAccountId).ToString(), nodeID.ToString());
             }
@@ -559,48 +562,41 @@ namespace Hiero.Tests.SDK.Transactions
 
             }.FreezeWith(client);
             List<Transaction.SignableNodeTransactionBodyBytes> list = tx.GetSignableNodeBodyBytesList();
-            Assert.Equal(2, list.Count); // Should have 4 entries: 2 nodes * 2 chunks
+            Assert.Equal(4, list.Count); // Should have 4 entries: 2 nodes * 2 chunks
 
             // Map to track transaction IDs per node
-            Dictionary<string, Dictionary<string, bool>> txIDsByNode = [];
-            foreach (AccountId nodeID in nodeAccountIDs)
-            {
-                txIDsByNode.Add(nodeID.ToString(), []);
-            }
-
+            Dictionary<string, Dictionary<string, bool>> txIDsByNode = nodeAccountIDs.ToDictionary(_ => _.ToString(), _ => new Dictionary<string, bool>());
+  
             for (int i = 0; i < list.Count; i++)
             {
-                Assert.True(nodeAccountIDs.Contains(list[i].NodeID));
+                Assert.Contains(list[i].NodeID, nodeAccountIDs);
                 Assert.NotNull(list[i].TransactionID);
                 Assert.NotEmpty(list[i].Body);
+
                 string nodeIDStr = list[i].NodeID.ToString();
                 string txIDStr = list[i].TransactionID.ToString();
 
                 // Each transaction ID should appear exactly once per node
                 Assert.False(txIDsByNode[nodeIDStr].ContainsKey(txIDStr), "Duplicate transaction ID found for the same node");
                 txIDsByNode[nodeIDStr].Add(txIDStr, true);
+
                 Proto.Services.TransactionBody body = Proto.Services.TransactionBody.Parser.ParseFrom(list[i].Body);
                 Assert.NotNull(body.FileAppend);
                 Assert.Equal(AccountId.FromProtobuf(body.NodeAccountId).ToString(), list[i].NodeID.ToString());
             }
 
-
             // Verify each node has the same number of unique transaction IDs
             foreach (AccountId nodeID in nodeAccountIDs)
-            {
                 Assert.Equal(2, tx.TransactionIds.Count);
-            }
-
 
             // Verify that all nodes have the same set of transaction IDs
             Dictionary<string, bool> firstNodeTxIDs = txIDsByNode[nodeAccountID1.ToString()];
             for (int i = 1; i < nodeAccountIDs.Count; i++)
             {
                 Dictionary<string, bool> nodeTxIDs = txIDsByNode[nodeAccountIDs[i].ToString()];
+
                 foreach (string txID in firstNodeTxIDs.Keys)
-                {
                     Assert.True(nodeTxIDs.ContainsKey(txID), "All nodes should have the same set of transaction IDs");
-                }
             }
         }
     }

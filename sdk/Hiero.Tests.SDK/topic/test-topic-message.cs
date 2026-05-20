@@ -40,7 +40,8 @@ namespace Hiero.Tests.SDK.Topic
                 ChunkInfo = new Proto.Services.ConsensusMessageChunkInfo { InitialTransactionId = testTransactionId.ToProtobuf() },
                 ConsensusTimestamp = new Proto.Services.Timestamp
                 {
-                    Seconds = testTimestamp.ToUnixTimeSeconds()
+                    Seconds = testTimestamp.ToUnixTimeSeconds(),
+                    Nanos = testTimestamp.Nanosecond
                 }
             };
 
@@ -51,7 +52,8 @@ namespace Hiero.Tests.SDK.Topic
                 SequenceNumber = testSequenceNumber,
                 ConsensusTimestamp = new Proto.Services.Timestamp
                 {
-                    Seconds = testTimestamp.ToUnixTimeSeconds()
+                    Seconds = testTimestamp.ToUnixTimeSeconds(),
+                    Nanos = testTimestamp.Nanosecond
                 }
             });
             TopicMessageChunk[] topicMessageChunkArr = new[]
@@ -80,18 +82,19 @@ namespace Hiero.Tests.SDK.Topic
                 ChunkInfo = new Proto.Services.ConsensusMessageChunkInfo { InitialTransactionId = testTransactionId.ToProtobuf() },
                 ConsensusTimestamp = new Proto.Services.Timestamp
                 {
-                    Seconds = testTimestamp.ToUnixTimeSeconds()
+                    Seconds = testTimestamp.ToUnixTimeSeconds(),
+                    Nanos = testTimestamp.Nanosecond
                 }
             };
             
             TopicMessage topicMessage = TopicMessage.OfSingle(consensusTopicResponse);
             
-            Assert.Equal(topicMessage.ConsensusTimestamp, testTimestamp);
-            Assert.Equal(topicMessage.Contents, testContents);
-            Assert.Equal(topicMessage.RunningHash, testRunningHash);
-            Assert.Equal(topicMessage.SequenceNumber, testSequenceNumber);
+            Assert.Equal(testTimestamp, topicMessage.ConsensusTimestamp);
+            Assert.Equal(testContents, topicMessage.Contents);
+            Assert.Equal(testRunningHash, topicMessage.RunningHash);
+            Assert.Equal(testSequenceNumber, topicMessage.SequenceNumber);
             Assert.Single(topicMessage.Chunks);
-            Assert.Equal(topicMessage.TransactionId, testTransactionId);
+            Assert.Equal(testTransactionId, topicMessage.TransactionId);
         }
         [Fact]
         /// <include file="test-topic-message.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Topic.TopicMessageTest.OfMany"]' />
@@ -110,7 +113,8 @@ namespace Hiero.Tests.SDK.Topic
                 },
                 ConsensusTimestamp = new Proto.Services.Timestamp
                 {
-                    Seconds = testTimestamp.ToUnixTimeSeconds()
+                    Seconds = testTimestamp.ToUnixTimeSeconds(),
+                    Nanos = testTimestamp.Nanosecond
                 }
             };
             var consensusTopicResponse2 = new Proto.Mirror.ConsensusTopicResponse
@@ -126,7 +130,8 @@ namespace Hiero.Tests.SDK.Topic
                 },
                 ConsensusTimestamp = new Proto.Services.Timestamp
                 {
-                    Seconds = testTimestamp.ToUnixTimeSeconds() + 1
+                    Seconds = testTimestamp.ToUnixTimeSeconds() + 1,
+                    Nanos = testTimestamp.Nanosecond
                 }
             };
             
@@ -135,11 +140,11 @@ namespace Hiero.Tests.SDK.Topic
             
             Array.Copy(testContents, 0, totalContents, 0, testContents.Length);
             Array.Copy(testContents, 0, totalContents, testContents.Length, testContents.Length);
-            Assert.Equal(topicMessage.ConsensusTimestamp, testTimestamp.AddSeconds(1));
-            Assert.Equal(topicMessage.Contents, totalContents);
-            Assert.Equal(topicMessage.RunningHash, testRunningHash);
-            Assert.Equal(topicMessage.SequenceNumber, testSequenceNumber + 1);
-            Assert.Equal(topicMessage.TransactionId, testTransactionId);
+            Assert.Equal(testTimestamp.AddSeconds(1), topicMessage.ConsensusTimestamp);
+            Assert.Equal(totalContents, topicMessage.Contents);
+            Assert.Equal(testRunningHash, topicMessage.RunningHash);
+            Assert.Equal(testSequenceNumber + 1, topicMessage.SequenceNumber);
+            Assert.Equal(testTransactionId, topicMessage.TransactionId);
         }
     }
 }

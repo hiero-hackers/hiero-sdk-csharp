@@ -55,8 +55,8 @@ namespace Hiero.Tests.SDK.Transactions
 
             Assert.Equal(0, accountId?.Shard);
             Assert.Equal(23847, accountId?.Num);
-            Assert.Equal(1588539964, validStart.ToUnixTimeSeconds());
-            Assert.Equal(632521325, validStart.Nanosecond);
+            Assert.Equal(1588539964, validStart?.ToUnixTimeSeconds());
+            Assert.Equal(632521325, validStart?.Nanosecond);
         }
         [Fact]
         /// <include file="test-transactions-id.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Transactions.TransactionIdTest.ShouldParseScheduled"]' />
@@ -68,8 +68,8 @@ namespace Hiero.Tests.SDK.Transactions
 
             Assert.Equal(0, accountId?.Shard);
             Assert.Equal(23847, accountId?.Num);
-            Assert.Equal(1588539964, validStart.ToUnixTimeSeconds());
-            Assert.Equal(632521325, validStart.Nanosecond);
+            Assert.Equal(1588539964, validStart?.ToUnixTimeSeconds());
+            Assert.Equal(632521325, validStart?.Nanosecond);
             Assert.True(transactionId.Scheduled);
             Assert.Null(transactionId.Nonce);
             Assert.Equal("0.0.23847@1588539964.632521325?scheduled", transactionId.ToString());
@@ -83,8 +83,8 @@ namespace Hiero.Tests.SDK.Transactions
             var validStart = transactionId.ValidStart;
             Assert.Equal(0, accountId?.Shard);
             Assert.Equal(23847, accountId?.Num);
-            Assert.Equal(1588539964, validStart.ToUnixTimeSeconds());
-            Assert.Equal(632521325, validStart.Nanosecond);
+            Assert.Equal(1588539964, validStart?.ToUnixTimeSeconds());
+            Assert.Equal(632521325, validStart?.Nanosecond);
             Assert.False(transactionId.Scheduled);
             Assert.Equal(transactionId.Nonce, 4);
             Assert.Equal("0.0.23847@1588539964.632521325/4", transactionId.ToString());

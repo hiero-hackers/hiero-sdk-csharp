@@ -41,15 +41,15 @@ namespace Hiero.SDK.Ethereum
 			    throw new ArgumentException($"expected 9 RLP encoded elements, found {rlpList.Count}");
 
 		    return new EthereumTransactionDataLegacy(
-				nonce: rlpList[0].RLPData,
-			    gasPrice: rlpList[1].RLPData,
-			    gasLimit: rlpList[2].RLPData,
-			    to: rlpList[3].RLPData,
-			    value: rlpList[4].RLPData,
-			    callData: rlpList[5].RLPData,
-			    v: rlpList[6].RLPData,
-			    r: rlpList[7].RLPData,
-			    s: rlpList[8].RLPData 
+				nonce: rlpList[0].RLPData ?? [],
+			    gasPrice: rlpList[1].RLPData ?? [],
+			    gasLimit: rlpList[2].RLPData ?? [],
+			    to: rlpList[3].RLPData ?? [],
+			    value: rlpList[4].RLPData ?? [], // Sometimes null. Did the rest for brevity
+			    callData: rlpList[5].RLPData ?? [],
+			    v: rlpList[6].RLPData ?? [],
+			    r: rlpList[7].RLPData ?? [],
+			    s: rlpList[8].RLPData ?? []
 		    );
 	    }
 

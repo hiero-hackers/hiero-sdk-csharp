@@ -86,6 +86,7 @@ namespace Hiero.Tests.SDK.Transactions
                 ]
             );
         }
+
         [Fact]
         /// <include file="test-transactions-record.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Transactions.TransactionRecordTest.ShouldSerialize"]' />
         public virtual void ShouldSerialize()

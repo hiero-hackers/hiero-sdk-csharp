@@ -258,13 +258,13 @@ namespace Hiero.SDK.Contract
         {
             var body = SourceTransactionBody.ContractCreateInstance;
 
-			BytecodeFileId = FileId.FromProtobuf(body.FileId);
-			Bytecode = body.Initcode.ToByteArray();
-			ProxyAccountId = AccountId.FromProtobuf(body.ProxyAccountId);
-			AdminKey = Key.FromProtobufKey(body.AdminKey);
+			if (body.FileId is not null) BytecodeFileId = FileId.FromProtobuf(body.FileId);
+			Bytecode = body.Initcode?.ToByteArray();
+            if (body.ProxyAccountId is not null) ProxyAccountId = AccountId.FromProtobuf(body.ProxyAccountId);
+			if (body.AdminKey is not null) AdminKey = Key.FromProtobufKey(body.AdminKey);
 
 			MaxAutomaticTokenAssociations = body.MaxAutomaticTokenAssociations;
-			AutoRenewPeriod = body.AutoRenewPeriod.ToTimeSpan();
+			AutoRenewPeriod = body.AutoRenewPeriod?.ToTimeSpan();
 
 			Gas = body.Gas;
             InitialBalance = Hbar.FromTinybars(body.InitialBalance);
@@ -273,8 +273,8 @@ namespace Hiero.SDK.Contract
             DeclineStakingReward = body.DeclineReward;
 
 			StakedNodeId = body.StakedNodeId;
-			StakedAccountId = AccountId.FromProtobuf(body.StakedAccountId);
-			AutoRenewAccountId = AccountId.FromProtobuf(body.AutoRenewAccountId);
+            if (body.StakedAccountId is not null) StakedAccountId = AccountId.FromProtobuf(body.StakedAccountId);
+			if (body.AutoRenewAccountId is not null) AutoRenewAccountId = AccountId.FromProtobuf(body.AutoRenewAccountId);
 
             // Initialize hook creation details
             HookCreationDetails_.Clear();

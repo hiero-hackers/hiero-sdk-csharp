@@ -88,7 +88,7 @@ namespace Hiero.SDK.Contract
         {
             var body = SourceTransactionBody.ContractCall;
 
-			ContractId = ContractId.FromProtobuf(body.ContractId);
+			if (body.ContractId is not null) ContractId = ContractId.FromProtobuf(body.ContractId);
 			Gas = body.Gas;
             PayableAmount = Hbar.FromTinybars(body.Amount);
             FunctionParameters = body.FunctionParameters;

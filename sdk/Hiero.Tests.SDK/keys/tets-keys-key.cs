@@ -90,7 +90,7 @@ namespace Hiero.Tests.SDK.Keys
             var protoKey = new Proto.Services.Key { Ed25519 = ByteString.CopyFrom(keyBytes) };
             var cut = PublicKey.FromProtobufKey(protoKey);
             Assert.IsType<PublicKeyED25519>(cut);
-            Assert.Same(cut.ToBytes(), keyBytes);
+            Assert.True(cut.ToBytes().SequenceEqual(keyBytes));
         }
         [Fact]
         /// <include file="tets-keys-key.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Keys.KeyTest.FromProtoKeyECDSA"]' />
@@ -100,7 +100,7 @@ namespace Hiero.Tests.SDK.Keys
             var protoKey = Proto.Services.Key.Parser.ParseFrom(keyProtobufBytes);
             var cut = PublicKey.FromProtobufKey(protoKey);
             Assert.IsType<PublicKeyECDSA>(cut);
-            Assert.Same(((PublicKey)cut).ToProtobufKey().ToByteArray(), keyProtobufBytes);
+            Assert.True(((PublicKey)cut).ToProtobufKey().ToByteArray().SequenceEqual(keyProtobufBytes));
         }
         [Fact]
         /// <include file="tets-keys-key.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Keys.KeyTest.FromProtoKeyKeyList"]' />
@@ -128,8 +128,8 @@ namespace Hiero.Tests.SDK.Keys
             var keyList = (KeyList)cut;
             var actual = keyList.ToProtobufKey().KeyList;
             Assert.Equal(actual.Keys.Count, 2);
-            Assert.Same(actual.Keys[0].Ed25519.ToByteArray(), keyBytes[0]);
-            Assert.Same(actual.Keys[1].Ed25519.ToByteArray(), keyBytes[1]);
+            Assert.True(actual.Keys[0].Ed25519.ToByteArray().SequenceEqual(keyBytes[0]));
+            Assert.True(actual.Keys[1].Ed25519.ToByteArray().SequenceEqual(keyBytes[1]));
         }
         [Fact]
         /// <include file="tets-keys-key.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Keys.KeyTest.FromProtoKeyThresholdKey"]' />
@@ -155,13 +155,13 @@ namespace Hiero.Tests.SDK.Keys
             var cut = Key.FromProtobufKey(protoKey);
 
             // then
-            Assert.Equal(cut.GetType(), typeof(KeyList));
+            Assert.IsType<KeyList>(cut.GetType());
             var thresholdKey = (KeyList)cut;
             var actual = thresholdKey.ToProtobufKey().ThresholdKey;
             Assert.Equal(actual.Threshold, (uint)1);
             Assert.Equal(actual.Keys.Keys.Count, 2);
-            Assert.Same(actual.Keys.Keys[0].Ed25519.ToByteArray(), keyBytes[0]);
-            Assert.Same(actual.Keys.Keys[1].Ed25519.ToByteArray(), keyBytes[1]);
+            Assert.True(actual.Keys.Keys[0].Ed25519.ToByteArray().SequenceEqual(keyBytes[0]));
+            Assert.True(actual.Keys.Keys[1].Ed25519.ToByteArray().SequenceEqual(keyBytes[1]));
         }
         [Fact]
         /// <include file="tets-keys-key.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Keys.KeyTest.ThrowsUnsupportedKey"]' />
@@ -242,8 +242,8 @@ namespace Hiero.Tests.SDK.Keys
             var protoKey = new Proto.Services.Key { Ed25519 = ByteString.CopyFrom(keyBytes) };
             var bytes = protoKey.ToByteArray();
             var cut = PublicKey.FromBytes(bytes);
-            Assert.Equal(cut.GetType(), typeof(PublicKeyED25519));
-            Assert.Same(cut.ToBytes(), keyBytes);
+            Assert.IsType<PublicKeyED25519>(cut.GetType());
+            Assert.True(cut.ToBytes().SequenceEqual(keyBytes));
         }
         [Fact]
         /// <include file="tets-keys-key.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Keys.KeyTest.FromBytesECDSA"]' />
@@ -251,8 +251,8 @@ namespace Hiero.Tests.SDK.Keys
         {
             var keyBytes = Hex.Decode("3a21034e0441201f2bf9c7d9873c2a9dc3fd451f64b7c05e17e4d781d916e3a11dfd99");
             var cut = PublicKey.FromBytes(keyBytes);
-            Assert.Equal(cut.GetType(), typeof(PublicKeyECDSA));
-            Assert.Same(cut.ToProtobufKey().ToByteArray(), keyBytes);
+            Assert.IsType<PublicKeyECDSA>(cut.GetType());
+            Assert.True(cut.ToProtobufKey().ToByteArray().SequenceEqual(keyBytes));
         }
         [Fact]
         /// <include file="tets-keys-key.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Keys.KeyTest.FromBytesKeyList"]' />
@@ -277,8 +277,8 @@ namespace Hiero.Tests.SDK.Keys
             var keyList = (KeyList)cut;
             var actual = keyList.ToProtobufKey().KeyList;
             Assert.Equal(2, actual.Keys.Count);
-            Assert.Same(actual.Keys[0].Ed25519.ToByteArray(), keyBytes[0]);
-            Assert.Same(actual.Keys[1].Ed25519.ToByteArray(), keyBytes[1]);
+            Assert.True(actual.Keys[0].Ed25519.ToByteArray().SequenceEqual(keyBytes[0]));
+            Assert.True(actual.Keys[1].Ed25519.ToByteArray().SequenceEqual(keyBytes[1]));
         }
         [Fact]
         /// <include file="tets-keys-key.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Keys.KeyTest.FromBytesThresholdKey"]' />
@@ -307,8 +307,8 @@ namespace Hiero.Tests.SDK.Keys
             var actual = thresholdKey.ToProtobufKey().ThresholdKey;
             Assert.Equal((uint)1, actual.Threshold);
             Assert.Equal(2, actual.Keys.Keys.Count);
-            Assert.Same(actual.Keys.Keys[0].Ed25519.ToByteArray(), keyBytes[0]);
-            Assert.Same(actual.Keys.Keys[1].Ed25519.ToByteArray(), keyBytes[1]);
+            Assert.True(actual.Keys.Keys[0].Ed25519.ToByteArray().SequenceEqual(keyBytes[0]));
+            Assert.True(actual.Keys.Keys[1].Ed25519.ToByteArray().SequenceEqual(keyBytes[1]));
         }
         [Fact]
         /// <include file="tets-keys-key.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Keys.KeyTest.ThrowsUnsupportedKeyFromBytes"]' />

@@ -158,7 +158,8 @@ namespace Hiero.Tests.SDK.Topic
         {
             var topicUpdateTransaction = new TopicUpdateTransaction { TopicMemo = testTopicMemo };
             topicUpdateTransaction.TopicMemo = null;
-            Assert.Empty(topicUpdateTransaction.TopicMemo);
+            
+            Assert.Null(topicUpdateTransaction.TopicMemo);
         }
         [Fact]
         /// <include file="test-topic-update-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Topic.TopicUpdateTransactionTest.ClearTopicMemoFrozen"]' />
@@ -230,6 +231,7 @@ namespace Hiero.Tests.SDK.Topic
         {
             var topicUpdateTransaction = new TopicUpdateTransaction { SubmitKey = testSubmitKey };
             topicUpdateTransaction.SubmitKey = null;
+
             Assert.Equal(topicUpdateTransaction.SubmitKey, new KeyList());
         }
         [Fact]
@@ -355,7 +357,7 @@ namespace Hiero.Tests.SDK.Topic
             {
                 CustomFees = customFixedFees
             };
-            Assert.Equal(topicUpdateTransaction.CustomFees.Count, 3);
+            Assert.Equal(3, topicUpdateTransaction.CustomFees.Count);
             Assert.Equal(topicUpdateTransaction.CustomFees, customFixedFees);
         }
         [Fact]
@@ -380,20 +382,21 @@ namespace Hiero.Tests.SDK.Topic
                     DenominatingTokenId = new TokenId(0, 0, 2)
                 }
             ];
-            CustomFixedFee customFixedFeeToBeAdded = new CustomFixedFee
+            CustomFixedFee customFixedFeeToBeAdded = new ()
             {
                 Amount = 4,
                 DenominatingTokenId = new TokenId(0, 0, 3)
             };
-            List<CustomFixedFee> expectedCustomFees = [];
+            List<CustomFixedFee> expectedCustomFees = [.. customFixedFees];
             expectedCustomFees.Add(customFixedFeeToBeAdded);
             TopicUpdateTransaction topicUpdateTransaction = new()
             {
-                CustomFees = customFixedFees 
+                CustomFees = customFixedFees
             };
             topicUpdateTransaction.CustomFees.Operate(_ => _.Add(customFixedFeeToBeAdded));
-            Assert.Equal(topicUpdateTransaction.CustomFees.Count, 4);
-            Assert.Equal(topicUpdateTransaction.CustomFees, expectedCustomFees);
+
+            Assert.Equal(4, topicUpdateTransaction.CustomFees.Count);
+            Assert.True(topicUpdateTransaction.CustomFees.SequenceEqual(expectedCustomFees));
         }
         [Fact]
         /// <include file="test-topic-update-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Topic.TopicUpdateTransactionTest.ShouldAddCustomFeeToEmptyList"]' />

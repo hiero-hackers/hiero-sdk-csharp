@@ -210,7 +210,8 @@ namespace Hiero.SDK.Networking
             if (AccountId != null)
 				builder.AccountId = AccountId.ToProtobuf();
 
-			builder.Description = Description;
+			if (Description is not null)
+				builder.Description = Description;
 
             // If gossip endpoints include FQDN but the network forbids it, prefer using an available IP
             // from service endpoints. We rewrite such gossip endpoints to use the first available service IP.

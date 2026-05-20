@@ -31,7 +31,7 @@ namespace Hiero.SDK.Core
             Dictionary<TokenId, Dictionary<AccountId, long>> tokenTransfers, 
             IEnumerable<TokenTransfer> tokenTransferList, 
             Dictionary<TokenId, List<TokenNftTransfer>> tokenNftTransfers, 
-            ScheduleId scheduleRef, 
+            ScheduleId? scheduleRef, 
             IEnumerable<AssessedCustomFee> assessedCustomFees,
 			IEnumerable<TokenAssociation> automaticTokenAssociations, 
             PublicKey? aliasKey,
@@ -40,8 +40,8 @@ namespace Hiero.SDK.Core
 			DateTimeOffset parentConsensusTimestamp, 
             ByteString ethereumHash, 
             IEnumerable<Transfer> paidStakingRewards,
-            ByteString prngBytes, 
-            int prngNumber, 
+            ByteString? prngBytes, 
+            int? prngNumber, 
             ByteString evmAddress,
 			IEnumerable<PendingAirdropRecord> pendingAirdropRecords)
         {
@@ -197,7 +197,7 @@ namespace Hiero.SDK.Core
         /// <include file="TransactionRecord.cs.xml" path='docs/member[@name="T:TransactionRecord_3"]' />
         public Dictionary<TokenId, List<TokenNftTransfer>> TokenNftTransfers { get; }
         /// <include file="TransactionRecord.cs.xml" path='docs/member[@name="F:TransactionRecord.ScheduleRef"]' />
-        public ScheduleId ScheduleRef { get; }
+        public ScheduleId? ScheduleRef { get; }
         /// <include file="TransactionRecord.cs.xml" path='docs/member[@name="F:TransactionRecord.AssessedCustomFees"]' />
         public List<AssessedCustomFee> AssessedCustomFees { get; }
         /// <include file="TransactionRecord.cs.xml" path='docs/member[@name="F:TransactionRecord.AutomaticTokenAssociations"]' />
@@ -209,21 +209,21 @@ namespace Hiero.SDK.Core
         /// <include file="TransactionRecord.cs.xml" path='docs/member[@name="F:TransactionRecord.Duplicates"]' />
         public List<TransactionRecord> Duplicates { get; }
         /// <include file="TransactionRecord.cs.xml" path='docs/member[@name="F:TransactionRecord.ParentConsensusTimestamp"]' />
-        public DateTimeOffset ParentConsensusTimestamp { get; }
+        public DateTimeOffset? ParentConsensusTimestamp { get; }
         /// <include file="TransactionRecord.cs.xml" path='docs/member[@name="F:TransactionRecord.EthereumHash"]' />
         public ByteString EthereumHash { get; }
         /// <include file="TransactionRecord.cs.xml" path='docs/member[@name="F:TransactionRecord.HbarAllowanceAdjustments"]' />
-        public List<HbarAllowance> HbarAllowanceAdjustments { get; }
+        [Obsolete] public List<HbarAllowance> HbarAllowanceAdjustments { get; }
         /// <include file="TransactionRecord.cs.xml" path='docs/member[@name="F:TransactionRecord.TokenAllowanceAdjustments"]' />
-        public List<TokenAllowance> TokenAllowanceAdjustments { get; }
+        [Obsolete] public List<TokenAllowance> TokenAllowanceAdjustments { get; }
         /// <include file="TransactionRecord.cs.xml" path='docs/member[@name="F:TransactionRecord.TokenNftAllowanceAdjustments"]' />
-        public List<TokenNftAllowance> TokenNftAllowanceAdjustments { get; }
+        [Obsolete] public List<TokenNftAllowance> TokenNftAllowanceAdjustments { get; }
         /// <include file="TransactionRecord.cs.xml" path='docs/member[@name="F:TransactionRecord.PaidStakingRewards"]' />
         public List<Transfer> PaidStakingRewards { get; }
         /// <include file="TransactionRecord.cs.xml" path='docs/member[@name="F:TransactionRecord.PrngBytes"]' />
-        public ByteString PrngBytes { get; }
+        public ByteString? PrngBytes { get; }
         /// <include file="TransactionRecord.cs.xml" path='docs/member[@name="F:TransactionRecord.PrngNumber"]' />
-        public int PrngNumber { get; }
+        public int? PrngNumber { get; }
         /// <include file="TransactionRecord.cs.xml" path='docs/member[@name="F:TransactionRecord.EvmAddress"]' />
         public ByteString EvmAddress { get; }
         /// <include file="TransactionRecord.cs.xml" path='docs/member[@name="F:TransactionRecord.PendingAirdropRecords"]' />
@@ -242,31 +242,61 @@ namespace Hiero.SDK.Core
 				Receipt = Receipt.ToProtobuf(),
                 TransactionHash = TransactionHash,
                 ConsensusTimestamp = ConsensusTimestamp.ToProtoTimestamp(),
-                ParentConsensusTimestamp = ParentConsensusTimestamp.ToProtoTimestamp(),
                 TransactionId = TransactionId.ToProtobuf(),
                 Memo = TransactionMemo,
                 TransactionFee = (ulong)TransactionFee.ToTinybars(),
                 TransferList = new Proto.Services.TransferList { },
                 EthereumHash = EthereumHash,
                 EvmAddress = EvmAddress,
-				PrngNumber = PrngNumber,
-                PrngBytes = PrngBytes,
-                ScheduleRef = ScheduleRef.ToProtobuf(),
             };
+
+            if (PendingAirdropRecords != null)
+                foreach (PendingAirdropRecord pendingAirdropRecord in PendingAirdropRecords)
+                    proto.NewPendingAirdrops.Add(pendingAirdropRecord.ToProtobuf());
+
+            if (ContractFunctionResult != null)
+                proto.ContractCallResult = ContractFunctionResult.ToProtobuf();
+
+            if (AliasKey != null)
+                proto.Alias = AliasKey.ToProtobufKey().ToByteString();
+
+            if (ParentConsensusTimestamp != null)
+                proto.ParentConsensusTimestamp = ParentConsensusTimestamp.Value.ToProtoTimestamp();
+
+            if (PrngBytes != null)
+                proto.PrngBytes = PrngBytes;
+
+            if (PrngNumber != null)
+                proto.PrngNumber = PrngNumber.Value;
+
+            if (ScheduleRef != null)
+                proto.ScheduleRef = ScheduleRef.ToProtobuf();
+
+
 
             foreach (var tokenEntry in TokenTransfers)
             {
                 Proto.Services.TokenTransferList tokenTransfersList = new()
 				{
 					Token = tokenEntry.Key.ToProtobuf(),
+                    Transfers = 
+                    {
+                        tokenEntry.Value.Select(_ => new Proto.Services.AccountAmount
+                        {
+                            AccountId = _.Key.ToProtobuf(),
+                            Amount = _.Value
+                        })
+                    }
 				};
+                
 
-				foreach (var aaEntry in tokenEntry.Value)
-					tokenTransfersList.Transfers.Add(new Proto.Services.AccountAmount
-					{
-						AccountId = aaEntry.Key.ToProtobuf(),
-						Amount = aaEntry.Value
-					});
+
+     //           foreach (var aaEntry in tokenEntry.Value)
+					//tokenTransfersList.Transfers.Add(new Proto.Services.AccountAmount
+					//{
+					//	AccountId = aaEntry.Key.ToProtobuf(),
+					//	Amount = aaEntry.Value
+					//});
 
                 proto.TokenTransferLists.Add(tokenTransfersList);
             }
@@ -302,22 +332,13 @@ namespace Hiero.SDK.Core
                 proto.TokenTransferLists.Add(nftTransferList);
             }
 
-			if (PendingAirdropRecords != null)
-				foreach (PendingAirdropRecord pendingAirdropRecord in PendingAirdropRecords)
-                    proto.NewPendingAirdrops.Add(pendingAirdropRecord.ToProtobuf());
-
-			if (ContractFunctionResult != null)
-				proto.ContractCallResult = ContractFunctionResult.ToProtobuf();
-
-            if (AliasKey != null)
-                proto.Alias = AliasKey.ToProtobufKey().ToByteString();
-
 			return proto;
         }
 		/// <include file="TransactionRecord.cs.xml" path='docs/member[@name="M:TransactionRecord.ValidateReceiptStatus(System.Boolean)"]' />
 		public TransactionRecord ValidateReceiptStatus(bool shouldValidate)
 		{
 			Receipt.ValidateStatus(shouldValidate);
+
 			return this;
 		}
 	}

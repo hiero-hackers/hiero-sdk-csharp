@@ -74,7 +74,6 @@ namespace Hiero.Tests.SDK.Topic
         /// <include file="test-topic-id.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Topic.TopicIdTest.TestTopicIdFromEvmAddress"]' />
         public virtual void TestTopicIdFromEvmAddress()
         {
-
             // Test with a long zero address representing topic 1234
             string evmAddress = "00000000000000000000000000000000000004d2";
             TopicId id = TopicId.FromEvmAddress(0, 0, evmAddress);
@@ -92,9 +91,8 @@ namespace Hiero.Tests.SDK.Topic
         /// <include file="test-topic-id.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Topic.TopicIdTest.TestTopicIdToEvmAddress"]' />
         public virtual void TestTopicIdToEvmAddress()
         {
-
             // Test with a normal topic ID
-            TopicId id = new TopicId(0, 0, 123);
+            TopicId id = new (0, 0, 123);
             Assert.Equal("000000000000000000000000000000000000007b", id.ToEvmAddress());
 
             // Test with a different shard and realm

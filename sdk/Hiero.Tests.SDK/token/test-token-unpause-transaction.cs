@@ -48,7 +48,7 @@ namespace Hiero.Tests.SDK.Token
         public virtual void ShouldBytesNft()
         {
             var tx = SpawnTestTransaction();
-            var tx2 = Transaction.FromBytes<TokenCreateTransaction>(tx.ToBytes());
+            var tx2 = Transaction.FromBytes<TokenUnpauseTransaction>(tx.ToBytes());
             Assert.Equal(tx2.ToString(), tx.ToString());
         }
         [Fact]

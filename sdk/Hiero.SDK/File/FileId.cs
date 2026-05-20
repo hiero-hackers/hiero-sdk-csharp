@@ -73,15 +73,14 @@ namespace Hiero.SDK.File
             if (!Utils.EntityIdHelper.IsLongZeroAddress(addressBytes))
 				throw new ArgumentException("EVM address is not a correct long zero address");
 
-			using MemoryStream ms = new (addressBytes);
-			using BinaryReader reader = new (ms);
+            using var memorystream = new MemoryStream(addressBytes);
 
-			reader.ReadInt32();
-			reader.ReadInt64();
+            _ = memorystream.ReadInt32();
+            _ = memorystream.ReadInt64();
 
-			long fileNum = reader.ReadInt64();
+            long fileNum = memorystream.ReadInt64();
 
-			return new FileId(shard, realm, fileNum);
+            return new FileId(shard, realm, fileNum);
 		}
 
 		/// <include file="FileId.cs.xml" path='docs/member[@name="P:FileId.Shard"]' />

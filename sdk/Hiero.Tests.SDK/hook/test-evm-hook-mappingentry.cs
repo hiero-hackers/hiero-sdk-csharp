@@ -66,10 +66,10 @@ namespace Hiero.Tests.SDK.Hook
         /// <include file="test-evm-hook-mappingentry.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Hook.EvmHookMappingEntryTest.BuildersRejectNullInputs"]' />
         public virtual void BuildersRejectNullInputs()
         {
-            Assert.Throws<NullReferenceException>(() => EvmHookMappingEntry.OfKey(null, new byte[] { 0x01 }));
-            Assert.Throws<NullReferenceException>(() => EvmHookMappingEntry.WithPreimage(null, new byte[] { 0x01 }));
-            Assert.Throws<NullReferenceException>(() => EvmHookMappingEntry.OfKey(new byte[] { 0x01 }, null));
-            Assert.Throws<NullReferenceException>(() => EvmHookMappingEntry.WithPreimage(new byte[] { 0x01 }, null));
+            Assert.Throws<ArgumentNullException>(() => EvmHookMappingEntry.OfKey(null, new byte[] { 0x01 }));
+            Assert.Throws<ArgumentNullException>(() => EvmHookMappingEntry.WithPreimage(null, new byte[] { 0x01 }));
+            Assert.Throws<ArgumentNullException>(() => EvmHookMappingEntry.OfKey(new byte[] { 0x01 }, null));
+            Assert.Throws<ArgumentNullException>(() => EvmHookMappingEntry.WithPreimage(new byte[] { 0x01 }, null));
         }
         [Fact]
         /// <include file="test-evm-hook-mappingentry.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Hook.EvmHookMappingEntryTest.ProtobufRoundTripForKeyAndPreimage"]' />

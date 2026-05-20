@@ -20,11 +20,11 @@ namespace Hiero.SDK.Hook
 
 		public static EvmHookMappingEntry OfKey(byte[] key, byte[] value)
 		{
-			return new EvmHookMappingEntry(key, null, value);
+			return new EvmHookMappingEntry(key ?? throw new ArgumentNullException(nameof(key)), null, value ?? throw new ArgumentNullException(nameof(value)));
 		}
 		public static EvmHookMappingEntry WithPreimage(byte[] preimage, byte[] value)
 		{
-			return new EvmHookMappingEntry(null, preimage, value);
+			return new EvmHookMappingEntry(null, preimage ?? throw new ArgumentNullException(nameof(preimage)), value ?? throw new ArgumentNullException(nameof(value)));
 		}
 		public static EvmHookMappingEntry FromProtobuf(Proto.Services.EvmHookMappingEntry proto)
 		{

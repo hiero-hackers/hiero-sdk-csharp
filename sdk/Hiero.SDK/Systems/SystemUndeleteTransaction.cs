@@ -55,8 +55,11 @@ namespace Hiero.SDK.Systems
         {
             var body = SourceTransactionBody.SystemUndelete;
 
-            FileId = FileId.FromProtobuf(body.FileId);
-            ContractId = ContractId.FromProtobuf(body.ContractId);
+            if (body.FileId is not null)
+                FileId = FileId.FromProtobuf(body.FileId);
+
+            if (body.ContractId is not null)
+                ContractId = ContractId.FromProtobuf(body.ContractId);
         }
 
         /// <include file="SystemUndeleteTransaction.cs.xml" path='docs/member[@name="M:ToProtobuf"]' />

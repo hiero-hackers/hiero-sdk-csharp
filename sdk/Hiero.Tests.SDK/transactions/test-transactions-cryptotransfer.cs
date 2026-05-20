@@ -112,9 +112,9 @@ namespace Hiero.Tests.SDK.Transactions
         public virtual void CanGetDecimals()
         {
             var tx = new TransferTransaction();
-            Assert.Null(tx.GetTokenIdDecimals()[TokenId.FromString(TestData.TOKEN_ID_1)]);
+            Assert.False(tx.GetTokenIdDecimals().ContainsKey(TokenId.FromString(TestData.TOKEN_ID_1)));
             tx.AddTokenTransfer(TokenId.FromString(TestData.TOKEN_ID_1), AccountId.FromString("0.0.8"), 100);
-            Assert.Null(tx.GetTokenIdDecimals()[TokenId.FromString(TestData.TOKEN_ID_1)]);
+            Assert.False(tx.GetTokenIdDecimals().ContainsKey(TokenId.FromString(TestData.TOKEN_ID_1)));
             tx.AddTokenTransferWithDecimals(TokenId.FromString(TestData.TOKEN_ID_1), AccountId.FromString("0.0.7"), -100, 5);
             Assert.Equal(tx.GetTokenIdDecimals()[TokenId.FromString(TestData.TOKEN_ID_1)], (uint)5);
         }
