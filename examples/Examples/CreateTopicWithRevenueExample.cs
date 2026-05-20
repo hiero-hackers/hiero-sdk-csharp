@@ -65,8 +65,8 @@ namespace Hiero.Examples
                     { 
                         AdminKey = OPERATOR_KEY, 
                         FeeScheduleKey = OPERATOR_KEY, 
-                        CustomFees = [customFee] 
-                    
+                        CustomFees = customFee
+
                     }.Execute(client).GetReceipt(client).TopicId;
                     Console.WriteLine("Created Topic ID: " + topicId);
 
@@ -84,7 +84,7 @@ namespace Hiero.Examples
                     client.OperatorSet(aliceAccountId, aliceKey);
                     new TopicMessageSubmitTransaction
                     {
-                        CustomFeeLimits = [customFeeLimit],
+                        CustomFeeLimits = customFeeLimit,
                         TopicId = topicId,
                         Message = ByteString.CopyFromUtf8("Hello, Hedera™ hashgraph!"),
                     }
@@ -132,7 +132,7 @@ namespace Hiero.Examples
                     new TopicUpdateTransaction
                     {
                         TopicId = topicId,
-                        CustomFees = { customFeeToken },
+                        CustomFees = customFeeToken,
                     }                        
                     .Execute(client)
                     .GetReceipt(client);
@@ -166,7 +166,7 @@ namespace Hiero.Examples
                     /// Step 10: Exempt Bob from paying topic fees.
                     /// </summary>
                     Console.WriteLine("Updating topic to add Bob as a fee-exempt key...");
-                    new TopicUpdateTransaction { TopicId = topicId, FeeExemptKeys = { bobKey } }.Execute(client).GetReceipt(client);
+                    new TopicUpdateTransaction { TopicId = topicId, FeeExemptKeys = bobKey }.Execute(client).GetReceipt(client);
 
                     /// <summary>
                     /// Step 11: Bob submits a message to the topic without paying the fee.

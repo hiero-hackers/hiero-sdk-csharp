@@ -83,7 +83,7 @@ namespace Hiero.Examples
                 KycKey = operatorPublicKey,
                 SupplyKey = operatorPublicKey,
                 FreezeDefault = false,
-                NodeAccountIds = { bobAccountCreateTxResponse.NodeId },
+                NodeAccountIds = bobAccountCreateTxResponse.NodeId,
                 TokenName = "Example Fungible Token for Transfer demo",
                 TokenSymbol = "EFT",
 
@@ -97,7 +97,7 @@ namespace Hiero.Examples
             Console.WriteLine("Associating the token with created accounts...");
             new TokenAssociateTransaction
             {
-                NodeAccountIds = { tokenCreateTxResponse.NodeId },
+                NodeAccountIds = tokenCreateTxResponse.NodeId,
                 AccountId = aliceAccountId,
                 TokenIds = [tokenId],
 
@@ -105,7 +105,7 @@ namespace Hiero.Examples
             Console.WriteLine("Associated account " + aliceAccountId + " with token " + tokenId);
             new TokenAssociateTransaction
             {
-                NodeAccountIds = { tokenCreateTxResponse.NodeId },
+                NodeAccountIds = tokenCreateTxResponse.NodeId,
                 AccountId = bobAccountId,
                 TokenIds = [tokenId],
 
@@ -116,9 +116,9 @@ namespace Hiero.Examples
             /// Grant token KYC for created accounts.
             /// </summary>
             Console.WriteLine("Granting token KYC for created accounts...");
-            new TokenGrantKycTransaction { NodeAccountIds = { tokenCreateTxResponse.NodeId }, AccountId = aliceAccountId, TokenId = tokenId }.Execute(client).GetReceipt(client);
+            new TokenGrantKycTransaction { NodeAccountIds = tokenCreateTxResponse.NodeId, AccountId = aliceAccountId, TokenId = tokenId }.Execute(client).GetReceipt(client);
             Console.WriteLine("Granted KYC for account " + aliceAccountId + " on token " + tokenId);
-            new TokenGrantKycTransaction { NodeAccountIds = { tokenCreateTxResponse.NodeId }, AccountId = bobAccountId, TokenId = tokenId }.Execute(client).GetReceipt(client);
+            new TokenGrantKycTransaction { NodeAccountIds = tokenCreateTxResponse.NodeId, AccountId = bobAccountId, TokenId = tokenId }.Execute(client).GetReceipt(client);
             Console.WriteLine("Granted KYC for account " + bobAccountId + " on token " + tokenId);
             /// <summary>
             /// Step 6:
@@ -169,10 +169,10 @@ namespace Hiero.Examples
                 TokenId = tokenId,
                 AccountId = aliceAccountId,
                 Amount = 10,
-                NodeAccountIds = { tokenCreateTxResponse.NodeId },
+                NodeAccountIds = tokenCreateTxResponse.NodeId,
 
             }.Execute(client).GetReceipt(client);
-            new TokenDeleteTransaction { NodeAccountIds = { tokenCreateTxResponse.NodeId }, TokenId = tokenId }.Execute(client).GetReceipt(client);
+            new TokenDeleteTransaction { NodeAccountIds = tokenCreateTxResponse.NodeId, TokenId = tokenId }.Execute(client).GetReceipt(client);
             new AccountDeleteTransaction
             {
                 AccountId = aliceAccountId,

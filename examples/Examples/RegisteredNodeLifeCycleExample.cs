@@ -87,7 +87,7 @@ namespace Hiero.Examples
             /// NOTE: This transaction must be signed by the consensus node's admin key.
             /// In this example, we assume the operator is the node admin.
             /// </summary>
-            NodeUpdateTransaction associateTx = new NodeUpdateTransaction().SetNodeId(0).AddAssociatedRegisteredNode(registeredNodeId).FreezeWith(client);
+            NodeUpdateTransaction associateTx = new NodeUpdateTransaction { NodeId = 0 }.AddAssociatedRegisteredNode(registeredNodeId).FreezeWith(client);
             Console.WriteLine("Associating registered node " + registeredNodeId + " with consensus node...");
             TransactionResponse associateTxResponse = associateTx.Execute(client);
             associateTxResponse.GetReceipt(client);
@@ -95,7 +95,7 @@ namespace Hiero.Examples
             /// Step 6:
             /// Remove the registeredNodeId as associatedRegisteredNodes from a Node.
             /// </summary>
-            NodeUpdateTransaction disassociateTx = new NodeUpdateTransaction().SetNodeId(0).ClearAssociatedRegisteredNodes().FreezeWith(client);
+            NodeUpdateTransaction disassociateTx = new NodeUpdateTransaction { NodeId = 0, }.FreezeWith(client);
             Console.WriteLine("Disassociating registered node " + registeredNodeId + " with consensus node...");
             TransactionResponse disassociatedTxResponse = disassociateTx.Execute(client);
             disassociatedTxResponse.GetReceipt(client);

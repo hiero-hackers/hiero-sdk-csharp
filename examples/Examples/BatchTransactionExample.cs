@@ -134,7 +134,7 @@ namespace Hiero.Examples
             Console.WriteLine("Executing batch transaction...");
             var receipt = new BatchTransaction
             {
-                InnerTransactions = [aliceBatchedTransfer, bobBatchedTransfer, carolBatchedTransfer]
+                InnerTransactions = new (aliceBatchedTransfer, bobBatchedTransfer, carolBatchedTransfer)
             }
                 .FreezeWith(client)
                 .Sign(batchKey1)
@@ -226,7 +226,7 @@ namespace Hiero.Examples
             Console.WriteLine("Executing batch transaction...");
             var receipt = new BatchTransaction
             {
-                InnerTransactions = [aliceBatchedTransfer],
+                InnerTransactions = aliceBatchedTransfer,
             }
             .FreezeWith(client)
             .Sign(batchKey)

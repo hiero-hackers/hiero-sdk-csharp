@@ -115,7 +115,7 @@ namespace Hiero.Examples
             /// </summary>
             ScheduleInfo scheduleInfo_BeforeLastSignature = new ScheduleInfoQuery
             {
-                NodeAccountIds = { accountCreateTxResponse.NodeId },
+                NodeAccountIds = accountCreateTxResponse.NodeId,
                 ScheduleId = scheduleId
 
             }.Execute(client);
@@ -149,7 +149,7 @@ namespace Hiero.Examples
             Console.WriteLine("Appending private key #3 signature to a schedule transaction..." + "(This last signature should mean the transaction executes since all 3 signatures have been provided)");
             TransactionReceipt scheduleSignTxReceipt = new ScheduleSignTransaction
             {
-                NodeAccountIds = { accountCreateTxResponse.NodeId },
+                NodeAccountIds = accountCreateTxResponse.NodeId,
                 ScheduleId = scheduleId,
             }
             .FreezeWith(client)
@@ -163,7 +163,7 @@ namespace Hiero.Examples
             /// </summary>
             ScheduleInfo scheduleInfo_AfterAllSigned = new ScheduleInfoQuery
             {
-                NodeAccountIds = { accountCreateTxResponse.NodeId },
+                NodeAccountIds = accountCreateTxResponse.NodeId,
                 ScheduleId = scheduleId,
 
             }.Execute(client);

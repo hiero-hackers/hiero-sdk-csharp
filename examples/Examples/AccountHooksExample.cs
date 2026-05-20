@@ -101,7 +101,7 @@ namespace Hiero.Examples
                 TransactionResponse accountCreateResponse = new AccountCreateTransaction
                 {
                     InitialBalance = Hbar.From(1),
-                    HookCreationDetails = { hookDetails },
+                    HookCreationDetails = hookDetails,
 
                 }.SetKeyWithoutAlias(accountPublicKey).FreezeWith(client).Sign(accountKey).Execute(client);
                 TransactionReceipt accountCreateReceipt = accountCreateResponse.GetReceipt(client);
@@ -136,10 +136,7 @@ namespace Hiero.Examples
                 TransactionResponse accountUpdateResponse = new AccountUpdateTransaction
                 {
                     AccountId = accountId,
-                    HookCreationDetails =
-                    [
-                        hook1, hook2
-                    ]
+                    HookCreationDetails = new(hook1, hook2)
                 }
                 .FreezeWith(client)
                 .Sign(accountKey)
@@ -174,7 +171,7 @@ namespace Hiero.Examples
                 TransactionResponse deleteHookResponse = new AccountUpdateTransaction
                 {
                     AccountId = accountId,
-                    HookIdsToDelete = [1, 2]
+                    HookIdsToDelete = new (1, 2)
                 }
                 .FreezeWith(client)
                 .Sign(accountKey)

@@ -114,17 +114,11 @@ namespace Hiero.Examples
             /// </summary>
             Console.WriteLine("Airdropping fts");
             var txnRecord = new TokenAirdropTransaction()
-                
                 .AddTokenTransfer(tokenID, alice, 10)
-                
-                .AddTokenTransfer(tokenID, treasuryAccount, -10)
-                
+                .AddTokenTransfer(tokenID, treasuryAccount, -10) 
                 .AddTokenTransfer(tokenID, bob, 10)
-                
                 .AddTokenTransfer(tokenID, treasuryAccount, -10)
-                
                 .AddTokenTransfer(tokenID, carol, 10)
-                
                 .AddTokenTransfer(tokenID, treasuryAccount, -10).FreezeWith(client).Sign(treasuryKey).Execute(client).GetRecord(client);
             /// <summary>
             /// Step 4:
@@ -149,7 +143,7 @@ namespace Hiero.Examples
             Console.WriteLine("Claiming ft with carol");
             new TokenClaimAirdropTransaction
             {
-                PendingAirdropIds = { txnRecord.PendingAirdropRecords[0].PendingAirdropId }
+                PendingAirdropIds = txnRecord.PendingAirdropRecords[0].PendingAirdropId
 
             }.FreezeWith(client).Sign(privateKey3).Execute(client).GetReceipt(client);
             carolBalance = new AccountBalanceQuery { AccountId = carol }.Execute(client);
@@ -187,7 +181,7 @@ namespace Hiero.Examples
             Console.WriteLine("Claiming nft with Bob");
             new TokenClaimAirdropTransaction 
             { 
-                PendingAirdropIds = { txnRecord.PendingAirdropRecords[0].PendingAirdropId } 
+                PendingAirdropIds = txnRecord.PendingAirdropRecords[0].PendingAirdropId 
             
             }.FreezeWith(client).Sign(privateKey2).Execute(client).GetReceipt(client);
             bobBalance = new AccountBalanceQuery { AccountId = bob }.Execute(client);
@@ -199,7 +193,7 @@ namespace Hiero.Examples
             Console.WriteLine("Canceling nft for Carol");
             new TokenCancelAirdropTransaction 
             { 
-                PendingAirdropIds = { txnRecord.PendingAirdropRecords[1].PendingAirdropId } 
+                PendingAirdropIds = txnRecord.PendingAirdropRecords[1].PendingAirdropId 
             
             }.FreezeWith(client).Sign(treasuryKey).Execute(client).GetReceipt(client);
             carolBalance = new AccountBalanceQuery { AccountId = carol }.Execute(client);

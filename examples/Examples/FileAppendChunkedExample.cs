@@ -86,7 +86,7 @@ namespace Hiero.Examples
             Console.WriteLine("Appending new contents to the created file...");
             new FileAppendTransaction
             {
-                NodeAccountIds = { fileCreateTxResponse.NodeId },
+                NodeAccountIds = fileCreateTxResponse.NodeId,
                 FileId = newFileId,
                 Contents = ByteString.CopyFromUtf8(contents.ToString()),
                 MaxChunks = 40,

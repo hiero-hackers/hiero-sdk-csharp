@@ -68,7 +68,7 @@ namespace Hiero.Examples
             TransactionResponse hookStoreResponse = new HookStoreTransaction 
             { 
                 HookId = hookId,
-                StorageUpdates = { storageUpdate },
+                StorageUpdates = storageUpdate,
             }
             .FreezeWith(client)
             .Sign(accountKey)
@@ -112,7 +112,7 @@ namespace Hiero.Examples
             {
                 TransactionResponse accountCreateResponse = new AccountCreateTransaction
                 {
-                    HookCreationDetails = { hookDetails },
+                    HookCreationDetails = hookDetails,
                     InitialBalance = Hbar.From(1),
                 }
                 .SetKeyWithoutAlias(accountPublicKey)

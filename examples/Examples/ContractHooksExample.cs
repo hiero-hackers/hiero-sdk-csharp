@@ -78,8 +78,8 @@ namespace Hiero.Examples
                 AdminKey = OPERATOR_KEY,
                 Gas = 400000,
                 BytecodeFileId = CreateBytecodeFile(client),
-                HookCreationDetails_ = { hookDetails }
-            
+                HookCreationDetails_ = hookDetails
+
             }.Execute(client);
             var receipt = response.GetReceipt(client);
             ContractId contractId = receipt.ContractId;
@@ -97,14 +97,14 @@ namespace Hiero.Examples
             Key adminKey = OPERATOR_KEY.GetPublicKey();
 
             // Hook 3: Basic lambda hook with no storage updates (using ID 3 to avoid conflict with existing hook 1)
-            EvmHook basicHook = new EvmHook(hookContractId);
-            HookCreationDetails hook3 = new HookCreationDetails(HookExtensionPoint.AccountAllowanceHook, 3, basicHook, adminKey);
+            EvmHook basicHook = new (hookContractId);
+            HookCreationDetails hook3 = new (HookExtensionPoint.AccountAllowanceHook, 3, basicHook, adminKey);
             try
             {
                 TransactionResponse contractUpdateResponse = new ContractUpdateTransaction 
                 {
                     ContractId = targetContractId,
-                    HookCreationDetails_ = { hook3 }
+                    HookCreationDetails_ = hook3
 
                 }.FreezeWith(client).Sign(OPERATOR_KEY).Execute(client);
                 contractUpdateResponse.GetReceipt(client);
@@ -131,7 +131,7 @@ namespace Hiero.Examples
                 TransactionResponse deleteHookResponse = new ContractUpdateTransaction
                 {
                     ContractId = contractId,
-                    HookIdsToDelete = { 1, 3 }
+                    HookIdsToDelete = new (1, 3)
                 
                 }.FreezeWith(client).Sign(OPERATOR_KEY).Execute(client);
                 deleteHookResponse.GetReceipt(client);

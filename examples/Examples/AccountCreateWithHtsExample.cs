@@ -276,7 +276,7 @@ namespace Hiero.Examples
             {
                 TokenId = nftTokenId,
                 AccountId = nftOwnerAccountId,
-                Serials = [exampleNftId]
+                Serials = exampleNftId
             }
             .FreezeWith(client)
             .Sign(wipePrivateKey)

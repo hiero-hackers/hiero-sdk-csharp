@@ -121,7 +121,7 @@ namespace Hiero.Examples
                 TransactionReceipt loopReceipt = new TransactionReceiptQuery
                 {
                     TransactionId = scheduledTxResponse.TransactionId,
-                    NodeAccountIds = [scheduledTxResponse.NodeId]
+                    NodeAccountIds = scheduledTxResponse.NodeId
 
                 }.Execute(loopClient);
                 Console.WriteLine("Operator (ID: " + operatorId + ") | Schedule ID: " + loopReceipt.ScheduleId);
@@ -146,7 +146,7 @@ namespace Hiero.Examples
                     { 
                         ScheduleId = scheduleId,
                         // TODO ScheduleId = loopReceipt.ScheduleId
-                        NodeAccountIds = [accountCreateTxResponse.NodeId],
+                        NodeAccountIds = accountCreateTxResponse.NodeId,
                     }.Execute(loopClient);
                     TransactionReceipt scheduleSignTxReceipt = new TransactionReceiptQuery { TransactionId = scheduleSignTxResponse.TransactionId, }.Execute(client);
                     Console.WriteLine("A transaction that appends signature to a schedule transaction " + "was complete with status: " + scheduleSignTxReceipt.Status);

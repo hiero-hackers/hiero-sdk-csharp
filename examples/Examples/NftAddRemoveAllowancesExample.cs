@@ -419,7 +419,7 @@ namespace Hiero.Examples
             {
                 TokenId = nftTokenId,
                 AccountId = receiverAccountId,
-                Serials = { 1 }
+                Serials = 1
             }
             .FreezeWith(client)
             .Sign(OPERATOR_KEY)
@@ -429,7 +429,7 @@ namespace Hiero.Examples
             { 
                 TokenId = nftTokenId2,
                 AccountId = receiverAccountId2,
-                Serials = { 1, 2 }
+                Serials = new (1, 2)
             }
             .FreezeWith(client)
             .Sign(OPERATOR_KEY)
