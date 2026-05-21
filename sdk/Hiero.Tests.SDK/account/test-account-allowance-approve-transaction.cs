@@ -19,7 +19,7 @@ namespace Hiero.Tests.SDK.Account
         private static readonly TokenId testTokenId = TokenId.FromString("1.2.3");
         private static readonly AccountId testOwnerAccountId = AccountId.FromString("4.5.7");
         private static readonly AccountId testSpenderAccountId = AccountId.FromString("8.9.0");
-        private static readonly DateTimeOffset validStart = DateTimeOffset.FromUnixTimeMilliseconds(1554158542);
+        private static readonly NodaTime.Instant validStart = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
         
         public virtual AccountAllowanceApproveTransaction SpawnTestTransaction()
         {

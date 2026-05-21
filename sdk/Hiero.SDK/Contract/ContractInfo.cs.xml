@@ -5,7 +5,7 @@
     Current information on the smart contract instance, including its balance.
     </summary>
   </member>
-  <member name="M:ContractInfo.#ctor(ContractId,AccountId,System.String,Key,DateTimeOffset,System.TimeSpan,AccountId,System.Int64,System.String,Hbar,System.Boolean,System.Collections.Generic.Dictionary{TokenId,TokenRelationship},LedgerId,StakingInfo)">
+  <member name="M:ContractInfo.#ctor(ContractId,AccountId,System.String,Key,NodaTime.Instant,System.NodaTime.Duration,AccountId,System.Int64,System.String,Hbar,System.Boolean,System.Collections.Generic.Dictionary{TokenId,TokenRelationship},LedgerId,StakingInfo)">
     <summary>
      Constructor.
     </summary>

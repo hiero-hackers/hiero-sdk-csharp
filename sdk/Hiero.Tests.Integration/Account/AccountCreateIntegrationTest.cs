@@ -1,16 +1,14 @@
 ﻿// SPDX-License-Identifier: Apache-2.0
-using Google.Protobuf.WellKnownTypes;
-
+using Hiero.SDK;
+using Hiero.SDK.Core;
+using Hiero.SDK.Cryptography;
 using Hiero.SDK.Cryptocurrency;
 using Hiero.SDK.Exceptions;
-using Hiero.SDK;
-using Hiero.SDK.Cryptography;
 using Hiero.SDK.Transactions;
 
 using Org.BouncyCastle.Utilities.Encoders;
 
-using System;
-using Hiero.SDK.Core;
+using NodaTime;
 
 namespace Hiero.Tests.Integration.Account
 {
@@ -40,7 +38,7 @@ namespace Hiero.Tests.Integration.Account
                 Assert.False(info.IsDeleted);
                 Assert.Equal(info.Key.ToString(), key.GetPublicKey().ToString());
                 Assert.Equal(info.Balance, new Hbar(1));
-                Assert.Equal(info.AutoRenewPeriod, TimeSpan.FromDays(90));
+                Assert.Equal(info.AutoRenewPeriod.TotalDays, Duration.FromDays(90).TotalDays);
                 Assert.Null(info.ProxyAccountId);
                 Assert.Equal(info.ProxyReceived, Hbar.ZERO);
             }
@@ -63,7 +61,7 @@ namespace Hiero.Tests.Integration.Account
                 Assert.False(info.IsDeleted);
                 Assert.Equal(info.Key.ToString(), key.GetPublicKey().ToString());
                 Assert.Equal(info.Balance, new Hbar(0));
-                Assert.Equal(info.AutoRenewPeriod, TimeSpan.FromDays(90));
+                Assert.Equal(info.AutoRenewPeriod.TotalDays, Duration.FromDays(90).TotalDays);
                 Assert.Null(info.ProxyAccountId);
                 Assert.Equal(info.ProxyReceived, Hbar.ZERO);
             }
@@ -119,8 +117,8 @@ namespace Hiero.Tests.Integration.Account
                 var key = PrivateKey.GenerateED25519();
                 var response = new AccountCreateTransaction()
                 {
-					TransactionId = TransactionId.WithValidStart(testEnv.OperatorId, DateTimeOffset.UtcNow.AddSeconds(-40)),
-					TransactionValidDuration = TimeSpan.FromSeconds(30),
+					TransactionId = TransactionId.WithValidStart(testEnv.OperatorId, SystemClock.Instance.GetCurrentInstant().PlusSeconds(-40)),
+					TransactionValidDuration = Duration.FromSeconds(30),
 					Key = key,
 				}
                 .FreezeWith(testEnv.Client)
@@ -137,7 +135,7 @@ namespace Hiero.Tests.Integration.Account
                 Assert.False(info.IsDeleted);
                 Assert.Equal(info.Key.ToString(), key.GetPublicKey().ToString());
                 Assert.Equal(info.Balance, new Hbar(0));
-                Assert.Equal(info.AutoRenewPeriod, TimeSpan.FromDays(90));
+                Assert.Equal(info.AutoRenewPeriod, Duration.FromDays(90));
                 Assert.Null(info.ProxyAccountId);
                 Assert.Equal(info.ProxyReceived, Hbar.ZERO);
             }

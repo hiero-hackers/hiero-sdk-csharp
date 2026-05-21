@@ -127,7 +127,7 @@ namespace Hiero.SDK.Core
                 SourceTransactionBody = Transaction.ParseTransactionBody(InnerSignedTransactions[0].BodyBytes);
             }
 
-            TransactionValidDuration = SourceTransactionBody.TransactionValidDuration.ToTimeSpan();
+            TransactionValidDuration = SourceTransactionBody.TransactionValidDuration.ToNodaDuration();
             MaxTransactionFee = Hbar.FromTinybars(SourceTransactionBody.TransactionFee);
             TransactionMemo = SourceTransactionBody.Memo;
             
@@ -163,7 +163,7 @@ namespace Hiero.SDK.Core
 		}
 		
 		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.RequireNotFrozen_3"]' />
-		public TimeSpan TransactionValidDuration
+		public NodaTime.Duration TransactionValidDuration
 		{
 			get;
 			set

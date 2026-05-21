@@ -25,11 +25,11 @@ namespace Hiero.SDK.Consensus
         {
             set => _Proto.TopicId = value.ToProtobuf(); 
         }
-		public DateTimeOffset StartTime 
+		public NodaTime.Instant StartTime 
         {
             set => _Proto.ConsensusStartTime = value.ToProtoTimestamp(); 
         }
-		public DateTimeOffset EndTime 
+		public NodaTime.Instant EndTime 
         {
             set => _Proto.ConsensusEndTime  = value.ToProtoTimestamp(); 
         }
@@ -58,7 +58,7 @@ namespace Hiero.SDK.Consensus
             });
 		}
 		public IntNN MaxAttempts { set; private get; } = 10;
-        public TimeSpan MaxBackoff
+        public NodaTime.Duration MaxBackoff
 		{
 			private get;
 
@@ -69,7 +69,7 @@ namespace Hiero.SDK.Consensus
 
 				field = value;
 			}
-        } = TimeSpan.FromSeconds(8);
+        } = NodaTime.Duration.FromSeconds(8);
         public Predicate<Exception> RetryHandler 
         { 
             set; 

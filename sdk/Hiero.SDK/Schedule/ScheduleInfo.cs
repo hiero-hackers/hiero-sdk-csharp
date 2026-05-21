@@ -13,7 +13,7 @@ namespace Hiero.SDK.Schedule
     /// <include file="ScheduleInfo.cs.xml" path='docs/member[@name="T:ScheduleInfo"]' />
     public sealed class ScheduleInfo
     {
-        /// <include file="ScheduleInfo.cs.xml" path='docs/member[@name="M:ScheduleInfo.#ctor(ScheduleId,AccountId,AccountId,Proto.Services.SchedulableTransactionBody,KeyList,Key,TransactionId,System.String,DateTimeOffset,DateTimeOffset,DateTimeOffset,LedgerId,System.Boolean)"]' />
+        /// <include file="ScheduleInfo.cs.xml" path='docs/member[@name="M:ScheduleInfo.#ctor(ScheduleId,AccountId,AccountId,Proto.Services.SchedulableTransactionBody,KeyList,Key,TransactionId,System.String,NodaTime.Instant,NodaTime.Instant,NodaTime.Instant,LedgerId,System.Boolean)"]' />
         public ScheduleInfo(
 			ScheduleId scheduleId, 
 			AccountId creatorAccountId, 
@@ -23,9 +23,9 @@ namespace Hiero.SDK.Schedule
 			Key? adminKey, 
 			TransactionId scheduledTransactionId, 
 			string memo, 
-			DateTimeOffset? expirationTime, 
-			DateTimeOffset? executed, 
-			DateTimeOffset? deleted, 
+			NodaTime.Instant? expirationTime, 
+			NodaTime.Instant? executed, 
+			NodaTime.Instant? deleted, 
 			LedgerId ledgerId, 
 			bool waitForExpiry)
         {
@@ -61,9 +61,9 @@ namespace Hiero.SDK.Schedule
                 info.AdminKey is null ? null : Key.FromProtobufKey(info.AdminKey),
 				TransactionId.FromProtobuf(info.ScheduledTransactionId), 
                 info.Memo, 
-                info.ExpirationTime?.ToDateTimeOffset(),
-                info.ExecutionTime?.ToDateTimeOffset(), 
-                info.DeletionTime?.ToDateTimeOffset(), 
+                info.ExpirationTime?.ToNodaTimeInstant(),
+                info.ExecutionTime?.ToNodaTimeInstant(), 
+                info.DeletionTime?.ToNodaTimeInstant(), 
                 LedgerId.FromByteString(info.LedgerId), 
                 info.WaitForExpiry);
         }
@@ -83,11 +83,11 @@ namespace Hiero.SDK.Schedule
 		/// <include file="ScheduleInfo.cs.xml" path='docs/member[@name="P:ScheduleInfo.Memo"]' />
 		public string Memo { get; }
 		/// <include file="ScheduleInfo.cs.xml" path='docs/member[@name="P:ScheduleInfo.ExpirationTime"]' />
-		public DateTimeOffset? ExpirationTime { get; }
+		public NodaTime.Instant? ExpirationTime { get; }
 		/// <include file="ScheduleInfo.cs.xml" path='docs/member[@name="P:ScheduleInfo.ExecutedAt"]' />
-		public DateTimeOffset? ExecutedAt { get; }
+		public NodaTime.Instant? ExecutedAt { get; }
 		/// <include file="ScheduleInfo.cs.xml" path='docs/member[@name="P:ScheduleInfo.DeletedAt"]' />
-		public DateTimeOffset? DeletedAt { get; }
+		public NodaTime.Instant? DeletedAt { get; }
 		/// <include file="ScheduleInfo.cs.xml" path='docs/member[@name="P:ScheduleInfo.TransactionBody"]' />
 		public Proto.Services.SchedulableTransactionBody TransactionBody { get; }
 		/// <include file="ScheduleInfo.cs.xml" path='docs/member[@name="P:ScheduleInfo.LedgerId"]' />

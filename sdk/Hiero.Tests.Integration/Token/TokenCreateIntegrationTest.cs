@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 
-using Google.Protobuf.WellKnownTypes;
-
 using Hiero.SDK.Cryptocurrency;
 using Hiero.SDK.Exceptions;
 using Hiero.SDK.Fee;
@@ -11,6 +9,8 @@ using Hiero.SDK;
 using Hiero.SDK.Cryptography;
 using Hiero.SDK.Token;
 using Hiero.SDK.Core;
+
+using NodaTime;
 
 namespace Hiero.Tests.Integration.Token
 {
@@ -472,8 +472,8 @@ namespace Hiero.Tests.Integration.Token
         {
             using (var testEnv = new IntegrationTestEnv(1))
             {
-                var autoRenewPeriod = TimeSpan.FromSeconds(7890000);
-                var expirationTime = DateTimeOffset.UtcNow.Add(autoRenewPeriod);
+                var autoRenewPeriod = Duration.FromSeconds(7890000);
+                var expirationTime = SystemClock.Instance.GetCurrentInstant().Plus(autoRenewPeriod);
                 var response = new TokenCreateTransaction
                 {
 					TokenName = "ffff",
@@ -499,7 +499,7 @@ namespace Hiero.Tests.Integration.Token
         {
             using (var testEnv = new IntegrationTestEnv(1))
             {
-                var expirationTime = DateTimeOffset.UtcNow.AddSeconds(8000001);
+                var expirationTime = SystemClock.Instance.GetCurrentInstant().PlusSeconds(8000001);
                 var response = new TokenCreateTransaction
                 {
 					TokenName = "ffff",
@@ -662,7 +662,7 @@ namespace Hiero.Tests.Integration.Token
             {
 
                 // Calculate expiration time 90 days from now
-                var expirationTime = DateTimeOffset.UtcNow.AddSeconds(90 * 24 * 60 * 60);
+                var expirationTime = SystemClock.Instance.GetCurrentInstant().PlusSeconds(90 * 24 * 60 * 60);
                 var response = new TokenCreateTransaction
                 {
 					TokenName = "TEST",

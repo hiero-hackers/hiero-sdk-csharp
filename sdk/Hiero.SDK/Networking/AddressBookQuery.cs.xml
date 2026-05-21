@@ -30,7 +30,7 @@
     Execute the query with the client's preset timeout.
     </summary>
   </member>
-  <member name="M:AddressBookQuery.Execute(Client,System.TimeSpan)">
+  <member name="M:AddressBookQuery.Execute(Client,System.NodaTime.Duration)">
     <summary>
     Execute the query with a user-supplied timeout.
     </summary>
@@ -40,7 +40,7 @@
     Execute the query asynchronously with the client's preset timeout.
     </summary>
   </member>
-  <member name="M:AddressBookQuery.ExecuteAsync(Client,System.TimeSpan)">
+  <member name="M:AddressBookQuery.ExecuteAsync(Client,System.NodaTime.Duration)">
     <summary>
     Execute the query asynchronously with a user-supplied timeout.
     </summary>

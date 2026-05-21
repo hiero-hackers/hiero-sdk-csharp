@@ -11,8 +11,8 @@ namespace Hiero.SDK.LiveHashes
     /// <include file="LiveHash.cs.xml" path='docs/member[@name="T:LiveHash"]' />
     public class LiveHash
     {
-        /// <include file="LiveHash.cs.xml" path='docs/member[@name="M:LiveHash.#ctor(AccountId,ByteString,KeyList,System.TimeSpan)"]' />
-        internal LiveHash(AccountId accountId, ByteString hash, KeyList keys, TimeSpan duration)
+        /// <include file="LiveHash.cs.xml" path='docs/member[@name="M:LiveHash.#ctor(AccountId,ByteString,KeyList,System.NodaTime.Duration)"]' />
+        internal LiveHash(AccountId accountId, ByteString hash, KeyList keys, NodaTime.Duration duration)
         {
             AccountId = accountId;
             Hash = hash;
@@ -32,7 +32,7 @@ namespace Hiero.SDK.LiveHashes
                 AccountId.FromProtobuf(liveHash.AccountId), 
                 liveHash.Hash,
                 KeyList.FromProtobuf(liveHash.Keys, null), 
-                liveHash.Duration.ToTimeSpan());
+                liveHash.Duration.ToNodaDuration());
         }
 
 		/// <include file="LiveHash.cs.xml" path='docs/member[@name="F:LiveHash.AccountId"]' />
@@ -42,7 +42,7 @@ namespace Hiero.SDK.LiveHashes
 		/// <include file="LiveHash.cs.xml" path='docs/member[@name="F:LiveHash.Keys"]' />
 		public KeyList Keys { get; }
 		/// <include file="LiveHash.cs.xml" path='docs/member[@name="F:LiveHash.Duration"]' />
-		public TimeSpan Duration { get; }
+		public NodaTime.Duration Duration { get; }
 
 		/// <include file="LiveHash.cs.xml" path='docs/member[@name="M:LiveHash.ToBytes"]' />
 		public virtual ByteString ToBytes()

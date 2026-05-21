@@ -15,8 +15,8 @@ namespace Hiero.SDK.Contract
     /// <include file="ContractInfo.cs.xml" path='docs/member[@name="T:ContractInfo"]' />
     public sealed class ContractInfo
     {
-        /// <include file="ContractInfo.cs.xml" path='docs/member[@name="M:ContractInfo.#ctor(ContractId,AccountId,System.String,Key,DateTimeOffset,System.TimeSpan,AccountId,System.Int64,System.String,Hbar,System.Boolean,System.Collections.Generic.Dictionary{TokenId,TokenRelationship},LedgerId,StakingInfo)"]' />
-        private ContractInfo(ContractId contractId, AccountId accountId, string contractAccountId, Key? adminKey, DateTimeOffset expirationTime, TimeSpan autoRenewPeriod, AccountId autoRenewAccountId, long storage, string contractMemo, Hbar balance, bool isDeleted, Dictionary<TokenId, TokenRelationship> tokenRelationships, LedgerId ledgerId, StakingInfo stakingInfo)
+        /// <include file="ContractInfo.cs.xml" path='docs/member[@name="M:ContractInfo.#ctor(ContractId,AccountId,System.String,Key,NodaTime.Instant,System.NodaTime.Duration,AccountId,System.Int64,System.String,Hbar,System.Boolean,System.Collections.Generic.Dictionary{TokenId,TokenRelationship},LedgerId,StakingInfo)"]' />
+        private ContractInfo(ContractId contractId, AccountId accountId, string contractAccountId, Key? adminKey, NodaTime.Instant expirationTime, NodaTime.Duration autoRenewPeriod, AccountId autoRenewAccountId, long storage, string contractMemo, Hbar balance, bool isDeleted, Dictionary<TokenId, TokenRelationship> tokenRelationships, LedgerId ledgerId, StakingInfo stakingInfo)
         {
             ContractId = contractId;
             AccountId = accountId;
@@ -47,8 +47,8 @@ namespace Hiero.SDK.Contract
                 AccountId.FromProtobuf(contractInfo.AccountId), 
                 contractInfo.ContractAccountId,
 				Key.FromProtobufKey(contractInfo.AdminKey), 
-                contractInfo.ExpirationTime.ToDateTimeOffset(), 
-                contractInfo.AutoRenewPeriod.ToTimeSpan(), 
+                contractInfo.ExpirationTime.ToNodaTimeInstant(), 
+                contractInfo.AutoRenewPeriod.ToNodaDuration(), 
                 AccountId.FromProtobuf(contractInfo.AutoRenewAccountId), 
                 contractInfo.Storage, 
                 contractInfo.Memo, 
@@ -70,9 +70,9 @@ namespace Hiero.SDK.Contract
 		/// <include file="ContractInfo.cs.xml" path='docs/member[@name="F:ContractInfo.AdminKey"]' />
 		public Key? AdminKey { get; }
 		/// <include file="ContractInfo.cs.xml" path='docs/member[@name="F:ContractInfo.ExpirationTime"]' />
-		public DateTimeOffset ExpirationTime { get; }
+		public NodaTime.Instant ExpirationTime { get; }
 		/// <include file="ContractInfo.cs.xml" path='docs/member[@name="F:ContractInfo.AutoRenewPeriod"]' />
-		public TimeSpan AutoRenewPeriod { get; }
+		public NodaTime.Duration AutoRenewPeriod { get; }
 		/// <include file="ContractInfo.cs.xml" path='docs/member[@name="F:ContractInfo.AutoRenewAccountId"]' />
 		public AccountId AutoRenewAccountId { get; }
 		/// <include file="ContractInfo.cs.xml" path='docs/member[@name="F:ContractInfo.Storage"]' />

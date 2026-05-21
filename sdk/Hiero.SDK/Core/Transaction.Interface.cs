@@ -38,7 +38,7 @@ namespace Hiero.SDK.Core
 		/// <include file="Transaction.Interface.cs.xml" path='docs/member[@name="P:.TransactionMemo"]' />
 		string TransactionMemo { get; set; }
 		/// <include file="Transaction.Interface.cs.xml" path='docs/member[@name="P:.TransactionValidDuration"]' />
-		TimeSpan TransactionValidDuration { get; set; }
+		NodaTime.Duration TransactionValidDuration { get; set; }
 		/// <include file="Transaction.Interface.cs.xml" path='docs/member[@name="P:.SourceTransactionBody"]' />
 		Proto.Services.TransactionBody SourceTransactionBody { get; }
 		/// <include file="Transaction.Interface.cs.xml" path='docs/member[@name="P:.FrozenBodyBuilder"]' />

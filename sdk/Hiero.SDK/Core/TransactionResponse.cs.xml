@@ -68,7 +68,7 @@
     <exception cref="PrecheckStatusException">when the precheck fails</exception>
     <exception cref="ReceiptStatusException">when there is an issue with the receipt</exception>
   </member>
-  <member name="M:TransactionResponse.GetReceipt(Client,System.TimeSpan)">
+  <member name="M:TransactionResponse.GetReceipt(Client,System.NodaTime.Duration)">
     <summary>
     Fetch the receipt of the transaction.
     </summary>
@@ -92,7 +92,7 @@
     <param name="client">The client with which this will be executed.</param>
     <returns>future result of the transaction receipt</returns>
   </member>
-  <member name="M:TransactionResponse.GetReceiptAsync(Client,System.TimeSpan)">
+  <member name="M:TransactionResponse.GetReceiptAsync(Client,System.NodaTime.Duration)">
     <summary>
     Fetch the receipt of the transaction asynchronously.
     </summary>
@@ -107,7 +107,7 @@
     <param name="client">The client with which this will be executed.</param>
     <param name="callback">a Action which handles the result or error.</param>
   </member>
-  <member name="M:TransactionResponse.GetReceiptAsync(Client,System.TimeSpan,System.Action{TransactionReceipt,System.Exception})">
+  <member name="M:TransactionResponse.GetReceiptAsync(Client,System.NodaTime.Duration,System.Action{TransactionReceipt,System.Exception})">
     <summary>
     Fetch the receipt of the transaction asynchronously.
     </summary>
@@ -123,7 +123,7 @@
     <param name="onSuccess">a Action which consumes the result on success.</param>
     <param name="onFailure">a Action which consumes the error on failure.</param>
   </member>
-  <member name="M:TransactionResponse.GetReceiptAsync(Client,System.TimeSpan,System.Action{TransactionReceipt},System.Action{System.Exception})">
+  <member name="M:TransactionResponse.GetReceiptAsync(Client,System.NodaTime.Duration,System.Action{TransactionReceipt},System.Action{System.Exception})">
     <summary>
     Fetch the receipt of the transaction asynchronously.
     </summary>
@@ -142,7 +142,7 @@
     <exception cref="PrecheckStatusException">when the precheck fails</exception>
     <exception cref="ReceiptStatusException">when there is an issue with the receipt</exception>
   </member>
-  <member name="M:TransactionResponse.GetRecord(Client,System.TimeSpan)">
+  <member name="M:TransactionResponse.GetRecord(Client,System.NodaTime.Duration)">
     <summary>
     Fetch the record of the transaction.
     </summary>
@@ -166,7 +166,7 @@
     <param name="client">The client with which this will be executed.</param>
     <returns>future result of the transaction record</returns>
   </member>
-  <member name="M:TransactionResponse.GetRecordAsync(Client,System.TimeSpan)">
+  <member name="M:TransactionResponse.GetRecordAsync(Client,System.NodaTime.Duration)">
     <summary>
     Fetch the record of the transaction asynchronously.
     </summary>
@@ -181,7 +181,7 @@
     <param name="client">The client with which this will be executed.</param>
     <param name="callback">a Action which handles the result or error.</param>
   </member>
-  <member name="M:TransactionResponse.GetRecordAsync(Client,System.TimeSpan,System.Action{TransactionRecord,System.Exception})">
+  <member name="M:TransactionResponse.GetRecordAsync(Client,System.NodaTime.Duration,System.Action{TransactionRecord,System.Exception})">
     <summary>
     Fetch the record of the transaction asynchronously.
     </summary>
@@ -197,7 +197,7 @@
     <param name="onSuccess">a Action which consumes the result on success.</param>
     <param name="onFailure">a Action which consumes the error on failure.</param>
   </member>
-  <member name="M:TransactionResponse.GetRecordAsync(Client,System.TimeSpan,System.Action{TransactionRecord},System.Action{System.Exception})">
+  <member name="M:TransactionResponse.GetRecordAsync(Client,System.NodaTime.Duration,System.Action{TransactionRecord},System.Action{System.Exception})">
     <summary>
     Fetch the record of the transaction asynchronously.
     </summary>

@@ -15,7 +15,7 @@ namespace Hiero.SDK.Consensus
     /// <include file="TopicInfo.cs.xml" path='docs/member[@name="T:TopicInfo"]' />
     public sealed class TopicInfo
     {
-        private TopicInfo(TopicId topicId, string topicMemo, ByteString runningHash, ulong sequenceNumber, DateTimeOffset expirationTime, Key? adminKey, Key? submitKey, TimeSpan autoRenewPeriod, AccountId autoRenewAccountId, LedgerId ledgerId, Key? feeScheduleKey, IEnumerable<Key> feeExemptKeys, IEnumerable<CustomFixedFee> customFees)
+        private TopicInfo(TopicId topicId, string topicMemo, ByteString runningHash, ulong sequenceNumber, NodaTime.Instant expirationTime, Key? adminKey, Key? submitKey, NodaTime.Duration autoRenewPeriod, AccountId autoRenewAccountId, LedgerId ledgerId, Key? feeScheduleKey, IEnumerable<Key> feeExemptKeys, IEnumerable<CustomFixedFee> customFees)
         {
             TopicId = topicId;
             TopicMemo = topicMemo;
@@ -45,10 +45,10 @@ namespace Hiero.SDK.Consensus
 				topicInfoResponse.TopicInfo.Memo, 
                 topicInfoResponse.TopicInfo.RunningHash, 
                 topicInfoResponse.TopicInfo.SequenceNumber,
-                topicInfoResponse.TopicInfo.ExpirationTime.ToDateTimeOffset(),
+                topicInfoResponse.TopicInfo.ExpirationTime.ToNodaTimeInstant(),
 				Key.FromProtobufKey(topicInfoResponse.TopicInfo.AdminKey),
 				Key.FromProtobufKey(topicInfoResponse.TopicInfo.SubmitKey), 
-                topicInfoResponse.TopicInfo.AutoRenewPeriod.ToTimeSpan(),
+                topicInfoResponse.TopicInfo.AutoRenewPeriod.ToNodaDuration(),
 				AccountId.FromProtobuf(topicInfoResponse.TopicInfo.AutoRenewAccount), 
                 LedgerId.FromByteString(topicInfoResponse.TopicInfo.LedgerId),
 				Key.FromProtobufKey(topicInfoResponse.TopicInfo.FeeScheduleKey), 
@@ -65,13 +65,13 @@ namespace Hiero.SDK.Consensus
 		/// <include file="TopicInfo.cs.xml" path='docs/member[@name="P:TopicInfo.SequenceNumber"]' />
 		public ulong SequenceNumber { get; }
 		/// <include file="TopicInfo.cs.xml" path='docs/member[@name="P:TopicInfo.ExpirationTime"]' />
-		public DateTimeOffset ExpirationTime { get; }
+		public NodaTime.Instant ExpirationTime { get; }
 		/// <include file="TopicInfo.cs.xml" path='docs/member[@name="P:TopicInfo.AdminKey"]' />
 		public Key? AdminKey { get; }
 		/// <include file="TopicInfo.cs.xml" path='docs/member[@name="P:TopicInfo.SubmitKey"]' />
 		public Key? SubmitKey { get; }
 		/// <include file="TopicInfo.cs.xml" path='docs/member[@name="P:TopicInfo.AutoRenewPeriod"]' />
-		public TimeSpan AutoRenewPeriod { get; }
+		public NodaTime.Duration AutoRenewPeriod { get; }
 		/// <include file="TopicInfo.cs.xml" path='docs/member[@name="P:TopicInfo.AutoRenewAccountId"]' />
 		public AccountId AutoRenewAccountId { get; }
 		/// <include file="TopicInfo.cs.xml" path='docs/member[@name="P:TopicInfo.LedgerId"]' />

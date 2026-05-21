@@ -45,7 +45,7 @@ namespace Hiero.Tests.Integration.System
                     new SystemDeleteTransaction
                     {
                         ContractId = contractId,
-                        ExpirationTime = DateTimeOffset.UtcNow,
+                        ExpirationTime = NodaTime.SystemClock.Instance.GetCurrentInstant(),
                     }
                     .Execute(testEnv.Client);
 
@@ -56,7 +56,7 @@ namespace Hiero.Tests.Integration.System
                     new SystemDeleteTransaction
                     {
                         FileId = fileId,
-                        ExpirationTime = DateTimeOffset.UtcNow,
+                        ExpirationTime = NodaTime.SystemClock.Instance.GetCurrentInstant(),
                     }
                     .Execute(testEnv.Client);
 

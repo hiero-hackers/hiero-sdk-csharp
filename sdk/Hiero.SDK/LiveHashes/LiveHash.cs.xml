@@ -10,7 +10,7 @@
     
     See <a href="https://docs.hedera.com/guides/core-concepts/accounts#livehash">Hedera Documentation</a></summary>
   </member>
-  <member name="M:LiveHash.#ctor(AccountId,ByteString,KeyList,System.TimeSpan)">
+  <member name="M:LiveHash.#ctor(AccountId,ByteString,KeyList,System.NodaTime.Duration)">
     <summary>
     Constructor.
     </summary>

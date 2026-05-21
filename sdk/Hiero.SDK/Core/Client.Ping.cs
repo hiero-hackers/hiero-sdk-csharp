@@ -15,8 +15,8 @@ namespace Hiero.SDK
         {
             Ping(nodeAccountId, RequestTimeout);
         }
-        /// <include file="Client.Ping.cs.xml" path='docs/member[@name="M:Ping(AccountId,System.TimeSpan)"]' />
-        public void Ping(AccountId nodeAccountId, TimeSpan timeout)
+        /// <include file="Client.Ping.cs.xml" path='docs/member[@name="M:Ping(AccountId,System.NodaTime.Duration)"]' />
+        public void Ping(AccountId nodeAccountId, NodaTime.Duration timeout)
         {
             new AccountBalanceQuery
 			{
@@ -30,8 +30,8 @@ namespace Hiero.SDK
         {
             return PingAsync(nodeAccountId, RequestTimeout);
         }
-        /// <include file="Client.Ping.cs.xml" path='docs/member[@name="M:PingAsync(AccountId,System.TimeSpan)"]' />
-        public async Task PingAsync(AccountId nodeAccountId, TimeSpan timeout)
+        /// <include file="Client.Ping.cs.xml" path='docs/member[@name="M:PingAsync(AccountId,System.NodaTime.Duration)"]' />
+        public async Task PingAsync(AccountId nodeAccountId, NodaTime.Duration timeout)
         {
 			await new AccountBalanceQuery()
 			{
@@ -44,8 +44,8 @@ namespace Hiero.SDK
         {
             Utils.ActionHelper.Action(PingAsync(nodeAccountId), callback);
         }
-        /// <include file="Client.Ping.cs.xml" path='docs/member[@name="M:PingAsync(AccountId,System.TimeSpan,System.Action{System.Exception})"]' />
-        public void PingAsync(AccountId nodeAccountId, TimeSpan timeout, Action<Exception> callback)
+        /// <include file="Client.Ping.cs.xml" path='docs/member[@name="M:PingAsync(AccountId,System.NodaTime.Duration,System.Action{System.Exception})"]' />
+        public void PingAsync(AccountId nodeAccountId, NodaTime.Duration timeout, Action<Exception> callback)
         {
             Utils.ActionHelper.Action(PingAsync(nodeAccountId, timeout), callback);
         }
@@ -54,8 +54,8 @@ namespace Hiero.SDK
         {
             Utils.ActionHelper.TwoActions(PingAsync(nodeAccountId), onSuccess, onFailure);
         }
-        /// <include file="Client.Ping.cs.xml" path='docs/member[@name="M:PingAsync(AccountId,System.TimeSpan,System.Action,System.Action{System.Exception})"]' />
-        public void PingAsync(AccountId nodeAccountId, TimeSpan timeout, Action onSuccess, Action<Exception> onFailure)
+        /// <include file="Client.Ping.cs.xml" path='docs/member[@name="M:PingAsync(AccountId,System.NodaTime.Duration,System.Action,System.Action{System.Exception})"]' />
+        public void PingAsync(AccountId nodeAccountId, NodaTime.Duration timeout, Action onSuccess, Action<Exception> onFailure)
         {
             Utils.ActionHelper.TwoActions(PingAsync(nodeAccountId, timeout), onSuccess, onFailure);
         }
@@ -67,8 +67,8 @@ namespace Hiero.SDK
                 PingAll(RequestTimeout);
             }
         }
-        /// <include file="Client.Ping.cs.xml" path='docs/member[@name="M:PingAll(System.TimeSpan)"]' />
-        public void PingAll(TimeSpan timeoutPerPing)
+        /// <include file="Client.Ping.cs.xml" path='docs/member[@name="M:PingAll(System.NodaTime.Duration)"]' />
+        public void PingAll(NodaTime.Duration timeoutPerPing)
         {
             lock (this)
             {
@@ -86,8 +86,8 @@ namespace Hiero.SDK
                 return PingAllAsync(RequestTimeout);
             }
         }
-        /// <include file="Client.Ping.cs.xml" path='docs/member[@name="M:PingAllAsync(System.TimeSpan)"]' />
-        public Task PingAllAsync(TimeSpan timeoutPerPing)
+        /// <include file="Client.Ping.cs.xml" path='docs/member[@name="M:PingAllAsync(System.NodaTime.Duration)"]' />
+        public Task PingAllAsync(NodaTime.Duration timeoutPerPing)
         {
             lock (this)
             {
@@ -112,13 +112,13 @@ namespace Hiero.SDK
 		{
 			Utils.ActionHelper.TwoActions(PingAllAsync(), onSuccess, onFailure);
 		}
-		/// <include file="Client.Ping.cs.xml" path='docs/member[@name="M:PingAllAsync(System.TimeSpan,System.Action{System.Exception})"]' />
-		public void PingAllAsync(TimeSpan timeoutPerPing, Action<Exception> callback)
+		/// <include file="Client.Ping.cs.xml" path='docs/member[@name="M:PingAllAsync(System.NodaTime.Duration,System.Action{System.Exception})"]' />
+		public void PingAllAsync(NodaTime.Duration timeoutPerPing, Action<Exception> callback)
         {
             Utils.ActionHelper.Action(PingAllAsync(timeoutPerPing), callback);
         }
-        /// <include file="Client.Ping.cs.xml" path='docs/member[@name="M:PingAllAsync(System.TimeSpan,System.Action,System.Action{System.Exception})"]' />
-        public void PingAllAsync(TimeSpan timeoutPerPing, Action onSuccess, Action<Exception> onFailure)
+        /// <include file="Client.Ping.cs.xml" path='docs/member[@name="M:PingAllAsync(System.NodaTime.Duration,System.Action,System.Action{System.Exception})"]' />
+        public void PingAllAsync(NodaTime.Duration timeoutPerPing, Action onSuccess, Action<Exception> onFailure)
         {
             Utils.ActionHelper.TwoActions(PingAllAsync(timeoutPerPing), onSuccess, onFailure);
         }

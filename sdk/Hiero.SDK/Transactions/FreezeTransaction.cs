@@ -24,7 +24,7 @@ namespace Hiero.SDK.Transactions
 			InitFromTransactionBody();
 		}
 
-		public DateTimeOffset StartTime
+		public NodaTime.Instant StartTime
 		{
 			get;
 			set
@@ -32,7 +32,8 @@ namespace Hiero.SDK.Transactions
 				RequireNotFrozen();
 				field = value;
 			}
-		} = DateTimeOffset.UnixEpoch;
+
+		} = NodaTime.Instant.FromUnixTimeMilliseconds(0);
 		public FileId? FileId
 		{
 			get => field;
@@ -78,7 +79,7 @@ namespace Hiero.SDK.Transactions
 
 			if (body.StartTime != null)
 			{
-				StartTime = body.StartTime.ToDateTimeOffset();
+				StartTime = body.StartTime.ToNodaTimeInstant();
 			}
 		}
 

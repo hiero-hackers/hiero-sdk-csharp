@@ -40,7 +40,7 @@ namespace Hiero.SDK.Contract
 		/// <include file="ContractCreateFlow.cs.xml" path='docs/member[@name="P:that.MaxAutomaticTokenAssociations"]' />
 		public virtual int MaxAutomaticTokenAssociations { get; set; }
 		/// <include file="ContractCreateFlow.cs.xml" path='docs/member[@name="P:that.AutoRenewPeriod"]' />
-		public virtual TimeSpan? AutoRenewPeriod { get; set; }
+		public virtual NodaTime.Duration? AutoRenewPeriod { get; set; }
 		/// <include file="ContractCreateFlow.cs.xml" path='docs/member[@name="P:that.AutoRenewAccountId"]' />
 		public virtual AccountId? AutoRenewAccountId { get; set; }
 		/// <include file="ContractCreateFlow.cs.xml" path='docs/member[@name="P:that.ConstructorParameters"]' />
@@ -162,8 +162,8 @@ namespace Hiero.SDK.Contract
         {
             return Execute(client, client.RequestTimeout);
         }
-        /// <include file="ContractCreateFlow.cs.xml" path='docs/member[@name="M:that.Execute(Client,System.TimeSpan)"]' />
-        public virtual TransactionResponse Execute(Client client, TimeSpan timeoutPerTransaction)
+        /// <include file="ContractCreateFlow.cs.xml" path='docs/member[@name="M:that.Execute(Client,System.NodaTime.Duration)"]' />
+        public virtual TransactionResponse Execute(Client client, NodaTime.Duration timeoutPerTransaction)
         {
             try
             {
@@ -192,8 +192,8 @@ namespace Hiero.SDK.Contract
         {
             return ExecuteAsync(client, client.RequestTimeout);
         }
-        /// <include file="ContractCreateFlow.cs.xml" path='docs/member[@name="M:that.ExecuteAsync(Client,System.TimeSpan)"]' />
-        public virtual async Task<TransactionResponse> ExecuteAsync(Client client, TimeSpan timeoutPerTransaction)
+        /// <include file="ContractCreateFlow.cs.xml" path='docs/member[@name="M:that.ExecuteAsync(Client,System.NodaTime.Duration)"]' />
+        public virtual async Task<TransactionResponse> ExecuteAsync(Client client, NodaTime.Duration timeoutPerTransaction)
         {
             SplitBytecode();
 
@@ -220,8 +220,8 @@ namespace Hiero.SDK.Contract
         {
             Utils.ActionHelper.Action(ExecuteAsync(client), callback);
         }
-        /// <include file="ContractCreateFlow.cs.xml" path='docs/member[@name="M:that.ExecuteAsync(Client,System.TimeSpan,System.Action{TransactionResponse,System.Exception})"]' />
-        public virtual void ExecuteAsync(Client client, TimeSpan timeoutPerTransaction, Action<TransactionResponse?, Exception?> callback)
+        /// <include file="ContractCreateFlow.cs.xml" path='docs/member[@name="M:that.ExecuteAsync(Client,System.NodaTime.Duration,System.Action{TransactionResponse,System.Exception})"]' />
+        public virtual void ExecuteAsync(Client client, NodaTime.Duration timeoutPerTransaction, Action<TransactionResponse?, Exception?> callback)
         {
             Utils.ActionHelper.Action(ExecuteAsync(client, timeoutPerTransaction), callback);
         }
@@ -230,8 +230,8 @@ namespace Hiero.SDK.Contract
         {
             Utils.ActionHelper.TwoActions(ExecuteAsync(client), onSuccess, onFailure);
         }
-        /// <include file="ContractCreateFlow.cs.xml" path='docs/member[@name="M:that.ExecuteAsync(Client,System.TimeSpan,System.Action{TransactionResponse},System.Action{System.Exception})"]' />
-        public virtual void ExecuteAsync(Client client, TimeSpan timeoutPerTransaction, Action<TransactionResponse> onSuccess, Action<Exception> onFailure)
+        /// <include file="ContractCreateFlow.cs.xml" path='docs/member[@name="M:that.ExecuteAsync(Client,System.NodaTime.Duration,System.Action{TransactionResponse},System.Action{System.Exception})"]' />
+        public virtual void ExecuteAsync(Client client, NodaTime.Duration timeoutPerTransaction, Action<TransactionResponse> onSuccess, Action<Exception> onFailure)
         {
             Utils.ActionHelper.TwoActions(ExecuteAsync(client, timeoutPerTransaction), onSuccess, onFailure);
         }

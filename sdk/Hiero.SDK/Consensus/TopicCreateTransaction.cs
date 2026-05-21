@@ -45,7 +45,7 @@ namespace Hiero.SDK.Consensus
 		/// <include file="TopicCreateTransaction.cs.xml" path='docs/member[@name="M:TopicCreateTransaction.RequireNotFrozen_3"]' />
 		public Key? SubmitKey { get; set { RequireNotFrozen(); field = value; } }
 		/// <include file="TopicCreateTransaction.cs.xml" path='docs/member[@name="M:TopicCreateTransaction.RequireNotFrozen_4"]' />
-		public TimeSpan? AutoRenewPeriod { get; set { RequireNotFrozen(); field = value; } }
+		public NodaTime.Duration? AutoRenewPeriod { get; set { RequireNotFrozen(); field = value; } }
 		/// <include file="TopicCreateTransaction.cs.xml" path='docs/member[@name="M:TopicCreateTransaction.RequireNotFrozen_5"]' />
 		public AccountId? AutoRenewAccountId { get; set { RequireNotFrozen(); field = value; } }
 		/// <include file="TopicCreateTransaction.cs.xml" path='docs/member[@name="M:TopicCreateTransaction.RequireNotFrozen_6"]' />
@@ -82,7 +82,7 @@ namespace Hiero.SDK.Consensus
 				SubmitKey = Key.FromProtobufKey(body.SubmitKey);
 
             if (body.AutoRenewPeriod is not null)
-				AutoRenewPeriod = body.AutoRenewPeriod.ToTimeSpan();
+				AutoRenewPeriod = body.AutoRenewPeriod.ToNodaDuration();
 
             if (body.FeeScheduleKey is not null)
                 FeeScheduleKey = Key.FromProtobufKey(body.FeeScheduleKey);

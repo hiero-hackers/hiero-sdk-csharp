@@ -105,7 +105,7 @@
     <exception cref="TimeoutException">when the transaction times out</exception>
     <exception cref="PrecheckStatusException">when the precheck fails</exception>
   </member>
-  <member name="M:Executable.Execute(Client,System.TimeSpan)">
+  <member name="M:Executable.Execute(Client,System.NodaTime.Duration)">
     <summary>
     Execute this transaction or query with a timeout
     </summary>
@@ -122,7 +122,7 @@
     <param name="client">The client with which this will be executed.</param>
     <returns>Future result of execution</returns>
   </member>
-  <member name="M:Executable.ExecuteAsync(Client,System.TimeSpan)">
+  <member name="M:Executable.ExecuteAsync(Client,System.NodaTime.Duration)">
     <summary>
     Execute this transaction or query asynchronously.
     </summary>
@@ -137,7 +137,7 @@
     <param name="client">The client with which this will be executed.</param>
     <param name="callback">a Action which handles the result or error.</param>
   </member>
-  <member name="M:Executable.ExecuteAsync(Client,System.TimeSpan,System.Action{TTransactionResponse,System.Exception})">
+  <member name="M:Executable.ExecuteAsync(Client,System.NodaTime.Duration,System.Action{TTransactionResponse,System.Exception})">
     <summary>
     Execute this transaction or query asynchronously.
     </summary>
@@ -153,7 +153,7 @@
     <param name="onSuccess">a Action which consumes the result on success.</param>
     <param name="onFailure">a Action which consumes the error on failure.</param>
   </member>
-  <member name="M:Executable.ExecuteAsync(Client,System.TimeSpan,System.Action{TTransactionResponse},System.Action{System.Exception})">
+  <member name="M:Executable.ExecuteAsync(Client,System.NodaTime.Duration,System.Action{TTransactionResponse},System.Action{System.Exception})">
     <summary>
     Execute this transaction or query asynchronously.
     </summary>

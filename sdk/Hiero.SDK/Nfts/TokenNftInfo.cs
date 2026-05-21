@@ -11,8 +11,8 @@ namespace Hiero.SDK.Nfts
 	/// <include file="TokenNftInfo.cs.xml" path='docs/member[@name="T:TokenNftInfo"]' />
 	public class TokenNftInfo
     {
-        /// <include file="TokenNftInfo.cs.xml" path='docs/member[@name="M:TokenNftInfo.#ctor(NftId,AccountId,DateTimeOffset,System.Byte[],LedgerId,AccountId)"]' />
-        internal TokenNftInfo(NftId nftId, AccountId accountId, DateTimeOffset creationTime, byte[] metadata, LedgerId ledgerId, AccountId? spenderId)
+        /// <include file="TokenNftInfo.cs.xml" path='docs/member[@name="M:TokenNftInfo.#ctor(NftId,AccountId,NodaTime.Instant,System.Byte[],LedgerId,AccountId)"]' />
+        internal TokenNftInfo(NftId nftId, AccountId accountId, NodaTime.Instant creationTime, byte[] metadata, LedgerId ledgerId, AccountId? spenderId)
         {
             NftId = nftId;
             AccountId = accountId;
@@ -33,7 +33,7 @@ namespace Hiero.SDK.Nfts
             return new TokenNftInfo(
                 NftId.FromProtobuf(info.NftId), 
                 AccountId.FromProtobuf(info.AccountId), 
-                info.CreationTime.ToDateTimeOffset(), 
+                info.CreationTime.ToNodaTimeInstant(), 
                 info.Metadata.ToByteArray(), 
                 LedgerId.FromByteString(info.LedgerId),
                 info.SpenderId is null ? null : AccountId.FromProtobuf(info.SpenderId));
@@ -44,7 +44,7 @@ namespace Hiero.SDK.Nfts
         /// <include file="TokenNftInfo.cs.xml" path='docs/member[@name="F:TokenNftInfo.AccountId"]' />
         public AccountId AccountId { get; }
         /// <include file="TokenNftInfo.cs.xml" path='docs/member[@name="F:TokenNftInfo.CreationTime"]' />
-        public DateTimeOffset CreationTime { get; }
+        public NodaTime.Instant CreationTime { get; }
         /// <include file="TokenNftInfo.cs.xml" path='docs/member[@name="F:TokenNftInfo.Metadata"]' />
         public byte[] Metadata { get; }
         /// <include file="TokenNftInfo.cs.xml" path='docs/member[@name="F:TokenNftInfo.LedgerId"]' />

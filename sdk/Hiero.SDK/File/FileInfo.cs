@@ -11,7 +11,7 @@ namespace Hiero.SDK.File
     /// <include file="FileInfo.cs.xml" path='docs/member[@name="T:FileInfo"]' />
     public sealed class FileInfo
     {
-        private FileInfo(FileId fileId, long size, DateTimeOffset expirationTime, bool isDeleted, KeyList keys, string fileMemo, LedgerId ledgerId)
+        private FileInfo(FileId fileId, long size, NodaTime.Instant expirationTime, bool isDeleted, KeyList keys, string fileMemo, LedgerId ledgerId)
         {
             FileId = fileId;
             Size = size;
@@ -28,7 +28,7 @@ namespace Hiero.SDK.File
             return new FileInfo(
 				FileId.FromProtobuf(fileInfo.FileId), 
 				fileInfo.Size, 
-				fileInfo.ExpirationTime.ToDateTimeOffset(), 
+				fileInfo.ExpirationTime.ToNodaTimeInstant(), 
 				fileInfo.Deleted,
 				KeyList.FromProtobuf(fileInfo.Keys, null), 
 				fileInfo.Memo, 
@@ -45,7 +45,7 @@ namespace Hiero.SDK.File
 		/// <include file="FileInfo.cs.xml" path='docs/member[@name="P:FileInfo.Size"]' />
 		public long Size { get; }
 		/// <include file="FileInfo.cs.xml" path='docs/member[@name="P:FileInfo.ExpirationTime"]' />
-		public DateTimeOffset ExpirationTime { get; }
+		public NodaTime.Instant ExpirationTime { get; }
 		/// <include file="FileInfo.cs.xml" path='docs/member[@name="P:FileInfo.IsDeleted"]' />
 		public bool IsDeleted { get; }
 		/// <include file="FileInfo.cs.xml" path='docs/member[@name="P:FileInfo.Keys"]' />

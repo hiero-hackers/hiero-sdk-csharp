@@ -8,7 +8,7 @@
     <exception cref="TimeoutException">when the transaction times out</exception>
     <exception cref="PrecheckStatusException">when the precheck fails</exception>
   </member>
-  <member name="M:Ping(AccountId,System.TimeSpan)">
+  <member name="M:Ping(AccountId,System.NodaTime.Duration)">
     <summary>
     Send a ping to the given node.
     </summary>
@@ -24,7 +24,7 @@
     <param name="nodeAccountId">Account ID of the node to ping</param>
     <returns>an empty future that throws exception if there was an error</returns>
   </member>
-  <member name="M:PingAsync(AccountId,System.TimeSpan)">
+  <member name="M:PingAsync(AccountId,System.NodaTime.Duration)">
     <summary>
     Send a ping to the given node asynchronously.
     </summary>
@@ -39,7 +39,7 @@
     <param name="nodeAccountId">Account ID of the node to ping</param>
     <param name="callback">a Action which handles the result or error.</param>
   </member>
-  <member name="M:PingAsync(AccountId,System.TimeSpan,System.Action{System.Exception})">
+  <member name="M:PingAsync(AccountId,System.NodaTime.Duration,System.Action{System.Exception})">
     <summary>
     Send a ping to the given node asynchronously.
     </summary>
@@ -55,7 +55,7 @@
     <param name="onSuccess">a Action which consumes the result on success.</param>
     <param name="onFailure">a Action which consumes the error on failure.</param>
   </member>
-  <member name="M:PingAsync(AccountId,System.TimeSpan,System.Action,System.Action{System.Exception})">
+  <member name="M:PingAsync(AccountId,System.NodaTime.Duration,System.Action,System.Action{System.Exception})">
     <summary>
     Send a ping to the given node asynchronously.
     </summary>
@@ -72,7 +72,7 @@
     <exception cref="TimeoutException">when the transaction times out</exception>
     <exception cref="PrecheckStatusException">when the precheck fails</exception>
   </member>
-  <member name="M:PingAll(System.TimeSpan)">
+  <member name="M:PingAll(System.NodaTime.Duration)">
     <summary>
     Sends pings to all nodes in the client's Network. Combines well with setMaxAttempts(1) to remove all dead nodes
     from the Network.
@@ -88,7 +88,7 @@
     </summary>
     <returns>an empty future that throws exception if there was an error</returns>
   </member>
-  <member name="M:PingAllAsync(System.TimeSpan)">
+  <member name="M:PingAllAsync(System.NodaTime.Duration)">
     <summary>
     Sends pings to all nodes in the client's Network asynchronously. Combines well with setMaxAttempts(1) to remove
     all dead nodes from the Network.
@@ -111,7 +111,7 @@
     <param name="onSuccess">a Action which consumes the result on success.</param>
     <param name="onFailure">a Action which consumes the error on failure.</param>
   </member>
-  <member name="M:PingAllAsync(System.TimeSpan,System.Action{System.Exception})">
+  <member name="M:PingAllAsync(System.NodaTime.Duration,System.Action{System.Exception})">
     <summary>
     Sends pings to all nodes in the client's Network asynchronously. Combines well with setMaxAttempts(1) to remove
     all dead nodes from the Network.
@@ -119,7 +119,7 @@
     <param name="timeoutPerPing">The timeout after which each execution attempt will be cancelled.</param>
     <param name="callback">a Action which handles the result or error.</param>
   </member>
-  <member name="M:PingAllAsync(System.TimeSpan,System.Action,System.Action{System.Exception})">
+  <member name="M:PingAllAsync(System.NodaTime.Duration,System.Action,System.Action{System.Exception})">
     <summary>
     Sends pings to all nodes in the client's Network asynchronously. Combines well with setMaxAttempts(1) to remove
     all dead nodes from the Network.

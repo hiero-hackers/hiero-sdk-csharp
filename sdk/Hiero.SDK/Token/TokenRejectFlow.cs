@@ -111,8 +111,8 @@ namespace Hiero.SDK.Token
         {
             return Execute(client, client.RequestTimeout);
         }
-        /// <include file="TokenRejectFlow.cs.xml" path='docs/member[@name="M:TokenRejectFlow.Execute(Client,System.TimeSpan)"]' />
-        public virtual TransactionResponse Execute(Client client, TimeSpan timeoutPerTransaction)
+        /// <include file="TokenRejectFlow.cs.xml" path='docs/member[@name="M:TokenRejectFlow.Execute(Client,System.NodaTime.Duration)"]' />
+        public virtual TransactionResponse Execute(Client client, NodaTime.Duration timeoutPerTransaction)
         {
             try
             {
@@ -132,8 +132,8 @@ namespace Hiero.SDK.Token
         {
             return ExecuteAsync(client, client.RequestTimeout);
         }
-        /// <include file="TokenRejectFlow.cs.xml" path='docs/member[@name="M:TokenRejectFlow.ExecuteAsync(Client,System.TimeSpan)"]' />
-        public virtual async Task<TransactionResponse> ExecuteAsync(Client client, TimeSpan timeoutPerTransaction)
+        /// <include file="TokenRejectFlow.cs.xml" path='docs/member[@name="M:TokenRejectFlow.ExecuteAsync(Client,System.NodaTime.Duration)"]' />
+        public virtual async Task<TransactionResponse> ExecuteAsync(Client client, NodaTime.Duration timeoutPerTransaction)
         {
             TransactionResponse transactionresponse = await CreateTokenRejectTransaction().ExecuteAsync(client, timeoutPerTransaction);
             TransactionReceipt transactionreceipt = await transactionresponse.GetReceiptQuery().ExecuteAsync(client, timeoutPerTransaction);
@@ -145,8 +145,8 @@ namespace Hiero.SDK.Token
         {
             Utils.ActionHelper.Action(ExecuteAsync(client), callback);
         }
-        /// <include file="TokenRejectFlow.cs.xml" path='docs/member[@name="M:TokenRejectFlow.ExecuteAsync(Client,System.TimeSpan,System.Action{TransactionResponse,System.Exception})"]' />
-        public virtual void ExecuteAsync(Client client, TimeSpan timeoutPerTransaction, Action<TransactionResponse?, Exception?> callback)
+        /// <include file="TokenRejectFlow.cs.xml" path='docs/member[@name="M:TokenRejectFlow.ExecuteAsync(Client,System.NodaTime.Duration,System.Action{TransactionResponse,System.Exception})"]' />
+        public virtual void ExecuteAsync(Client client, NodaTime.Duration timeoutPerTransaction, Action<TransactionResponse?, Exception?> callback)
         {
             Utils.ActionHelper.Action(ExecuteAsync(client, timeoutPerTransaction), callback);
         }
@@ -155,8 +155,8 @@ namespace Hiero.SDK.Token
         {
             Utils.ActionHelper.TwoActions(ExecuteAsync(client), onSuccess, onFailure);
         }
-        /// <include file="TokenRejectFlow.cs.xml" path='docs/member[@name="M:TokenRejectFlow.ExecuteAsync(Client,System.TimeSpan,System.Action{TransactionResponse},System.Action{System.Exception})"]' />
-        public virtual void ExecuteAsync(Client client, TimeSpan timeoutPerTransaction, Action<TransactionResponse> onSuccess, Action<Exception> onFailure)
+        /// <include file="TokenRejectFlow.cs.xml" path='docs/member[@name="M:TokenRejectFlow.ExecuteAsync(Client,System.NodaTime.Duration,System.Action{TransactionResponse},System.Action{System.Exception})"]' />
+        public virtual void ExecuteAsync(Client client, NodaTime.Duration timeoutPerTransaction, Action<TransactionResponse> onSuccess, Action<Exception> onFailure)
         {
             Utils.ActionHelper.TwoActions(ExecuteAsync(client, timeoutPerTransaction), onSuccess, onFailure);
         }

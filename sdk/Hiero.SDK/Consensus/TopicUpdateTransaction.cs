@@ -53,7 +53,7 @@ namespace Hiero.SDK.Consensus
             set { RequireNotFrozen(); field = value; } 
         }
         /// <include file="TopicUpdateTransaction.cs.xml" path='docs/member[@name="M:TopicUpdateTransaction.AutoRenewPeriod"]' />
-        public TimeSpan? AutoRenewPeriod 
+        public NodaTime.Duration? AutoRenewPeriod 
         { 
             get; 
             set { RequireNotFrozen(); field = value; } 
@@ -65,7 +65,7 @@ namespace Hiero.SDK.Consensus
             set { RequireNotFrozen(); field = value; } 
         }
         /// <include file="TopicUpdateTransaction.cs.xml" path='docs/member[@name="M:TopicUpdateTransaction.RequireNotFrozen_6"]' />
-        public DateTimeOffset? ExpirationTime
+        public NodaTime.Instant? ExpirationTime
         {
             get;
             set
@@ -77,7 +77,7 @@ namespace Hiero.SDK.Consensus
                     ExpirationTimeDuration = null;
             }
         }
-        public TimeSpan? ExpirationTimeDuration
+        public NodaTime.Duration? ExpirationTimeDuration
         {
             get;
             set
@@ -122,7 +122,7 @@ namespace Hiero.SDK.Consensus
                 SubmitKey = Key.FromProtobufKey(body.SubmitKey);
 
             if (body.AutoRenewPeriod is not null)
-                AutoRenewPeriod = body.AutoRenewPeriod.ToTimeSpan();
+                AutoRenewPeriod = body.AutoRenewPeriod.ToNodaDuration();
 
             if (body.AutoRenewAccount is not null)
                 AutoRenewAccountId = AccountId.FromProtobuf(body.AutoRenewAccount);
@@ -131,7 +131,7 @@ namespace Hiero.SDK.Consensus
                 TopicMemo = body.Memo;
 
             if (body.ExpirationTime is not null)
-                ExpirationTime = body.ExpirationTime.ToDateTimeOffset();
+                ExpirationTime = body.ExpirationTime.ToNodaTimeInstant();
 
             if (body.FeeScheduleKey is not null)
                 FeeScheduleKey = Key.FromProtobufKey(body.FeeScheduleKey);
@@ -168,8 +168,7 @@ namespace Hiero.SDK.Consensus
 
 			if (ExpirationTime != null)
                 builder.ExpirationTime = ExpirationTime.Value.ToProtoTimestamp();
-
-            if (ExpirationTimeDuration != null)
+            else if (ExpirationTimeDuration != null)
                 builder.ExpirationTime = ExpirationTimeDuration.Value.ToProtoTimestamp();
 
             if (FeeScheduleKey != null)

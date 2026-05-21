@@ -104,7 +104,7 @@
     MIN_AUTORENEW_PERIOD.&lt;br/&gt;
     This value MUST be less than the configured MAX_AUTORENEW_PERIOD.
     &lt;/summary&gt;
-    &lt;param name="autoRenewPeriod"&gt;The TimeSpan to be set for auto renewal&lt;/param&gt;
+    &lt;param name="autoRenewPeriod"&gt;The NodaTime.Duration to be set for auto renewal&lt;/param&gt;
     &lt;returns&gt;{@code this}&lt;/returns&gt;</summary>
   </member>
   <member name="M:TopicCreateTransaction.RequireNotFrozen_5">

@@ -166,7 +166,7 @@ namespace Hiero.Tests.Integration.File
                 {
 					FileId = fileId,
                     Contents = ByteString.CopyFromUtf8(Contents.BIG_CONTENTS),
-					TransactionValidDuration = TimeSpan.FromSeconds(25)
+					TransactionValidDuration = NodaTime.Duration.FromSeconds(25)
 
 				}.Execute(testEnv.Client).GetReceipt(testEnv.Client);
 

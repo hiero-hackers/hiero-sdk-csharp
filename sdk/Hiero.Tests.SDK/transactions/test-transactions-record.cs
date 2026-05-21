@@ -28,7 +28,7 @@ namespace Hiero.Tests.SDK.Transactions
     /// <include file="test-transactions-record.cs.xml" path='docs/member[@name="T:Hiero.Tests.SDK.Transactions.TransactionRecordTest"]' />
     public class TransactionRecordTest
     {
-        static readonly DateTimeOffset time = DateTimeOffset.FromUnixTimeMilliseconds(1554158542);
+        static readonly NodaTime.Instant time = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
         private static readonly byte[] callResult = Hex.Decode(ContractFunctionResultTest.CALL_RESULT_HEX);
 
         private static TransactionRecord SpawnRecordExample(ByteString? prngBytes, int? prngNumber)

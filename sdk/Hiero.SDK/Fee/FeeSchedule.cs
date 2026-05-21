@@ -12,7 +12,7 @@ namespace Hiero.SDK.Fee
     /// <include file="FeeSchedule.cs.xml" path='docs/member[@name="T:FeeSchedule"]' />
     public class FeeSchedule : ICloneable
     {
-        internal DateTimeOffset ExpirationTime = new ();
+        internal NodaTime.Instant ExpirationTime = new ();
         /// <include file="FeeSchedule.cs.xml" path='docs/member[@name="M:FeeSchedule.#ctor"]' />
         public FeeSchedule() { }
 
@@ -26,7 +26,7 @@ namespace Hiero.SDK.Fee
         {
             return new FeeSchedule
 			{
-                ExpirationTime = feeSchedule.ExpiryTime.ToDateTimeOffset(),
+                ExpirationTime = feeSchedule.ExpiryTime.ToNodaTimeInstant(),
                 TransactionFeeSchedules = [.. feeSchedule.TransactionFeeSchedule.Select(_ => TransactionFeeSchedule.FromProtobuf(_))]
             };
         }

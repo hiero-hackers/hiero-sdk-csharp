@@ -12,7 +12,7 @@ namespace Hiero.Tests.SDK.HBar
     /// <include file="test-hbar-staking-info.cs.xml" path='docs/member[@name="T:Hiero.Tests.SDK.HBar.StakingInfoTest"]' />
     public class StakingInfoTest
     {
-        private readonly DateTimeOffset validStart = DateTimeOffset.FromUnixTimeMilliseconds(1554158542);
+        private readonly NodaTime.Instant validStart = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
 
         public virtual StakingInfo SpawnStakingInfoAccountExample()
         {

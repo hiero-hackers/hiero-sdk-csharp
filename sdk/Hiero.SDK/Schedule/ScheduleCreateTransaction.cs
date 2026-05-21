@@ -26,7 +26,7 @@ namespace Hiero.SDK.Schedule
         }
 
 		/// <include file="ScheduleCreateTransaction.cs.xml" path='docs/member[@name="M:ScheduleCreateTransaction.RequireNotFrozen"]' />
-		public DateTimeOffset? ExpirationTime 
+		public NodaTime.Instant? ExpirationTime 
         {
             get;
             set
@@ -38,7 +38,7 @@ namespace Hiero.SDK.Schedule
             }
         }
 		/// <include file="ScheduleCreateTransaction.cs.xml" path='docs/member[@name="M:ScheduleCreateTransaction.RequireNotFrozen_2"]' />
-		public TimeSpan? ExpirationTimeDuration
+		public NodaTime.Duration? ExpirationTimeDuration
 		{
 			get;
 			set
@@ -126,7 +126,7 @@ namespace Hiero.SDK.Schedule
 			AdminKey = body.AdminKey is null ? null : Key.FromProtobufKey(body.AdminKey);
 			ScheduledTransactionBody = body.ScheduledTransactionBody;
 			PayerAccountId = body.PayerAccountId is null ? null : AccountId.FromProtobuf(body.PayerAccountId);
-			ExpirationTime = body.ExpirationTime?.ToDateTimeOffset();
+			ExpirationTime = body.ExpirationTime?.ToNodaTimeInstant();
         }
 
         public override void ValidateChecksums(Client client)

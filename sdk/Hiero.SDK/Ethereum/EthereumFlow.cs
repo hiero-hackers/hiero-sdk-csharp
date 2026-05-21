@@ -19,7 +19,7 @@ namespace Hiero.SDK.Ethereum
         /// <include file="EthereumFlow.cs.xml" path='docs/member[@name="F:.MAX_ETHEREUM_DATA_SIZE"]' />
         static int MAX_ETHEREUM_DATA_SIZE = 128000;
 
-		private static FileId CreateFile<T>(byte[] callData, Client client, TimeSpan timeoutPerTransaction, Transaction<T> ethereumTransaction) where T : Transaction<T>
+		private static FileId CreateFile<T>(byte[] callData, Client client, NodaTime.Duration timeoutPerTransaction, Transaction<T> ethereumTransaction) where T : Transaction<T>
         {
             try
             {
@@ -56,7 +56,7 @@ namespace Hiero.SDK.Ethereum
                 throw new Exception(string.Empty, e);
             }
         }
-        private static async Task<FileId> CreateFileAsync<T>(byte[] callData, Client client, TimeSpan timeoutPerTransaction, Transaction<T> ethereumTransaction) where T : Transaction<T>
+        private static async Task<FileId> CreateFileAsync<T>(byte[] callData, Client client, NodaTime.Duration timeoutPerTransaction, Transaction<T> ethereumTransaction) where T : Transaction<T>
 		{
 			// Hex encode the call data
 			byte[] callDataHex = Hex.Encode(callData);
@@ -106,8 +106,8 @@ namespace Hiero.SDK.Ethereum
         {
             return Execute(client, client.RequestTimeout);
         }
-        /// <include file="EthereumFlow.cs.xml" path='docs/member[@name="M:Execute(Client,System.TimeSpan)"]' />
-        public virtual TransactionResponse Execute(Client client, TimeSpan timeoutPerTransaction)
+        /// <include file="EthereumFlow.cs.xml" path='docs/member[@name="M:Execute(Client,System.NodaTime.Duration)"]' />
+        public virtual TransactionResponse Execute(Client client, NodaTime.Duration timeoutPerTransaction)
         {
             if (EthereumData == null)
             {
@@ -136,8 +136,8 @@ namespace Hiero.SDK.Ethereum
         {
             return ExecuteAsync(client, client.RequestTimeout);
         }
-        /// <include file="EthereumFlow.cs.xml" path='docs/member[@name="M:ExecuteAsync(Client,System.TimeSpan)"]' />
-        public virtual async Task<TransactionResponse> ExecuteAsync(Client client, TimeSpan timeoutPerTransaction)
+        /// <include file="EthereumFlow.cs.xml" path='docs/member[@name="M:ExecuteAsync(Client,System.NodaTime.Duration)"]' />
+        public virtual async Task<TransactionResponse> ExecuteAsync(Client client, NodaTime.Duration timeoutPerTransaction)
         {
             if (EthereumData == null)
             {
@@ -173,8 +173,8 @@ namespace Hiero.SDK.Ethereum
         {
             Utils.ActionHelper.Action(ExecuteAsync(client), callback);
         }
-        /// <include file="EthereumFlow.cs.xml" path='docs/member[@name="M:ExecuteAsync(Client,System.TimeSpan,System.Action{TransactionResponse,System.Exception})"]' />
-        public virtual void ExecuteAsync(Client client, TimeSpan timeoutPerTransaction, Action<TransactionResponse?, Exception?> callback)
+        /// <include file="EthereumFlow.cs.xml" path='docs/member[@name="M:ExecuteAsync(Client,System.NodaTime.Duration,System.Action{TransactionResponse,System.Exception})"]' />
+        public virtual void ExecuteAsync(Client client, NodaTime.Duration timeoutPerTransaction, Action<TransactionResponse?, Exception?> callback)
         {
             Utils.ActionHelper.Action(ExecuteAsync(client, timeoutPerTransaction), callback);
         }
@@ -183,8 +183,8 @@ namespace Hiero.SDK.Ethereum
         {
             Utils.ActionHelper.TwoActions(ExecuteAsync(client), onSuccess, onFailure);
         }
-        /// <include file="EthereumFlow.cs.xml" path='docs/member[@name="M:ExecuteAsync(Client,System.TimeSpan,System.Action{TransactionResponse},System.Action{System.Exception})"]' />
-        public virtual void ExecuteAsync(Client client, TimeSpan timeoutPerTransaction, Action<TransactionResponse> onSuccess, Action<Exception> onFailure)
+        /// <include file="EthereumFlow.cs.xml" path='docs/member[@name="M:ExecuteAsync(Client,System.NodaTime.Duration,System.Action{TransactionResponse},System.Action{System.Exception})"]' />
+        public virtual void ExecuteAsync(Client client, NodaTime.Duration timeoutPerTransaction, Action<TransactionResponse> onSuccess, Action<Exception> onFailure)
         {
             Utils.ActionHelper.TwoActions(ExecuteAsync(client, timeoutPerTransaction), onSuccess, onFailure);
         }

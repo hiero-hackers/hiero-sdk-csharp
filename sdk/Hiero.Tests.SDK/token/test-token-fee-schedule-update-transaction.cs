@@ -15,7 +15,7 @@ namespace Hiero.Tests.SDK.Token
     /// <include file="test-token-fee-schedule-update-transaction.ts.cs.xml" path='docs/member[@name="T:Hiero.Tests.SDK.Token.TokenFeeScheduleUpdateTransactionTest"]' />
     public class TokenFeeScheduleUpdateTransactionTest
     {
-        private readonly DateTimeOffset validStart = DateTimeOffset.FromUnixTimeMilliseconds(1554158542);
+        private readonly NodaTime.Instant validStart = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
 
         private TokenFeeScheduleUpdateTransaction SpawnTestTransaction()
         {

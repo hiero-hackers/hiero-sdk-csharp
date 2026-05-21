@@ -14,7 +14,7 @@ namespace Hiero.Tests.SDK.Transactions
     public class TransactionReceiptQueryTest
     {
         private static readonly PrivateKey unusedPrivateKey = PrivateKey.FromString("302e020100300506032b657004220420db484b828e64b2d8f12ce3c0a0e93a0b8cce7af1bb8f39c97732394482538e10");
-        private readonly DateTimeOffset validStart = DateTimeOffset.FromUnixTimeMilliseconds(1554158542);
+        private readonly NodaTime.Instant validStart = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
 
         public virtual void ShouldSerialize()
         {

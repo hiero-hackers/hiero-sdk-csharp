@@ -212,7 +212,7 @@ namespace Hiero.Tests.Integration.Transactions
                 var publicKey = adminKey.GetPublicKey();
                 var evmAddress = publicKey.ToEvmAddress();
                 var initialBalance = new Hbar(1);
-                var autoRenewPeriod = TimeSpan.FromSeconds(2592000);
+                var autoRenewPeriod = NodaTime.Duration.FromSeconds(2592000);
                 var memo = "test account memo";
                 var maxAutomaticTokenAssociations = 4;
                 var accountCreateTransaction = new AccountCreateTransaction
@@ -578,8 +578,8 @@ namespace Hiero.Tests.Integration.Transactions
 					},
                     TransactionValidStart = new Proto.Services.Timestamp
                     {
-						Nanos = id.ValidStart.Nanosecond,
-						Seconds = id.ValidStart.ToUnixTimeSeconds(),
+						Nanos = id.ValidStart.Value.ToUnixTimeSecondsAndNanoseconds().nanoseconds,
+						Seconds = id.ValidStart.Value.ToUnixTimeSeconds(),
 					},
 				},
 				TransactionFee = 200000000,

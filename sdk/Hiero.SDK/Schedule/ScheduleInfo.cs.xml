@@ -8,7 +8,7 @@
     See &lt;a href="https://docs.hedera.com/guides/docs/sdks/schedule-transaction/get-schedule-info"&gt;Hedera Documentation&lt;/a&gt;
     &lt;/summary&gt;</summary>
   </member>
-  <member name="M:ScheduleInfo.#ctor(ScheduleId,AccountId,AccountId,Proto.SchedulableTransactionBody,KeyList,Key,TransactionId,System.String,DateTimeOffset,DateTimeOffset,DateTimeOffset,LedgerId,System.Boolean)">
+  <member name="M:ScheduleInfo.#ctor(ScheduleId,AccountId,AccountId,Proto.SchedulableTransactionBody,KeyList,Key,TransactionId,System.String,NodaTime.Instant,NodaTime.Instant,NodaTime.Instant,LedgerId,System.Boolean)">
     <summary>
     Constructor.
     </summary>

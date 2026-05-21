@@ -38,7 +38,7 @@ namespace Hiero.Tests.Integration.LiveHashes
                     new LiveHashAddTransaction
                     {
 						AccountId = accountId,
-						//Duration = TimeSpan.FromDays(30),
+						//Duration = NodaTime.Duration.FromDays(30),
 						Hash = HASH,
 						Keys = [key]
 					

@@ -25,14 +25,14 @@ namespace Hiero.SDK
 		internal static readonly Regex RST_STREAM = new(".*\\brst[^0-9a-zA-Z]stream\\b.*", RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
         /// <include file="Executable.cs.xml" path='docs/member[@name="P:Executable.GrpcDeadline"]' />
-        public TimeSpan GrpcDeadline { get; set; }
+        public NodaTime.Duration GrpcDeadline { get; set; }
         /// <include file="Executable.cs.xml" path='docs/member[@name="T:Executable_3"]' />
-        public TimeSpan MaxBackoff
+        public NodaTime.Duration MaxBackoff
         {
             get => field;
             set
             {
-                if (field.Nanoseconds < 0)
+                if (field.TotalNanoseconds < 0)
                 {
                     throw new ArgumentException("maxBackoff must be a positive duration");
                 }
@@ -46,12 +46,12 @@ namespace Hiero.SDK
 
         } = Client.DEFAULT_MAX_BACKOFF;
         /// <include file="Executable.cs.xml" path='docs/member[@name="T:Executable_4"]' />
-        public TimeSpan MinBackoff
+        public NodaTime.Duration MinBackoff
         {
             get => field;
             set
             {
-                if (value.Nanoseconds < 0)
+                if (value.TotalNanoseconds < 0)
                 {
                     throw new ArgumentException("minBackoff must be a positive duration");
                 }
@@ -316,8 +316,8 @@ namespace Hiero.SDK
         {
             return Execute(client, client.RequestTimeout, onResponse);
         }
-		/// <include file="Executable.cs.xml" path='docs/member[@name="M:Executable.Execute(Client,System.TimeSpan)"]' />
-		public virtual TTransactionResponse Execute(Client client, TimeSpan timeout, Action<TTransactionResponse>? onResponse = null)
+		/// <include file="Executable.cs.xml" path='docs/member[@name="M:Executable.Execute(Client,System.NodaTime.Duration)"]' />
+		public virtual TTransactionResponse Execute(Client client, NodaTime.Duration timeout, Action<TTransactionResponse>? onResponse = null)
 		{
 			Exception? lastException = null;
 
@@ -334,16 +334,16 @@ namespace Hiero.SDK
 			CheckNodeAccountIds();
 			SetNodesFromNodeAccountIds(client);
 
-			DateTimeOffset timeoutTime = DateTimeOffset.UtcNow + timeout;
+			NodaTime.Instant timeoutTime = NodaTime.SystemClock.Instance.GetCurrentInstant() + timeout;
 
 			for (int attempt = 1; ; attempt++)
 			{
 				if (attempt > MaxAttempts)
 					throw new MaxAttemptsExceededException(lastException);
 
-				TimeSpan remainingTimeout = timeoutTime - DateTimeOffset.UtcNow;
+				NodaTime.Duration remainingTimeout = timeoutTime - NodaTime.SystemClock.Instance.GetCurrentInstant();
 
-				if (remainingTimeout <= TimeSpan.Zero)
+				if (remainingTimeout <= NodaTime.Duration.Zero)
 					throw new TimeoutException();
 
 				GrpcRequest grpcRequest = new(this, client.Network_, attempt, remainingTimeout);
@@ -416,7 +416,7 @@ namespace Hiero.SDK
 
 						if (attempt < MaxAttempts)
 						{
-							remainingTimeout = timeoutTime - DateTimeOffset.UtcNow;
+							remainingTimeout = timeoutTime - NodaTime.SystemClock.Instance.GetCurrentInstant();
 							Delay((int)Math.Min(remainingTimeout.TotalMilliseconds, grpcRequest.Delay.TotalMilliseconds));
 						}
 
@@ -443,8 +443,8 @@ namespace Hiero.SDK
         {
             return ExecuteAsync(client, client.RequestTimeout);
         }
-        /// <include file="Executable.cs.xml" path='docs/member[@name="M:Executable.ExecuteAsync(Client,System.TimeSpan)"]' />
-        public virtual async Task<TTransactionResponse> ExecuteAsync(Client client, TimeSpan timeout)
+        /// <include file="Executable.cs.xml" path='docs/member[@name="M:Executable.ExecuteAsync(Client,System.NodaTime.Duration)"]' />
+        public virtual async Task<TTransactionResponse> ExecuteAsync(Client client, NodaTime.Duration timeout)
         {
 			TaskCompletionSource<TTransactionResponse> retval = new ();
 
@@ -466,8 +466,8 @@ namespace Hiero.SDK
         {
 			Utils.ActionHelper.Action(ExecuteAsync(client), callback);
 		}
-        /// <include file="Executable.cs.xml" path='docs/member[@name="M:Executable.ExecuteAsync(Client,System.TimeSpan,System.Action{TTransactionResponse,System.Exception})"]' />
-        public virtual async void ExecuteAsync(Client client, TimeSpan timeout, Action<TTransactionResponse?, Exception?> callback)
+        /// <include file="Executable.cs.xml" path='docs/member[@name="M:Executable.ExecuteAsync(Client,System.NodaTime.Duration,System.Action{TTransactionResponse,System.Exception})"]' />
+        public virtual async void ExecuteAsync(Client client, NodaTime.Duration timeout, Action<TTransactionResponse?, Exception?> callback)
         {
 			Utils.ActionHelper.Action(ExecuteAsync(client, timeout), callback);
 		}
@@ -476,8 +476,8 @@ namespace Hiero.SDK
         {
 			Utils.ActionHelper.TwoActions(ExecuteAsync(client), onSuccess, onFailure);
 		}
-        /// <include file="Executable.cs.xml" path='docs/member[@name="M:Executable.ExecuteAsync(Client,System.TimeSpan,System.Action{TTransactionResponse},System.Action{System.Exception})"]' />
-        public virtual async void ExecuteAsync(Client client, TimeSpan timeout, Action<TTransactionResponse> onSuccess, Action<Exception> onFailure)
+        /// <include file="Executable.cs.xml" path='docs/member[@name="M:Executable.ExecuteAsync(Client,System.NodaTime.Duration,System.Action{TTransactionResponse},System.Action{System.Exception})"]' />
+        public virtual async void ExecuteAsync(Client client, NodaTime.Duration timeout, Action<TTransactionResponse> onSuccess, Action<Exception> onFailure)
         {
 			Utils.ActionHelper.TwoActions(ExecuteAsync(client, timeout), onSuccess, onFailure);
 		}
@@ -520,7 +520,7 @@ namespace Hiero.SDK
 			var request = MakeRequest();
 			return request;
 		}
-		private async Task ExecuteAsyncInternal(Client client, int attempt, Exception? lastException, TaskCompletionSource<TTransactionResponse> returnFuture, TimeSpan timeout)
+		private async Task ExecuteAsyncInternal(Client client, int attempt, Exception? lastException, TaskCompletionSource<TTransactionResponse> returnFuture, NodaTime.Duration timeout)
 		{
 			// Use client logger if not set
 			//Logger ??= client.Logger_;
@@ -534,8 +534,8 @@ namespace Hiero.SDK
 				return;
 			}
 
-			DateTimeOffset timeoutTime = DateTimeOffset.UtcNow + timeout;
-			TimeSpan remainingTimeout = timeoutTime - DateTimeOffset.UtcNow;
+			NodaTime.Instant timeoutTime = NodaTime.SystemClock.Instance.GetCurrentInstant() + timeout;
+            NodaTime.Duration remainingTimeout = timeoutTime - NodaTime.SystemClock.Instance.GetCurrentInstant();
 
 			var grpcRequest = new GrpcRequest(this, client.Network_, attempt, remainingTimeout);
 
@@ -544,7 +544,7 @@ namespace Hiero.SDK
 				// Wait if node is unhealthy
 				if (!grpcRequest.Node.IsHealthy())
 				{
-					await new Delayer(client.Executor).DelayAsync(TimeSpan.FromMilliseconds(grpcRequest.Node.GetRemainingTimeForBackoff()));
+					await new Delayer(client.Executor).DelayAsync(NodaTime.Duration.FromMilliseconds(grpcRequest.Node.GetRemainingTimeForBackoff()));
 				}
 
 				// Check if node channel failed to connect
@@ -552,7 +552,7 @@ namespace Hiero.SDK
 				{
 					var connectionException = grpcRequest.ReactToConnectionFailure();
 					AdvanceRequest();
-					await ExecuteAsyncInternal(client, attempt + 1, connectionException, returnFuture, timeoutTime - DateTimeOffset.UtcNow);
+					await ExecuteAsyncInternal(client, attempt + 1, connectionException, returnFuture, timeoutTime - NodaTime.SystemClock.Instance.GetCurrentInstant());
 					return;
 				}
 
@@ -581,7 +581,7 @@ namespace Hiero.SDK
 					if (grpcRequest.ShouldRetryExceptionally(lastException))
 					{
 						AdvanceRequest();
-						await ExecuteAsyncInternal(client, attempt + 1, lastException, returnFuture, timeoutTime - DateTimeOffset.UtcNow);
+						await ExecuteAsyncInternal(client, attempt + 1, lastException, returnFuture, timeoutTime - NodaTime.SystemClock.Instance.GetCurrentInstant());
 						return;
 					}
 					returnFuture.TrySetException(e);
@@ -603,13 +603,13 @@ namespace Hiero.SDK
 							client.Network_.IncreaseBackoff(grpcRequest.Node);
 						}
 
-						await new Delayer(client.Executor).DelayAsync(attempt < MaxAttempts ? grpcRequest.Delay : TimeSpan.Zero, () => { });
-						await ExecuteAsyncInternal(client, attempt + 1, grpcRequest.MapStatusException(), returnFuture, timeoutTime - DateTimeOffset.UtcNow);
+						await new Delayer(client.Executor).DelayAsync(attempt < MaxAttempts ? grpcRequest.Delay : NodaTime.Duration.Zero, () => { });
+						await ExecuteAsyncInternal(client, attempt + 1, grpcRequest.MapStatusException(), returnFuture, timeoutTime - NodaTime.SystemClock.Instance.GetCurrentInstant());
 						break;
 
 					case ExecutionState.ServerError:
 						AdvanceRequest();
-						await ExecuteAsyncInternal(client, attempt + 1, grpcRequest.MapStatusException(), returnFuture, timeoutTime - DateTimeOffset.UtcNow);
+						await ExecuteAsyncInternal(client, attempt + 1, grpcRequest.MapStatusException(), returnFuture, timeoutTime - NodaTime.SystemClock.Instance.GetCurrentInstant());
 						break;
 
 					case ExecutionState.RequestError:

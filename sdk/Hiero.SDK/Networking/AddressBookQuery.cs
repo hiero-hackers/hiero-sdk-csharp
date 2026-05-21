@@ -38,7 +38,7 @@ namespace Hiero.SDK.Networking
 		/// <include file="AddressBookQuery.cs.xml" path='docs/member[@name="P:AddressBookQuery.FileId"]' />
 		public virtual FileId? FileId { get; set; }
 		/// <include file="AddressBookQuery.cs.xml" path='docs/member[@name="T:AddressBookQuery_2"]' />
-		public virtual TimeSpan MaxBackoff
+		public virtual NodaTime.Duration MaxBackoff
 		{
 			get;
 			set
@@ -51,7 +51,7 @@ namespace Hiero.SDK.Networking
 				field = value;
 			}
 
-		} = TimeSpan.FromSeconds(8);
+		} = NodaTime.Duration.FromSeconds(8);
 		/// <include file="AddressBookQuery.cs.xml" path='docs/member[@name="P:AddressBookQuery.Limit"]' />
 		public virtual int? Limit { get; set; }
 		/// <include file="AddressBookQuery.cs.xml" path='docs/member[@name="P:AddressBookQuery.MaxAttempts"]' />
@@ -75,10 +75,10 @@ namespace Hiero.SDK.Networking
 		{
 			return Execute(client, client.RequestTimeout);
 		}
-		/// <include file="AddressBookQuery.cs.xml" path='docs/member[@name="M:AddressBookQuery.Execute(Client,System.TimeSpan)"]' />
-		public virtual NodeAddressBook Execute(Client client, TimeSpan timeout)
+		/// <include file="AddressBookQuery.cs.xml" path='docs/member[@name="M:AddressBookQuery.Execute(Client,System.NodaTime.Duration)"]' />
+		public virtual NodeAddressBook Execute(Client client, NodaTime.Duration timeout)
 		{
-			var deadline = DateTime.UtcNow.Add(timeout);
+			var deadline = DateTime.UtcNow.Add(timeout.ToTimeSpan());
 
 			for (int attempt = 1; true; attempt++)
 			{
@@ -113,10 +113,10 @@ namespace Hiero.SDK.Networking
 		{
 			return ExecuteAsync(client, client.RequestTimeout);
 		}
-		/// <include file="AddressBookQuery.cs.xml" path='docs/member[@name="M:AddressBookQuery.ExecuteAsync(Client,System.TimeSpan)"]' />
-		public virtual Task<NodeAddressBook> ExecuteAsync(Client client, TimeSpan timeout)
+		/// <include file="AddressBookQuery.cs.xml" path='docs/member[@name="M:AddressBookQuery.ExecuteAsync(Client,System.NodaTime.Duration)"]' />
+		public virtual Task<NodeAddressBook> ExecuteAsync(Client client, NodaTime.Duration timeout)
 		{
-			var deadline = DateTime.UtcNow.Add(timeout);
+			var deadline = DateTime.UtcNow.Add(timeout.ToTimeSpan());
 
 			var tcs = new TaskCompletionSource<NodeAddressBook>(
 				TaskCreationOptions.RunContinuationsAsynchronously);

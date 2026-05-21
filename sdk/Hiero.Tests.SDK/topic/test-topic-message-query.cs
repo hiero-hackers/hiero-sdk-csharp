@@ -1,12 +1,16 @@
 ﻿// SPDX-License-Identifier: Apache-2.0
 using Google.Protobuf;
-using Google.Protobuf.WellKnownTypes;
+
 using Grpc.Core;
 
 using Hiero.SDK;
 using Hiero.SDK.Cryptocurrency;
 using Hiero.SDK.Consensus;
+
+using NodaTime;
+
 using System;
+
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
@@ -17,7 +21,7 @@ namespace Hiero.Tests.SDK.Topic
     /// <include file="test-topic-message-query.cs.xml" path='docs/member[@name="T:Hiero.Tests.SDK.Topic.TopicMessageQueryTest"]' />
     public class TopicMessageQueryTest
     {
-        private static readonly DateTimeOffset START_TIME = DateTimeOffset.UtcNow;
+        private static readonly NodaTime.Instant START_TIME = NodaTime.SystemClock.Instance.GetCurrentInstant();
         private Client client;
         private bool complete = false;
         private readonly List<Exception> errors = new();
@@ -41,9 +45,9 @@ namespace Hiero.Tests.SDK.Topic
             topicMessageQuery = new TopicMessageQuery
             {
                 CompletionHandler = () => Volatile.Write(ref complete, true),
-                EndTime = START_TIME.AddSeconds(100),
+                EndTime = START_TIME.PlusSeconds(100),
                 ErrorHandler = (t, r) => errors.Add(t),
-                MaxBackoff = TimeSpan.FromMilliseconds(500),
+                MaxBackoff = NodaTime.Duration.FromMilliseconds(500),
                 StartTime = START_TIME,
                 TopicId = TopicId.FromString("0.0.1000")
             };
@@ -89,7 +93,7 @@ namespace Hiero.Tests.SDK.Topic
             Assert.Empty(errors);
             Assert.Single(received);
             var first = received[0];
-            Assert.Equal(response2.ConsensusTimestamp.ToDateTimeOffset(), first.ConsensusTimestamp);
+            Assert.Equal(response2.ConsensusTimestamp.ToNodaTimeInstant(), first.ConsensusTimestamp);
             Assert.Equal(response2.ChunkInfo.InitialTransactionId, first.TransactionId.ToProtobuf());
             Assert.Equal(message, first.Contents);
             Assert.Equal(response2.RunningHash.ToByteArray(), first.RunningHash);
@@ -130,7 +134,7 @@ namespace Hiero.Tests.SDK.Topic
         public virtual void RetryRecovers(StatusCode code, string description)
         {
             Proto.Mirror.ConsensusTopicResponse response = Response(1);
-            DateTimeOffset nextTimestamp = response.ConsensusTimestamp.ToDateTimeOffset().AddTicks(1);
+            NodaTime.Instant nextTimestamp = response.ConsensusTimestamp.ToNodaTimeInstant().PlusTicks(1);
             Proto.Mirror.ConsensusTopicQuery request = Request();
 
             var retryRequest = Request();
@@ -184,7 +188,7 @@ namespace Hiero.Tests.SDK.Topic
         public virtual void RetryWithLimit()
         {
             Proto.Mirror.ConsensusTopicResponse response = Response(1);
-            DateTimeOffset nextTimestamp = response.ConsensusTimestamp.ToDateTimeOffset().AddTicks(1);
+            NodaTime.Instant nextTimestamp = response.ConsensusTimestamp.ToNodaTimeInstant().PlusTicks(1);
             Proto.Mirror.ConsensusTopicQuery request = Request();
 
             topicMessageQuery.Limit = 2;
@@ -328,15 +332,10 @@ namespace Hiero.Tests.SDK.Topic
         {
             return new Proto.Mirror.ConsensusTopicQuery
             {
-                ConsensusEndTime = START_TIME.AddSeconds(100).ToProtoTimestamp(),
+                ConsensusEndTime = START_TIME.PlusSeconds(100).ToProtoTimestamp(),
                 ConsensusStartTime = START_TIME.ToProtoTimestamp(),
                 TopicId = new Proto.Services.TopicID { TopicNum = 1000 }
             };
-        }
-
-        private static Timestamp ToTimestamp(DateTimeOffset dateTimeOffset)
-        {
-            return Timestamp.FromDateTimeOffset(dateTimeOffset);
         }
 
         private static Proto.Mirror.ConsensusTopicResponse Response(long sequenceNumber)
@@ -364,7 +363,7 @@ namespace Hiero.Tests.SDK.Topic
 
             var message = ByteString.CopyFrom(new byte[] { (byte)sequenceNumber });
 
-            response.ConsensusTimestamp = START_TIME.AddSeconds(sequenceNumber).ToProtoTimestamp();
+            response.ConsensusTimestamp = START_TIME.PlusSeconds(sequenceNumber).ToProtoTimestamp();
             response.SequenceNumber = (ulong)sequenceNumber;
             response.Message = message;
             response.RunningHash = message;

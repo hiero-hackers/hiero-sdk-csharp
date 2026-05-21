@@ -13,7 +13,7 @@ namespace Hiero.Tests.SDK.Exceptions
         /// <include file="test-exception-receiptstatus.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Exceptions.ReceiptStatusExceptionTest.ShouldHaveMessage"]' />
         public virtual void ShouldHaveMessage()
         {
-            var validStart = DateTimeOffset.FromUnixTimeMilliseconds(1554158542);
+            var validStart = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
             var txId = new TransactionId(new AccountId(0, 0, 100), validStart);
             var txReceipt = TransactionReceipt.FromProtobuf(new Proto.Services.TransactionReceipt { Status = Proto.Services.ResponseCodeEnum.InsufficientTxFee });
             var e = new ReceiptStatusException(txId, txReceipt);

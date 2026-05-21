@@ -7,7 +7,7 @@ namespace Hiero.SDK.Consensus
     /// <include file="TopicMessageChunk.cs.xml" path='docs/member[@name="M:TopicMessageChunk.#ctor(Proto.Mirror.ConsensusTopicResponse)"]' />
     public sealed class TopicMessageChunk(Proto.Mirror.ConsensusTopicResponse response)
     {
-		public DateTimeOffset ConsensusTimestamp { get; } = response.ConsensusTimestamp.ToDateTimeOffset();
+		public NodaTime.Instant ConsensusTimestamp { get; } = response.ConsensusTimestamp.ToNodaTimeInstant();
 		public long ContentSize { get; } = response.Message.Length;
 		public byte[] RunningHash { get; } = response.RunningHash.ToByteArray();
 		public ulong SequenceNumber { get; } = response.SequenceNumber;

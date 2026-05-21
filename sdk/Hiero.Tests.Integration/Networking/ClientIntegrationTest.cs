@@ -63,7 +63,7 @@ namespace Hiero.Tests.Integration.Networking
             using (var testEnv = new IntegrationTestEnv(1))
             {
                 testEnv.Client.DefaultMaxQueryPayment = new Hbar(2);
-                testEnv.Client.RequestTimeout = TimeSpan.FromMinutes(2);
+                testEnv.Client.RequestTimeout = NodaTime.Duration.FromMinutes(2);
 				testEnv.Client.Network_.SetNetwork(network);
 
 				Assert.NotNull(testEnv.OperatorId);

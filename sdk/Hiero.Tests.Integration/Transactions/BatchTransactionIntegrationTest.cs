@@ -128,7 +128,7 @@ namespace Hiero.Tests.Integration.Transactions
                 {
 					FileId = FileId.FromString("4.5.6"),
 					FileHash = Hex.Decode("1723904587120938954702349857"),
-					StartTime = DateTimeOffset.UtcNow,
+					StartTime = NodaTime.SystemClock.Instance.GetCurrentInstant(),
 					FreezeType = FreezeType.FreezeOnly
 				
                 }.Batchify(testEnv.Client, testEnv.OperatorKey);

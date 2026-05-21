@@ -48,9 +48,9 @@ namespace Hiero.SDK.Token
         /// <include file="TokenInfo.cs.xml" path='docs/member[@name="F:TokenInfo.AutoRenewAccount"]' />
         public AccountId AutoRenewAccount { get; }
         /// <include file="TokenInfo.cs.xml" path='docs/member[@name="F:TokenInfo.AutoRenewPeriod"]' />
-        public TimeSpan AutoRenewPeriod { get; }
+        public NodaTime.Duration AutoRenewPeriod { get; }
         /// <include file="TokenInfo.cs.xml" path='docs/member[@name="F:TokenInfo.ExpirationTime"]' />
-        public DateTimeOffset ExpirationTime { get; }
+        public NodaTime.Instant ExpirationTime { get; }
         /// <include file="TokenInfo.cs.xml" path='docs/member[@name="F:TokenInfo.TokenMemo"]' />
         public string TokenMemo { get; }
         /// <include file="TokenInfo.cs.xml" path='docs/member[@name="F:TokenInfo.CustomFees"]' />
@@ -72,7 +72,7 @@ namespace Hiero.SDK.Token
         /// <include file="TokenInfo.cs.xml" path='docs/member[@name="F:TokenInfo.LedgerId"]' />
         public LedgerId LedgerId { get; }
 
-        internal TokenInfo(TokenId tokenId, string name, string symbol, uint decimals, ulong totalSupply, AccountId treasuryAccountId, Key? adminKey, Key? kycKey, Key? freezeKey, Key? wipeKey, Key? supplyKey, Key? feeScheduleKey, bool defaultFreezeStatus, bool defaultKycStatus, bool isDeleted, AccountId autoRenewAccount, TimeSpan autoRenewPeriod, DateTimeOffset expirationTime, string tokenMemo, IEnumerable<CustomFee> customFees, TokenType tokenType, TokenSupplyType supplyType, long maxSupply, Key? pauseKey, bool pauseStatus, byte[] metadata, Key? metadataKey, LedgerId ledgerId)
+        internal TokenInfo(TokenId tokenId, string name, string symbol, uint decimals, ulong totalSupply, AccountId treasuryAccountId, Key? adminKey, Key? kycKey, Key? freezeKey, Key? wipeKey, Key? supplyKey, Key? feeScheduleKey, bool defaultFreezeStatus, bool defaultKycStatus, bool isDeleted, AccountId autoRenewAccount, NodaTime.Duration autoRenewPeriod, NodaTime.Instant expirationTime, string tokenMemo, IEnumerable<CustomFee> customFees, TokenType tokenType, TokenSupplyType supplyType, long maxSupply, Key? pauseKey, bool pauseStatus, byte[] metadata, Key? metadataKey, LedgerId ledgerId)
         {
             TokenId = tokenId;
             Name = name;
@@ -145,8 +145,8 @@ namespace Hiero.SDK.Token
                 KycStatusFromProtobuf(response.TokenInfo.DefaultKycStatus),
 				response.TokenInfo.Deleted,
 				AccountId.FromProtobuf(response.TokenInfo.AutoRenewAccount),
-				response.TokenInfo.AutoRenewPeriod.ToTimeSpan(),
-				response.TokenInfo.Expiry.ToDateTimeOffset(),
+				response.TokenInfo.AutoRenewPeriod.ToNodaDuration(),
+				response.TokenInfo.Expiry.ToNodaTimeInstant(),
 				response.TokenInfo.Memo, 
                 CustomFeesFromProto(response.TokenInfo), 
                 (TokenType)response.TokenInfo.TokenType, 

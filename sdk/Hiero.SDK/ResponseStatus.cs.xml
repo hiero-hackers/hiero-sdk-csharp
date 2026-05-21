@@ -44,7 +44,7 @@
   <member name="T:ResponseStatus_8">
     <summary>
     The given transactionValidDuration was either non-Positive = Proto.ResponseCodeEnum.Positive, or greater than the maximum
-    valid TimeSpan.From 180 secs.
+    valid NodaTime.Duration.From 180 secs.
     </summary>
   </member>
   <member name="T:ResponseStatus_9">

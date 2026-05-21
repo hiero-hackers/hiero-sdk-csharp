@@ -2,16 +2,18 @@
 using Google.Protobuf;
 using Google.Protobuf.Reflection;
 
+using Hiero.SDK.Core;
 using Hiero.SDK.Ethereum;
 using Hiero.SDK.Exceptions;
 using Hiero.SDK.Hook;
 using Hiero.SDK.Cryptography;
 using Hiero.SDK.Transactions;
 
+using NodaTime;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Hiero.SDK.Core;
 
 namespace Hiero.SDK.Cryptocurrency
 {
@@ -111,7 +113,7 @@ namespace Hiero.SDK.Cryptocurrency
             set { RequireNotFrozen(); field = value; } 
         }
 		/// <include file="AccountCreateTransaction.cs.xml" path='docs/member[@name="M:RequireNotFrozen_5"]' />
-		public TimeSpan AutoRenewPeriod 
+		public NodaTime.Duration AutoRenewPeriod 
         { 
             get; 
             set { RequireNotFrozen(); field = value; } 
@@ -239,7 +241,7 @@ namespace Hiero.SDK.Cryptocurrency
 
             if (body.AutoRenewPeriod is not null)
             {
-                AutoRenewPeriod = body.AutoRenewPeriod.ToTimeSpan();
+                AutoRenewPeriod = body.AutoRenewPeriod.ToNodaDuration();
             }
 
             InitialBalance = Hbar.FromTinybars((long)body.InitialBalance);

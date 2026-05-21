@@ -115,7 +115,7 @@ namespace Hiero.SDK.Contract
 			}
 		}
 		/// <include file="ContractCreateTransaction.cs.xml" path='docs/member[@name="M:ContractCreateTransaction.RequireNotFrozen_7"]' />
-		public TimeSpan? AutoRenewPeriod
+		public NodaTime.Duration? AutoRenewPeriod
 		{
 			get;
 			set
@@ -264,7 +264,7 @@ namespace Hiero.SDK.Contract
 			if (body.AdminKey is not null) AdminKey = Key.FromProtobufKey(body.AdminKey);
 
 			MaxAutomaticTokenAssociations = body.MaxAutomaticTokenAssociations;
-			AutoRenewPeriod = body.AutoRenewPeriod?.ToTimeSpan();
+			AutoRenewPeriod = body.AutoRenewPeriod?.ToNodaDuration();
 
 			Gas = body.Gas;
             InitialBalance = Hbar.FromTinybars(body.InitialBalance);

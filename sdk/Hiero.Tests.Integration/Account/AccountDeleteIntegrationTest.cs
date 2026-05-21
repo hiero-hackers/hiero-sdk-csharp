@@ -36,7 +36,7 @@ namespace Hiero.Tests.Integration.Account
                 Assert.False(info.IsDeleted);
                 Assert.Equal(info.Key.ToString(), key.GetPublicKey().ToString());
                 Assert.Equal(info.Balance, new Hbar(1));
-                Assert.Equal(info.AutoRenewPeriod, TimeSpan.FromDays(90));
+                Assert.Equal(info.AutoRenewPeriod, NodaTime.Duration.FromDays(90));
                 Assert.Null(info.ProxyAccountId);
                 Assert.Equal(info.ProxyReceived, Hbar.ZERO);
             }

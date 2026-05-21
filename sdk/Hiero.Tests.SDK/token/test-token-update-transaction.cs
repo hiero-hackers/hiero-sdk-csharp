@@ -32,8 +32,8 @@ namespace Hiero.Tests.SDK.Token
         private static readonly string testTokenSymbol = "test symbol";
         private static readonly string testTokenMemo = "test memo";
         private static readonly TokenId testTokenId = TokenId.FromString("4.2.0");
-        private static readonly TimeSpan testAutoRenewPeriod = TimeSpan.FromSeconds(10);
-        private static readonly DateTimeOffset testExpirationTime = DateTimeOffset.UtcNow;
+        private static readonly NodaTime.Duration testAutoRenewPeriod = NodaTime.Duration.FromSeconds(10);
+        private static readonly NodaTime.Instant testExpirationTime = NodaTime.SystemClock.Instance.GetCurrentInstant();
         private static readonly byte[] testMetadata = new byte[]
         {
             1,
@@ -42,7 +42,7 @@ namespace Hiero.Tests.SDK.Token
             4,
             5
         };
-        private readonly DateTimeOffset validStart = DateTimeOffset.FromUnixTimeMilliseconds(1554158542);
+        private readonly NodaTime.Instant validStart = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
  
         public virtual void ShouldSerialize()
         {

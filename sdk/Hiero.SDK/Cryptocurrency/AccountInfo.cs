@@ -16,8 +16,8 @@ namespace Hiero.SDK.Cryptocurrency
     /// <include file="AccountInfo.cs.xml" path='docs/member[@name="T:AccountInfo"]' />
     public sealed class AccountInfo
     {        
-        /// <include file="AccountInfo.cs.xml" path='docs/member[@name="M:AccountInfo.#ctor(AccountId,System.String,System.Boolean,AccountId,System.Int64,Key,System.Int64,System.Int64,System.Int64,System.Boolean,DateTimeOffset,System.TimeSpan,System.Collections.Generic.IEnumerable{LiveHash},System.Collections.Generic.Dictionary{TokenId,TokenRelationship},System.String,System.Int64,System.Int32,PublicKey,LedgerId,System.Int64,StakingInfo)"]' />
-        private AccountInfo(AccountId accountId, string contractAccountId, bool isDeleted, AccountId? proxyAccountId, long proxyReceived, Key key, long balance, long sendRecordThreshold, long receiveRecordThreshold, bool receiverSignatureRequired, DateTimeOffset expirationTime, TimeSpan autoRenewPeriod, IEnumerable<LiveHash> liveHashes, Dictionary<TokenId, TokenRelationship> tokenRelationships, string accountMemo, long ownedNfts, int maxAutomaticTokenAssociations, PublicKey? aliasKey, LedgerId ledgerId, long ethereumNonce, StakingInfo? stakingInfo)
+        /// <include file="AccountInfo.cs.xml" path='docs/member[@name="M:AccountInfo.#ctor(AccountId,System.String,System.Boolean,AccountId,System.Int64,Key,System.Int64,System.Int64,System.Int64,System.Boolean,NodaTime.Instant,System.NodaTime.Duration,System.Collections.Generic.IEnumerable{LiveHash},System.Collections.Generic.Dictionary{TokenId,TokenRelationship},System.String,System.Int64,System.Int32,PublicKey,LedgerId,System.Int64,StakingInfo)"]' />
+        private AccountInfo(AccountId accountId, string contractAccountId, bool isDeleted, AccountId? proxyAccountId, long proxyReceived, Key key, long balance, long sendRecordThreshold, long receiveRecordThreshold, bool receiverSignatureRequired, NodaTime.Instant expirationTime, NodaTime.Duration autoRenewPeriod, IEnumerable<LiveHash> liveHashes, Dictionary<TokenId, TokenRelationship> tokenRelationships, string accountMemo, long ownedNfts, int maxAutomaticTokenAssociations, PublicKey? aliasKey, LedgerId ledgerId, long ethereumNonce, StakingInfo? stakingInfo)
         {
             AccountId = accountId;
             ContractAccountId = contractAccountId;
@@ -66,9 +66,9 @@ namespace Hiero.SDK.Cryptocurrency
         /// <include file="AccountInfo.cs.xml" path='docs/member[@name="F:AccountInfo.IsReceiverSigRequired"]' />
         public bool IsReceiverSigRequired { get; }
         /// <include file="AccountInfo.cs.xml" path='docs/member[@name="F:AccountInfo.ExpirationTime"]' />
-        public DateTimeOffset ExpirationTime { get; }
+        public NodaTime.Instant ExpirationTime { get; }
         /// <include file="AccountInfo.cs.xml" path='docs/member[@name="F:AccountInfo.AutoRenewPeriod"]' />
-        public TimeSpan AutoRenewPeriod { get; }
+        public NodaTime.Duration AutoRenewPeriod { get; }
         /// <include file="AccountInfo.cs.xml" path='docs/member[@name="F:AccountInfo.LiveHashes"]' />
         public List<LiveHash> LiveHashes { get; }
         public Dictionary<TokenId, TokenRelationship> TokenRelationships { get; }
@@ -112,8 +112,8 @@ namespace Hiero.SDK.Cryptocurrency
                 (long)accountInfo.GenerateSendRecordThreshold, 
                 (long)accountInfo.GenerateReceiveRecordThreshold, 
                 accountInfo.ReceiverSigRequired, 
-                accountInfo.ExpirationTime.ToDateTimeOffset(),
-                accountInfo.AutoRenewPeriod.ToTimeSpan(),
+                accountInfo.ExpirationTime.ToNodaTimeInstant(),
+                accountInfo.AutoRenewPeriod.ToNodaDuration(),
 				[.. accountInfo.LiveHashes.Select(_ => LiveHash.FromProtobuf(_))],
 				accountInfo.TokenRelationships.ToDictionary(_ => TokenId.FromProtobuf(_.TokenId), _ => TokenRelationship.FromProtobuf(_)), 
                 accountInfo.Memo,

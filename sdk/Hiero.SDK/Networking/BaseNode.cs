@@ -35,7 +35,7 @@ namespace Hiero.SDK.Networking
         {
             Executor = executor;
             Address = address;
-			ReadmitTime = DateTime.UnixEpoch;
+			ReadmitTime = NodaTime.Instant.FromUnixTimeSeconds(0);
 			CurrentBackoff = Client.DEFAULT_MIN_NODE_BACKOFF;
             MinBackoff = Client.DEFAULT_MIN_NODE_BACKOFF;
             MaxBackoff = Client.DEFAULT_MAX_NODE_BACKOFF;
@@ -76,12 +76,12 @@ namespace Hiero.SDK.Networking
 			}
 		}
 		/// <include file="BaseNode.cs.xml" path='docs/member[@name="P:BaseNode.ReadmitTime"]' />
-		public DateTimeOffset ReadmitTime { get; set; }
+		public NodaTime.Instant ReadmitTime { get; set; }
 
 		/// <include file="BaseNode.cs.xml" path='docs/member[@name="P:BaseNode.CurrentBackoff"]' />
-		public TimeSpan CurrentBackoff { get; set; }
+		public NodaTime.Duration CurrentBackoff { get; set; }
 		/// <include file="BaseNode.cs.xml" path='docs/member[@name="M:BaseNode.lock(this)_3"]' />
-		public virtual TimeSpan MinBackoff 
+		public virtual NodaTime.Duration MinBackoff 
         {
             get
             {
@@ -102,7 +102,7 @@ namespace Hiero.SDK.Networking
 			}
         }
 		/// <include file="BaseNode.cs.xml" path='docs/member[@name="P:BaseNode.MaxBackoff"]' />
-		public virtual TimeSpan MaxBackoff { get; set; }
+		public virtual NodaTime.Duration MaxBackoff { get; set; }
 		/// <include file="BaseNode.cs.xml" path='docs/member[@name="P:BaseNode.Address"]' />
 		public virtual BaseNodeAddress Address { get; protected set; }
 		/// <include file="BaseNode.cs.xml" path='docs/member[@name="P:BaseNode.BadGrpcStatusCount"]' />
@@ -118,15 +118,15 @@ namespace Hiero.SDK.Networking
 			}
 
 			return await await new Delayer(Executor)
-				.DelayAsync(TimeSpan.FromMilliseconds(GET_STATE_INTERVAL_MILLIS), () => ChannelFailedToConnectAsync(i + 1, Channel.State));
+				.DelayAsync(NodaTime.Duration.FromMilliseconds(GET_STATE_INTERVAL_MILLIS), () => ChannelFailedToConnectAsync(i + 1, Channel.State));
 		}
 
 		/// <include file="BaseNode.cs.xml" path='docs/member[@name="M:BaseNode.ChannelFailedToConnect"]' />
 		public virtual bool ChannelFailedToConnect()
 		{
-			return ChannelFailedToConnect(DateTime.MaxValue);
+			return ChannelFailedToConnect(NodaTime.Instant.MaxValue);
 		}
-		public virtual bool ChannelFailedToConnect(DateTimeOffset timeoutTime)
+		public virtual bool ChannelFailedToConnect(NodaTime.Instant timeoutTime)
 		{
 			if (hasConnected)
 			{
@@ -139,9 +139,9 @@ namespace Hiero.SDK.Networking
 			{
 				for (int i = 0; i < GET_STATE_MAX_ATTEMPTS && !hasConnected; i++)
 				{
-					TimeSpan remaining = timeoutTime - DateTime.UtcNow;
+					NodaTime.Duration remaining = timeoutTime - NodaTime.SystemClock.Instance.GetCurrentInstant();
 
-					if (remaining <= TimeSpan.Zero) return false;
+					if (remaining <= NodaTime.Duration.Zero) return false;
 
 					Thread.Sleep(GET_STATE_INTERVAL_MILLIS);
 
@@ -168,7 +168,7 @@ namespace Hiero.SDK.Networking
 		/// <include file="BaseNode.cs.xml" path='docs/member[@name="M:BaseNode.IsHealthy"]' />
 		public virtual bool IsHealthy()
         {
-            return ReadmitTime.ToUnixTimeMilliseconds() < DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            return ReadmitTime.ToUnixTimeMilliseconds() < NodaTime.SystemClock.Instance.GetCurrentInstant().ToUnixTimeMilliseconds();
         }
         /// <include file="BaseNode.cs.xml" path='docs/member[@name="M:BaseNode.IncreaseBackoff"]' />
         public virtual void IncreaseBackoff()
@@ -176,7 +176,7 @@ namespace Hiero.SDK.Networking
             lock (this)
             {
 				BadGrpcStatusCount++;
-				ReadmitTime = DateTime.UtcNow + CurrentBackoff;
+				ReadmitTime = NodaTime.SystemClock.Instance.GetCurrentInstant() + CurrentBackoff;
 
 				CurrentBackoff *= 2;
 
@@ -198,7 +198,7 @@ namespace Hiero.SDK.Networking
 		/// <include file="BaseNode.cs.xml" path='docs/member[@name="M:BaseNode.GetRemainingTimeForBackoff"]' />
 		public virtual long GetRemainingTimeForBackoff()
         {
-            return ReadmitTime.ToUnixTimeMilliseconds() - DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            return ReadmitTime.ToUnixTimeMilliseconds() - NodaTime.SystemClock.Instance.GetCurrentInstant().ToUnixTimeMilliseconds();
         }
         /// <include file="BaseNode.cs.xml" path='docs/member[@name="M:BaseNode.GetChannelCredentials"]' />
         public virtual ChannelCredentials GetChannelCredentials()
@@ -208,14 +208,14 @@ namespace Hiero.SDK.Networking
 		/// <include file="BaseNode.cs.xml" path='docs/member[@name="M:BaseNode.UnhealthyBackoffRemaining"]' />
 		public virtual long UnhealthyBackoffRemaining()
 		{
-			return Math.Max(0, ReadmitTime.ToUnixTimeMilliseconds() - DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
+			return Math.Max(0, ReadmitTime.ToUnixTimeMilliseconds() - NodaTime.SystemClock.Instance.GetCurrentInstant().ToUnixTimeMilliseconds());
 		}
-        /// <include file="BaseNode.cs.xml" path='docs/member[@name="M:BaseNode.Dispose(System.TimeSpan)"]' />
-        public virtual void Dispose(TimeSpan timeout)
+        /// <include file="BaseNode.cs.xml" path='docs/member[@name="M:BaseNode.Dispose(System.NodaTime.Duration)"]' />
+        public virtual void Dispose(NodaTime.Duration timeout)
         {
             lock (this)
             {
-				channel?.ShutdownAsync().Wait(timeout);
+				channel?.ShutdownAsync().Wait(timeout.ToTimeSpan());
 				channel = null;
 			}
         }

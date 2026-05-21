@@ -1,4 +1,5 @@
 ﻿
+
 namespace System
 {
     public static class DateTimeOffsetExtensions
@@ -7,7 +8,13 @@ namespace System
 
 		public static DateTimeOffset AddNanoseconds(this DateTimeOffset value, long nanoseconds)
 		{
-			return value.AddTicks(nanoseconds / NanosecondsPerTick);
+			long fhf = nanoseconds / NanosecondsPerTick;
+			(long valu, long rem) = Math.DivRem(nanoseconds, NanosecondsPerTick);
+			long hh = nanoseconds % NanosecondsPerTick;
+
+            return value
+				.AddTicks(nanoseconds / NanosecondsPerTick);
+				//.AddTicks(nanoseconds % NanosecondsPerTick);
 		}
 	}
 }

@@ -67,8 +67,8 @@ namespace Hiero.Tests.SDK.Token
         private static readonly long testTokenMaxSupply = 1000000;
         private static readonly bool testTokenPauseStatus = true;
         private static readonly LedgerId testTokenLedgerId = LedgerId.MAINNET;
-        private static readonly TimeSpan testAutoRenewPeriod = TimeSpan.FromHours(10);
-        private static readonly DateTimeOffset testExpirationTime = DateTimeOffset.FromUnixTimeMilliseconds(1554158542);
+        private static readonly NodaTime.Duration testAutoRenewPeriod = NodaTime.Duration.FromHours(10);
+        private static readonly NodaTime.Instant testExpirationTime = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
         private static readonly byte[] testMetadata = new byte[]
         {
             1,

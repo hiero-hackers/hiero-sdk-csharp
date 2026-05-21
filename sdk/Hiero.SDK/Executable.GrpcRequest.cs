@@ -14,7 +14,7 @@ namespace Hiero.SDK
 	{
 		public class GrpcRequest
 		{
-			public GrpcRequest(Executable<TSdkRequest, TProtoRequest, TProtoResponse, TTransactionResponse> parent, Network? network, int attempt, TimeSpan grpcDeadline)
+			public GrpcRequest(Executable<TSdkRequest, TProtoRequest, TProtoResponse, TTransactionResponse> parent, Network? network, int attempt, NodaTime.Duration grpcDeadline)
 			{
 				Parent = parent;
 				Network = network;
@@ -25,7 +25,7 @@ namespace Hiero.SDK
 				StartAt = Stopwatch.GetTimestamp();
 
 				// Exponential back-off for Delayer: 250ms, 500ms, 1s, 2s, 4s, 8s, ... 8s
-				Delay = TimeSpan.FromMilliseconds((long)Math.Min(Parent.MinBackoff.TotalMilliseconds * Math.Pow(2, attempt - 1), Parent.MaxBackoff.TotalMilliseconds));
+				Delay = NodaTime.Duration.FromMilliseconds((long)Math.Min(Parent.MinBackoff.TotalMilliseconds * Math.Pow(2, attempt - 1), Parent.MaxBackoff.TotalMilliseconds));
 			}
 
 			private readonly Executable<TSdkRequest, TProtoRequest, TProtoResponse, TTransactionResponse> Parent;
@@ -38,10 +38,10 @@ namespace Hiero.SDK
 			private double Latency;
 			private ResponseStatus ResponseStatus;
 
-			public readonly TimeSpan Delay;
+			public readonly NodaTime.Duration Delay;
 			public readonly Node Node;
 
-			public TimeSpan GrpcDeadline { get; set; }
+			public NodaTime.Duration GrpcDeadline { get; set; }
 
 			public virtual CallOptions CallOptions 
 			{
@@ -82,7 +82,7 @@ namespace Hiero.SDK
 			}
 			public virtual void VerboseLog(Node node)
 			{
-				//Parent.Logger?.Trace("Node IP {0} Timestamp {1} Transaction Type {2}", node.Address?.Address ?? "NULL", DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(), GetType().Name);
+				//Parent.Logger?.Trace("Node IP {0} Timestamp {1} Transaction Type {2}", node.Address?.Address ?? "NULL", NodaTime.SystemClock.Instance.GetCurrentInstant().ToUnixTimeMilliseconds(), GetType().Name);
 			}
 			public virtual bool ShouldRetryExceptionally(Exception e)
 			{

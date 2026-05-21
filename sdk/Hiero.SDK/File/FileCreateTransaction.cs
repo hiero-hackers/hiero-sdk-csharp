@@ -5,7 +5,7 @@ using Hiero.SDK.Core;
 using Hiero.SDK.Cryptocurrency;
 using Hiero.SDK.Cryptography;
 using Hiero.SDK.Transactions;
-
+using NodaTime;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,7 +18,7 @@ namespace Hiero.SDK.File
         /// <include file="FileCreateTransaction.cs.xml" path='docs/member[@name="M:FileCreateTransaction.#ctor"]' />
         public FileCreateTransaction()
         {
-            ExpirationTime = DateTimeOffset.UtcNow.Add(Transaction.DEFAULT_AUTO_RENEW_PERIOD);
+            ExpirationTime = Transaction.DEFAULT_AUTO_RENEW_PERIOD.ToInstant();
             DefaultMaxTransactionFee = new Hbar(5);
         }
 		/// <include file="FileCreateTransaction.cs.xml" path='docs/member[@name="M:FileCreateTransaction.#ctor(Proto.Services.TransactionBody)"]' />
@@ -32,11 +32,11 @@ namespace Hiero.SDK.File
             InitFromTransactionBody();
         }
 
-        private DateTimeOffset? _ExpirationTime = null;
-		private TimeSpan? _ExpirationTimeDuration = null;
+        private NodaTime.Instant? _ExpirationTime = null;
+		private NodaTime.Duration? _ExpirationTimeDuration = null;
 
         /// <include file="FileCreateTransaction.cs.xml" path='docs/member[@name="M:FileCreateTransaction.RequireNotFrozen"]' />
-        public DateTimeOffset? ExpirationTime
+        public NodaTime.Instant? ExpirationTime
 		{
 			get => _ExpirationTime;
 			set
@@ -47,7 +47,7 @@ namespace Hiero.SDK.File
 			}
 		}
 		/// <include file="FileCreateTransaction.cs.xml" path='docs/member[@name="M:FileCreateTransaction.RequireNotFrozen_2"]' />
-		public TimeSpan? ExpirationTimeDuration
+		public NodaTime.Duration? ExpirationTimeDuration
 		{
 			get => _ExpirationTimeDuration;
 			set
@@ -108,7 +108,7 @@ namespace Hiero.SDK.File
 			var body = SourceTransactionBody.FileCreate;
 
 			if (body.ExpirationTime is not null)
-				ExpirationTime = body.ExpirationTime.ToDateTimeOffset();
+				ExpirationTime = body.ExpirationTime.ToNodaTimeInstant();
 
 			if (body.Keys is not null)
 				Keys = KeyList.FromProtobuf(body.Keys, null);
@@ -122,20 +122,14 @@ namespace Hiero.SDK.File
 		{
 			var builder = new Proto.Services.FileCreateTransactionBody();
 
-			if (ExpirationTime != null)
-			{
-				builder.ExpirationTime = ExpirationTime.Value.ToProtoTimestamp();
-			}
 
-			if (ExpirationTimeDuration != null)
-			{
+			if (ExpirationTime != null)
+				builder.ExpirationTime = ExpirationTime.Value.ToProtoTimestamp();
+			else if (ExpirationTimeDuration != null)
 				builder.ExpirationTime = ExpirationTimeDuration.Value.ToProtoTimestamp();
-			}
 
 			if (Keys != null)
-			{
 				builder.Keys = Keys.ToProtobuf();
-			}
 
 			builder.Contents = ByteString.CopyFrom(Contents);
 			builder.Memo = FileMemo;

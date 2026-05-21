@@ -1,18 +1,19 @@
 ﻿// SPDX-License-Identifier: Apache-2.0
 using Google.Protobuf;
 
+using Hiero.SDK;
+using Hiero.SDK.Core;
 using Hiero.SDK.Cryptocurrency;
 using Hiero.SDK.Exceptions;
-using Hiero.SDK;
 using Hiero.SDK.Cryptography;
 using Hiero.SDK.Schedule;
 using Hiero.SDK.Token;
 using Hiero.SDK.Consensus;
 using Hiero.SDK.Transactions;
 
-using System;
 using System.Threading;
-using Hiero.SDK.Core;
+
+using NodaTime;
 
 namespace Hiero.Tests.Integration.Schedule
 {
@@ -354,7 +355,7 @@ namespace Hiero.Tests.Integration.Schedule
                 var scheduledTx = transaction.Schedule();
                 scheduledTx.AdminKey = testEnv.OperatorKey;
                 scheduledTx.PayerAccountId = testEnv.OperatorId;
-				scheduledTx.ScheduleMemo = "mirror scheduled E2E signature on create and sign_" + DateTimeOffset.UtcNow;
+				scheduledTx.ScheduleMemo = "mirror scheduled E2E signature on create and sign_" + SystemClock.Instance.GetCurrentInstant();
                 var scheduled = scheduledTx.FreezeWith(testEnv.Client);
                 var scheduleId = scheduled
                 .Execute(testEnv.Client)
@@ -412,7 +413,7 @@ namespace Hiero.Tests.Integration.Schedule
                 // Schedule the transaction
                 var scheduleId = transfer.Schedule(_ =>
                 {
-                    _.ExpirationTime = DateTimeOffset.UtcNow.AddSeconds(oneDayInSecs);
+                    _.ExpirationTime = SystemClock.Instance.GetCurrentInstant().PlusSeconds(oneDayInSecs);
 					_.ScheduleMemo = "HIP-423 Integration Test";
 				})
                 .Execute(testEnv.Client)
@@ -471,7 +472,7 @@ namespace Hiero.Tests.Integration.Schedule
                 {
                     transfer.Schedule(_ =>
                     {
-                        _.ExpirationTime = DateTimeOffset.UtcNow.AddDays(365);
+                        _.ExpirationTime = SystemClock.Instance.GetCurrentInstant().PlusSeconds(365);
                         _.ScheduleMemo = "HIP-423 Integration Test";
                     })
                     .Execute(testEnv.Client)
@@ -504,7 +505,7 @@ namespace Hiero.Tests.Integration.Schedule
                 {
                     transfer.Schedule(_ =>
                     {
-                        _.ExpirationTime = DateTimeOffset.UtcNow.AddSeconds(-10);
+                        _.ExpirationTime = SystemClock.Instance.GetCurrentInstant().PlusSeconds(-10);
                         _.ScheduleMemo = "HIP-423 Integration Test";
                     })
                     .Execute(testEnv.Client)
@@ -536,7 +537,7 @@ namespace Hiero.Tests.Integration.Schedule
 				// Schedule the transaction
 				var scheduleId = transfer.Schedule(_ =>
 				{
-					_.ExpirationTime = DateTimeOffset.UtcNow.AddSeconds(oneDayInSecs);
+					_.ExpirationTime = SystemClock.Instance.GetCurrentInstant().PlusSeconds(oneDayInSecs);
 					_.ScheduleMemo = "HIP-423 Integration Test";
 				})
 				.Execute(testEnv.Client)
@@ -597,7 +598,7 @@ namespace Hiero.Tests.Integration.Schedule
                 // Schedule the transaction
                 var scheduleId = transfer.Schedule(_ =>
                 {
-                    _.ExpirationTime = DateTimeOffset.UtcNow.AddSeconds(oneDayInSecs);
+                    _.ExpirationTime = SystemClock.Instance.GetCurrentInstant().PlusSeconds(oneDayInSecs);
                     _.ScheduleMemo = "HIP-423 Integration Test";
                 })
                 .Execute(testEnv.Client)
@@ -695,7 +696,7 @@ namespace Hiero.Tests.Integration.Schedule
 
                 // Schedule the transaction
                 var schedule = transfer.Schedule();
-				schedule.ExpirationTime = DateTimeOffset.UtcNow.AddSeconds(oneDayInSecs);
+				schedule.ExpirationTime = SystemClock.Instance.GetCurrentInstant().PlusSeconds(oneDayInSecs);
 				schedule.ScheduleMemo = "HIP-423 Integration Test";
 				var scheduleId = schedule.Execute(testEnv.Client)
                 .GetReceipt(testEnv.Client).ScheduleId;
@@ -786,7 +787,7 @@ namespace Hiero.Tests.Integration.Schedule
 
                 // Schedule the transaction
                 var scheduleId = transfer.Schedule();
-				scheduleId.ExpirationTime = DateTimeOffset.UtcNow.AddSeconds(10);
+				scheduleId.ExpirationTime = SystemClock.Instance.GetCurrentInstant().PlusSeconds(10);
                 scheduleId.WaitForExpiry = true;
                 scheduleId.ScheduleMemo = "HIP-423 Integration Test";
                 ScheduleInfo info = new ScheduleInfoQuery

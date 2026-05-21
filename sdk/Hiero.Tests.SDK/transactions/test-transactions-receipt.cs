@@ -20,7 +20,7 @@ namespace Hiero.Tests.SDK.Transactions
     /// <include file="test-transactions-receipt.cs.xml" path='docs/member[@name="T:Hiero.Tests.SDK.Transactions.TransactionReceiptTest"]' />
     public class TransactionReceiptTest
     {
-        private static readonly DateTimeOffset time = DateTimeOffset.FromUnixTimeMilliseconds(1554158542);
+        private static readonly NodaTime.Instant time = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
 
         public static TransactionReceipt SpawnReceiptExample()
         {

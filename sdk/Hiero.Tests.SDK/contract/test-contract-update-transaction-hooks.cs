@@ -107,7 +107,7 @@ namespace Hiero.Tests.SDK.Contract
 			var tx = new ContractUpdateTransaction
 			{
 				NodeAccountIds = AccountId.FromString("0.0.5005"),
-				TransactionId = TransactionId.WithValidStart(AccountId.FromString("0.0.5006"), DateTimeOffset.FromUnixTimeMilliseconds(1554158542))
+				TransactionId = TransactionId.WithValidStart(AccountId.FromString("0.0.5006"), NodaTime.Instant.FromUnixTimeMilliseconds(1554158542))
 			};
 			tx.Freeze();
             
@@ -125,7 +125,7 @@ namespace Hiero.Tests.SDK.Contract
 			var tx = new ContractUpdateTransaction
 			{
 				NodeAccountIds = AccountId.FromString("0.0.5005"),
-				TransactionId = TransactionId.WithValidStart(AccountId.FromString("0.0.5006"), DateTimeOffset.FromUnixTimeMilliseconds(1554158542))
+				TransactionId = TransactionId.WithValidStart(AccountId.FromString("0.0.5006"), NodaTime.Instant.FromUnixTimeMilliseconds(1554158542))
 			};
 			tx.Freeze();
             
@@ -143,7 +143,7 @@ namespace Hiero.Tests.SDK.Contract
 			var tx = new ContractUpdateTransaction
 			{
 				NodeAccountIds = AccountId.FromString("0.0.5005"),
-				TransactionId = TransactionId.WithValidStart(AccountId.FromString("0.0.5006"), DateTimeOffset.FromUnixTimeMilliseconds(1554158542))
+				TransactionId = TransactionId.WithValidStart(AccountId.FromString("0.0.5006"), NodaTime.Instant.FromUnixTimeMilliseconds(1554158542))
 			};
 
 			tx.Freeze();
@@ -158,7 +158,7 @@ namespace Hiero.Tests.SDK.Contract
             var tx = new ContractUpdateTransaction
             {
 				NodeAccountIds = AccountId.FromString("0.0.5005"),
-				TransactionId = TransactionId.WithValidStart(AccountId.FromString("0.0.5006"), DateTimeOffset.FromUnixTimeMilliseconds(1554158542))
+				TransactionId = TransactionId.WithValidStart(AccountId.FromString("0.0.5006"), NodaTime.Instant.FromUnixTimeMilliseconds(1554158542))
 			};
 
             tx.Freeze();

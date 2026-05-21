@@ -34,7 +34,7 @@
     If an allowance is granted for the NFT, its corresponding spender account
     </summary>
   </member>
-  <member name="M:TokenNftInfo.#ctor(NftId,AccountId,DateTimeOffset,System.Byte[],LedgerId,AccountId)">
+  <member name="M:TokenNftInfo.#ctor(NftId,AccountId,NodaTime.Instant,System.Byte[],LedgerId,AccountId)">
     <summary>
     Constructor.
     </summary>

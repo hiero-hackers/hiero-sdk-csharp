@@ -27,7 +27,7 @@ namespace Hiero.SDK.Utils
         /// <include file="EntityIdHelper.cs.xml" path='docs/member[@name="F:EntityIdHelper.SOLIDITY_ADDRESS_LEN_HEX"]' />
         public static readonly int SOLIDITY_ADDRESS_LEN_HEX = SOLIDITY_ADDRESS_LEN * 2;
         private static readonly Regex ENTITY_ID_REGEX = new ("(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-([a-z]{5}))?$");
-        public static readonly TimeSpan MIRROR_NODE_CONNECTION_TIMEOUT = TimeSpan.FromSeconds(30);
+        public static readonly NodaTime.Duration MIRROR_NODE_CONNECTION_TIMEOUT = NodaTime.Duration.FromSeconds(30);
 		/// <include file="EntityIdHelper.cs.xml" path='docs/member[@name="M:EntityIdHelper.#ctor"]' />
 		private EntityIdHelper() { }
         /// <include file="EntityIdHelper.cs.xml" path='docs/member[@name="M:EntityIdHelper.FromString``1(System.String,WithIdNums{``0})"]' />
@@ -238,7 +238,7 @@ namespace Hiero.SDK.Utils
 
 			using var httpClient = new HttpClient
 			{
-				Timeout = MIRROR_NODE_CONNECTION_TIMEOUT
+				Timeout = MIRROR_NODE_CONNECTION_TIMEOUT.ToTimeSpan()
 			};
 
 			using var request = new HttpRequestMessage(HttpMethod.Post, apiUrl);

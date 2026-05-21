@@ -1,4 +1,5 @@
 using Google.Protobuf.Reflection;
+
 using Hiero.SDK.Core;
 using Hiero.SDK.Cryptocurrency;
 using Hiero.SDK.Transactions;
@@ -26,7 +27,7 @@ namespace Hiero.SDK
 				header.Payment = new TransferTransaction
 				{
 					NodeAccountIds = new AccountId(0, 0, 0),
-					TransactionId = TransactionId.WithValidStart(new AccountId(0, 0, 0), DateTimeOffset.FromUnixTimeMilliseconds(0))
+					TransactionId = TransactionId.WithValidStart(new AccountId(0, 0, 0), NodaTime.Instant.FromUnixTimeMilliseconds(0))
 
 				}.Freeze().MakeRequest();;
 			}

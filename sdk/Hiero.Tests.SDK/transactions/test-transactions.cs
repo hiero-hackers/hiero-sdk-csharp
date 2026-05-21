@@ -25,7 +25,7 @@ namespace Hiero.Tests.SDK.Transactions
         private static readonly PrivateKey mockPrivateKey = PrivateKey.FromString("302e020100300506032b657004220420db484b828e64b2d8f12ce3c0a0e93a0b8cce7af1bb8f39c97732394482538e10");
         private static readonly List<AccountId> testNodeAccountIds = [AccountId.FromString("0.0.5005"), AccountId.FromString("0.0.5006")];
         private static readonly AccountId testAccountId = AccountId.FromString("0.0.5006");
-        private static readonly DateTimeOffset validStart = DateTimeOffset.FromUnixTimeMilliseconds(1554158542);
+        private static readonly NodaTime.Instant validStart = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
         private static readonly TransactionId testTransactionID = TransactionId.WithValidStart(testAccountId, validStart);
         private Client client;
         // Additional test setup for new V2 methods
@@ -196,7 +196,7 @@ namespace Hiero.Tests.SDK.Transactions
 				TransactionId = new TransactionId(testAccountId, validStart),
 				NodeAccountIds = testNodeAccountIds,
 				MaxTransactionFee = new Hbar(1),
-				TransactionValidDuration = TimeSpan.FromHours(1),
+				TransactionValidDuration = NodaTime.Duration.FromHours(1),
 			
             }.Freeze();
             Assert.True(noOptionalFieldsTransaction.GetTransactionBodySize() < fullOptionalFieldsTransaction.GetTransactionBodySize());
@@ -413,7 +413,7 @@ namespace Hiero.Tests.SDK.Transactions
                 ChunkSize = 2048,
             
             }.FreezeWith(client);
-            TransactionId invalidTxID = TransactionId.WithValidStart(AccountId.FromString("0.0.999"), DateTimeOffset.UtcNow);
+            TransactionId invalidTxID = TransactionId.WithValidStart(AccountId.FromString("0.0.999"), NodaTime.SystemClock.Instance.GetCurrentInstant());
             transaction = transaction.AddSignature(mockPrivateKey.GetPublicKey(), mockSignature, invalidTxID, nodeAccountID1);
             Dictionary<AccountId, Dictionary<PublicKey, byte[]>> signatures = transaction.GetSignatures();
             if (signatures.ContainsKey(nodeAccountID1))
@@ -462,7 +462,7 @@ namespace Hiero.Tests.SDK.Transactions
                 4
             };
             AccountId nodeID = AccountId.FromString("0.0.3");
-            TransactionId testTxID = TransactionId.WithValidStart(AccountId.FromString("0.0.5"), DateTimeOffset.UtcNow);
+            TransactionId testTxID = TransactionId.WithValidStart(AccountId.FromString("0.0.5"), NodaTime.SystemClock.Instance.GetCurrentInstant());
             var result = tx.AddSignature(key.GetPublicKey(), mockSig, testTxID, nodeID);
             Assert.Equal(result, tx);
         }

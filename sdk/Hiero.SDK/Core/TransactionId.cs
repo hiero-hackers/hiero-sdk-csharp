@@ -4,6 +4,8 @@ using Google.Protobuf;
 using Hiero.SDK.Cryptocurrency;
 using Hiero.SDK.Exceptions;
 
+using NodaTime;
+
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,8 +13,8 @@ using System.Threading.Tasks;
 namespace Hiero.SDK.Core
 {
     /// <include file="TransactionId.cs.xml" path='docs/member[@name="T:TransactionId"]' />
-    /// <include file="TransactionId.cs.xml" path='docs/member[@name="M:TransactionId.#ctor(AccountId,DateTimeOffset)"]' />
-    public sealed class TransactionId(AccountId? accountId, DateTimeOffset? validStart) : IComparable<TransactionId>
+    /// <include file="TransactionId.cs.xml" path='docs/member[@name="M:TransactionId.#ctor(AccountId,NodaTime.Instant)"]' />
+    public sealed class TransactionId(AccountId? accountId, Instant? validStart) : IComparable<TransactionId>
     {
 		private static readonly long NANOSECONDS_PER_MILLISECOND = 1000000;
 		private static readonly long TIMESTAMP_INCREMENT_NANOSECONDS = 1000;
@@ -32,7 +34,7 @@ namespace Hiero.SDK.Core
 			{
 				// Get the current time in nanoseconds and remove a few seconds to allow for some time drift
 				// between the client and the receiving node and prevented spurious INVALID_TRANSACTION_START.
-				currentTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() * NANOSECONDS_PER_MILLISECOND - NANOSECONDS_TO_REMOVE;
+				currentTime = NodaTime.SystemClock.Instance.GetCurrentInstant().ToUnixTimeMilliseconds() * NANOSECONDS_PER_MILLISECOND - NANOSECONDS_TO_REMOVE;
 
 				// Get the last recorded timestamp.
 				lastTime = Interlocked.Read(ref monotonicTime);
@@ -46,10 +48,10 @@ namespace Hiero.SDK.Core
 			}
             while (Interlocked.CompareExchange(ref monotonicTime, currentTime, lastTime) != lastTime);
 
-			return new TransactionId(accountId, DateTimeOffset.UtcNow.AddNanoseconds((int)(currentTime + Random.Shared.NextInt64(1000))));
+			return new TransactionId(accountId, SystemClock.Instance.GetCurrentInstant().PlusNanoseconds((int)(currentTime + Random.Shared.NextInt64(1000))));
 		}
-		/// <include file="TransactionId.cs.xml" path='docs/member[@name="M:TransactionId.WithValidStart(AccountId,DateTimeOffset)"]' />
-		public static TransactionId WithValidStart(AccountId accountId, DateTimeOffset validStart)
+		/// <include file="TransactionId.cs.xml" path='docs/member[@name="M:TransactionId.WithValidStart(AccountId,NodaTime.Instant)"]' />
+		public static TransactionId WithValidStart(AccountId accountId, NodaTime.Instant validStart)
         {
 			return new TransactionId(accountId, validStart);
         }
@@ -74,9 +76,13 @@ namespace Hiero.SDK.Core
             if (validStartParts.Length != 2)
                 throw new ArgumentException("expecting {account}@{seconds}.{nanos}");
 
-            DateTimeOffset validStart = DateTimeOffset
-                .FromUnixTimeSeconds(long.Parse(validStartParts[0]))
-				.AddNanoseconds(long.Parse(validStartParts[1]));
+            long
+                seconds = long.Parse(validStartParts[0]),
+                nanoseconds = long.Parse(validStartParts[1]);
+
+            Instant validStart = Instant
+                .FromUnixTimeSeconds(seconds)
+                .PlusNanoseconds(nanoseconds);
 
             return new TransactionId(accountId, validStart)
             {
@@ -92,7 +98,7 @@ namespace Hiero.SDK.Core
 		/// <include file="TransactionId.cs.xml" path='docs/member[@name="M:TransactionId.FromProtobuf(Proto.Services.TransactionId)"]' />
 		public static TransactionId FromProtobuf(Proto.Services.TransactionID transactionId)
 		{
-			return new TransactionId(AccountId.FromProtobuf(transactionId.AccountId), transactionId.TransactionValidStart.ToDateTimeOffset())
+			return new TransactionId(AccountId.FromProtobuf(transactionId.AccountId), transactionId.TransactionValidStart.ToNodaTimeInstant())
 			{
 				Scheduled = transactionId.Scheduled,
 				Nonce = transactionId.Nonce != 0 ? transactionId.Nonce : null
@@ -106,13 +112,15 @@ namespace Hiero.SDK.Core
         /// <include file="TransactionId.cs.xml" path='docs/member[@name="P:TransactionId.AccountId"]' />
         public AccountId? AccountId { get; } = accountId;
         /// <include file="TransactionId.cs.xml" path='docs/member[@name="P:TransactionId.ValidStart"]' />
-        public DateTimeOffset? ValidStart { get; } = validStart;
+        public NodaTime.Instant? ValidStart { get; } = validStart;
 
         private string ToStringPostfix()
 		{
             if (ValidStart is null) throw new ArgumentNullException(nameof(ValidStart));
 
-            return "@" + ValidStart.Value.ToUnixTimeSeconds() + "." + ValidStart.Value.Nanosecond + (Scheduled ? "?scheduled" : "") + (Nonce != null ? "/" + Nonce : "");
+            (long seconds, int nanoseconds) = ValidStart.Value.ToUnixTimeSecondsAndNanoseconds();
+
+            return "@" + seconds + "." + nanoseconds + (Scheduled ? "?scheduled" : "") + (Nonce != null ? "/" + Nonce : "");
 		}
 
 		/// <include file="TransactionId.cs.xml" path='docs/member[@name="M:TransactionId.GetReceipt(Client)"]' />
@@ -120,8 +128,8 @@ namespace Hiero.SDK.Core
         {
             return GetReceipt(client, client.RequestTimeout);
         }
-        /// <include file="TransactionId.cs.xml" path='docs/member[@name="M:TransactionId.GetReceipt(Client,System.TimeSpan)"]' />
-        public TransactionReceipt GetReceipt(Client client, TimeSpan timeout)
+        /// <include file="TransactionId.cs.xml" path='docs/member[@name="M:TransactionId.GetReceipt(Client,System.NodaTime.Duration)"]' />
+        public TransactionReceipt GetReceipt(Client client, NodaTime.Duration timeout)
         {
             var receipt = new TransactionReceiptQuery
             {
@@ -139,8 +147,8 @@ namespace Hiero.SDK.Core
         {
             return GetReceiptAsync(client, client.RequestTimeout);
         }
-        /// <include file="TransactionId.cs.xml" path='docs/member[@name="M:TransactionId.GetReceiptAsync(Client,System.TimeSpan)"]' />
-        public async Task<TransactionReceipt> GetReceiptAsync(Client client, TimeSpan timeout)
+        /// <include file="TransactionId.cs.xml" path='docs/member[@name="M:TransactionId.GetReceiptAsync(Client,System.NodaTime.Duration)"]' />
+        public async Task<TransactionReceipt> GetReceiptAsync(Client client, NodaTime.Duration timeout)
         {
             TransactionReceipt transactionreceipt = await new TransactionReceiptQuery
             {
@@ -158,8 +166,8 @@ namespace Hiero.SDK.Core
         {
             Utils.ActionHelper.Action(GetReceiptAsync(client), callback);
         }
-        /// <include file="TransactionId.cs.xml" path='docs/member[@name="M:TransactionId.GetReceiptAsync(Client,System.TimeSpan,System.Action{TransactionReceipt,System.Exception})"]' />
-        public void GetReceiptAsync(Client client, TimeSpan timeout, Action<TransactionReceipt?, Exception?> callback)
+        /// <include file="TransactionId.cs.xml" path='docs/member[@name="M:TransactionId.GetReceiptAsync(Client,System.NodaTime.Duration,System.Action{TransactionReceipt,System.Exception})"]' />
+        public void GetReceiptAsync(Client client, NodaTime.Duration timeout, Action<TransactionReceipt?, Exception?> callback)
         {
             Utils.ActionHelper.Action(GetReceiptAsync(client, timeout), callback);
         }
@@ -168,8 +176,8 @@ namespace Hiero.SDK.Core
         {
             Utils.ActionHelper.TwoActions(GetReceiptAsync(client), onSuccess, onFailure);
         }
-        /// <include file="TransactionId.cs.xml" path='docs/member[@name="M:TransactionId.GetReceiptAsync(Client,System.TimeSpan,System.Action{TransactionReceipt},System.Action{System.Exception})"]' />
-        public void GetReceiptAsync(Client client, TimeSpan timeout, Action<TransactionReceipt> onSuccess, Action<Exception> onFailure)
+        /// <include file="TransactionId.cs.xml" path='docs/member[@name="M:TransactionId.GetReceiptAsync(Client,System.NodaTime.Duration,System.Action{TransactionReceipt},System.Action{System.Exception})"]' />
+        public void GetReceiptAsync(Client client, NodaTime.Duration timeout, Action<TransactionReceipt> onSuccess, Action<Exception> onFailure)
         {
             Utils.ActionHelper.TwoActions(GetReceiptAsync(client, timeout), onSuccess, onFailure);
         }
@@ -179,8 +187,8 @@ namespace Hiero.SDK.Core
         {
             return GetRecord(client, client.RequestTimeout);
         }
-        /// <include file="TransactionId.cs.xml" path='docs/member[@name="M:TransactionId.GetRecord(Client,System.TimeSpan)"]' />
-        public TransactionRecord GetRecord(Client client, TimeSpan timeout)
+        /// <include file="TransactionId.cs.xml" path='docs/member[@name="M:TransactionId.GetRecord(Client,System.NodaTime.Duration)"]' />
+        public TransactionRecord GetRecord(Client client, NodaTime.Duration timeout)
         {
             GetReceipt(client, timeout);
 
@@ -195,8 +203,8 @@ namespace Hiero.SDK.Core
         {
             return GetRecordAsync(client, client.RequestTimeout);
         }
-        /// <include file="TransactionId.cs.xml" path='docs/member[@name="M:TransactionId.GetRecordAsync(Client,System.TimeSpan)"]' />
-        public async Task<TransactionRecord> GetRecordAsync(Client client, TimeSpan timeout)
+        /// <include file="TransactionId.cs.xml" path='docs/member[@name="M:TransactionId.GetRecordAsync(Client,System.NodaTime.Duration)"]' />
+        public async Task<TransactionRecord> GetRecordAsync(Client client, NodaTime.Duration timeout)
         {
             // note: we get the receipt first to ensure consensus has been reached
             TransactionReceipt _ = await GetReceiptAsync(client, timeout);
@@ -212,8 +220,8 @@ namespace Hiero.SDK.Core
         {
             Utils.ActionHelper.Action(GetRecordAsync(client), callback);
         }
-        /// <include file="TransactionId.cs.xml" path='docs/member[@name="M:TransactionId.GetRecordAsync(Client,System.TimeSpan,System.Action{TransactionRecord,System.Exception})"]' />
-        public void GetRecordAsync(Client client, TimeSpan timeout, Action<TransactionRecord?, Exception?> callback)
+        /// <include file="TransactionId.cs.xml" path='docs/member[@name="M:TransactionId.GetRecordAsync(Client,System.NodaTime.Duration,System.Action{TransactionRecord,System.Exception})"]' />
+        public void GetRecordAsync(Client client, NodaTime.Duration timeout, Action<TransactionRecord?, Exception?> callback)
         {
             Utils.ActionHelper.Action(GetRecordAsync(client, timeout), callback);
         }
@@ -222,8 +230,8 @@ namespace Hiero.SDK.Core
         {
             Utils.ActionHelper.TwoActions(GetRecordAsync(client), onSuccess, onFailure);
         }
-        /// <include file="TransactionId.cs.xml" path='docs/member[@name="M:TransactionId.GetRecordAsync(Client,System.TimeSpan,System.Action{TransactionRecord},System.Action{System.Exception})"]' />
-        public void GetRecordAsync(Client client, TimeSpan timeout, Action<TransactionRecord> onSuccess, Action<Exception> onFailure)
+        /// <include file="TransactionId.cs.xml" path='docs/member[@name="M:TransactionId.GetRecordAsync(Client,System.NodaTime.Duration,System.Action{TransactionRecord},System.Action{System.Exception})"]' />
+        public void GetRecordAsync(Client client, NodaTime.Duration timeout, Action<TransactionRecord> onSuccess, Action<Exception> onFailure)
         {
             Utils.ActionHelper.TwoActions(GetRecordAsync(client, timeout), onSuccess, onFailure);
         }

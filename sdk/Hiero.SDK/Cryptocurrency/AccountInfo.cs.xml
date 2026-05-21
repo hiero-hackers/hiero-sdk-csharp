@@ -131,7 +131,7 @@
     Staking metadata for this account.
     </summary>
   </member>
-  <member name="M:AccountInfo.#ctor(AccountId,System.String,System.Boolean,AccountId,System.Int64,Key,System.Int64,System.Int64,System.Int64,System.Boolean,DateTimeOffset,System.TimeSpan,System.Collections.Generic.IEnumerable{LiveHash},System.Collections.Generic.Dictionary{TokenId,TokenRelationship},System.String,System.Int64,System.Int32,PublicKey,LedgerId,System.Int64,StakingInfo)">
+  <member name="M:AccountInfo.#ctor(AccountId,System.String,System.Boolean,AccountId,System.Int64,Key,System.Int64,System.Int64,System.Int64,System.Boolean,NodaTime.Instant,System.NodaTime.Duration,System.Collections.Generic.IEnumerable{LiveHash},System.Collections.Generic.Dictionary{TokenId,TokenRelationship},System.String,System.Int64,System.Int32,PublicKey,LedgerId,System.Int64,StakingInfo)">
     <summary>
     Constructor.
     </summary>

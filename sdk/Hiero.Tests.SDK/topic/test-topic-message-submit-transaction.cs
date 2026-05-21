@@ -20,7 +20,7 @@ namespace Hiero.Tests.SDK.Topic
         private static readonly PrivateKey unusedPrivateKey = PrivateKey.FromString("302e020100300506032b657004220420db484b828e64b2d8f12ce3c0a0e93a0b8cce7af1bb8f39c97732394482538e10");
         private static readonly TopicId testTopicId = new (0, 6, 9);
         private static readonly byte[] testMessageBytes = [ 0x04, 0x05, 0x06 ];
-        private static readonly DateTimeOffset validStart = DateTimeOffset.FromUnixTimeMilliseconds(1554158542);
+        private static readonly NodaTime.Instant validStart = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
 
         private TopicMessageSubmitTransaction SpawnTestTransactionString()
         {

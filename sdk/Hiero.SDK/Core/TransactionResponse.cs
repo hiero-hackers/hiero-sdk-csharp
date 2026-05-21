@@ -68,8 +68,8 @@ namespace Hiero.SDK.Core
         {
             return GetReceipt(client, client.RequestTimeout);
         }
-        /// <include file="TransactionResponse.cs.xml" path='docs/member[@name="M:TransactionResponse.GetReceipt(Client,System.TimeSpan)"]' />
-        public TransactionReceipt GetReceipt(Client client, TimeSpan timeout)
+        /// <include file="TransactionResponse.cs.xml" path='docs/member[@name="M:TransactionResponse.GetReceipt(Client,System.NodaTime.Duration)"]' />
+        public TransactionReceipt GetReceipt(Client client, NodaTime.Duration timeout)
         {
             int attempts = 0;
             ReceiptStatusException? lastException = null;
@@ -145,8 +145,8 @@ namespace Hiero.SDK.Core
         {
             return GetReceiptAsync(client, client.RequestTimeout);
         }
-        /// <include file="TransactionResponse.cs.xml" path='docs/member[@name="M:TransactionResponse.GetReceiptAsync(Client,System.TimeSpan)"]' />
-        public async Task<TransactionReceipt> GetReceiptAsync(Client client, TimeSpan timeout)
+        /// <include file="TransactionResponse.cs.xml" path='docs/member[@name="M:TransactionResponse.GetReceiptAsync(Client,System.NodaTime.Duration)"]' />
+        public async Task<TransactionReceipt> GetReceiptAsync(Client client, NodaTime.Duration timeout)
         {
             TransactionReceipt transactionreceipt = await GetReceiptQuery().ExecuteAsync(client, timeout);
 
@@ -158,8 +158,8 @@ namespace Hiero.SDK.Core
 		{
 			Utils.ActionHelper.Action(GetReceiptAsync(client), callback);
 		}
-        /// <include file="TransactionResponse.cs.xml" path='docs/member[@name="M:TransactionResponse.GetReceiptAsync(Client,System.TimeSpan,System.Action{TransactionReceipt,System.Exception})"]' />
-        public async void GetReceiptAsync(Client client, TimeSpan timeout, Action<TransactionReceipt?, Exception?> callback)
+        /// <include file="TransactionResponse.cs.xml" path='docs/member[@name="M:TransactionResponse.GetReceiptAsync(Client,System.NodaTime.Duration,System.Action{TransactionReceipt,System.Exception})"]' />
+        public async void GetReceiptAsync(Client client, NodaTime.Duration timeout, Action<TransactionReceipt?, Exception?> callback)
         {
 			Utils.ActionHelper.Action(GetReceiptAsync(client, timeout), callback);
 		}
@@ -168,8 +168,8 @@ namespace Hiero.SDK.Core
         {
 			Utils.ActionHelper.TwoActions(GetReceiptAsync(client), onSuccess, onFailure);
 		}
-        /// <include file="TransactionResponse.cs.xml" path='docs/member[@name="M:TransactionResponse.GetReceiptAsync(Client,System.TimeSpan,System.Action{TransactionReceipt},System.Action{System.Exception})"]' />
-        public async void GetReceiptAsync(Client client, TimeSpan timeout, Action<TransactionReceipt> onSuccess, Action<Exception> onFailure)
+        /// <include file="TransactionResponse.cs.xml" path='docs/member[@name="M:TransactionResponse.GetReceiptAsync(Client,System.NodaTime.Duration,System.Action{TransactionReceipt},System.Action{System.Exception})"]' />
+        public async void GetReceiptAsync(Client client, NodaTime.Duration timeout, Action<TransactionReceipt> onSuccess, Action<Exception> onFailure)
         {
 			Utils.ActionHelper.TwoActions(GetReceiptAsync(client, timeout), onSuccess, onFailure);
 		}
@@ -179,8 +179,8 @@ namespace Hiero.SDK.Core
         {
             return GetRecord(client, client.RequestTimeout);
         }
-        /// <include file="TransactionResponse.cs.xml" path='docs/member[@name="M:TransactionResponse.GetRecord(Client,System.TimeSpan)"]' />
-        public TransactionRecord GetRecord(Client client, TimeSpan timeout)
+        /// <include file="TransactionResponse.cs.xml" path='docs/member[@name="M:TransactionResponse.GetRecord(Client,System.NodaTime.Duration)"]' />
+        public TransactionRecord GetRecord(Client client, NodaTime.Duration timeout)
         {
             GetReceipt(client, timeout);
 
@@ -200,8 +200,8 @@ namespace Hiero.SDK.Core
         {
             return GetRecordAsync(client, client.RequestTimeout);
         }
-        /// <include file="TransactionResponse.cs.xml" path='docs/member[@name="M:TransactionResponse.GetRecordAsync(Client,System.TimeSpan)"]' />
-        public async Task<TransactionRecord> GetRecordAsync(Client client, TimeSpan timeout)
+        /// <include file="TransactionResponse.cs.xml" path='docs/member[@name="M:TransactionResponse.GetRecordAsync(Client,System.NodaTime.Duration)"]' />
+        public async Task<TransactionRecord> GetRecordAsync(Client client, NodaTime.Duration timeout)
         {
             await GetReceiptAsync(client, timeout);
 
@@ -213,8 +213,8 @@ namespace Hiero.SDK.Core
         {
 			Utils.ActionHelper.Action(GetRecordAsync(client), callback);
 		}
-		/// <include file="TransactionResponse.cs.xml" path='docs/member[@name="M:TransactionResponse.GetRecordAsync(Client,System.TimeSpan,System.Action{TransactionRecord,System.Exception})"]' />
-		public async void GetRecordAsync(Client client, TimeSpan timeout, Action<TransactionRecord?, Exception?> callback)
+		/// <include file="TransactionResponse.cs.xml" path='docs/member[@name="M:TransactionResponse.GetRecordAsync(Client,System.NodaTime.Duration,System.Action{TransactionRecord,System.Exception})"]' />
+		public async void GetRecordAsync(Client client, NodaTime.Duration timeout, Action<TransactionRecord?, Exception?> callback)
         {
 			Utils.ActionHelper.Action(GetRecordAsync(client, timeout), callback);
 		}
@@ -223,8 +223,8 @@ namespace Hiero.SDK.Core
         {
 			Utils.ActionHelper.TwoActions(GetRecordAsync(client), onSuccess, onFailure);
 		}
-        /// <include file="TransactionResponse.cs.xml" path='docs/member[@name="M:TransactionResponse.GetRecordAsync(Client,System.TimeSpan,System.Action{TransactionRecord},System.Action{System.Exception})"]' />
-        public async void GetRecordAsync(Client client, TimeSpan timeout, Action<TransactionRecord> onSuccess, Action<Exception> onFailure)
+        /// <include file="TransactionResponse.cs.xml" path='docs/member[@name="M:TransactionResponse.GetRecordAsync(Client,System.NodaTime.Duration,System.Action{TransactionRecord},System.Action{System.Exception})"]' />
+        public async void GetRecordAsync(Client client, NodaTime.Duration timeout, Action<TransactionRecord> onSuccess, Action<Exception> onFailure)
         {
 			Utils.ActionHelper.TwoActions(GetRecordAsync(client, timeout), onSuccess, onFailure);
 		}

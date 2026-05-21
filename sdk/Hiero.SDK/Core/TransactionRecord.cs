@@ -22,7 +22,7 @@ namespace Hiero.SDK.Core
         internal TransactionRecord(
             TransactionReceipt transactionReceipt, 
             ByteString transactionHash, 
-            DateTimeOffset consensusTimestamp, 
+            NodaTime.Instant consensusTimestamp, 
             TransactionId transactionId,
             string transactionMemo, 
             long transactionFee, 
@@ -37,7 +37,7 @@ namespace Hiero.SDK.Core
             PublicKey? aliasKey,
 			IEnumerable<TransactionRecord> children,
 			IEnumerable<TransactionRecord> duplicates,
-			DateTimeOffset parentConsensusTimestamp, 
+			NodaTime.Instant parentConsensusTimestamp, 
             ByteString ethereumHash, 
             IEnumerable<Transfer> paidStakingRewards,
             ByteString? prngBytes, 
@@ -150,7 +150,7 @@ namespace Hiero.SDK.Core
             return new TransactionRecord(
                 TransactionReceipt.FromProtobuf(transactionRecord.Receipt, [], [], transactionId), 
                 transactionRecord.TransactionHash,
-                transactionRecord.ConsensusTimestamp.ToDateTimeOffset(), 
+                transactionRecord.ConsensusTimestamp.ToNodaTimeInstant(), 
                 TransactionId.FromProtobuf(transactionRecord.TransactionId), 
                 transactionRecord.Memo, 
                 (long)transactionRecord.TransactionFee, 
@@ -165,7 +165,7 @@ namespace Hiero.SDK.Core
                 aliasKey, 
                 children, 
                 duplicates,
-				transactionRecord.ParentConsensusTimestamp.ToDateTimeOffset(), 
+				transactionRecord.ParentConsensusTimestamp.ToNodaTimeInstant(), 
                 transactionRecord.EthereumHash, 
                 paidStakingRewards,
 				transactionRecord.PrngBytes, 
@@ -179,7 +179,7 @@ namespace Hiero.SDK.Core
         /// <include file="TransactionRecord.cs.xml" path='docs/member[@name="F:TransactionRecord.TransactionHash"]' />
         public ByteString TransactionHash { get; }
         /// <include file="TransactionRecord.cs.xml" path='docs/member[@name="F:TransactionRecord.ConsensusTimestamp"]' />
-        public DateTimeOffset ConsensusTimestamp { get; }
+        public NodaTime.Instant ConsensusTimestamp { get; }
         /// <include file="TransactionRecord.cs.xml" path='docs/member[@name="F:TransactionRecord.TransactionId"]' />
         public TransactionId TransactionId { get; }
         /// <include file="TransactionRecord.cs.xml" path='docs/member[@name="F:TransactionRecord.TransactionMemo"]' />
@@ -209,7 +209,7 @@ namespace Hiero.SDK.Core
         /// <include file="TransactionRecord.cs.xml" path='docs/member[@name="F:TransactionRecord.Duplicates"]' />
         public List<TransactionRecord> Duplicates { get; }
         /// <include file="TransactionRecord.cs.xml" path='docs/member[@name="F:TransactionRecord.ParentConsensusTimestamp"]' />
-        public DateTimeOffset? ParentConsensusTimestamp { get; }
+        public NodaTime.Instant? ParentConsensusTimestamp { get; }
         /// <include file="TransactionRecord.cs.xml" path='docs/member[@name="F:TransactionRecord.EthereumHash"]' />
         public ByteString EthereumHash { get; }
         /// <include file="TransactionRecord.cs.xml" path='docs/member[@name="F:TransactionRecord.HbarAllowanceAdjustments"]' />

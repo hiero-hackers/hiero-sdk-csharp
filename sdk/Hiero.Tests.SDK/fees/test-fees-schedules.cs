@@ -17,7 +17,7 @@ namespace Hiero.Tests.SDK.Fees
             {
                 Current = new FeeSchedule
                 {
-                    ExpirationTime = DateTimeOffset.FromUnixTimeMilliseconds(1554158542),
+                    ExpirationTime = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542),
                     TransactionFeeSchedules = [ new TransactionFeeSchedule
                     {
                         Fees = [ new FeeData
@@ -30,7 +30,7 @@ namespace Hiero.Tests.SDK.Fees
                 },
                 Next = new FeeSchedule
                 {
-                    ExpirationTime = DateTimeOffset.FromUnixTimeMilliseconds(1554158222),
+                    ExpirationTime = NodaTime.Instant.FromUnixTimeMilliseconds(1554158222),
                     TransactionFeeSchedules = [ new TransactionFeeSchedule
                     {
                         Fees = [ new FeeData

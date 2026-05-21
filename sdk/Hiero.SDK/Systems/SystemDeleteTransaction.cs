@@ -54,7 +54,7 @@ namespace Hiero.SDK.Systems
 			}
         }
 		/// <include file="SystemDeleteTransaction.cs.xml" path='docs/member[@name="M:RequireNotFrozen_3"]' />
-		public DateTimeOffset? ExpirationTime
+		public NodaTime.Instant? ExpirationTime
 		{
 			get;
 			set
@@ -94,7 +94,7 @@ namespace Hiero.SDK.Systems
 
 			FileId = FileId.FromProtobuf(body.FileId);
 			ContractId = ContractId.FromProtobuf(body.ContractId);
-			ExpirationTime = body.ExpirationTime.ToDateTimeOffset();
+			ExpirationTime = body.ExpirationTime.ToNodaTimeInstant();
 		}
 
         public override void ValidateChecksums(Client client)

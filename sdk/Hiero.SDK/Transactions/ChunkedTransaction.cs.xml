@@ -93,7 +93,7 @@
     <exception cref="TimeoutException">when the transaction times out</exception>
     <exception cref="PrecheckStatusException">when the precheck fails</exception>
   </member>
-  <member name="M:ChunkedTransaction.ExecuteAll(Client,System.TimeSpan)">
+  <member name="M:ChunkedTransaction.ExecuteAll(Client,System.NodaTime.Duration)">
     <summary>
     Execute this transaction or query
     </summary>
@@ -110,7 +110,7 @@
     <param name="client">The client with which this will be executed.</param>
     <returns>Future result of execution for each chunk</returns>
   </member>
-  <member name="M:ChunkedTransaction.ExecuteAllAsync(Client,System.TimeSpan)">
+  <member name="M:ChunkedTransaction.ExecuteAllAsync(Client,System.NodaTime.Duration)">
     <summary>
     Execute this transaction or query asynchronously.
     </summary>
@@ -125,7 +125,7 @@
     <param name="client">The client with which this will be executed.</param>
     <param name="callback">a Action which handles the result or error.</param>
   </member>
-  <member name="M:ChunkedTransaction.ExecuteAllAsync(Client,System.TimeSpan,System.Action{System.Collections.Generic.IList{TransactionResponse},System.Exception})">
+  <member name="M:ChunkedTransaction.ExecuteAllAsync(Client,System.NodaTime.Duration,System.Action{System.Collections.Generic.IList{TransactionResponse},System.Exception})">
     <summary>
     Execute this transaction or query asynchronously.
     </summary>
@@ -141,7 +141,7 @@
     <param name="onSuccess">a Action which consumes the result on success.</param>
     <param name="onFailure">a Action which consumes the error on failure.</param>
   </member>
-  <member name="M:ChunkedTransaction.ExecuteAllAsync(Client,System.TimeSpan,System.Action{System.Collections.Generic.IList{TransactionResponse}},System.Action{System.Exception})">
+  <member name="M:ChunkedTransaction.ExecuteAllAsync(Client,System.NodaTime.Duration,System.Action{System.Collections.Generic.IList{TransactionResponse}},System.Action{System.Exception})">
     <summary>
     Execute this transaction or query asynchronously.
     </summary>

@@ -5,7 +5,7 @@
     Topic message records.
     </summary>
   </member>
-  <member name="M:TopicMessage.#ctor(DateTimeOffset,System.Byte[],System.Byte[],System.UInt64,TopicMessageChunk[],TransactionId)">
+  <member name="M:TopicMessage.#ctor(NodaTime.Instant,System.Byte[],System.Byte[],System.UInt64,TopicMessageChunk[],TransactionId)">
     <summary>
     Constructor.
     </summary>

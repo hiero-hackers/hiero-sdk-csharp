@@ -99,7 +99,7 @@
   </member>
   <member name="M:ScheduleCreateTransaction.RequireNotFrozen_2">
     <summary>
-    Overload: set the expiration time using a TimeSpan value.
+    Overload: set the expiration time using a NodaTime.Duration value.
     </summary>
   </member>
   <member name="P:ScheduleCreateTransaction.WaitForExpiry">

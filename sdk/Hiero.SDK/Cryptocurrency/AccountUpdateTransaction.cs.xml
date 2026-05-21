@@ -108,7 +108,7 @@
     This duration SHALL be applied only when _automatically_ extending the
     account expiration.
     &lt;/summary&gt;
-    &lt;param name="autoRenewPeriod"&gt;The TimeSpan to be set for auto renewal&lt;/param&gt;
+    &lt;param name="autoRenewPeriod"&gt;The NodaTime.Duration to be set for auto renewal&lt;/param&gt;
     &lt;returns&gt;{@code this}&lt;/returns&gt;</summary>
   </member>
   <member name="M:AccountUpdateTransaction.RequireNotFrozen_7">

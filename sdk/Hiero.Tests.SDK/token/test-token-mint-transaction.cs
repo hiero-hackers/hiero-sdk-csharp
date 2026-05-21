@@ -24,7 +24,7 @@ namespace Hiero.Tests.SDK.Token
         private static readonly long testAmount = 10;
         private static readonly List<byte[]> testMetadataList = [new byte[] { 1, 2, 3, 4, 5 }];
         private static readonly ByteString testMetadataByteString = ByteString.CopyFrom(new byte[] { 1, 2, 3, 4, 5 });
-        private readonly DateTimeOffset validStart = DateTimeOffset.FromUnixTimeMilliseconds(1554158542);
+        private readonly NodaTime.Instant validStart = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
         
         public virtual void ShouldSerialize()
         {

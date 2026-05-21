@@ -19,7 +19,7 @@ namespace Hiero.Tests.SDK.Transactions
     {
         private static readonly PrivateKey privateKeyED25519 = KeyTestDataFactory.ED25519_TEST_KEY;
         private static readonly PrivateKey privateKeyECDSA = KeyTestDataFactory.ECDSA_TEST_KEY;
-        private static readonly DateTimeOffset validStart = DateTimeOffset.FromUnixTimeSeconds(1554158542);
+        private static readonly NodaTime.Instant validStart = NodaTime.Instant.FromUnixTimeSeconds(1554158542);
         private static readonly List<ITransaction> INNER_TRANSACTIONS = [SpawnTestTransactionAccountCreate(), SpawnTestTransactionAccountCreate(), SpawnTestTransactionAccountCreate()];
 
         private static AccountCreateTransaction SpawnTestTransactionAccountCreate()
@@ -131,7 +131,7 @@ namespace Hiero.Tests.SDK.Transactions
             var batchTransaction = new BatchTransaction();
             var freezeTransaction = new FreezeTransaction
             {
-				StartTime = DateTimeOffset.UtcNow,
+				StartTime = NodaTime.SystemClock.Instance.GetCurrentInstant(),
 				FreezeType = FreezeType.FreezeOnly,
 				NodeAccountIds = new (AccountId.FromString("0.0.5005"), AccountId.FromString("0.0.5006")),
 				TransactionId = TransactionId.WithValidStart(AccountId.FromString("0.0.5006"), validStart),
@@ -167,7 +167,7 @@ namespace Hiero.Tests.SDK.Transactions
             var validTransaction = SpawnTestTransactionAccountCreate();
             var freezeTransaction = new FreezeTransaction
             {
-				StartTime = DateTimeOffset.UtcNow,
+				StartTime = NodaTime.SystemClock.Instance.GetCurrentInstant(),
 				FreezeType = FreezeType.FreezeOnly,
 				NodeAccountIds = new (AccountId.FromString("0.0.5005"), AccountId.FromString("0.0.5006")),
 				TransactionId = TransactionId.WithValidStart(AccountId.FromString("0.0.5006"), validStart),
@@ -298,7 +298,7 @@ namespace Hiero.Tests.SDK.Transactions
 			// Test blacklisted transaction with batch key
 			var blacklistedTransaction = new FreezeTransaction
             {
-				StartTime = DateTimeOffset.UtcNow,
+				StartTime = NodaTime.SystemClock.Instance.GetCurrentInstant(),
 				FreezeType = FreezeType.FreezeOnly,
 				NodeAccountIds = new (AccountId.FromString("0.0.5005"), AccountId.FromString("0.0.5006")),
 				TransactionId = TransactionId.WithValidStart(AccountId.FromString("0.0.5006"), validStart),

@@ -28,7 +28,7 @@ namespace Hiero.Tests.SDK.Node
         private static readonly byte[] TEST_GOSSIP_CA_CERTIFICATE = [ 0, 1, 2, 3, 4 ];
         private static readonly byte[] TEST_GRPC_CERTIFICATE_HASH = [ 5, 6, 7, 8, 9 ];
         private static readonly PublicKey TEST_ADMIN_KEY = PrivateKey.FromString("302e020100300506032b65700422042062c4b69e9f45a554e5424fb5a6fe5e6ac1f19ead31dc7718c2d980fd1f998d4b").GetPublicKey();
-        readonly DateTimeOffset TEST_VALID_START = DateTimeOffset.FromUnixTimeMilliseconds(1554158542);
+        readonly NodaTime.Instant TEST_VALID_START = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
 
         public virtual void ShouldSerialize()
         {

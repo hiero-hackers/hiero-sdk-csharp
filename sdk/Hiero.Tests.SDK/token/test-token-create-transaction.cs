@@ -37,8 +37,8 @@ namespace Hiero.Tests.SDK.Token
         private static readonly string testTokenName = "test name";
         private static readonly string testTokenSymbol = "test symbol";
         private static readonly string testTokenMemo = "test memo";
-        private static readonly TimeSpan testAutoRenewPeriod = TimeSpan.FromHours(10);
-        private static readonly DateTimeOffset testExpirationTime = DateTimeOffset.UtcNow;
+        private static readonly NodaTime.Duration testAutoRenewPeriod = NodaTime.Duration.FromHours(10);
+        private static readonly NodaTime.Instant testExpirationTime = NodaTime.SystemClock.Instance.GetCurrentInstant();
         private static readonly List<CustomFee> testCustomFees = [new CustomFixedFee 
         {
 			FeeCollectorAccountId = AccountId.FromString("0.0.543"), 
@@ -53,7 +53,7 @@ namespace Hiero.Tests.SDK.Token
             4,
             5
         };
-        private readonly DateTimeOffset validStart = DateTimeOffset.FromUnixTimeMilliseconds(1554158542);
+        private readonly NodaTime.Instant validStart = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
 
         public virtual void ShouldSerializeFungible()
         {

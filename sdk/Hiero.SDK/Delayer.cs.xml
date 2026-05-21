@@ -6,21 +6,21 @@
     Uses the provided ExecutorService for scheduling.
     </summary>
   </member>
-  <member name="M:Delayer.DelayAsync(System.TimeSpan)">
+  <member name="M:Delayer.DelayAsync(System.NodaTime.Duration)">
     <summary>
     Schedules an action to run after the specified delay.
     </summary>
     <param name="delay">Time to wait before executing the action.</param>
     <param name="action">Action to execute.</param>
   </member>
-  <member name="M:Delayer.DelayAsync(System.TimeSpan,System.Action)">
+  <member name="M:Delayer.DelayAsync(System.NodaTime.Duration,System.Action)">
     <summary>
     Schedules an action to run after the specified delay.
     </summary>
     <param name="delay">Time to wait before executing the action.</param>
     <param name="action">Action to execute.</param>
   </member>
-  <member name="M:Delayer.DelayAsync``1(System.TimeSpan,System.Func{``0})">
+  <member name="M:Delayer.DelayAsync``1(System.NodaTime.Duration,System.Func{``0})">
     <summary>
     Schedules a function returning a value after a delay.
     </summary>

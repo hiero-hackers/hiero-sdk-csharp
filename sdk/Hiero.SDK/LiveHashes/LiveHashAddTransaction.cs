@@ -29,7 +29,7 @@ namespace Hiero.SDK.LiveHashes
 		/// <include file="LiveHashAddTransaction.cs.xml" path='docs/member[@name="M:RequireNotFrozen_3"]' />
 		public KeyList? Keys { get; set { RequireNotFrozen(); field = value; } }
 		/// <include file="LiveHashAddTransaction.cs.xml" path='docs/member[@name="M:RequireNotFrozen_4"]' />
-		public TimeSpan? Timespan { get; set { RequireNotFrozen(); field = value; } }
+		public NodaTime.Duration? Timespan { get; set { RequireNotFrozen(); field = value; } }
 
 		/// <include file="LiveHashAddTransaction.cs.xml" path='docs/member[@name="M:InitFromTransactionBody"]' />
 		void InitFromTransactionBody()
@@ -51,7 +51,7 @@ namespace Hiero.SDK.LiveHashes
 
             if (hashBody.Duration is not null)
             {
-                Timespan = hashBody.Duration.ToTimeSpan();
+                Timespan = hashBody.Duration.ToNodaDuration();
             }
         }
 

@@ -20,7 +20,7 @@ namespace Hiero.Tests.SDK.File
         {
 			FileId = new FileId(0, 0, 1).ToProtobuf(),
 			Size = 2,
-			ExpirationTime = DateTimeOffset.FromUnixTimeMilliseconds(3).ToProtoTimestamp(),
+			ExpirationTime = NodaTime.Instant.FromUnixTimeMilliseconds(3).ToProtoTimestamp(),
 			Deleted = true,
 			// Keys = [.. keys],
 			LedgerId = LedgerId.MAINNET.ToByteString(),

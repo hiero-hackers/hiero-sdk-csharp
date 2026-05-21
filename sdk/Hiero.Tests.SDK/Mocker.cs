@@ -101,12 +101,12 @@ namespace Hiero.Tests.SDK
             client = Client.ForNetwork(network, _client =>
             {
                 _client.OperatorSet(new AccountId(0, 0, 1800), PRIVATE_KEY);
-                _client.MinBackoff = TimeSpan.FromMilliseconds(0);
-                _client.MaxBackoff = TimeSpan.FromMilliseconds(0);
-                _client.NodeMinBackoff = TimeSpan.FromMilliseconds(0);
-                _client.NodeMaxBackoff = TimeSpan.FromMilliseconds(0);
-                _client.MinNodeReadmitTime = TimeSpan.FromMilliseconds(0);
-                _client.MaxNodeReadmitTime = TimeSpan.FromMilliseconds(0);
+                _client.MinBackoff = NodaTime.Duration.FromMilliseconds(0);
+                _client.MaxBackoff = NodaTime.Duration.FromMilliseconds(0);
+                _client.NodeMinBackoff = NodaTime.Duration.FromMilliseconds(0);
+                _client.NodeMaxBackoff = NodaTime.Duration.FromMilliseconds(0);
+                _client.MinNodeReadmitTime = NodaTime.Duration.FromMilliseconds(0);
+                _client.MaxNodeReadmitTime = NodaTime.Duration.FromMilliseconds(0);
                 //_client.Logger = new Logger(LogLevel.SILENT));
             });                
         }

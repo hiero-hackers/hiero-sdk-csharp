@@ -121,7 +121,7 @@
     </summary>
     <returns>the unhealthy backoff time remaining</returns>
   </member>
-  <member name="M:BaseNode.Dispose(System.TimeSpan)">
+  <member name="M:BaseNode.Dispose(System.NodaTime.Duration)">
     <summary>
     Close the current nodes channel
     </summary>

@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
+using NodaTime;
 
 namespace Hiero.SDK
 {
@@ -21,14 +22,14 @@ namespace Hiero.SDK
     {
 		private readonly bool ShouldShutdownExecutor;
 		internal readonly ExecutorService Executor;
-        private long _GrpcDeadline_Ticks = DEFAULT_GRPC_DEADLINE.Ticks;
+        private long _GrpcDeadline_Ticks = (long)DEFAULT_GRPC_DEADLINE.TotalTicks;
         private readonly HashSet<SubscriptionHandle> Subscriptions = [];
 
         private Task? NetworkUpdateFuture;
         private CancellationTokenSource? NetworkUpdateFutureCancellationTokenSource;
         
-        /// <include file="Client.cs.xml" path='docs/member[@name="M:Client.#ctor(ExecutorService,Network,MirrorNetwork,System.TimeSpan,System.Boolean,System.TimeSpan,System.Int64,System.Int64)"]' />
-        internal Client(ExecutorService executor, Network network, MirrorNetwork mirrorNetwork, TimeSpan? networkUpdateInitialDelay, bool shouldShutdownExecutor, TimeSpan? networkUpdatePeriod, long shard, long realm)
+        /// <include file="Client.cs.xml" path='docs/member[@name="M:Client.#ctor(ExecutorService,Network,MirrorNetwork,System.NodaTime.Duration,System.Boolean,System.NodaTime.Duration,System.Int64,System.Int64)"]' />
+        internal Client(ExecutorService executor, Network network, MirrorNetwork mirrorNetwork, NodaTime.Duration? networkUpdateInitialDelay, bool shouldShutdownExecutor, NodaTime.Duration? networkUpdatePeriod, long shard, long realm)
         {
             Executor = executor;
             Network_ = network;
@@ -160,9 +161,9 @@ namespace Hiero.SDK
 			}
 		}
 		/// <include file="Client.cs.xml" path='docs/member[@name="M:Client.FromTicks(Volatile.Read(ref)"]' />
-		public TimeSpan MinBackoff
+		public NodaTime.Duration MinBackoff
 		{
-			get => TimeSpan.FromTicks(Volatile.Read(ref _MinBackoff));
+			get => NodaTime.Duration.FromTicks(Volatile.Read(ref _MinBackoff));
 			set
 			{
 				if (value.TotalNanoseconds < 0)
@@ -170,19 +171,19 @@ namespace Hiero.SDK
 					throw new ArgumentException("MinBackoff must be a positive duration");
 				}
 
-				if (value.CompareTo(_MaxBackoff) > 0)
+				if (value.TotalTicks.CompareTo(_MaxBackoff) > 0)
 				{
 					throw new ArgumentException("MinBackoff must be less than or equal to MaxBackoff");
 				}
 
-				Volatile.Write(ref _MinBackoff, value.Ticks);
+				Volatile.Write(ref _MinBackoff, (long)value.TotalTicks);
 			}
 
-		} private long _MinBackoff = DEFAULT_MIN_BACKOFF.Ticks;
+		} private long _MinBackoff = (long)DEFAULT_MIN_BACKOFF.TotalTicks;
 		/// <include file="Client.cs.xml" path='docs/member[@name="M:Client.FromTicks(Volatile.Read(ref)_2"]' />
-		public TimeSpan MaxBackoff
+		public NodaTime.Duration MaxBackoff
 		{
-			get => TimeSpan.FromTicks(Volatile.Read(ref _MaxBackoff));
+			get => NodaTime.Duration.FromTicks(Volatile.Read(ref _MaxBackoff));
 			set
 			{
 				if (value.TotalNanoseconds < 0)
@@ -190,17 +191,17 @@ namespace Hiero.SDK
 					throw new ArgumentException("MaxBackoff must be a positive duration");
 				}
 
-				if (value.CompareTo(_MinBackoff) < 0)
+				if (value.TotalTicks.CompareTo(_MinBackoff) < 0)
 				{
 					throw new ArgumentException("MaxBackoff must be greater than or equal to MinBackoff");
 				}
 
-				Volatile.Write(ref _MaxBackoff, value.Ticks);
+				Volatile.Write(ref _MaxBackoff, (long)value.TotalTicks);
 			}
 
-		} private long _MaxBackoff = DEFAULT_MAX_BACKOFF.Ticks;
+		} private long _MaxBackoff = (long)DEFAULT_MAX_BACKOFF.TotalTicks;
 		/// <include file="Client.cs.xml" path='docs/member[@name="M:Client.lock(this)_7"]' />
-		public TimeSpan NodeMinBackoff
+		public NodaTime.Duration NodeMinBackoff
 		{
 			get
 			{
@@ -215,7 +216,7 @@ namespace Hiero.SDK
 			}
 		}
 		/// <include file="Client.cs.xml" path='docs/member[@name="M:Client.lock(this)_8"]' />
-		public TimeSpan NodeMaxBackoff
+		public NodaTime.Duration NodeMaxBackoff
 		{
 			get
 			{
@@ -230,13 +231,13 @@ namespace Hiero.SDK
 			}
 		}
 		/// <include file="Client.cs.xml" path='docs/member[@name="T:Client_6"]' />
-		public TimeSpan MinNodeReadmitTime
+		public NodaTime.Duration MinNodeReadmitTime
 		{
 			get => Network_.MinNodeReadmitTime;
 			set => Network_.MinNodeReadmitTime = value;
 		}
 		/// <include file="Client.cs.xml" path='docs/member[@name="M:Client.lock(this)_9"]' />
-		public TimeSpan MaxNodeReadmitTime
+		public NodaTime.Duration MaxNodeReadmitTime
 		{
 			get => Network_.MaxNodeReadmitTime;
 			set => Network_.MaxNodeReadmitTime = value;
@@ -348,13 +349,13 @@ namespace Hiero.SDK
 		} = DEFAULT_MAX_QUERY_PAYMENT;
 
 		/// <include file="Client.cs.xml" path='docs/member[@name="M:Client.lock(this)_15"]' />
-		public TimeSpan RequestTimeout
+		public NodaTime.Duration RequestTimeout
 		{
 			get { lock (this) return field; }
 			set { lock (this) field = value; }
 		}
 		/// <include file="Client.cs.xml" path='docs/member[@name="T:Client_7"]' />
-		public TimeSpan CloseTimeout
+		public NodaTime.Duration CloseTimeout
 		{
 			get => field;
 			set
@@ -365,13 +366,13 @@ namespace Hiero.SDK
 			}
 		}
 		/// <include file="Client.cs.xml" path='docs/member[@name="M:Client.Write(_GrpcDeadline_Ticks@,value.)"]' />
-		public TimeSpan GrpcDeadline
+		public NodaTime.Duration GrpcDeadline
 		{
-			set => Volatile.Write(ref _GrpcDeadline_Ticks, value.Ticks);
-			get => TimeSpan.FromTicks(Volatile.Read(ref _GrpcDeadline_Ticks));
+			set => Volatile.Write(ref _GrpcDeadline_Ticks, (long)value.TotalTicks);
+			get => NodaTime.Duration.FromTicks(Volatile.Read(ref _GrpcDeadline_Ticks));
 		}
 		/// <include file="Client.cs.xml" path='docs/member[@name="M:Client.lock(this)_16"]' />
-		public TimeSpan? NetworkUpdatePeriod
+		public NodaTime.Duration? NetworkUpdatePeriod
 		{
 			get { lock (this) return field; }
 			set
@@ -386,7 +387,7 @@ namespace Hiero.SDK
 			}
 		}
 
-		internal void ScheduleNetworkUpdate(TimeSpan? delay)
+		internal void ScheduleNetworkUpdate(NodaTime.Duration? delay)
 		{
 			lock (this)
 			{
@@ -490,12 +491,12 @@ namespace Hiero.SDK
                 Dispose(CloseTimeout);
             }
         }
-		/// <include file="Client.cs.xml" path='docs/member[@name="M:Client.Dispose(System.TimeSpan)"]' />
-		public void Dispose(TimeSpan timeout)
+		/// <include file="Client.cs.xml" path='docs/member[@name="M:Client.Dispose(System.NodaTime.Duration)"]' />
+		public void Dispose(NodaTime.Duration timeout)
         {
             lock (this)
             {
-				var closeDeadline = Timestamp.FromDateTimeOffset(DateTimeOffset.Now.AddSeconds(timeout.Seconds));
+				var closeDeadline = timeout.ToInstant();
                 
                 NetworkUpdatePeriod = null;
                 CancelScheduledNetworkUpdate();
@@ -512,7 +513,7 @@ namespace Hiero.SDK
 					{
 						Executor.Dispose();
 
-						TimeSpan waitTime = TimeSpan.FromTicks(timeout.Ticks / 2);
+						NodaTime.Duration waitTime = NodaTime.Duration.FromTicks(timeout.TotalTicks / 2);
 					
 						if (!Executor.WaitForTermination(waitTime))
 						{

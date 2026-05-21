@@ -23,7 +23,7 @@ namespace Hiero.Tests.SDK.Token
         private static readonly AccountId TEST_OWNER_ID = AccountId.FromString("0.6.9");
         private static readonly List<TokenId> TEST_TOKEN_IDS = [ TokenId.FromString("1.2.3"), TokenId.FromString("4.5.6"), TokenId.FromString("7.8.9") ];
         private static readonly List<NftId> TEST_NFT_IDS = [ new NftId(TokenId.FromString("4.5.6"), 2), new NftId(TokenId.FromString("7.8.9"), 3) ];
-        readonly DateTimeOffset TEST_VALID_START = DateTimeOffset.FromUnixTimeMilliseconds(1554158542);
+        readonly NodaTime.Instant TEST_VALID_START = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
 
         public virtual void ShouldSerialize()
         {

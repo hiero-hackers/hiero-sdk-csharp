@@ -17,7 +17,7 @@ namespace Hiero.Tests.SDK.Node
     {
         private static readonly PrivateKey TEST_PRIVATE_KEY = PrivateKey.FromString("302e020100300506032b657004220420db484b828e64b2d8f12ce3c0a0e93a0b8cce7af1bb8f39c97732394482538e10");
         private static readonly ulong TEST_NODE_ID = 420;
-        readonly DateTimeOffset TEST_VALID_START = DateTimeOffset.FromUnixTimeMilliseconds(1554158542);
+        readonly NodaTime.Instant TEST_VALID_START = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
         readonly AccountId ACCOUNT_ID = AccountId.FromString("0.6.9");
 
         public virtual void ShouldSerialize()
@@ -101,7 +101,7 @@ namespace Hiero.Tests.SDK.Node
         /// <include file="test-node-delete-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeDeleteTransactionTest.ShouldFreezeSuccessfullyWhenNodeIdIsSet"]' />
         public virtual void ShouldFreezeSuccessfullyWhenNodeIdIsSet()
         {
-            DateTimeOffset VALID_START = DateTimeOffset.FromUnixTimeMilliseconds(1596210382);
+            NodaTime.Instant VALID_START = NodaTime.Instant.FromUnixTimeMilliseconds(1596210382);
             AccountId ACCOUNT_Id = AccountId.FromString("0.6.9");
             var transaction = new NodeDeleteTransaction
             {
@@ -118,7 +118,7 @@ namespace Hiero.Tests.SDK.Node
         /// <include file="test-node-delete-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeDeleteTransactionTest.ShouldThrowErrorWhenFreezingWithoutSettingNodeId"]' />
         public virtual void ShouldThrowErrorWhenFreezingWithoutSettingNodeId()
         {
-            DateTimeOffset VALID_START = DateTimeOffset.FromUnixTimeMilliseconds(1596210382);
+            NodaTime.Instant VALID_START = NodaTime.Instant.FromUnixTimeMilliseconds(1596210382);
             AccountId ACCOUNT_Id = AccountId.FromString("0.6.9");
             var transaction = new NodeDeleteTransaction
             {
@@ -133,7 +133,7 @@ namespace Hiero.Tests.SDK.Node
         /// <include file="test-node-delete-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeDeleteTransactionTest.ShouldThrowErrorWhenFreezingWithZeroNodeId"]' />
         public virtual void ShouldThrowErrorWhenFreezingWithZeroNodeId()
         {
-            DateTimeOffset VALID_START = DateTimeOffset.FromUnixTimeMilliseconds(1596210382);
+            NodaTime.Instant VALID_START = NodaTime.Instant.FromUnixTimeMilliseconds(1596210382);
             AccountId ACCOUNT_Id = AccountId.FromString("0.6.9");
             var transaction = new NodeDeleteTransaction
             {
@@ -149,7 +149,7 @@ namespace Hiero.Tests.SDK.Node
         /// <include file="test-node-delete-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeDeleteTransactionTest.ShouldFreezeSuccessfullyWithActualClientWhenNodeIdIsSet"]' />
         public virtual void ShouldFreezeSuccessfullyWithActualClientWhenNodeIdIsSet()
         {
-            DateTimeOffset VALID_START = DateTimeOffset.FromUnixTimeMilliseconds(1596210382);
+            NodaTime.Instant VALID_START = NodaTime.Instant.FromUnixTimeMilliseconds(1596210382);
             AccountId ACCOUNT_Id = AccountId.FromString("0.6.9");
             var transaction = new NodeDeleteTransaction()
             {

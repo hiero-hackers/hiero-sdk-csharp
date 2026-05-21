@@ -11,7 +11,7 @@ namespace Hiero.Tests.SDK
 {
     public static class TransactionTestFactory
     {
-        public static readonly DateTimeOffset DEFAULT_VALID_START = DateTimeOffset.FromUnixTimeMilliseconds(1554158542);
+        public static readonly NodaTime.Instant DEFAULT_VALID_START = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
 
         public static AccountId DefaultNodeAccountId => AccountId.FromString(TestData.DEFAULT_ENTITY_ID);
         public static AccountId SecondaryNodeAccountId => AccountId.FromString(TestData.SECONDARY_ENTITY_ID);
@@ -48,7 +48,7 @@ namespace Hiero.Tests.SDK
                 NodeAccountIds = CreateDefaultNodeAccountIds(),
                 TransactionId = CreateDefaultTransactionId(),
                 ReceiverSigRequired = true,
-                AutoRenewPeriod = TimeSpan.FromHours(10),
+                AutoRenewPeriod = NodaTime.Duration.FromHours(10),
                 StakedAccountId = DefaultStakedAccountId,
                 Alias = EvmAddress.FromString("0x5c562e90feaf0eebd33ea75d21024f249d451417"),
                 MaxAutomaticTokenAssociations = 100,

@@ -56,7 +56,7 @@ namespace Hiero.Tests.SDK.Transactions
             Assert.Equal(0, accountId?.Shard);
             Assert.Equal(23847, accountId?.Num);
             Assert.Equal(1588539964, validStart?.ToUnixTimeSeconds());
-            Assert.Equal(632521325, validStart?.Nanosecond);
+            Assert.Equal(632521325, validStart?.ToUnixTimeSecondsAndNanoseconds().nanoseconds);
         }
         [Fact]
         /// <include file="test-transactions-id.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Transactions.TransactionIdTest.ShouldParseScheduled"]' />
@@ -69,7 +69,7 @@ namespace Hiero.Tests.SDK.Transactions
             Assert.Equal(0, accountId?.Shard);
             Assert.Equal(23847, accountId?.Num);
             Assert.Equal(1588539964, validStart?.ToUnixTimeSeconds());
-            Assert.Equal(632521325, validStart?.Nanosecond);
+            Assert.Equal(632521325, validStart?.ToUnixTimeSecondsAndNanoseconds().nanoseconds);
             Assert.True(transactionId.Scheduled);
             Assert.Null(transactionId.Nonce);
             Assert.Equal("0.0.23847@1588539964.632521325?scheduled", transactionId.ToString());
@@ -84,7 +84,7 @@ namespace Hiero.Tests.SDK.Transactions
             Assert.Equal(0, accountId?.Shard);
             Assert.Equal(23847, accountId?.Num);
             Assert.Equal(1588539964, validStart?.ToUnixTimeSeconds());
-            Assert.Equal(632521325, validStart?.Nanosecond);
+            Assert.Equal(632521325, validStart?.ToUnixTimeSecondsAndNanoseconds().nanoseconds);
             Assert.False(transactionId.Scheduled);
             Assert.Equal(transactionId.Nonce, 4);
             Assert.Equal("0.0.23847@1588539964.632521325/4", transactionId.ToString());
@@ -104,11 +104,11 @@ namespace Hiero.Tests.SDK.Transactions
 
 
             // Compare when only one of the txs has accountId
-            transactionId1 = new TransactionId(null, DateTimeOffset.FromUnixTimeMilliseconds(1588539964));
-            transactionId2 = new TransactionId(AccountId.FromString("0.0.23847"), DateTimeOffset.FromUnixTimeMilliseconds(1588539964));
+            transactionId1 = new TransactionId(null, NodaTime.Instant.FromUnixTimeMilliseconds(1588539964));
+            transactionId2 = new TransactionId(AccountId.FromString("0.0.23847"), NodaTime.Instant.FromUnixTimeMilliseconds(1588539964));
             Assert.Equal(-1, transactionId1.CompareTo(transactionId2));
-            transactionId1 = new TransactionId(AccountId.FromString("0.0.23847"), DateTimeOffset.FromUnixTimeMilliseconds(1588539964));
-            transactionId2 = new TransactionId(null, DateTimeOffset.FromUnixTimeMilliseconds(1588539964));
+            transactionId1 = new TransactionId(AccountId.FromString("0.0.23847"), NodaTime.Instant.FromUnixTimeMilliseconds(1588539964));
+            transactionId2 = new TransactionId(null, NodaTime.Instant.FromUnixTimeMilliseconds(1588539964));
             Assert.Equal(1, transactionId1.CompareTo(transactionId2));
 
             // Compare the AccountIds
@@ -127,19 +127,19 @@ namespace Hiero.Tests.SDK.Transactions
 
             // Compare when only one of the txs has valid start
             transactionId1 = new TransactionId(null, null);
-            transactionId2 = new TransactionId(null, DateTimeOffset.FromUnixTimeMilliseconds(1588539964));
+            transactionId2 = new TransactionId(null, NodaTime.Instant.FromUnixTimeMilliseconds(1588539964));
             Assert.Equal(-1, transactionId1.CompareTo(transactionId2));
-            transactionId1 = new TransactionId(AccountId.FromString("0.0.23847"), DateTimeOffset.FromUnixTimeMilliseconds(1588539964));
+            transactionId1 = new TransactionId(AccountId.FromString("0.0.23847"), NodaTime.Instant.FromUnixTimeMilliseconds(1588539964));
             transactionId2 = new TransactionId(null, null);
             Assert.Equal(1, transactionId1.CompareTo(transactionId2));
 
             // Compare the validStarts
-            transactionId1 = new TransactionId(null, DateTimeOffset.FromUnixTimeMilliseconds(1588539965));
-            transactionId2 = new TransactionId(null, DateTimeOffset.FromUnixTimeMilliseconds(1588539964));
+            transactionId1 = new TransactionId(null, NodaTime.Instant.FromUnixTimeMilliseconds(1588539965));
+            transactionId2 = new TransactionId(null, NodaTime.Instant.FromUnixTimeMilliseconds(1588539964));
             Assert.Equal(1, transactionId1.CompareTo(transactionId2));
             
-            transactionId1 = new TransactionId(null, DateTimeOffset.FromUnixTimeMilliseconds(1588539964));
-            transactionId2 = new TransactionId(null, DateTimeOffset.FromUnixTimeMilliseconds(1588539965));
+            transactionId1 = new TransactionId(null, NodaTime.Instant.FromUnixTimeMilliseconds(1588539964));
+            transactionId2 = new TransactionId(null, NodaTime.Instant.FromUnixTimeMilliseconds(1588539965));
             Assert.Equal(-1, transactionId1.CompareTo(transactionId2));
 
             transactionId1 = new TransactionId(null, null);
@@ -160,14 +160,14 @@ namespace Hiero.Tests.SDK.Transactions
             var txIdString = "0.0.4163533@1681876267.054802581";
             var txId = TransactionId.FromString(txIdString);
 
-            Assert.Equal(txId.ToString(), txIdString);
+            Assert.Equal(txIdString, txId.ToString());
         }
         [Fact]
         /// <include file="test-transactions-id.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Transactions.TransactionIdTest.EqualsHashCodeContractWithNonce"]' />
         public virtual void EqualsHashCodeContractWithNonce()
         {
             AccountId accountId = new (0, 0, 1000);
-            DateTimeOffset now = DateTimeOffset.UtcNow;
+            NodaTime.Instant now = NodaTime.SystemClock.Instance.GetCurrentInstant();
             TransactionId txnId1 = TransactionId.WithValidStart(accountId, now);
             TransactionId txnId2 = TransactionId.WithValidStart(accountId, now);
             

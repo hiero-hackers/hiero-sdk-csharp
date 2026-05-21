@@ -1,6 +1,5 @@
 ﻿// SPDX-License-Identifier: Apache-2.0
 using Google.Protobuf;
-using Google.Protobuf.WellKnownTypes;
 
 using Hiero.SDK.Consensus;
 
@@ -39,11 +38,11 @@ namespace Hiero.Tests.Integration.Topic
                 {
                     false
                 };
-                var start = DateTimeOffset.UtcNow;
+                var start = NodaTime.SystemClock.Instance.GetCurrentInstant();
                 var handle = new TopicMessageQuery
                 {
 					TopicId = topicId,
-					StartTime = DateTimeOffset.UnixEpoch,
+					StartTime = NodaTime.Instant.FromUnixTimeMilliseconds(0),
 
 				}.Subscribe(testEnv.Client, (message) =>
                 {
@@ -57,7 +56,7 @@ namespace Hiero.Tests.Integration.Topic
 				}.Execute(testEnv.Client).GetReceipt(testEnv.Client);
                 while (!receivedMessage[0])
                 {
-					if (DateTimeOffset.UtcNow - start > TimeSpan.FromSeconds(60))
+					if (NodaTime.SystemClock.Instance.GetCurrentInstant() - start > NodaTime.Duration.FromSeconds(60))
 						throw new Exception("TopicMessage was not received in 60 seconds or less");
 
 					Thread.Sleep(5000);
@@ -100,11 +99,11 @@ namespace Hiero.Tests.Integration.Topic
                 {
                     false
                 };
-                var start = DateTimeOffset.UtcNow;
+                var start = NodaTime.SystemClock.Instance.GetCurrentInstant();
                 var handle = new TopicMessageQuery
                 {
 					TopicId = topicId,
-					StartTime = DateTimeOffset.UnixEpoch,
+					StartTime = NodaTime.Instant.FromUnixTimeMilliseconds(0),
 
 				}.Subscribe(testEnv.Client, (message) =>
                 {
@@ -120,7 +119,7 @@ namespace Hiero.Tests.Integration.Topic
 
                 while (!receivedMessage[0])
                 {
-                    if ((start - DateTimeOffset.UtcNow).CompareTo(TimeSpan.FromSeconds(60)) > 0)
+                    if ((start - NodaTime.SystemClock.Instance.GetCurrentInstant()).CompareTo(NodaTime.Duration.FromSeconds(60)) > 0)
                     {
                         throw new Exception("TopicMessage was not received in 60 seconds or less");
                     }
@@ -154,7 +153,7 @@ namespace Hiero.Tests.Integration.Topic
                 var handle = new TopicMessageQuery
                 {
                     TopicId = topicId,
-                    StartTime = DateTime.UnixEpoch,
+                    StartTime = NodaTime.Instant.FromUnixTimeMilliseconds(0),
 					ErrorHandler = (exception, topicMessage) => Volatile.Write(ref errorHandlerInvoked, true),
 					RetryHandler = (exception) =>
                     {

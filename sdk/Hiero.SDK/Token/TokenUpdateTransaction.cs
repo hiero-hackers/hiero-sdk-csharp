@@ -100,7 +100,7 @@ namespace Hiero.SDK.Token
             set { RequireNotFrozen(); field = value; } 
         }
         /// <include file="TokenUpdateTransaction.cs.xml" path='docs/member[@name="M:TokenUpdateTransaction.RequireNotFrozen_13"]' />
-        public virtual DateTimeOffset? ExpirationTime
+        public virtual NodaTime.Instant? ExpirationTime
 		{
             get; 
             set 
@@ -113,7 +113,7 @@ namespace Hiero.SDK.Token
 
             } 
         }
-        public virtual TimeSpan? ExpirationTimeDuration 
+        public virtual NodaTime.Duration? ExpirationTimeDuration 
         {
             get; 
             set 
@@ -133,7 +133,7 @@ namespace Hiero.SDK.Token
             set { RequireNotFrozen(); field = value; } 
         }
         /// <include file="TokenUpdateTransaction.cs.xml" path='docs/member[@name="M:TokenUpdateTransaction.RequireNotFrozen_15"]' />
-        public virtual TimeSpan? AutoRenewPeriod 
+        public virtual NodaTime.Duration? AutoRenewPeriod 
         { 
             get; 
             set { RequireNotFrozen(); field = value; } 
@@ -200,10 +200,10 @@ namespace Hiero.SDK.Token
                 MetadataKey = Key.FromProtobufKey(body.MetadataKey);
 
             if (body.Expiry is not null)
-                ExpirationTime = body.Expiry.ToDateTimeOffset();
+                ExpirationTime = body.Expiry.ToNodaTimeInstant();
 
             if (body.AutoRenewPeriod is not null)
-				AutoRenewPeriod = body.AutoRenewPeriod.ToTimeSpan();
+				AutoRenewPeriod = body.AutoRenewPeriod.ToNodaDuration();
 
 			if (body.Memo is not null)
 				TokenMemo = body.Memo;
@@ -259,8 +259,7 @@ namespace Hiero.SDK.Token
 
             if (ExpirationTime != null)
                 builder.Expiry = ExpirationTime.Value.ToProtoTimestamp();
-
-            if (ExpirationTimeDuration != null)
+            else if (ExpirationTimeDuration != null)
                 builder.Expiry = ExpirationTimeDuration.Value.ToProtoTimestamp();
 
             if (AutoRenewPeriod != null)

@@ -177,7 +177,7 @@
     <exception cref="PrecheckStatusException">when the precheck fails</exception>
     <exception cref="TimeoutException">when the transaction times out</exception>
   </member>
-  <member name="M:that.Execute(Client,System.TimeSpan)">
+  <member name="M:that.Execute(Client,System.NodaTime.Duration)">
     <summary>
     Execute the transactions in the flow with the passed in client.
     </summary>
@@ -194,7 +194,7 @@
     <param name="client">the client with the transaction to execute</param>
     <returns>the response</returns>
   </member>
-  <member name="M:that.ExecuteAsync(Client,System.TimeSpan)">
+  <member name="M:that.ExecuteAsync(Client,System.NodaTime.Duration)">
     <summary>
     Execute the transactions in the flow with the passed in client asynchronously.
     </summary>
@@ -209,7 +209,7 @@
     <param name="client">the client with the transaction to execute</param>
     <param name="callback">a Action which handles the result or error.</param>
   </member>
-  <member name="M:that.ExecuteAsync(Client,System.TimeSpan,System.Action{TransactionResponse,System.Exception})">
+  <member name="M:that.ExecuteAsync(Client,System.NodaTime.Duration,System.Action{TransactionResponse,System.Exception})">
     <summary>
     Execute the transactions in the flow with the passed in client asynchronously.
     </summary>
@@ -225,7 +225,7 @@
     <param name="onSuccess">a Action which consumes the result on success.</param>
     <param name="onFailure">a Action which consumes the error on failure.</param>
   </member>
-  <member name="M:that.ExecuteAsync(Client,System.TimeSpan,System.Action{TransactionResponse},System.Action{System.Exception})">
+  <member name="M:that.ExecuteAsync(Client,System.NodaTime.Duration,System.Action{TransactionResponse},System.Action{System.Exception})">
     <summary>
     Execute the transactions in the flow with the passed in client asynchronously.
     </summary>

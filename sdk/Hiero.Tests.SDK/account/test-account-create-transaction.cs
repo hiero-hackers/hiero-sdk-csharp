@@ -17,7 +17,7 @@ namespace Hiero.Tests.SDK.Account
     {
         private static readonly PrivateKey privateKeyED25519 = PrivateKey.FromString("302e020100300506032b657004220420db484b828e64b2d8f12ce3c0a0e93a0b8cce7af1bb8f39c97732394482538e10");
         PrivateKey privateKeyECDSA = PrivateKey.FromStringECDSA("7f109a9e3b0d8ecfba9cc23a3614433ce0fa7ddcc80f2a8f10b222179a5a80d6");
-        private readonly DateTimeOffset validStart = DateTimeOffset.FromUnixTimeMilliseconds(1554158542);
+        private readonly NodaTime.Instant validStart = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
 
         public virtual AccountCreateTransaction SpawnTestTransaction()
         {
@@ -30,7 +30,7 @@ namespace Hiero.Tests.SDK.Account
 				ProxyAccountId = AccountId.FromString("0.0.1001"),
 				AccountMemo = "some dumb memo",
 				ReceiverSigRequired = true,
-				AutoRenewPeriod = TimeSpan.FromHours(10),
+				AutoRenewPeriod = NodaTime.Duration.FromHours(10),
 				StakedAccountId = AccountId.FromString("0.0.3"),
 				Alias = EvmAddress.FromString("0x5c562e90feaf0eebd33ea75d21024f249d451417"),
 				MaxAutomaticTokenAssociations = 100,
@@ -53,7 +53,7 @@ namespace Hiero.Tests.SDK.Account
 				ProxyAccountId = AccountId.FromString("0.0.1001"),
 				AccountMemo = "some dumb memo",
 				ReceiverSigRequired = true,
-				AutoRenewPeriod = TimeSpan.FromHours(10),
+				AutoRenewPeriod = NodaTime.Duration.FromHours(10),
 				StakedNodeId = 4,
 				MaxAutomaticTokenAssociations = 100,
 				MaxTransactionFee = Hbar.FromTinybars(100000),

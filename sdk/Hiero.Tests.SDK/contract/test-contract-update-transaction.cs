@@ -1,14 +1,15 @@
 ﻿// SPDX-License-Identifier: Apache-2.0
 using System;
 
+using Hiero.SDK;
+using Hiero.SDK.Core;
 using Hiero.SDK.Cryptography;
 using Hiero.SDK.Contract;
 using Hiero.SDK.Transactions;
 using Hiero.SDK.Cryptocurrency;
 
 using VerifyXunit;
-using Hiero.SDK;
-using Hiero.SDK.Core;
+using NodaTime;
 
 namespace Hiero.Tests.SDK.Contract
 {
@@ -16,7 +17,7 @@ namespace Hiero.Tests.SDK.Contract
     public class ContractUpdateTransactionTest
     {
         private static readonly PrivateKey privateKey = PrivateKey.FromString("302e020100300506032b657004220420db484b828e64b2d8f12ce3c0a0e93a0b8cce7af1bb8f39c97732394482538e10");
-        private readonly DateTimeOffset validStart = DateTimeOffset.FromUnixTimeMilliseconds(1554158542);
+        private readonly NodaTime.Instant validStart = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
 
         public virtual void ShouldSerialize()
         {
@@ -46,10 +47,10 @@ namespace Hiero.Tests.SDK.Contract
 				ContractId = ContractId.FromString("0.0.5007"),
 				AdminKey = privateKey,
 				MaxAutomaticTokenAssociations = 101,
-				AutoRenewPeriod = TimeSpan.FromDays(1),
+				AutoRenewPeriod = NodaTime.Duration.FromDays(1),
 				ContractMemo = "3",
 				StakedAccountId = AccountId.FromString("0.0.3"),
-				ExpirationTime = DateTime.UnixEpoch.AddMilliseconds(4),
+				ExpirationTime = NodaTime.Instant.FromUnixTimeMilliseconds(4),
 				ProxyAccountId = new AccountId(0, 0, 4),
 				MaxTransactionFee = Hbar.FromTinybars(100000),
 				AutoRenewAccountId = new AccountId(0, 0, 30),
@@ -67,10 +68,10 @@ namespace Hiero.Tests.SDK.Contract
 				ContractId = ContractId.FromString("0.0.5007"),
 				AdminKey = privateKey,
 				MaxAutomaticTokenAssociations = 101,
-				AutoRenewPeriod = TimeSpan.FromDays(1),
+				AutoRenewPeriod = NodaTime.Duration.FromDays(1),
 				ContractMemo = "3",
 				StakedNodeId = 4,
-				ExpirationTime = DateTime.UnixEpoch.AddMilliseconds(4),
+				ExpirationTime = NodaTime.Instant.FromUnixTimeMilliseconds(4),
 				ProxyAccountId = new AccountId(0, 0, 4),
 				MaxTransactionFee = Hbar.FromTinybars(100000),
 				AutoRenewAccountId = new AccountId(0, 0, 30),
@@ -107,22 +108,22 @@ namespace Hiero.Tests.SDK.Contract
 				ContractId = ContractId.FromString("0.0.5007"),
 				AdminKey = privateKey,
 				MaxAutomaticTokenAssociations = 101,
-				AutoRenewPeriod = TimeSpan.FromDays(1),
+				AutoRenewPeriod = Duration.FromDays(1),
 				ContractMemo = "with-duration",
 				StakedAccountId = AccountId.FromString("0.0.3"),
-				ExpirationTime = DateTimeOffset.UtcNow.AddSeconds(1234),
+				ExpirationTime = SystemClock.Instance.GetCurrentInstant().PlusSeconds(1234),
 				ProxyAccountId = new AccountId(0, 0, 4),
 				MaxTransactionFee = Hbar.FromTinybars(100000),
 				AutoRenewAccountId = new AccountId(0, 0, 30),
 			};
 
-            // When expiration is set via Duration, DateTimeOffset getter should be null
+            // When expiration is set via Duration, NodaTime.Instant getter should be null
             Assert.Null(tx.ExpirationTime);
             
             var tx2 = Transaction.FromBytes<ContractUpdateTransaction>(tx.ToBytes());
 
             Assert.Equal(tx2.ToString(), tx.ToString());
-            Assert.Equal(tx2.ExpirationTime, DateTimeOffset.FromUnixTimeMilliseconds(1234));
+            Assert.Equal(tx2.ExpirationTime, NodaTime.Instant.FromUnixTimeMilliseconds(1234));
         }
         [Fact]
         /// <include file="test-contract-update-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Contract.ContractUpdateTransactionTest.SetExpirationTimeDurationOnFrozenTransactionShouldThrow"]' />
@@ -130,13 +131,13 @@ namespace Hiero.Tests.SDK.Contract
         {
             var tx = SpawnTestTransaction();
 
-            Assert.Throws<InvalidOperationException>(() => tx.ExpirationTime = DateTimeOffset.FromUnixTimeMilliseconds(1));
+            Assert.Throws<InvalidOperationException>(() => tx.ExpirationTime = NodaTime.Instant.FromUnixTimeMilliseconds(1));
         }
         [Fact]
         /// <include file="test-contract-update-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Contract.ContractUpdateTransactionTest.GetSetExpirationTimeDateTime"]' />
         public virtual void GetSetExpirationTimeDateTime()
         {
-            var instant = DateTimeOffset.FromUnixTimeMilliseconds(1234567);
+            var instant = NodaTime.Instant.FromUnixTimeMilliseconds(1234567);
             var tx = new ContractUpdateTransaction
             {
 				ExpirationTime = instant

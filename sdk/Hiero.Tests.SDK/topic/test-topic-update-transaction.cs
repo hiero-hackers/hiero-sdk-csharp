@@ -23,10 +23,10 @@ namespace Hiero.Tests.SDK.Topic
         private static readonly PublicKey testSubmitKey = PrivateKey.FromString("302e020100300506032b657004220420db484b828e64b2d8f12ce3c0a0e93a0b8cce7af1bb8f39c97732394482538e12").GetPublicKey();
         private static readonly TopicId testTopicId = TopicId.FromString("0.0.5007");
         private static readonly string testTopicMemo = "test memo";
-        private static readonly TimeSpan testAutoRenewPeriod = TimeSpan.FromHours(10);
-        private static readonly DateTimeOffset testExpirationTime = DateTimeOffset.UtcNow;
+        private static readonly NodaTime.Duration testAutoRenewPeriod = NodaTime.Duration.FromHours(10);
+        private static readonly NodaTime.Instant testExpirationTime = NodaTime.SystemClock.Instance.GetCurrentInstant();
         private static readonly AccountId testAutoRenewAccountId = AccountId.FromString("8.8.8");
-        private static readonly DateTimeOffset validStart = DateTimeOffset.FromUnixTimeMilliseconds(1554158542);
+        private static readonly NodaTime.Instant validStart = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
 
         public virtual void ClearShouldSerialize()
         {

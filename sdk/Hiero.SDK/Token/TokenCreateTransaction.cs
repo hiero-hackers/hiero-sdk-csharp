@@ -67,7 +67,7 @@ namespace Hiero.SDK.Token
 		/// <include file="TokenCreateTransaction.cs.xml" path='docs/member[@name="M:TokenCreateTransaction.RequireNotFrozen_14"]' />
 		public virtual Key? MetadataKey { get; set { RequireNotFrozen(); field = value; } }
 		/// <include file="TokenCreateTransaction.cs.xml" path='docs/member[@name="M:TokenCreateTransaction.RequireNotFrozen_15"]' />
-		public virtual DateTimeOffset? ExpirationTime
+		public virtual NodaTime.Instant? ExpirationTime
 		{
 			get;
 			set
@@ -81,7 +81,7 @@ namespace Hiero.SDK.Token
 
 			}
 		}
-		public virtual TimeSpan? ExpirationTimeDuration
+		public virtual NodaTime.Duration? ExpirationTimeDuration
 		{
 			get;
 			set
@@ -98,7 +98,7 @@ namespace Hiero.SDK.Token
 		/// <include file="TokenCreateTransaction.cs.xml" path='docs/member[@name="M:TokenCreateTransaction.RequireNotFrozen_16"]' />
 		public virtual AccountId? AutoRenewAccountId { get; set { RequireNotFrozen(); field = value; } }
 		/// <include file="TokenCreateTransaction.cs.xml" path='docs/member[@name="M:TokenCreateTransaction.RequireNotFrozen_17"]' />
-		public virtual TimeSpan? AutoRenewPeriod { get; set { RequireNotFrozen(); field = value; } }
+		public virtual NodaTime.Duration? AutoRenewPeriod { get; set { RequireNotFrozen(); field = value; } }
 		/// <include file="TokenCreateTransaction.cs.xml" path='docs/member[@name="M:TokenCreateTransaction.RequireNotFrozen_18"]' />
 		public virtual string? TokenMemo { get; set { RequireNotFrozen(); field = value; } }
 		/// <include file="TokenCreateTransaction.cs.xml" path='docs/member[@name="M:TokenCreateTransaction.RequireNotFrozen_19"]' />
@@ -157,10 +157,10 @@ namespace Hiero.SDK.Token
 				MetadataKey = Key.FromProtobufKey(body.MetadataKey);
 
 			if (body.Expiry is not null)
-				ExpirationTime = body.Expiry.ToDateTimeOffset();
+				ExpirationTime = body.Expiry.ToNodaTimeInstant();
 
 			if (body.AutoRenewPeriod is not null)
-				AutoRenewPeriod = body.AutoRenewPeriod.ToTimeSpan();
+				AutoRenewPeriod = body.AutoRenewPeriod.ToNodaDuration();
 
 			foreach (var fee in body.CustomFees)
 				CustomFees.Add(CustomFee.FromProtobuf(fee));
@@ -220,13 +220,12 @@ namespace Hiero.SDK.Token
             if (MetadataKey != null)
 				builder.MetadataKey = MetadataKey.ToProtobufKey();
 
-            if (ExpirationTime != null)
+			if (ExpirationTime != null)
 				builder.Expiry = ExpirationTime.Value.ToProtoTimestamp();
-
-            if (ExpirationTimeDuration != null)
+			else if (ExpirationTimeDuration != null)
 				builder.Expiry = ExpirationTimeDuration.Value.ToProtoTimestamp();
 
-            if (AutoRenewPeriod != null)
+			if (AutoRenewPeriod != null)
 				builder.AutoRenewPeriod = AutoRenewPeriod.Value.ToProtoDuration();
 
             foreach (var fee in CustomFees)

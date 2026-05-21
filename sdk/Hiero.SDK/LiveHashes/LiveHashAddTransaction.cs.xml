@@ -50,7 +50,7 @@
     <summary>
     The duration for which the livehash will remain valid
     </summary>
-    <param name="duration">The TimeSpan to be set</param>
+    <param name="duration">The NodaTime.Duration to be set</param>
     <returns>{@code this}</returns>
   </member>
   <member name="M:InitFromTransactionBody">

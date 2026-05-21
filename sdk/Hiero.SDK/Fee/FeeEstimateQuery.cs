@@ -42,7 +42,7 @@ namespace Hiero.SDK.Fee
 		public virtual FeeEstimateMode Mode { get; set; } = FeeEstimateMode.State;
 		public virtual Proto.Services.Transaction? Transaction { get; set; }
         public virtual int MaxAttempts { get; set; } = 10;
-        public virtual TimeSpan MaxBackoff
+        public virtual NodaTime.Duration MaxBackoff
         {
             get;
             set
@@ -53,7 +53,7 @@ namespace Hiero.SDK.Fee
 				field = value;
 			}
 
-        } = TimeSpan.FromSeconds(8);
+        } = NodaTime.Duration.FromSeconds(8);
 
         public virtual HttpRequestMessage BuildRequest(Client client, FeeEstimateMode resolvedMode)
         {
@@ -65,7 +65,7 @@ namespace Hiero.SDK.Fee
         {
             return Execute(client, client.RequestTimeout);
         }
-        public virtual FeeEstimateResponse Execute(Client client, TimeSpan timeout)
+        public virtual FeeEstimateResponse Execute(Client client, NodaTime.Duration timeout)
         {
             var requestPayload = GetRequestPayload();
             var url = BuildUrl(client, Mode);
@@ -73,7 +73,7 @@ namespace Hiero.SDK.Fee
             {
                 try
                 {
-                    HTTP_CLIENT.Timeout = timeout;
+                    HTTP_CLIENT.Timeout = timeout.ToTimeSpan();
 					var response = HTTP_CLIENT.Send(BuildHttpRequest(url, requestPayload));
                     var result = HandleResponse(response, Mode, attempt);
                     if (result != null)
@@ -93,7 +93,7 @@ namespace Hiero.SDK.Fee
         {
             return ExecuteAsync(client, client.RequestTimeout);
         }
-        public virtual TaskCompletionSource<FeeEstimateResponse> ExecuteAsync(Client client, TimeSpan timeout)
+        public virtual TaskCompletionSource<FeeEstimateResponse> ExecuteAsync(Client client, NodaTime.Duration timeout)
         {
             TaskCompletionSource<FeeEstimateResponse> returnFuture = new();
             ExecuteAsync(client, timeout, Mode, returnFuture, 1);
@@ -106,7 +106,7 @@ namespace Hiero.SDK.Fee
             return this;
         }
 
-        public virtual async void ExecuteAsync(Client client, TimeSpan timeout, FeeEstimateMode resolvedMode, TaskCompletionSource<FeeEstimateResponse> returnFuture, int attempt)
+        public virtual async void ExecuteAsync(Client client, NodaTime.Duration timeout, FeeEstimateMode resolvedMode, TaskCompletionSource<FeeEstimateResponse> returnFuture, int attempt)
         {
             var requestPayload = GetRequestPayload();
             var url = BuildUrl(client, resolvedMode);
@@ -115,7 +115,7 @@ namespace Hiero.SDK.Fee
 
             try
             {
-                HTTP_CLIENT.Timeout = timeout;
+                HTTP_CLIENT.Timeout = timeout.ToTimeSpan();
                 httpresponsemessage = await HTTP_CLIENT.SendAsync(BuildHttpRequest(url, requestPayload));
             }
             catch (Exception exception)
@@ -158,8 +158,8 @@ namespace Hiero.SDK.Fee
             return null;
         }
 
-        /// <include file="FeeEstimateQuery.cs.xml" path='docs/member[@name="M:HandleAsyncError(Client,System.TimeSpan,FeeEstimateMode,TaskCompletionSource{FeeEstimateResponse},System.Int32,System.Exception)"]' />
-        private void HandleAsyncError(Client client, TimeSpan timeout, FeeEstimateMode resolvedMode, TaskCompletionSource<FeeEstimateResponse> returnFuture, int attempt, Exception error)
+        /// <include file="FeeEstimateQuery.cs.xml" path='docs/member[@name="M:HandleAsyncError(Client,System.NodaTime.Duration,FeeEstimateMode,TaskCompletionSource{FeeEstimateResponse},System.Int32,System.Exception)"]' />
+        private void HandleAsyncError(Client client, NodaTime.Duration timeout, FeeEstimateMode resolvedMode, TaskCompletionSource<FeeEstimateResponse> returnFuture, int attempt, Exception error)
         {
             if (attempt >= MaxAttempts || !ShouldRetry(error))
             {
@@ -171,8 +171,8 @@ namespace Hiero.SDK.Fee
             WarnAndDelay(attempt, error);
             ExecuteAsync(client, timeout, resolvedMode, returnFuture, attempt + 1);
         }
-        /// <include file="FeeEstimateQuery.cs.xml" path='docs/member[@name="M:HandleAsyncResponse(Client,System.TimeSpan,FeeEstimateMode,TaskCompletionSource{FeeEstimateResponse},System.Int32,HttpResponseMessage)"]' />
-        private async void HandleAsyncResponse(Client client, TimeSpan timeout, FeeEstimateMode resolvedMode, TaskCompletionSource<FeeEstimateResponse> returnFuture, int attempt, HttpResponseMessage response)
+        /// <include file="FeeEstimateQuery.cs.xml" path='docs/member[@name="M:HandleAsyncResponse(Client,System.NodaTime.Duration,FeeEstimateMode,TaskCompletionSource{FeeEstimateResponse},System.Int32,HttpResponseMessage)"]' />
+        private async void HandleAsyncResponse(Client client, NodaTime.Duration timeout, FeeEstimateMode resolvedMode, TaskCompletionSource<FeeEstimateResponse> returnFuture, int attempt, HttpResponseMessage response)
         {
             if (IsSuccessfulResponse(response.StatusCode))
             {

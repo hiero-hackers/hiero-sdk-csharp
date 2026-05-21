@@ -11,7 +11,7 @@ namespace Hiero.Tests.SDK.Topic
     /// <include file="test-topic-message-chunk.cs.xml" path='docs/member[@name="T:Hiero.Tests.SDK.Topic.TopicMessageChunkTest"]' />
     public class TopicMessageChunkTest
     {
-        private static readonly DateTimeOffset testTimestamp = DateTimeOffset.FromUnixTimeMilliseconds(1554158542);
+        private static readonly NodaTime.Instant testTimestamp = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
         private static readonly byte[] testContents = new byte[]
         {
             0x01,

@@ -18,7 +18,7 @@ namespace Hiero.Tests.SDK.Account
         private static readonly Proto.Services.LiveHash liveHash = new ()
         {
 			AccountId = new AccountId(0, 0, 10).ToProtobuf(),
-			Duration = TimeSpan.FromDays(11).ToProtoDuration(),
+			Duration = NodaTime.Duration.FromDays(11).ToProtoDuration(),
 			Hash = ByteString.CopyFrom(hash),
 
 			// Keys = new Proto.KeyList([privateKey.GetPublicKey().ToProtobufKey()]) 
@@ -34,8 +34,8 @@ namespace Hiero.Tests.SDK.Account
             GenerateSendRecordThreshold = 4,
             GenerateReceiveRecordThreshold = 5,
             ReceiverSigRequired = true,
-            ExpirationTime = DateTimeOffset.FromUnixTimeMilliseconds(6).ToProtoTimestamp(),
-            AutoRenewPeriod = TimeSpan.FromDays(7).ToProtoDuration(),
+            ExpirationTime = NodaTime.Instant.FromUnixTimeMilliseconds(6).ToProtoTimestamp(),
+            AutoRenewPeriod = NodaTime.Duration.FromDays(7).ToProtoDuration(),
             ProxyAccountId = new AccountId(0, 0, 8).ToProtobuf(),
             LedgerId = LedgerId.PREVIEWNET.ToByteString(),
             EthereumNonce = 1001,

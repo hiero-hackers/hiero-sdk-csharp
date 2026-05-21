@@ -63,9 +63,10 @@ namespace Hiero.SDK
 			});
 			return tcs.Task;
 		}
-		public bool WaitForTermination(TimeSpan timeout)
+		public bool WaitForTermination(NodaTime.Duration timeout)
 		{
-			DateTime end = DateTime.UtcNow + timeout;
+			DateTime end = DateTime.UtcNow + timeout.ToTimeSpan();
+
 			foreach (var thread in _threads)
 			{
 				TimeSpan remaining = end - DateTime.UtcNow;

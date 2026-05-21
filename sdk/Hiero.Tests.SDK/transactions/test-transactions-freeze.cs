@@ -24,7 +24,7 @@ namespace Hiero.Tests.SDK.Transactions
         private static readonly FileId testFileId = FileId.FromString("4.5.6");
         private static readonly byte[] testFileHash = Hex.Decode("1723904587120938954702349857");
         private static readonly FreezeType testFreezeType = FreezeType.TelemetryUpgrade;
-        private readonly DateTimeOffset validStart = DateTimeOffset.FromUnixTimeMilliseconds(1554158542);
+        private readonly NodaTime.Instant validStart = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
 
         public virtual void ShouldSerialize()
         {

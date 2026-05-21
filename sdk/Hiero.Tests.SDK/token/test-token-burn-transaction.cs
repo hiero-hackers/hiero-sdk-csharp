@@ -20,7 +20,7 @@ namespace Hiero.Tests.SDK.Token
         private static readonly TokenId testTokenId = TokenId.FromString("4.2.0");
         private static readonly ulong testAmount = 69;
         private static readonly List<long> testSerials = [420];
-        private readonly DateTimeOffset validStart = DateTimeOffset.FromUnixTimeMilliseconds(1554158542);
+        private readonly NodaTime.Instant validStart = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
 
         public virtual void ShouldSerializeFungible()
         {

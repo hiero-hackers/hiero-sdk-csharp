@@ -5,7 +5,7 @@
     Managed client for use on the Hedera Hashgraph Network.
     </summary>
   </member>
-  <member name="M:Client.#ctor(ExecutorService,Network,MirrorNetwork,System.TimeSpan,System.Boolean,System.TimeSpan,System.Int64,System.Int64)">
+  <member name="M:Client.#ctor(ExecutorService,Network,MirrorNetwork,System.NodaTime.Duration,System.Boolean,System.NodaTime.Duration,System.Int64,System.Int64)">
     <summary>
     Constructor.
     </summary>
@@ -211,7 +211,7 @@
     &lt;/summary&gt;
     &lt;exception cref="TimeoutException"&gt;if the mirror Network doesn't close in time&lt;/exception&gt;</summary>
   </member>
-  <member name="M:Client.Dispose(System.TimeSpan)">
+  <member name="M:Client.Dispose(System.NodaTime.Duration)">
     <summary>&lt;summary&gt;
     Initiates an orderly shutdown of all channels (to the Hedera Network) in which preexisting transactions or
     queries continue but more would be immediately cancelled.
@@ -219,7 +219,7 @@
     &lt;p&gt;After this method returns, this client can be re-used. Channels will be re-established as
     needed.
     &lt;/summary&gt;
-    &lt;param name="timeout"&gt;The TimeSpan to be set&lt;/param&gt;
+    &lt;param name="timeout"&gt;The NodaTime.Duration to be set&lt;/param&gt;
     &lt;exception cref="TimeoutException"&gt;if the mirror Network doesn't close in time&lt;/exception&gt;</summary>
   </member>
 </docs>

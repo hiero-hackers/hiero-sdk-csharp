@@ -1,16 +1,17 @@
 ﻿// SPDX-License-Identifier: Apache-2.0
 using System;
 
-using Google.Protobuf.WellKnownTypes;
-
 using Hiero.SDK;
+using Hiero.SDK.Core;
 using Hiero.SDK.Schedule;
 using Hiero.SDK.Transactions;
 using Hiero.SDK.Cryptocurrency;
 using Hiero.SDK.Cryptography;
 
 using VerifyXunit;
-using Hiero.SDK.Core;
+
+using NodaTime;
+using NodaTime.Extensions;
 
 namespace Hiero.Tests.SDK.Schedule
 {
@@ -18,7 +19,7 @@ namespace Hiero.Tests.SDK.Schedule
     public class ScheduleCreateTransactionTest
     {
         private static readonly PrivateKey unusedPrivateKey = PrivateKey.FromString("302e020100300506032b657004220420db484b828e64b2d8f12ce3c0a0e93a0b8cce7af1bb8f39c97732394482538e10");
-        private readonly DateTimeOffset validStart = DateTimeOffset.FromUnixTimeMilliseconds(1554158542);
+        private readonly NodaTime.Instant validStart = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
 
         public virtual void ShouldSerialize()
         {
@@ -76,36 +77,36 @@ namespace Hiero.Tests.SDK.Schedule
                     _.PayerAccountId = AccountId.FromString("0.0.222");
                     _.ScheduleMemo = "with-duration";
                     _.MaxTransactionFee = new Hbar(1);
-                    _.ExpirationTime = DateTime.UtcNow.AddSeconds(1234);
+                    _.ExpirationTime = DateTime.UtcNow.AddSeconds(1234).ToInstant();
                 });
-            // When expiration is set via Duration, DateTimeOffset getter should be null
+            // When expiration is set via Duration, NodaTime.Instant getter should be null
 
             Assert.Null(tx.ExpirationTime);
             
             var tx2 = Transaction.FromBytes<ScheduleCreateTransaction>(tx.ToBytes());
 
             Assert.Equal(tx2.ToString(), tx.ToString());
-            Assert.Equal(tx2.ExpirationTime, DateTimeOffset.FromUnixTimeMilliseconds(1234));
+            Assert.Equal(tx2.ExpirationTime, NodaTime.Instant.FromUnixTimeMilliseconds(1234));
         }
         [Fact]
         /// <include file="test-schedule-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Schedule.ScheduleCreateTransactionTest.SetExpirationTimeDurationOnFrozenTransactionShouldThrow"]' />
         public virtual void SetExpirationTimeDurationOnFrozenTransactionShouldThrow()
         {
             var tx = SpawnTestTransaction();
-            Assert.Throws<InvalidOperationException>(() => tx.ExpirationTime = DateTimeOffset.FromUnixTimeSeconds(1));
+            Assert.Throws<InvalidOperationException>(() => tx.ExpirationTime = NodaTime.Instant.FromUnixTimeSeconds(1));
         }
         [Fact]
         /// <include file="test-schedule-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Schedule.ScheduleCreateTransactionTest.GetSetExpirationTimeDateTime"]' />
         public virtual void GetSetExpirationTimeDateTime()
         {
-            var instant = DateTimeOffset.FromUnixTimeMilliseconds(1234567).ToTimestamp();
+            var instant = Instant.FromUnixTimeMilliseconds(1234567);
             var tx = new ScheduleCreateTransaction
             {
-				ExpirationTime = instant.ToDateTimeOffset()
+				ExpirationTime = instant
 			};
 
-            Assert.Equal(tx.ExpirationTime?.ToUnixTimeSeconds(), instant.Seconds);
-            Assert.Equal(tx.ExpirationTime?.Nanosecond, instant.Nanos);
+            Assert.Equal(tx.ExpirationTime?.ToUnixTimeSeconds(), instant.ToUnixTimeSeconds());
+            Assert.Equal(tx.ExpirationTime?.ToUnixTimeSecondsAndNanoseconds().nanoseconds, instant.ToUnixTimeSecondsAndNanoseconds().nanoseconds);
         }
     }
 }

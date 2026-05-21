@@ -15,7 +15,7 @@ namespace Hiero.Tests.SDK.Nfts
     /// <include file="test-token-nft-info.cs.xml" path='docs/member[@name="T:Hiero.Tests.SDK.Nfts.TokenNftInfoTest"]' />
     public class TokenNftInfoTest
     {
-        static readonly DateTimeOffset creationTime = DateTimeOffset.FromUnixTimeMilliseconds(1554158542);
+        static readonly NodaTime.Instant creationTime = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
 
         private static TokenNftInfo SpawnTokenNftInfoExample(AccountId spenderAccountId)
         {

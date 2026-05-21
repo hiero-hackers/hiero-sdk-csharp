@@ -88,7 +88,7 @@ namespace Hiero.SDK.File
 		}
 
 		/// <include file="FileUpdateTransaction.cs.xml" path='docs/member[@name="M:FileUpdateTransaction.RequireNotFrozen_7"]' />
-		public DateTimeOffset? ExpirationTime
+		public NodaTime.Instant? ExpirationTime
 		{
 			get => field;
 			set
@@ -99,7 +99,7 @@ namespace Hiero.SDK.File
                     ExpirationTimeDuration = null;
             }
 		}
-		public TimeSpan? ExpirationTimeDuration
+		public NodaTime.Duration? ExpirationTimeDuration
 		{
 			get => field;
 			set
@@ -125,11 +125,10 @@ namespace Hiero.SDK.File
 			if (Keys != null)
 				builder.Keys = Keys.ToProtobuf();
 
-			if (ExpirationTime != null)
-				builder.ExpirationTime = ExpirationTime.Value.ToProtoTimestamp();
-
-            if (ExpirationTimeDuration != null)
-				builder.ExpirationTime = ExpirationTimeDuration.Value.ToProtoTimestamp();
+            if (ExpirationTime != null)
+                builder.ExpirationTime = ExpirationTime.Value.ToProtoTimestamp();
+            else if (ExpirationTimeDuration != null)
+                builder.ExpirationTime = ExpirationTimeDuration.Value.ToProtoTimestamp();
 
             if (FileMemo != null)
 				builder.Memo = FileMemo;
@@ -173,7 +172,7 @@ namespace Hiero.SDK.File
 				Keys = KeyList.FromProtobuf(body.Keys, null);
 
 			if (body.ExpirationTime is not null)
-				ExpirationTime = body.ExpirationTime.ToDateTimeOffset();
+				ExpirationTime = body.ExpirationTime.ToNodaTimeInstant();
 
 			if (body.Memo is not null)
 				FileMemo = body.Memo;

@@ -53,7 +53,7 @@ namespace Hiero.SDK.Cryptocurrency
             set { RequireNotFrozen(); field = value; } 
         }
 		/// <include file="AccountUpdateTransaction.cs.xml" path='docs/member[@name="M:AccountUpdateTransaction.RequireNotFrozen_5"]' />
-		public DateTimeOffset? ExpirationTime
+		public NodaTime.Instant? ExpirationTime
         {
             get;
             set
@@ -65,7 +65,7 @@ namespace Hiero.SDK.Cryptocurrency
                     ExpirationTimeDuration = null;
             }
         }
-        public TimeSpan? ExpirationTimeDuration 
+        public NodaTime.Duration? ExpirationTimeDuration 
         {
             get; 
             set 
@@ -78,7 +78,7 @@ namespace Hiero.SDK.Cryptocurrency
             } 
         }
         /// <include file="AccountUpdateTransaction.cs.xml" path='docs/member[@name="M:AccountUpdateTransaction.RequireNotFrozen_6"]' />
-        public TimeSpan? AutoRenewPeriod 
+        public NodaTime.Duration? AutoRenewPeriod 
         {
             get; 
             set { RequireNotFrozen(); field = value; } 
@@ -145,10 +145,10 @@ namespace Hiero.SDK.Cryptocurrency
                 Key = Key.FromProtobufKey(body.Key);
 
             if (body.ExpirationTime is not null)
-                ExpirationTime = body.ExpirationTime.ToDateTimeOffset();
+                ExpirationTime = body.ExpirationTime.ToNodaTimeInstant();
 
             if (body.AutoRenewPeriod is not null)
-                AutoRenewPeriod = body.AutoRenewPeriod.ToTimeSpan();
+                AutoRenewPeriod = body.AutoRenewPeriod.ToNodaDuration();
 
             if (body.ReceiverSigRequiredWrapper is not null)
                 ReceiverSigRequired = body.ReceiverSigRequiredWrapper.Value;

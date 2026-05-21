@@ -104,7 +104,7 @@ namespace Hiero.Tests.SDK.Account
             var tx = new AccountUpdateTransaction();
             
             tx.SetNodeAccountIds([ AccountId.FromString("0.0.5005") ]);
-            tx.TransactionId = TransactionId.WithValidStart(AccountId.FromString("0.0.5006"), DateTimeOffset.FromUnixTimeMilliseconds(1554158542));
+            tx.TransactionId = TransactionId.WithValidStart(AccountId.FromString("0.0.5006"), NodaTime.Instant.FromUnixTimeMilliseconds(1554158542));
             tx.Freeze();
             
             var contractId = new ContractId(0, 0, 1);
@@ -121,7 +121,7 @@ namespace Hiero.Tests.SDK.Account
         {
             var tx = new AccountUpdateTransaction
             {
-				TransactionId = TransactionId.WithValidStart(AccountId.FromString("0.0.5006"), DateTimeOffset.FromUnixTimeMilliseconds(1554158542))
+				TransactionId = TransactionId.WithValidStart(AccountId.FromString("0.0.5006"), NodaTime.Instant.FromUnixTimeMilliseconds(1554158542))
 			}
             .SetNodeAccountIds([ AccountId.FromString("0.0.5005") ])
             .Freeze();
@@ -140,7 +140,7 @@ namespace Hiero.Tests.SDK.Account
         {
             var tx = new AccountUpdateTransaction
             {
-				TransactionId = TransactionId.WithValidStart(AccountId.FromString("0.0.5006"), DateTimeOffset.FromUnixTimeMilliseconds(1554158542))
+				TransactionId = TransactionId.WithValidStart(AccountId.FromString("0.0.5006"), NodaTime.Instant.FromUnixTimeMilliseconds(1554158542))
 			}
             .SetNodeAccountIds([ AccountId.FromString("0.0.5005") ])
             .Freeze();
@@ -155,7 +155,7 @@ namespace Hiero.Tests.SDK.Account
         {
             var tx = new AccountUpdateTransaction
             {
-				TransactionId = TransactionId.WithValidStart(AccountId.FromString("0.0.5006"), DateTimeOffset.FromUnixTimeMilliseconds(1554158542))
+				TransactionId = TransactionId.WithValidStart(AccountId.FromString("0.0.5006"), NodaTime.Instant.FromUnixTimeMilliseconds(1554158542))
 			}
             .SetNodeAccountIds([ AccountId.FromString("0.0.5005") ])
             .Freeze();

@@ -14,9 +14,9 @@ namespace Hiero.SDK
 {
     public interface IExecutable 
     {
-        TimeSpan GrpcDeadline { get; set; }
-        TimeSpan MaxBackoff { get; set; }
-        TimeSpan MinBackoff { get; set; }
+        NodaTime.Duration GrpcDeadline { get; set; }
+        NodaTime.Duration MaxBackoff { get; set; }
+        NodaTime.Duration MinBackoff { get; set; }
         int MaxAttempts { get; set; }
         int MaxRetry { get; set; }
         ListGuarded<AccountId> NodeAccountIds { get; set; }

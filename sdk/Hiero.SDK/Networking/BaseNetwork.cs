@@ -1,11 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
-using Google.Protobuf.WellKnownTypes;
+using NodaTime;
 
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Net;
 
 namespace Hiero.SDK.Networking
 {
@@ -121,7 +119,7 @@ namespace Hiero.SDK.Networking
 		/// <include file="BaseNetwork.cs.xml" path='docs/member[@name="P:BaseNetwork.HealthyNodes"]' />
 		public IList<BaseNodeT> HealthyNodes { get; protected set; } = [];        
         /// <include file="BaseNetwork.cs.xml" path='docs/member[@name="M:BaseNetwork.AddSeconds(Client.DEFAULT_MIN_NODE_BACKOFF.)"]' />
-        public DateTimeOffset EarliestReadmitTime { get; protected set; } = DateTimeOffset.UtcNow.AddSeconds(Client.DEFAULT_MIN_NODE_BACKOFF.TotalSeconds);
+        public NodaTime.Instant EarliestReadmitTime { get; protected set; } = NodaTime.SystemClock.Instance.GetCurrentInstant().PlusSeconds(Client.DEFAULT_MIN_NODE_BACKOFF.TotalSeconds);
 
 		/// <include file="BaseNetwork.cs.xml" path='docs/member[@name="M:BaseNetwork.lock(this)"]' />
 		public virtual LedgerId? LedgerId
@@ -137,7 +135,7 @@ namespace Hiero.SDK.Networking
 
 		} = DEFAULT_MAX_NODE_ATTEMPTS;
 		/// <include file="BaseNetwork.cs.xml" path='docs/member[@name="M:BaseNetwork.lock(this)_3"]' />
-		public virtual TimeSpan MinNodeBackoff
+		public virtual NodaTime.Duration MinNodeBackoff
 		{
 			get { lock (this) return field; }
 			set 
@@ -153,7 +151,7 @@ namespace Hiero.SDK.Networking
 
 		} = Client.DEFAULT_MIN_NODE_BACKOFF;
 		/// <include file="BaseNetwork.cs.xml" path='docs/member[@name="M:BaseNetwork.lock(this)_4"]' />
-		public virtual TimeSpan MaxNodeBackoff
+		public virtual NodaTime.Duration MaxNodeBackoff
 		{
 			get { lock (this) return field; }
 			set
@@ -169,7 +167,7 @@ namespace Hiero.SDK.Networking
 
 		} = Client.DEFAULT_MAX_NODE_BACKOFF;
 		/// <include file="BaseNetwork.cs.xml" path='docs/member[@name="M:BaseNetwork.lock(this)_5"]' />
-		public virtual TimeSpan MinNodeReadmitTime
+		public virtual NodaTime.Duration MinNodeReadmitTime
 		{
 			get { lock (this) return field; }
 			set 
@@ -179,20 +177,20 @@ namespace Hiero.SDK.Networking
 					field = value;
 
 					foreach (var node in Nodes)
-						node.ReadmitTime = DateTimeOffset.UtcNow;
+						node.ReadmitTime = NodaTime.SystemClock.Instance.GetCurrentInstant();
 				}
             }
 
 		} = Client.DEFAULT_MIN_NODE_BACKOFF;
 		/// <include file="BaseNetwork.cs.xml" path='docs/member[@name="M:BaseNetwork.lock(this)_6"]' />
-		public virtual TimeSpan MaxNodeReadmitTime
+		public virtual NodaTime.Duration MaxNodeReadmitTime
 		{
 			get { lock (this) return field; }
 			set { lock (this) field = value; }
 
 		} = Client.DEFAULT_MAX_NODE_BACKOFF;
 		/// <include file="BaseNetwork.cs.xml" path='docs/member[@name="M:BaseNetwork.lock(this)_7"]' />
-		public virtual TimeSpan CloseTimeout
+		public virtual NodaTime.Duration CloseTimeout
 		{
 			get { lock (this) return field; }
 			set { lock (this) field = value; }
@@ -242,10 +240,10 @@ namespace Hiero.SDK.Networking
 		{
 			lock (this)
 			{
-				var now = DateTimeOffset.UtcNow;
+				var now = NodaTime.SystemClock.Instance.GetCurrentInstant();
 				if (now.ToUnixTimeSeconds() > EarliestReadmitTime.ToUnixTimeSeconds())
 				{
-					var nextEarliestReadmitTime = now.AddSeconds(MaxNodeReadmitTime.Seconds);
+					var nextEarliestReadmitTime = now.PlusSeconds(MaxNodeReadmitTime.Seconds);
 					foreach (var node in Nodes)
 					{
 						if (node.ReadmitTime.ToUnixTimeSeconds() > now.ToUnixTimeSeconds() && node.ReadmitTime.ToUnixTimeSeconds() < nextEarliestReadmitTime.ToUnixTimeSeconds())
@@ -256,8 +254,8 @@ namespace Hiero.SDK.Networking
 
 					EarliestReadmitTime = nextEarliestReadmitTime;
 
-					if (EarliestReadmitTime < now.Add(MinNodeReadmitTime))
-						EarliestReadmitTime = now.Add(MinNodeReadmitTime);
+					if (EarliestReadmitTime < now.Plus(MinNodeReadmitTime))
+						EarliestReadmitTime = now.Plus(MinNodeReadmitTime);
 
 					outer:
 					for (var i = 0; i < Nodes.Count; i++)
@@ -290,7 +288,7 @@ namespace Hiero.SDK.Networking
                 node.DecreaseBackoff();
             }
         }
-		public virtual Exception? AwaitClose(Timestamp deadline, Exception? previousError)
+		public virtual Exception? AwaitClose(Instant deadline, Exception? previousError)
 		{
 			lock (this)
 			{
@@ -305,7 +303,7 @@ namespace Hiero.SDK.Networking
 					{
 						if (node.Channel != null)
 						{
-							var timeoutMillis = (Timestamp.FromDateTime(DateTime.UtcNow) - deadline).ToTimeSpan().TotalMilliseconds;
+							var timeoutMillis = (SystemClock.Instance.GetCurrentInstant() - deadline).TotalMilliseconds;
 							if (timeoutMillis <= 0 || node.Channel.ShutdownAsync().Wait(TimeSpan.FromMilliseconds(timeoutMillis)))
 							{
 								throw new TimeoutException("Failed to properly shutdown all channels");
@@ -347,8 +345,8 @@ namespace Hiero.SDK.Networking
 				// getNodesToRemove() should always return the list in reverse order
 				foreach (var index in GetNodesToRemove(network))
 				{
-					var stopAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds() + CloseTimeout.Seconds;
-					var remainingTime = stopAt - DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+					var stopAt = NodaTime.SystemClock.Instance.GetCurrentInstant().ToUnixTimeSeconds() + CloseTimeout.Seconds;
+					var remainingTime = stopAt - NodaTime.SystemClock.Instance.GetCurrentInstant().ToUnixTimeSeconds();
 					var node = Nodes[index];
 
 					// Exit early if we have no time remaining
@@ -358,7 +356,7 @@ namespace Hiero.SDK.Networking
 					}
 
 					RemoveNodeFromNetwork(node);
-					node.Dispose(TimeSpan.FromSeconds(remainingTime));
+					node.Dispose(NodaTime.Duration.FromSeconds(remainingTime));
 					Nodes.RemoveAt(index);
 				}
 

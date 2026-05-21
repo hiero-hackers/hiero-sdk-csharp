@@ -232,11 +232,11 @@ namespace Hiero.SDK.Transactions
 			OnFreezeChunk(bodyBuilder, null, 0, Data.Length, 1, 1);
 			return DoSchedule(bodyBuilder);
 		}
-		public override TransactionResponse Execute(Client client, TimeSpan timeoutPerChunk, Action<TransactionResponse>? onResponse = null)
+		public override TransactionResponse Execute(Client client, NodaTime.Duration timeoutPerChunk, Action<TransactionResponse>? onResponse = null)
         {
             return ExecuteAll(client, timeoutPerChunk)[0];
         }
-		public override async Task<TransactionResponse> ExecuteAsync(Client client, TimeSpan timeoutPerChunk)
+		public override async Task<TransactionResponse> ExecuteAsync(Client client, NodaTime.Duration timeoutPerChunk)
 		{
 			IList<TransactionResponse> responses = await ExecuteAllAsync(client, timeoutPerChunk);
 
@@ -294,8 +294,8 @@ namespace Hiero.SDK.Transactions
         {
             return ExecuteAll(client, client.RequestTimeout);
         }
-        /// <include file="ChunkedTransaction.cs.xml" path='docs/member[@name="M:ChunkedTransaction.ExecuteAll(Client,System.TimeSpan)"]' />
-        public virtual List<TransactionResponse> ExecuteAll(Client client, TimeSpan timeoutPerChunk)
+        /// <include file="ChunkedTransaction.cs.xml" path='docs/member[@name="M:ChunkedTransaction.ExecuteAll(Client,System.NodaTime.Duration)"]' />
+        public virtual List<TransactionResponse> ExecuteAll(Client client, NodaTime.Duration timeoutPerChunk)
         {
             FreezeAndSign(client);
             var responses = new List<TransactionResponse>(TransactionIds.Count);
@@ -322,8 +322,8 @@ namespace Hiero.SDK.Transactions
         {
             return ExecuteAllAsync(client, client.RequestTimeout);
         }
-        /// <include file="ChunkedTransaction.cs.xml" path='docs/member[@name="M:ChunkedTransaction.ExecuteAllAsync(Client,System.TimeSpan)"]' />
-        public virtual async Task<IList<TransactionResponse>> ExecuteAllAsync(Client client, TimeSpan timeoutPerChunk)
+        /// <include file="ChunkedTransaction.cs.xml" path='docs/member[@name="M:ChunkedTransaction.ExecuteAllAsync(Client,System.NodaTime.Duration)"]' />
+        public virtual async Task<IList<TransactionResponse>> ExecuteAllAsync(Client client, NodaTime.Duration timeoutPerChunk)
         {
             FreezeAndSign(client);
 
@@ -346,8 +346,8 @@ namespace Hiero.SDK.Transactions
         {
 			Utils.ActionHelper.Action(ExecuteAllAsync(client), callback);
 		}
-        /// <include file="ChunkedTransaction.cs.xml" path='docs/member[@name="M:ChunkedTransaction.ExecuteAllAsync(Client,System.TimeSpan,System.Action{System.Collections.Generic.IList{TransactionResponse},System.Exception})"]' />
-        public virtual async void ExecuteAllAsync(Client client, TimeSpan timeout, Action<IList<TransactionResponse>?, Exception?> callback)
+        /// <include file="ChunkedTransaction.cs.xml" path='docs/member[@name="M:ChunkedTransaction.ExecuteAllAsync(Client,System.NodaTime.Duration,System.Action{System.Collections.Generic.IList{TransactionResponse},System.Exception})"]' />
+        public virtual async void ExecuteAllAsync(Client client, NodaTime.Duration timeout, Action<IList<TransactionResponse>?, Exception?> callback)
         {
 			Utils.ActionHelper.Action(ExecuteAllAsync(client, timeout), callback);
 		}
@@ -356,8 +356,8 @@ namespace Hiero.SDK.Transactions
         {
 			Utils.ActionHelper.TwoActions(ExecuteAllAsync(client), onSuccess, onFailure);
 		}
-        /// <include file="ChunkedTransaction.cs.xml" path='docs/member[@name="M:ChunkedTransaction.ExecuteAllAsync(Client,System.TimeSpan,System.Action{System.Collections.Generic.IList{TransactionResponse}},System.Action{System.Exception})"]' />
-        public virtual async void ExecuteAllAsync(Client client, TimeSpan timeout, Action<IList<TransactionResponse>> onSuccess, Action<Exception> onFailure)
+        /// <include file="ChunkedTransaction.cs.xml" path='docs/member[@name="M:ChunkedTransaction.ExecuteAllAsync(Client,System.NodaTime.Duration,System.Action{System.Collections.Generic.IList{TransactionResponse}},System.Action{System.Exception})"]' />
+        public virtual async void ExecuteAllAsync(Client client, NodaTime.Duration timeout, Action<IList<TransactionResponse>> onSuccess, Action<Exception> onFailure)
         {
 			Utils.ActionHelper.TwoActions(ExecuteAllAsync(client, timeout), onSuccess, onFailure);
 		}      

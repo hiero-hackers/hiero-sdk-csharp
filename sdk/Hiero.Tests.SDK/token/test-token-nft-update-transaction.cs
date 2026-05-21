@@ -23,7 +23,7 @@ namespace Hiero.Tests.SDK.Nfts
         private static readonly TokenId testTokenId = TokenId.FromString("4.2.0");
         private static readonly List<long> testSerialNumbers = [8, 9, 10];
         private static readonly byte[] testMetadata = [1, 2, 3, 4, 5];
-        private readonly DateTimeOffset validStart = DateTimeOffset.FromUnixTimeMilliseconds(1554158542);
+        private readonly NodaTime.Instant validStart = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
 
         public virtual void ShouldSerialize()
         {

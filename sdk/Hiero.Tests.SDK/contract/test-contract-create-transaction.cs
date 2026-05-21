@@ -21,7 +21,7 @@ namespace Hiero.Tests.SDK.Contract
     public class ContractCreateTransactionTest
     {
         private static readonly PrivateKey unusedPrivateKey = PrivateKey.FromString("302e020100300506032b657004220420db484b828e64b2d8f12ce3c0a0e93a0b8cce7af1bb8f39c97732394482538e10");
-        private readonly DateTimeOffset validStart = DateTimeOffset.FromUnixTimeMilliseconds(1554158542);
+        private readonly NodaTime.Instant validStart = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
 
         public virtual void ShouldSerialize()
         {
@@ -55,7 +55,7 @@ namespace Hiero.Tests.SDK.Contract
 				InitialBalance = Hbar.FromTinybars(1000),
 				StakedAccountId = AccountId.FromString("0.0.3"),
                 MaxAutomaticTokenAssociations = 101,
-				AutoRenewPeriod = TimeSpan.FromHours(10),
+				AutoRenewPeriod = NodaTime.Duration.FromHours(10),
 				ConstructorParameters = ByteString.CopyFrom([10, 11, 12, 13, 25]),
 				MaxTransactionFee = Hbar.FromTinybars(100000),
 				AutoRenewAccountId = new AccountId(0, 0, 30),
@@ -76,7 +76,7 @@ namespace Hiero.Tests.SDK.Contract
 				InitialBalance = Hbar.FromTinybars(1000),
 				StakedNodeId = 4,
 				MaxAutomaticTokenAssociations = 101,
-				AutoRenewPeriod = TimeSpan.FromHours(10),
+				AutoRenewPeriod = NodaTime.Duration.FromHours(10),
 				ConstructorParameters = ByteString.CopyFrom([ 10, 11, 12, 13, 25 ]),
 				MaxTransactionFee = Hbar.FromTinybars(100000),
 				AutoRenewAccountId = new AccountId(0, 0, 30),

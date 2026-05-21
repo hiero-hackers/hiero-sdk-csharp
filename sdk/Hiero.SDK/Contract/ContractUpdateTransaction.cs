@@ -39,7 +39,7 @@ namespace Hiero.SDK.Contract
 			}
 		}
 		/// <include file="ContractUpdateTransaction.cs.xml" path='docs/member[@name="M:ContractUpdateTransaction.RequireNotFrozen_2"]' />
-		public DateTimeOffset? ExpirationTime
+		public NodaTime.Instant? ExpirationTime
 		{
 			get;
 			set
@@ -50,7 +50,7 @@ namespace Hiero.SDK.Contract
                     ExpirationTimeDuration = null;
             }
 		}
-		public TimeSpan? ExpirationTimeDuration
+		public NodaTime.Duration? ExpirationTimeDuration
 		{
 			get;
 			set
@@ -88,7 +88,7 @@ namespace Hiero.SDK.Contract
 			}
 		}
 		/// <include file="ContractUpdateTransaction.cs.xml" path='docs/member[@name="M:ContractUpdateTransaction.RequireNotFrozen_5"]' />
-		public TimeSpan? AutoRenewPeriod
+		public NodaTime.Duration? AutoRenewPeriod
 		{
 			get;
 			set
@@ -178,13 +178,13 @@ namespace Hiero.SDK.Contract
 
             ContractId = body.ContractId is null? null : ContractId.FromProtobuf(body.ContractId);
             ProxyAccountId = body.ProxyAccountId is null ? null: AccountId.FromProtobuf(body.ProxyAccountId);
-            ExpirationTime = body.ExpirationTime.ToDateTimeOffset();
+            ExpirationTime = body.ExpirationTime.ToNodaTimeInstant();
 
             if (body.AdminKey is not null)
 				AdminKey = Key.FromProtobufKey(body.AdminKey);
 
 			MaxAutomaticTokenAssociations = body.MaxAutomaticTokenAssociations;
-            AutoRenewPeriod = body.AutoRenewPeriod.ToTimeSpan();
+            AutoRenewPeriod = body.AutoRenewPeriod.ToNodaDuration();
             ContractMemo = body.MemoWrapper;
             DeclineStakingReward = body.DeclineReward;
             StakedAccountId = body.StakedAccountId is null ? null : AccountId.FromProtobuf(body.StakedAccountId);

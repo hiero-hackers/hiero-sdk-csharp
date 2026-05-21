@@ -27,13 +27,13 @@ namespace Hiero.SDK.Transactions
 	public static partial class Transaction
 	{
 		/// <include file="Transaction.Statics.cs.xml" path='docs/member[@name="M:FromDays(90)"]' />
-		internal static readonly TimeSpan DEFAULT_AUTO_RENEW_PERIOD = TimeSpan.FromDays(90);
+		internal static readonly NodaTime.Duration DEFAULT_AUTO_RENEW_PERIOD = NodaTime.Duration.FromDays(90);
 		/// <include file="Transaction.Statics.cs.xml" path='docs/member[@name="T:Unknown"]' />
 		internal static readonly AccountId DUMMY_ACCOUNT_ID = new(0, 0, 0);
-		/// <include file="Transaction.Statics.cs.xml" path='docs/member[@name="M:WithValidStart(DUMMY_ACCOUNT_ID,DateTimeOffset.)"]' />
-		internal static readonly TransactionId DUMMY_TRANSACTION_ID = TransactionId.WithValidStart(DUMMY_ACCOUNT_ID, DateTimeOffset.UnixEpoch);
+		/// <include file="Transaction.Statics.cs.xml" path='docs/member[@name="M:WithValidStart(DUMMY_ACCOUNT_ID,NodaTime.Instant.)"]' />
+		internal static readonly TransactionId DUMMY_TRANSACTION_ID = TransactionId.WithValidStart(DUMMY_ACCOUNT_ID, NodaTime.Instant.FromUnixTimeSeconds(0));
 		/// <include file="Transaction.Statics.cs.xml" path='docs/member[@name="M:FromSeconds(120)"]' />
-		internal static readonly TimeSpan DEFAULT_TRANSACTION_VALID_DURATION = TimeSpan.FromSeconds(120);
+		internal static readonly NodaTime.Duration DEFAULT_TRANSACTION_VALID_DURATION = NodaTime.Duration.FromSeconds(120);
 		internal static readonly string ATOMIC_BATCH_NODE_ACCOUNT_ID = "0.0.0";
 
 		/// <include file="Transaction.Statics.cs.xml" path='docs/member[@name="M:FromBytes``1(System.Byte[])"]' />

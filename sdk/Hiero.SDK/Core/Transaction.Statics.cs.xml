@@ -10,7 +10,7 @@
     Dummy account ID used to assist in deserializing incomplete Transactions.
     </summary>
   </member>
-  <member name="M:WithValidStart(DUMMY_ACCOUNT_ID,DateTimeOffset.)">
+  <member name="M:WithValidStart(DUMMY_ACCOUNT_ID,NodaTime.Instant.)">
     <summary>
     Dummy transaction ID used to assist in deserializing incomplete Transactions.
     </summary>

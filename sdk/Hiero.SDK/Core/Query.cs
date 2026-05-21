@@ -223,7 +223,7 @@ namespace Hiero.SDK
 		* @         when the transaction times out
 		* @  when the precheck fails
 		*/
-		public virtual Hbar GetCost(Client client, TimeSpan timeout)
+		public virtual Hbar GetCost(Client client, NodaTime.Duration timeout)
 		{
 			InitWithNodeIds(client);
 
@@ -250,7 +250,7 @@ namespace Hiero.SDK
 		 * @param timeout The timeout after which the execution attempt will be cancelled.
 		 * @return                          Future result of the cost in hbar
 		 */
-		public virtual Task<Hbar> GetCostAsync(Client client, TimeSpan timeout)
+		public virtual Task<Hbar> GetCostAsync(Client client, NodaTime.Duration timeout)
 		{
 			InitWithNodeIds(client);
 
@@ -277,7 +277,7 @@ namespace Hiero.SDK
 		 * @param timeout The timeout after which the execution attempt will be cancelled.
 		 * @param callback a BiConsumer which handles the result or error.
 		 */
-		public virtual async void GetCostAsync(Client client, TimeSpan timeout, Action<Hbar?, Exception?> callback)
+		public virtual async void GetCostAsync(Client client, NodaTime.Duration timeout, Action<Hbar?, Exception?> callback)
 		{
 			Utils.ActionHelper.Action(GetCostAsync(client), callback);
 		}
@@ -300,7 +300,7 @@ namespace Hiero.SDK
 		 * @param onSuccess a Consumer which consumes the result on success.
 		 * @param onFailure a Consumer which consumes the error on failure.
 		 */
-		public virtual void GetCostAsync(Client client, TimeSpan timeout, Action<Hbar> onSuccess, Action<Exception> onFailure)
+		public virtual void GetCostAsync(Client client, NodaTime.Duration timeout, Action<Hbar> onSuccess, Action<Exception> onFailure)
 		{
 			Utils.ActionHelper.TwoActions(GetCostAsync(client, timeout), onSuccess, onFailure);
 		}

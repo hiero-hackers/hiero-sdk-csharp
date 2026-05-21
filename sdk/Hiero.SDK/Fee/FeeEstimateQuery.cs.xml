@@ -10,12 +10,12 @@
     Handle errors during execution.
     </summary>
   </member>
-  <member name="M:HandleAsyncError(Client,System.TimeSpan,FeeEstimateMode,TaskCompletionSource{FeeEstimateResponse},System.Int32,System.Exception)">
+  <member name="M:HandleAsyncError(Client,System.NodaTime.Duration,FeeEstimateMode,TaskCompletionSource{FeeEstimateResponse},System.Int32,System.Exception)">
     <summary>
     Handle async error response.
     </summary>
   </member>
-  <member name="M:HandleAsyncResponse(Client,System.TimeSpan,FeeEstimateMode,TaskCompletionSource{FeeEstimateResponse},System.Int32,HttpResponseMessage)">
+  <member name="M:HandleAsyncResponse(Client,System.NodaTime.Duration,FeeEstimateMode,TaskCompletionSource{FeeEstimateResponse},System.Int32,HttpResponseMessage)">
     <summary>
     Handle async success response.
     </summary>

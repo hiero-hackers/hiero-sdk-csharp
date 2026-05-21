@@ -8,7 +8,7 @@ using System;
 namespace Hiero.SDK
 {
     /// <include file="StakingInfo.cs.xml" path='docs/member[@name="T:StakingInfo"]' />
-    public class StakingInfo(bool declineStakingReward, DateTimeOffset stakePeriodStart, Hbar pendingReward, Hbar stakedToMe, AccountId? stakedAccountId, long? stakedNodeId)
+    public class StakingInfo(bool declineStakingReward, NodaTime.Instant stakePeriodStart, Hbar pendingReward, Hbar stakedToMe, AccountId? stakedAccountId, long? stakedNodeId)
     {
         /// <include file="StakingInfo.cs.xml" path='docs/member[@name="M:StakingInfo.FromBytes(System.Byte[])"]' />
         public static StakingInfo FromBytes(byte[] bytes)
@@ -19,7 +19,7 @@ namespace Hiero.SDK
         {
             return new StakingInfo(
                 info.DeclineReward,
-                info.StakePeriodStart.ToDateTimeOffset(),
+                info.StakePeriodStart.ToNodaTimeInstant(),
                 Hbar.FromTinybars(info.PendingReward),
                 Hbar.FromTinybars(info.StakedToMe),
                 info.StakedAccountId is null ? null : AccountId.FromProtobuf(info.StakedAccountId),
@@ -29,7 +29,7 @@ namespace Hiero.SDK
         /// <include file="StakingInfo.cs.xml" path='docs/member[@name="P:StakingInfo.DeclineStakingReward"]' />
         public bool DeclineStakingReward { get; } = declineStakingReward;
         /// <include file="StakingInfo.cs.xml" path='docs/member[@name="P:StakingInfo.StakePeriodStart"]' />
-        public DateTimeOffset StakePeriodStart { get; } = stakePeriodStart;
+        public NodaTime.Instant StakePeriodStart { get; } = stakePeriodStart;
         /// <include file="StakingInfo.cs.xml" path='docs/member[@name="P:StakingInfo.PendingReward"]' />
         public Hbar PendingReward { get; } = pendingReward;
         /// <include file="StakingInfo.cs.xml" path='docs/member[@name="P:StakingInfo.StakedToMe"]' />

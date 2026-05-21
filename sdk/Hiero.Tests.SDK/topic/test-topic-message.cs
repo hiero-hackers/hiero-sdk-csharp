@@ -1,18 +1,20 @@
 ﻿// SPDX-License-Identifier: Apache-2.0
 using System;
 
+using Hiero.SDK.Core;
 using Hiero.SDK.Consensus;
 using Hiero.SDK.Cryptocurrency;
 
 using Google.Protobuf;
-using Hiero.SDK.Core;
+
+using NodaTime;
 
 namespace Hiero.Tests.SDK.Topic
 {
     /// <include file="test-topic-message.cs.xml" path='docs/member[@name="T:Hiero.Tests.SDK.Topic.TopicMessageTest"]' />
     public class TopicMessageTest
     {
-        private static readonly DateTimeOffset testTimestamp = DateTimeOffset.FromUnixTimeMilliseconds(1554158542);
+        private static readonly NodaTime.Instant testTimestamp = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
         private static readonly byte[] testContents = new byte[]
         {
             0x01,
@@ -41,7 +43,7 @@ namespace Hiero.Tests.SDK.Topic
                 ConsensusTimestamp = new Proto.Services.Timestamp
                 {
                     Seconds = testTimestamp.ToUnixTimeSeconds(),
-                    Nanos = testTimestamp.Nanosecond
+                    Nanos = testTimestamp.ToUnixTimeSecondsAndNanoseconds().nanoseconds
                 }
             };
 
@@ -53,7 +55,7 @@ namespace Hiero.Tests.SDK.Topic
                 ConsensusTimestamp = new Proto.Services.Timestamp
                 {
                     Seconds = testTimestamp.ToUnixTimeSeconds(),
-                    Nanos = testTimestamp.Nanosecond
+                    Nanos = testTimestamp.ToUnixTimeSecondsAndNanoseconds().nanoseconds
                 }
             });
             TopicMessageChunk[] topicMessageChunkArr = new[]
@@ -83,7 +85,7 @@ namespace Hiero.Tests.SDK.Topic
                 ConsensusTimestamp = new Proto.Services.Timestamp
                 {
                     Seconds = testTimestamp.ToUnixTimeSeconds(),
-                    Nanos = testTimestamp.Nanosecond
+                    Nanos = testTimestamp.ToUnixTimeSecondsAndNanoseconds().nanoseconds
                 }
             };
             
@@ -114,7 +116,7 @@ namespace Hiero.Tests.SDK.Topic
                 ConsensusTimestamp = new Proto.Services.Timestamp
                 {
                     Seconds = testTimestamp.ToUnixTimeSeconds(),
-                    Nanos = testTimestamp.Nanosecond
+                    Nanos = testTimestamp.ToUnixTimeSecondsAndNanoseconds().nanoseconds
                 }
             };
             var consensusTopicResponse2 = new Proto.Mirror.ConsensusTopicResponse
@@ -131,7 +133,7 @@ namespace Hiero.Tests.SDK.Topic
                 ConsensusTimestamp = new Proto.Services.Timestamp
                 {
                     Seconds = testTimestamp.ToUnixTimeSeconds() + 1,
-                    Nanos = testTimestamp.Nanosecond
+                    Nanos = testTimestamp.ToUnixTimeSecondsAndNanoseconds().nanoseconds
                 }
             };
             
@@ -140,7 +142,7 @@ namespace Hiero.Tests.SDK.Topic
             
             Array.Copy(testContents, 0, totalContents, 0, testContents.Length);
             Array.Copy(testContents, 0, totalContents, testContents.Length, testContents.Length);
-            Assert.Equal(testTimestamp.AddSeconds(1), topicMessage.ConsensusTimestamp);
+            Assert.Equal(testTimestamp.PlusSeconds(1), topicMessage.ConsensusTimestamp);
             Assert.Equal(totalContents, topicMessage.Contents);
             Assert.Equal(testRunningHash, topicMessage.RunningHash);
             Assert.Equal(testSequenceNumber + 1, topicMessage.SequenceNumber);

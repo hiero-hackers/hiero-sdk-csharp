@@ -18,7 +18,7 @@ namespace Hiero.Tests.SDK.Transactions
     public class CryptoTransferTransactionTest
     {
         private static readonly PrivateKey unusedPrivateKey = KeyTestDataFactory.ED25519_TEST_KEY;
-        private readonly DateTimeOffset validStart = TransactionTestFactory.DEFAULT_VALID_START;
+        private readonly NodaTime.Instant validStart = TransactionTestFactory.DEFAULT_VALID_START;
 
         public virtual void ShouldSerialize()
         {

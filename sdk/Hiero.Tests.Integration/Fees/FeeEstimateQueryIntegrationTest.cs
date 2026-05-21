@@ -20,7 +20,7 @@ namespace Hiero.Tests.Integration.Fees
     /// <include file="FeeEstimateQueryIntegrationTest.cs.xml" path='docs/member[@name="T:Hiero.Tests.Integration.FeeEstimateQueryIntegrationTest"]' />
     public class FeeEstimateQueryIntegrationTest
     {
-        private static readonly long MIRROR_SYNC_DELAY_MILLIS = (long)TimeSpan.FromSeconds(2).TotalMilliseconds;
+        private static readonly long MIRROR_SYNC_DELAY_MILLIS = (long)NodaTime.Duration.FromSeconds(2).TotalMilliseconds;
         
         private IntegrationTestEnv CreateFeeEstimateTestEnv()
         {
