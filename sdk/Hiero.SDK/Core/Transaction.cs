@@ -336,12 +336,14 @@ namespace Hiero.SDK.Core
             return builder;
 		}
 
-        protected virtual ListGuarded<TType> GenerateListGuarded<TType>(ListGuarded<TType>? list = null)
+        protected virtual ListGuarded<TType> GenerateListGuarded<TType>(ListGuarded<TType>? list = null, Action<ListGuarded<TType>>? init = null)
         {
 			list ??= [];
 			list.OnRequireNotFrozen = RequireNotFrozen;
 
-			return list;
+			init?.Invoke(list);
+
+            return list;
         }
 
         /// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.AddSignature(PublicKey,System.Byte[])"]' />
@@ -606,7 +608,7 @@ namespace Hiero.SDK.Core
 
 			var nextTransactionId = initialTransactionId.ToProtobuf();
 			TransactionIds.EnsureCapacity(count);
-			TransactionIds.Clear();
+			TransactionIds.Operate(_ => _.Clear());
 			for (int i = 0; i < count; i++)
 			{
 				TransactionIds.Operate(_ => _.Add(TransactionId.FromProtobuf(nextTransactionId)));

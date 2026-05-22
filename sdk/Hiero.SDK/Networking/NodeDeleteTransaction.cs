@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
-using Google.Protobuf;
 using Google.Protobuf.Reflection;
+
 using Hiero.SDK.Core;
 using Hiero.SDK.Cryptocurrency;
 
@@ -28,7 +28,7 @@ namespace Hiero.SDK.Networking
 		/// <include file="NodeDeleteTransaction.cs.xml" path='docs/member[@name="M:NodeDeleteTransaction.RequireNotFrozen"]' />
 		public virtual ulong? NodeId
         {
-            get;
+			get => field ?? throw new InvalidOperationException("NodeDeleteTransaction: 'nodeId' has not been set");
             set
             {
 				RequireNotFrozen();

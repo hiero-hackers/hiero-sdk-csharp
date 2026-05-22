@@ -83,7 +83,7 @@ namespace Hiero.Tests.SDK.Contract
             Assert.Equal(result[0], hookDetails);
 
             // Verify it returns a copy
-            result.Clear();
+            result.Operate(_ => _.Clear());
             Assert.Single(tx.HookCreationDetails_);
         }
         [Fact]
@@ -97,7 +97,7 @@ namespace Hiero.Tests.SDK.Contract
             Assert.True(result.Contains(123L));
 
             // Verify it returns a copy
-            result.Clear();
+            result.Operate(_ => _.Clear());
             Assert.Single(tx.HookIdsToDelete);
         }
         [Fact]

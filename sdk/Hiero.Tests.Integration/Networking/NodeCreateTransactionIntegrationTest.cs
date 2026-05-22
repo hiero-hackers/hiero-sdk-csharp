@@ -75,8 +75,8 @@ namespace Hiero.Tests.Integration.Networking
 					AdminKey = adminKey,
 					Description = description,
 					GossipCaCertificate = validGossipCert,
-					GossipEndpoints = [endpoint, endpoint2],
-					ServiceEndpoints = [endpoint, endpoint2],
+					GossipEndpoints = new (endpoint, endpoint2),
+					ServiceEndpoints = new (endpoint, endpoint2),
 					DeclineReward = true,
 					GrpcWebProxyEndpoint = grpcWebProxyEndpoint,
 				}

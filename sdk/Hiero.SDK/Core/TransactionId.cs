@@ -120,7 +120,7 @@ namespace Hiero.SDK.Core
 
             (long seconds, int nanoseconds) = ValidStart.Value.ToUnixTimeSecondsAndNanoseconds();
 
-            return "@" + seconds + "." + nanoseconds + (Scheduled ? "?scheduled" : "") + (Nonce != null ? "/" + Nonce : "");
+            return string.Format("@{0}.{1:D9}{2}{3}", seconds, nanoseconds, Scheduled ? "?scheduled" : string.Empty, Nonce != null ? "/" + Nonce : string.Empty);
 		}
 
 		/// <include file="TransactionId.cs.xml" path='docs/member[@name="M:TransactionId.GetReceipt(Client)"]' />

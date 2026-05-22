@@ -80,7 +80,7 @@ namespace Hiero.Tests.SDK.Token
             PendingAirdropId pendingAirdropId = new (new AccountId(0, 0, 457), new AccountId(0, 0, 456), new TokenId(0, 0, 123));
             pendingAirdropIds.Add(pendingAirdropId);
             transaction.PendingAirdropIds.Operate(_ => pendingAirdropIds);
-            transaction.PendingAirdropIds.Clear();
+            transaction.PendingAirdropIds.Operate(_ => _.Clear());
             
             Assert.Equal(transaction.PendingAirdropIds.Count, 0);
         }

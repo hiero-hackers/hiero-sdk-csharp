@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: Apache-2.0
 using Google.Protobuf;
 using Google.Protobuf.Reflection;
+
 using Hiero.SDK.Core;
 using Hiero.SDK.Cryptocurrency;
-using Newtonsoft.Json.Serialization;
+
 using System;
 using System.Collections.Generic;
 
@@ -38,7 +39,8 @@ namespace Hiero.SDK.Transactions
         internal ListGuarded<ITransaction> GenerateListGuarded(ListGuarded<ITransaction>? list = null)
         {
             list = base.GenerateListGuarded(list);
-			list.OnValidate = ValidateInnerTransaction;
+			list.OnValidateItem = ValidateInnerTransaction;
+			list.OnRequireNotFrozen = RequireNotFrozen;
 
             return list;
         }

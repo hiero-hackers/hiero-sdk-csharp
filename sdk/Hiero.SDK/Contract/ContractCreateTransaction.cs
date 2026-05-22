@@ -277,7 +277,7 @@ namespace Hiero.SDK.Contract
 			if (body.AutoRenewAccountId is not null) AutoRenewAccountId = AccountId.FromProtobuf(body.AutoRenewAccountId);
 
             // Initialize hook creation details
-            HookCreationDetails_.Clear();
+            HookCreationDetails_.Operate(_ => _.Clear());
 
             foreach (var protoHookDetails in body.HookCreationDetails)
 				HookCreationDetails_.Operate(_ => _.Add(HookCreationDetails.FromProtobuf(protoHookDetails)));

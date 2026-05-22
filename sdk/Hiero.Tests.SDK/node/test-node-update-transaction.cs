@@ -623,7 +623,7 @@ namespace Hiero.Tests.SDK.Node
             };
             var exception = Assert.Throws<ArgumentException>(() => transaction.ServiceEndpoints = [endpoint]);
             
-            Assert.Equal(exception.Message, "Endpoint must not contain both ipAddressV4 and domainName");
+            Assert.Equal("Endpoint must not contain both ipAddressV4 and domainName", exception.Message);
         }
         [Fact]
         /// <include file="test-node-update-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeUpdateTransactionTest.ShouldThrowErrorWhenSettingNullGossipCaCertificate"]' />
@@ -632,7 +632,7 @@ namespace Hiero.Tests.SDK.Node
             var transaction = new NodeUpdateTransaction();
             var exception = Assert.Throws<ArgumentException>(() => transaction.GossipCaCertificate = null);
             
-            Assert.Equal(exception.Message, "Gossip CA certificate must not be null or empty");
+            Assert.Equal("Gossip CA certificate must not be null or empty", exception.Message);
         }
         [Fact]
         /// <include file="test-node-update-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeUpdateTransactionTest.ShouldThrowErrorWhenSettingEmptyGossipCaCertificate"]' />
@@ -641,7 +641,7 @@ namespace Hiero.Tests.SDK.Node
             var transaction = new NodeUpdateTransaction();
             var exception = Assert.Throws<ArgumentException>(() => transaction.GossipCaCertificate = []);
             
-            Assert.Equal(exception.Message, "Gossip CA certificate must not be null or empty");
+            Assert.Equal("Gossip CA certificate must not be null or empty", exception.Message);
         }
         [Fact]
         /// <include file="test-node-update-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeUpdateTransactionTest.ShouldAllowValidGossipCaCertificate"]' />

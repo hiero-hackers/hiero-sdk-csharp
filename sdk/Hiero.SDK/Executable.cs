@@ -257,7 +257,7 @@ namespace Hiero.SDK
         }
 		public virtual void SetNodesFromNodeAccountIds(Client client)
 		{
-			Nodes.Clear();
+			Nodes.Operate(_ => _.Clear());
 
 			// When a single node is explicitly set we get all of its proxies so in case of
 			// failure the system can retry with different proxy on each attempt

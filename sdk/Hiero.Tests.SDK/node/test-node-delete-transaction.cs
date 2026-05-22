@@ -168,7 +168,7 @@ namespace Hiero.Tests.SDK.Node
             var transaction = new NodeDeleteTransaction();
             var exception = Assert.Throws<InvalidOperationException>(() => transaction.NodeId);
 
-            Assert.Equal(exception.Message, "NodeDeleteTransaction: 'nodeId' has not been set");
+            Assert.Equal("NodeDeleteTransaction: 'nodeId' has not been set", exception.Message);
         }
 
         [Fact]

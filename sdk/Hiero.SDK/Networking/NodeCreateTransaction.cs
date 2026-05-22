@@ -1,12 +1,14 @@
 // SPDX-License-Identifier: Apache-2.0
 using Google.Protobuf;
 using Google.Protobuf.Reflection;
+
 using Hiero.SDK.Core;
 using Hiero.SDK.Cryptocurrency;
 using Hiero.SDK.Cryptography;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Hiero.SDK.Networking
@@ -53,57 +55,19 @@ namespace Hiero.SDK.Networking
 			}
 		}
 		/// <include file="NodeCreateTransaction.cs.xml" path='docs/member[@name="M:NodeCreateTransaction.RequireNotFrozen_3"]' />
-		public IList<Endpoint> GossipEndpoints
+		public ListGuarded<Endpoint> GossipEndpoints
 		{
-			get { RequireNotFrozen(); return _GossipEndpoints; }
-			set
-			{
-				if (value.Count == 0)
-				{
-					throw new ArgumentException("Gossip endpoints list must not be empty");
-				}
-
-				if (value.Count > 10)
-				{
-					throw new ArgumentException("Gossip endpoints list must not contain more than 10 entries");
-				}
-
-				foreach (Endpoint endpoint in value)
-				{
-					Endpoint.ValidateNoIpAndDomain(endpoint);
-				}
-
-				_GossipEndpoints = [.. value];
-			}
+			set => field = GenerateListGuarded(value, InitGossipEndpoints);
+			get => field ??= GenerateListGuarded<Endpoint>(null, InitGossipEndpoints);
 		}
-		public IReadOnlyList<Endpoint> GossipEndpoints_Read => _GossipEndpoints.AsReadOnly();
 		/// <include file="NodeCreateTransaction.cs.xml" path='docs/member[@name="M:NodeCreateTransaction.RequireNotFrozen_4"]' />
-		public IList<Endpoint> ServiceEndpoints
-		{
-			get { RequireNotFrozen(); return _ServiceEndpoints; }
-			set
-			{
-				if (value.Count == 0)
-				{
-					throw new ArgumentException("Service endpoints list must not be empty");
-				}
-
-				if (value.Count > 8)
-				{
-					throw new ArgumentException("Service endpoints list must not contain more than 8 entries");
-				}
-
-				foreach (Endpoint endpoint in _ServiceEndpoints)
-				{
-					Endpoint.ValidateNoIpAndDomain(endpoint);
-				}
-
-				_ServiceEndpoints = [.. value];
-			}
-		}
-		public IReadOnlyList<Endpoint> ServiceEndpoints_Read => ServiceEndpoints.AsReadOnly();
-		/// <include file="NodeCreateTransaction.cs.xml" path='docs/member[@name="M:NodeCreateTransaction.RequireNotFrozen_5"]' />
-		public byte[]? GossipCaCertificate
+		public ListGuarded<Endpoint> ServiceEndpoints
+        {
+            set => field = GenerateListGuarded(value, InitServiceEndpoints);
+            get => field ??= GenerateListGuarded<Endpoint>(null, InitServiceEndpoints);
+        }
+        /// <include file="NodeCreateTransaction.cs.xml" path='docs/member[@name="M:NodeCreateTransaction.RequireNotFrozen_5"]' />
+        public byte[]? GossipCaCertificate
 		{
 			get;
 			set
@@ -168,40 +132,27 @@ namespace Hiero.SDK.Networking
 		{
 			var body = SourceTransactionBody.NodeCreate;
 
-			if (body.AccountId is not null)
-			{
-				AccountId = AccountId.FromProtobuf(body.AccountId);
-			}
+            Description = body.Description;
+            DeclineReward = body.DeclineReward;
 
-			Description = body.Description;
-			foreach (var gossipEndpoint in body.GossipEndpoint)
-			{
-				GossipEndpoints.Add(Endpoint.FromProtobuf(gossipEndpoint));
-			}
+            GossipEndpoints = new(body.GossipEndpoint.Select(_ => Endpoint.FromProtobuf(_)));
+            ServiceEndpoints = new(body.ServiceEndpoint.Select(_ => Endpoint.FromProtobuf(_)));
 
-			foreach (var serviceEndpoint in body.ServiceEndpoint)
-			{
-				ServiceEndpoints.Add(Endpoint.FromProtobuf(serviceEndpoint));
-			}
+            if (body.AccountId is not null)
+                AccountId = AccountId.FromProtobuf(body.AccountId);
 
-			var protobufGossipCert = body.GossipCaCertificate;
-			GossipCaCertificate = protobufGossipCert.Equals(ByteString.Empty) ? null : protobufGossipCert.ToByteArray();
+            if (body.AdminKey is not null)
+                AdminKey = Key.FromProtobufKey(body.AdminKey);
 
-			var protobufGrpcCert = body.GrpcCertificateHash;
-			GrpcCertificateHash = protobufGrpcCert.Equals(ByteString.Empty) ? null : protobufGrpcCert.ToByteArray();
+            if (body.GrpcProxyEndpoint is not null)
+                GrpcWebProxyEndpoint = Endpoint.FromProtobuf(body.GrpcProxyEndpoint);
 
-			if (body.AdminKey is not null)
-			{
-				AdminKey = Key.FromProtobufKey(body.AdminKey);
-			}
+			if (body.GossipCaCertificate is not null && body.GossipCaCertificate.Equals(ByteString.Empty) is false)
+				GossipCaCertificate = body.GossipCaCertificate.ToByteArray();
 
-			DeclineReward = body.DeclineReward;
-
-			if (body.GrpcProxyEndpoint is not null)
-			{
-				GrpcWebProxyEndpoint = Endpoint.FromProtobuf(body.GrpcProxyEndpoint);
-			}
-		}
+            if (body.GrpcCertificateHash is not null && body.GrpcCertificateHash.Equals(ByteString.Empty) is false)
+                GrpcCertificateHash = body.GrpcCertificateHash.ToByteArray();			
+        }
 		/// <include file="NodeCreateTransaction.cs.xml" path='docs/member[@name="M:NodeCreateTransaction.ToProtobuf"]' />
 		public virtual Proto.Services.NodeCreateTransactionBody ToProtobuf()
         {
@@ -286,6 +237,31 @@ namespace Hiero.SDK.Networking
         public override void OnScheduled(Proto.Services.SchedulableTransactionBody scheduled)
         {
             scheduled.NodeCreate = ToProtobuf();
+        }
+
+		private void InitGossipEndpoints(ListGuarded<Endpoint> list)
+		{
+            list.OnValidateItem = _ => Endpoint.ValidateNoIpAndDomain(_);
+            list.OnValidatePost = _ =>
+            {
+                if (_.Count == 0)
+                    throw new ArgumentException("Gossip endpoints list must not be empty");
+
+                if (_.Count >= 10)
+                    throw new ArgumentException("Gossip endpoints list must not contain more than 10 entries");
+            };
+        }
+		private void InitServiceEndpoints(ListGuarded<Endpoint> list)
+		{
+            list.OnValidateItem = _ => Endpoint.ValidateNoIpAndDomain(_);
+            list.OnValidatePost = _ =>
+            {
+                if (_.Count == 0)
+                    throw new ArgumentException("Service endpoints list must not be empty");
+
+                if (list.Count >= 8)
+                    throw new ArgumentException("Service endpoints list must not contain more than 8 entries");
+            };
         }
     }
 }

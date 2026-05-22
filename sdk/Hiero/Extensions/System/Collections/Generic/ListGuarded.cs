@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-
+﻿
 namespace System.Collections.Generic
 {
 	public class ListGuarded<T> : IEnumerable<T>
@@ -37,9 +33,12 @@ namespace System.Collections.Generic
 			{
 				OnRequireNotFrozen?.Invoke();
 				OnRequireNotLocked?.Invoke();
-				OnValidate?.Invoke(value);
-				_list[index] = value;
-			}
+				OnValidateItem?.Invoke(value);
+
+                OnValidatePre?.Invoke(Read);
+                _list[index] = value;
+                OnValidatePost?.Invoke(Read);
+            }
 		}
 
 		public int Index { get; set; }
@@ -55,46 +54,35 @@ namespace System.Collections.Generic
 
         public Action OnRequireNotFrozen { get; internal set; }
 		public Action OnRequireNotLocked { get; internal set; }
-		public Action<T>? OnValidate { get; internal set; }
+		public Action<T>? OnValidateItem { get; internal set; }
+		public Action<IReadOnlyList<T>>? OnValidatePre { get; internal set; }
+		public Action<IReadOnlyList<T>>? OnValidatePost { get; internal set; }
 
-        public ListGuarded<T> Operate(Action<List<T>> list)
+        public ListGuarded<T> Operate(Action<ListInternal<T>> list)
         {
             OnRequireNotFrozen?.Invoke();
             OnRequireNotLocked?.Invoke();
 
             list.Invoke(_list);
 
-            if (OnValidate is not null)
-                foreach (T item in _list)
-                    OnValidate?.Invoke(item);
-
-            _list = new ListInternal<T>(this, (List<T>)_list);
+            _list = new ListInternal<T>(this, _list);
 
             return this;
         }
-        public ListGuarded<T> Operate(Func<List<T>, IEnumerable<T>> list)
-		{
-            OnRequireNotFrozen?.Invoke();
-            OnRequireNotLocked?.Invoke();
-
-            List<T> items = [.. list.Invoke((List<T>)_list)];
-
-            if (OnValidate is not null)
-                foreach (T item in items)
-                    OnValidate?.Invoke(item);
-
-            _list = new ListInternal<T>(this, items);
-
-            return this;
-		}
-
-        public void Clear()
+        public ListGuarded<T> Operate(Func<ListInternal<T>, IEnumerable<T>> list)
         {
             OnRequireNotFrozen?.Invoke();
             OnRequireNotLocked?.Invoke();
 
-            _list.Clear();
+            IEnumerable<T> enumerable = list.Invoke(_list);
+
+
+            _list = new ListInternal<T>(this);
+            _list.AddRange(list.Invoke(_list));
+
+            return this;
         }
+
         public void Shuffle()
         {
             OnRequireNotFrozen?.Invoke();
@@ -138,33 +126,48 @@ namespace System.Collections.Generic
 		public static implicit operator T[](ListGuarded<T> list) => [.. list];
 		public static implicit operator List<T>(ListGuarded<T> list) => [.. list];
 
-		private class ListInternal<TT> : List<TT>
+		public class ListInternal<TT> : List<TT>
 		{
-			public ListInternal(ListGuarded<TT> parent) : this(parent, []) { }
-			public ListInternal(ListGuarded<TT> parent, params TT[] values) : this (parent, values as IEnumerable<TT>) { }
-			public ListInternal(ListGuarded<TT> parent, IEnumerable<TT> values)
+            internal ListInternal(ListGuarded<TT> parent) : this(parent, []) { }
+            internal ListInternal(ListGuarded<TT> parent, params TT[] values) : this (parent, values as IEnumerable<TT>) { }
+			internal ListInternal(ListGuarded<TT> parent, IEnumerable<TT> values)
 			{
 				Parent = parent;
 
                 AddRange(values);
 			}
 
-            public ListGuarded<TT> Parent { get; } 
+            public ListGuarded<TT> Parent { get; }
+
+            public void AddRange(params TT[] items)
+            {
+                AddRange(items as IEnumerable<TT>);
+            }
 
             public new void Add(TT item)
             {
-                Parent.OnRequireNotFrozen?.Invoke();
-                Parent.OnRequireNotLocked?.Invoke();
-                Parent.OnValidate?.Invoke(item);
-
+                Parent.OnValidateItem?.Invoke(item);
+                Parent.OnValidatePre?.Invoke(Parent.Read);
                 base.Add(item);
+                Parent.OnValidatePost?.Invoke(Parent.Read);
+            }
+            public new void AddRange(IEnumerable<TT> items)
+            {
+                Parent.OnValidatePre?.Invoke(Parent.Read);
+
+                foreach (TT item in items)
+                {
+                    Parent.OnValidateItem?.Invoke(item);
+                    base.Add(item);
+                }
+
+                Parent.OnValidatePost?.Invoke(Parent.Read);
             }
             public new void Clear()
-            {
-                Parent.OnRequireNotFrozen?.Invoke();
-                Parent.OnRequireNotLocked?.Invoke();
-                
-				base.Clear();
+            {                
+                Parent.OnValidatePre?.Invoke(Parent.Read);
+                base.Clear();
+                Parent.OnValidatePost?.Invoke(Parent.Read);
             }
             public new void CopyTo(TT[] array, int arrayIndex)
             {
@@ -176,25 +179,25 @@ namespace System.Collections.Generic
             }
             public new void Insert(int index, TT item)
             {
-                Parent.OnRequireNotFrozen?.Invoke();
-                Parent.OnRequireNotLocked?.Invoke();
-                Parent.OnValidate?.Invoke(item);
-
+                Parent.OnValidateItem?.Invoke(item);
+                Parent.OnValidatePre?.Invoke(Parent.Read);
                 base.Insert(index, item);
+                Parent.OnValidatePost?.Invoke(Parent.Read);
             }
             public new bool Remove(TT item)
             {
-                Parent.OnRequireNotFrozen?.Invoke();
-                Parent.OnRequireNotLocked?.Invoke();
-                
-				return base.Remove(item);
+                bool result;
+                Parent.OnValidatePre?.Invoke(Parent.Read);
+                result = base.Remove(item);
+                Parent.OnValidatePost?.Invoke(Parent.Read);
+
+                return result;
             }
             public new void RemoveAt(int index)
             {
-                Parent.OnRequireNotFrozen?.Invoke();
-                Parent.OnRequireNotLocked?.Invoke();
-                
-				base.RemoveAt(index);
+                Parent.OnValidatePre?.Invoke(Parent.Read);
+                base.RemoveAt(index);
+                Parent.OnValidatePost?.Invoke(Parent.Read);
             }
         }
     }

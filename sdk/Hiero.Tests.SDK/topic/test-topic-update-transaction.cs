@@ -438,7 +438,7 @@ namespace Hiero.Tests.SDK.Topic
             {
                 CustomFees = customFixedFees
             };
-            topicUpdateTransaction.CustomFees.Clear();
+            topicUpdateTransaction.CustomFees.Operate(_ => _.Clear());
             Assert.Empty(topicUpdateTransaction.CustomFees);
         }
     }

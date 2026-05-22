@@ -80,7 +80,7 @@ namespace Hiero.Tests.SDK.Account
             Assert.Equal(result[0], hookDetails);
 
             // Verify it returns a copy
-            result.Clear();
+            result.Operate(_ => _.Clear());
             Assert.Single(tx.HookCreationDetails);
         }
         [Fact]
@@ -94,7 +94,7 @@ namespace Hiero.Tests.SDK.Account
             Assert.Contains(123, result);
 
             // Verify it returns a copy
-            result.Clear();
+            result.Operate(_ => _.Clear());
             Assert.Single(tx.HookIdsToDelete);
         }
         [Fact]
