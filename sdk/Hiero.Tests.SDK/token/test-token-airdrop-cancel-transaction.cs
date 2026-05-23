@@ -1,7 +1,10 @@
 ﻿// SPDX-License-Identifier: Apache-2.0
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
+using Hiero.SDK;
+using Hiero.SDK.Core;
 using Hiero.SDK.Cryptocurrency;
 using Hiero.SDK.Token;
 using Hiero.SDK.Airdrops;
@@ -10,8 +13,6 @@ using Hiero.SDK.Transactions;
 using Hiero.SDK.Cryptography;
 
 using VerifyXunit;
-using Hiero.SDK;
-using Hiero.SDK.Core;
 
 namespace Hiero.Tests.SDK.Token
 {
@@ -95,8 +96,8 @@ namespace Hiero.Tests.SDK.Token
             transaction.PendingAirdropIds.Operate(_ => _.Add(pendingAirdropId2));
             
             Assert.Equal(2, transaction.PendingAirdropIds.Count);
-            Assert.True(transaction.PendingAirdropIds.Contains(pendingAirdropId1));
-            Assert.True(transaction.PendingAirdropIds.Contains(pendingAirdropId2));
+            Assert.True(transaction.PendingAirdropIds.Read.Contains(pendingAirdropId1));
+            Assert.True(transaction.PendingAirdropIds.Read.Contains(pendingAirdropId2));
         }
         [Fact]
         /// <include file="test-token-airdrop-cancel-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Token.TokenCancelAirdropTransactionTest.TestBuildTransactionBody"]' />

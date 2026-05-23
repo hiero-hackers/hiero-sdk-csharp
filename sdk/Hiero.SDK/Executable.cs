@@ -269,9 +269,11 @@ namespace Hiero.SDK
 					throw new InvalidOperationException("Account ID did not map to valid node in the client's network");
 				}
 
-				Nodes
-					.Operate(_ => _.AddRange(nodeProxies))
-					.Shuffle();
+				Nodes.Operate(_ =>
+				{
+					_.AddRange(nodeProxies);
+					_.Shuffle();
+				});
 				return;
 			}
 

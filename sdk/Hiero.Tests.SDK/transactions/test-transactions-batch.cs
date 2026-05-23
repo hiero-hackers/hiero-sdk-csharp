@@ -255,7 +255,9 @@ namespace Hiero.Tests.SDK.Transactions
 				TransactionId = TransactionId.WithValidStart(AccountId.FromString("0.0.5006"), validStart),
 			
             }.Freeze();
-            
+
+            batchTransaction.InnerTransactions.Operate(_ => _.Add(transactionWithoutBatchKey));
+
             InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => batchTransaction.InnerTransactions.Operate(_ => _.Add(transactionWithoutBatchKey)));
 			Assert.Contains("Batch key needs to be set", exception.Message);
 		}
@@ -271,7 +273,7 @@ namespace Hiero.Tests.SDK.Transactions
 				TransactionId = TransactionId.WithValidStart(AccountId.FromString("0.0.5006"), validStart),
 
 			}.Freeze();
-            
+
             InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => batchTransaction.InnerTransactions.Operate(_ => _.AddRange([validTransaction, transactionWithoutBatchKey])));
 			Assert.Contains("Batch key needs to be set", exception.Message);
 		}

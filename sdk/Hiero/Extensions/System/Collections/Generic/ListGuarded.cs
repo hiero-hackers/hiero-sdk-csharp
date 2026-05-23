@@ -76,30 +76,12 @@ namespace System.Collections.Generic
 
             IEnumerable<T> enumerable = list.Invoke(_list);
 
-
             _list = new ListInternal<T>(this);
-            _list.AddRange(list.Invoke(_list));
+            _list.AddRange(enumerable);
 
             return this;
         }
 
-        public void Shuffle()
-        {
-            OnRequireNotFrozen?.Invoke();
-            OnRequireNotLocked?.Invoke();
-
-            var rng = Random.Shared;
-
-            for (int i = _list.Count - 1; i > 0; i--)
-            {
-                int j = rng.Next(i + 1);
-                (_list[i], _list[j]) = (_list[j], _list[i]);
-            }
-        }
-        public bool Contains(T item)
-        {
-            return _list.Contains(item);
-        }
         public int Advance()
 		{
 			int index = Index;
@@ -143,11 +125,24 @@ namespace System.Collections.Generic
             {
                 AddRange(items as IEnumerable<TT>);
             }
+            public void Shuffle()
+            {
+                Parent.OnRequireNotFrozen?.Invoke();
+                Parent.OnRequireNotLocked?.Invoke();
+
+                var rng = Random.Shared;
+
+                for (int i = Count - 1; i > 0; i--)
+                {
+                    int j = rng.Next(i + 1);
+                    (this[i], this[j]) = (this[j], this[i]);
+                }
+            }
 
             public new void Add(TT item)
             {
-                Parent.OnValidateItem?.Invoke(item);
                 Parent.OnValidatePre?.Invoke(Parent.Read);
+                Parent.OnValidateItem?.Invoke(item);
                 base.Add(item);
                 Parent.OnValidatePost?.Invoke(Parent.Read);
             }
@@ -179,8 +174,8 @@ namespace System.Collections.Generic
             }
             public new void Insert(int index, TT item)
             {
-                Parent.OnValidateItem?.Invoke(item);
                 Parent.OnValidatePre?.Invoke(Parent.Read);
+                Parent.OnValidateItem?.Invoke(item);
                 base.Insert(index, item);
                 Parent.OnValidatePost?.Invoke(Parent.Read);
             }

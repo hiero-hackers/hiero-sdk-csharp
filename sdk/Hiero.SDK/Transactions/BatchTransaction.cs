@@ -30,15 +30,15 @@ namespace Hiero.SDK.Transactions
         }
 
 		/// <include file="BatchTransaction.cs.xml" path='docs/member[@name="M:BatchTransaction.InitFromTransactionBody"]' />
-		public ListGuarded<ITransaction> InnerTransactions 
-		{
-            init => field = GenerateListGuarded(value);
-            get => field ??= GenerateListGuarded<ITransaction>();
+		public ListGuarded<ITransaction> InnerTransactions
+        {
+            get => field ??= GenerateListGuarded_Transaction();
+            init => field = GenerateListGuarded_Transaction(value);
 		}
 
-        internal ListGuarded<ITransaction> GenerateListGuarded(ListGuarded<ITransaction>? list = null)
+        private ListGuarded<ITransaction> GenerateListGuarded_Transaction(ListGuarded<ITransaction>? list = null, Action<ListGuarded<ITransaction>>? init = null)
         {
-            list = base.GenerateListGuarded(list);
+            list = GenerateListGuarded(list);
 			list.OnValidateItem = ValidateInnerTransaction;
 			list.OnRequireNotFrozen = RequireNotFrozen;
 

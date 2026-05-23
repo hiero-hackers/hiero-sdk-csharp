@@ -100,23 +100,20 @@ namespace Hiero.SDK.Token
 		protected virtual T DoAddTokenTransfer(TokenId tokenId, AccountId accountId, long amount, bool isApproved, uint? expectedDecimals, FungibleHookCall? hookCall)
 		{
 			RequireNotFrozen();
+
 			foreach (var transfer in tokenTransfers)
 			{
 				if (transfer.TokenId.Equals(tokenId))
 				{
 					if (transfer.ExpectedDecimals != null && !transfer.ExpectedDecimals.Equals(expectedDecimals))
-					{
-						throw new ArgumentException("expected decimals for a token cannot be changed once set");
-					}
+                        throw new ArgumentException("expected decimals for a token cannot be changed once set");
 
-					if (transfer.AccountId.Equals(accountId) && transfer.IsApproved == isApproved)
+                    if (transfer.AccountId.Equals(accountId) && transfer.IsApproved == isApproved)
 					{
 						if (expectedDecimals != null)
-						{
-							transfer.ExpectedDecimals = expectedDecimals;
-						}
+                            transfer.ExpectedDecimals = expectedDecimals;
 
-						transfer.Amount += amount;
+                        transfer.Amount += amount;
 						transfer.HookCall = hookCall;
 
 						// noinspection unchecked
@@ -125,9 +122,9 @@ namespace Hiero.SDK.Token
 				}
 			}
 
-
 			// Create new record
 			var tt = new TokenTransfer(tokenId, accountId, amount, expectedDecimals, isApproved, hookCall);
+
 			tokenTransfers.Add(tt);
 
 			// noinspection unchecked
@@ -136,6 +133,7 @@ namespace Hiero.SDK.Token
 		protected virtual T DoAddNftTransfer(NftId nftId, AccountId sender, AccountId receiver, bool isApproved, NftHookCall? senderHookCall, NftHookCall? receiverHookCall)
 		{
 			RequireNotFrozen();
+
 			nftTransfers.Add(new TokenNftTransfer(nftId.TokenId, sender, receiver, nftId.Serial, isApproved, senderHookCall, receiverHookCall));
 
 			// noinspection unchecked
