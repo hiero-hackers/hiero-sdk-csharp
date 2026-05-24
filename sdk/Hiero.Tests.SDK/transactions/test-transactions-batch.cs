@@ -256,8 +256,6 @@ namespace Hiero.Tests.SDK.Transactions
 			
             }.Freeze();
 
-            batchTransaction.InnerTransactions.Operate(_ => _.Add(transactionWithoutBatchKey));
-
             InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => batchTransaction.InnerTransactions.Operate(_ => _.Add(transactionWithoutBatchKey)));
 			Assert.Contains("Batch key needs to be set", exception.Message);
 		}

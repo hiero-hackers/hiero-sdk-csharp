@@ -98,7 +98,6 @@ namespace Hiero.SDK.Cryptography
                 return new PrivateKeyECDSA(new BigInteger(1, privateKey), null);
             }
 
-
             // Assume a DER-encoded private key descriptor
             return FromECPrivateKeyInternal(ECPrivateKeyStructure.GetInstance(privateKey));
         }

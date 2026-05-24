@@ -53,9 +53,7 @@ namespace Hiero.SDK.Token
             var body = SourceTransactionBody.TokenDissociate;
 
             if (body.Account is not null)
-            {
-				AccountId = AccountId.FromProtobuf(body.Account);
-            }
+                AccountId = AccountId.FromProtobuf(body.Account);
 
             foreach (var token in body.Tokens)
                 TokenIds.Add(TokenId.FromProtobuf(token));

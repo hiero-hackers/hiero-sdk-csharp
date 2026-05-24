@@ -124,7 +124,7 @@ namespace Hiero.Tests.SDK.Keys
             var cut = Key.FromProtobufKey(protoKey);
 
             // then
-            Assert.Equal(cut.GetType(), typeof(KeyList));
+            Assert.IsType<KeyList>(cut);
             var keyList = (KeyList)cut;
             var actual = keyList.ToProtobufKey().KeyList;
             Assert.Equal(actual.Keys.Count, 2);
@@ -155,7 +155,8 @@ namespace Hiero.Tests.SDK.Keys
             var cut = Key.FromProtobufKey(protoKey);
 
             // then
-            Assert.IsType<KeyList>(cut.GetType());
+            Assert.IsType<KeyList>(cut);
+
             var thresholdKey = (KeyList)cut;
             var actual = thresholdKey.ToProtobufKey().ThresholdKey;
             Assert.Equal(actual.Threshold, (uint)1);
@@ -242,7 +243,7 @@ namespace Hiero.Tests.SDK.Keys
             var protoKey = new Proto.Services.Key { Ed25519 = ByteString.CopyFrom(keyBytes) };
             var bytes = protoKey.ToByteArray();
             var cut = PublicKey.FromBytes(bytes);
-            Assert.IsType<PublicKeyED25519>(cut.GetType());
+            Assert.IsType<PublicKeyED25519>(cut);
             Assert.True(cut.ToBytes().SequenceEqual(keyBytes));
         }
         [Fact]
@@ -251,7 +252,7 @@ namespace Hiero.Tests.SDK.Keys
         {
             var keyBytes = Hex.Decode("3a21034e0441201f2bf9c7d9873c2a9dc3fd451f64b7c05e17e4d781d916e3a11dfd99");
             var cut = PublicKey.FromBytes(keyBytes);
-            Assert.IsType<PublicKeyECDSA>(cut.GetType());
+            Assert.IsType<PublicKeyECDSA>(cut);
             Assert.True(cut.ToProtobufKey().ToByteArray().SequenceEqual(keyBytes));
         }
         [Fact]
@@ -273,7 +274,7 @@ namespace Hiero.Tests.SDK.Keys
             var protoKey = new Proto.Services.Key { KeyList = protoKeyList };
             var bytes = protoKey.ToByteArray();
             var cut = KeyList.FromBytes(bytes);
-            Assert.IsType<KeyList>(cut.GetType());
+            Assert.IsType<KeyList>(cut);
             var keyList = (KeyList)cut;
             var actual = keyList.ToProtobufKey().KeyList;
             Assert.Equal(2, actual.Keys.Count);
@@ -302,7 +303,7 @@ namespace Hiero.Tests.SDK.Keys
             var protoKey = new Proto.Services.Key { ThresholdKey = protoThresholdKey };
             var bytes = protoKey.ToByteArray();
             var cut = KeyList.FromBytes(bytes);
-            Assert.IsType<KeyList>(cut.GetType());
+            Assert.IsType<KeyList>(cut);
             var thresholdKey = (KeyList)cut;
             var actual = thresholdKey.ToProtobufKey().ThresholdKey;
             Assert.Equal((uint)1, actual.Threshold);

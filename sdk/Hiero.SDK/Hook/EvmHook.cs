@@ -4,6 +4,7 @@ using Hiero.SDK.Contract;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Hiero.SDK.Hook
 {
@@ -54,10 +55,11 @@ namespace Hiero.SDK.Hook
         {
             if (this == o)
                 return true;
-            if (o == null || GetType() != o?.GetType())
+
+            if (o is not EvmHook that)
                 return false;
-            EvmHook that = (EvmHook)o;
-            return base.Equals(o) && StorageUpdates.Equals(that.StorageUpdates);
+            
+            return base.Equals(o) && StorageUpdates.SequenceEqual(that.StorageUpdates);
         }
         public override int GetHashCode()
         {

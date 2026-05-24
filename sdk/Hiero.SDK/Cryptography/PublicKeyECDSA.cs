@@ -109,18 +109,12 @@ namespace Hiero.SDK.Cryptography
 		public override bool Equals(object? o)
         {
             if (this == o)
-            {
                 return true;
-            }
 
-            if (o == null || GetType() != o?.GetType())
-            {
+            if (o is not PublicKeyECDSA publicKey)
                 return false;
-            }
 
-            PublicKeyECDSA publicKey = (PublicKeyECDSA)o;
-
-            return Equals(KeyData, publicKey.KeyData);
+            return KeyData.SequenceEqual(publicKey.KeyData);
         }
         public override bool Verify(byte[] message, byte[] signature)
         {

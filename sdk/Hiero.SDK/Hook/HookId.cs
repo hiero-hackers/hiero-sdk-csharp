@@ -29,11 +29,9 @@ namespace Hiero.SDK.Hook
             if (this == o)
                 return true;
 
-            if (o == null || GetType() != o?.GetType())
+            if (o is not HookId hookId1)
                 return false;
             
-            HookId hookId1 = (HookId)o;
-
             return HookId_ == hookId1.HookId_ && EntityId.Equals(hookId1.EntityId);
         }
         public override int GetHashCode()

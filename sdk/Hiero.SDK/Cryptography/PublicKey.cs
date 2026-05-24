@@ -157,22 +157,18 @@ namespace Hiero.SDK.Cryptography
             foreach (var signedTransaction in transaction.InnerSignedTransactions)
             {
                 var found = false;
+                
                 foreach (var sigPair in signedTransaction.SigMap.SigPair)
-                {
                     if (sigPair.PubKeyPrefix.Equals(ByteString.CopyFrom(ToBytesRaw())))
                     {
                         found = true;
-                        if (!Verify(signedTransaction.BodyBytes.ToByteArray(), ExtractSignatureFromProtobuf(sigPair).ToByteArray()))
-                        {
-                            return false;
-                        }
-                    }
-                }
 
-                if (!found)
-                {
+                        if (!Verify(signedTransaction.BodyBytes.ToByteArray(), ExtractSignatureFromProtobuf(sigPair).ToByteArray()))
+                            return false;
+                    }
+
+                if (!found) 
                     return false;
-                }
             }
 
             return true;

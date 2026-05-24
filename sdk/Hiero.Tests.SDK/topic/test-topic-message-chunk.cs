@@ -33,7 +33,7 @@ namespace Hiero.Tests.SDK.Topic
         {
             var consensusTopicResponse = new Proto.Mirror.ConsensusTopicResponse
             {
-                ConsensusTimestamp = new Proto.Services.Timestamp{ Seconds = testTimestamp.ToUnixTimeSeconds() },
+                ConsensusTimestamp = testTimestamp.ToProtoTimestamp(),
                 Message = ByteString.CopyFrom(testContents),
                 RunningHash = ByteString.CopyFrom(testRunningHash),
                 SequenceNumber = testSequenceNumber,

@@ -71,7 +71,7 @@ namespace Hiero.Tests.SDK.Fees
         /// <include file="test-fees-custom-limit.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Fees.CustomFeeLimitTest.TestGetCustomFees"]' />
         public virtual void TestGetCustomFees()
         {
-            Assert.Same(TEST_FEES, TEST_CUSTOM_FEE_LIMIT.CustomFees);
+            Assert.True(TEST_FEES.SequenceEqual(TEST_CUSTOM_FEE_LIMIT.CustomFees));
         }
         [Fact]
         /// <include file="test-fees-custom-limit.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Fees.CustomFeeLimitTest.TestSetCustomFees"]' />

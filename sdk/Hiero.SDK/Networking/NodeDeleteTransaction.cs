@@ -28,7 +28,7 @@ namespace Hiero.SDK.Networking
 		/// <include file="NodeDeleteTransaction.cs.xml" path='docs/member[@name="M:NodeDeleteTransaction.RequireNotFrozen"]' />
 		public virtual ulong? NodeId
         {
-			get => field ?? throw new InvalidOperationException("NodeDeleteTransaction: 'nodeId' has not been set");
+			get;
             set
             {
 				RequireNotFrozen();
@@ -46,12 +46,10 @@ namespace Hiero.SDK.Networking
 		/// <include file="NodeDeleteTransaction.cs.xml" path='docs/member[@name="M:NodeDeleteTransaction.ToProtobuf"]' />
 		public virtual Proto.Services.NodeDeleteTransactionBody ToProtobuf()
 		{
-			var builder = new Proto.Services.NodeDeleteTransactionBody();
-
-			if (NodeId != null)
-				builder.NodeId = NodeId.Value;
-
-			return builder;
+            return new Proto.Services.NodeDeleteTransactionBody
+            {
+                NodeId = NodeId ?? throw new InvalidOperationException("NodeDeleteTransaction: 'nodeId' has not been set")
+            };
 		}
 
 		public override void ValidateChecksums(Client client) { /* No op */ }
@@ -68,11 +66,9 @@ namespace Hiero.SDK.Networking
 		public override NodeDeleteTransaction FreezeWith(Client? client)
 		{
 			if (NodeId == null)
-			{
-				throw new InvalidOperationException("NodeDeleteTransaction: 'nodeId' must be explicitly set before calling freeze().");
-			}
+                throw new InvalidOperationException("NodeDeleteTransaction: 'nodeId' must be explicitly set before calling freeze().");
 
-			return base.FreezeWith(client);
+            return base.FreezeWith(client);
 		}
 		public override MethodDescriptor GetMethodDescriptor()
 		{

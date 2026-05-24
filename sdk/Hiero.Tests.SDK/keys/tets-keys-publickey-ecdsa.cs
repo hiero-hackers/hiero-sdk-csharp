@@ -244,7 +244,7 @@ namespace Hiero.Tests.SDK.Keys
             string expectedEvmAddress = "d8eb8db03c699faa3f47adcdcd2ae91773b10f8b";
             PrivateKey privateKey = PrivateKey.FromStringECDSA(privateKeyString);
             PublicKey key = privateKey.GetPublicKey();
-            Assert.Equal(key.ToEvmAddress().ToString(), expectedEvmAddress);
+            Assert.Equal(expectedEvmAddress, key.ToEvmAddress().ToString());
         }
         [Fact]
         /// <include file="tets-keys-publickey-ecdsa.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Keys.ECDSAPublicKeyTest.DERImportTestVectors"]' />

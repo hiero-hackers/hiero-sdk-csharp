@@ -366,8 +366,6 @@ namespace Hiero.Tests.SDK.Node
 			foreach (Endpoint serviceEndpoint in TEST_SERVICE_ENDPOINTS)
 				transactionBodyBuilder.ServiceEndpoint.Add(serviceEndpoint.ToProtobuf());
 
-
-
 			var nodeCreateTransaction = new NodeCreateTransaction(new Proto.Services.TransactionBody
 			{
 				NodeCreate = transactionBodyBuilder

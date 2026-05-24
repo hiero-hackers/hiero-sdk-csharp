@@ -86,8 +86,9 @@ namespace Hiero.Tests.SDK.Token
 				TokenDissociate = transactionBody
 			};
             var tokenDissociateTransaction = new TokenDissociateTransaction(tx);
-            Assert.Equal(tokenDissociateTransaction.AccountId, testAccountId);
-            Assert.Equal(tokenDissociateTransaction.TokenIds.Count, testTokenIds.Count);
+
+            Assert.Equal(testAccountId, tokenDissociateTransaction.AccountId);
+            Assert.Equal(testTokenIds.Count, tokenDissociateTransaction.TokenIds.Count);
         }
         [Fact]
         /// <include file="test-token-dissociate-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Token.TokenDissociateTransactionTest.GetSetAccountId"]' />

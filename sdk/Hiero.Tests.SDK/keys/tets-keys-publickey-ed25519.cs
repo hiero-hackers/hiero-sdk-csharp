@@ -94,7 +94,7 @@ namespace Hiero.Tests.SDK.Keys
             byte[] key1Bytes = key1.ToBytes();
             PublicKey key2 = PublicKey.FromBytes(key1Bytes);
             byte[] key2Bytes = key2.ToBytes();
-            Assert.Same(key2Bytes, key1Bytes);
+            Assert.True(key2Bytes.SequenceEqual(key1Bytes));
         }
         [Fact]
         /// <include file="tets-keys-publickey-ed25519.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Keys.Ed25519PublicKeyTest.KeyByteSerialization2"]' />
@@ -106,8 +106,8 @@ namespace Hiero.Tests.SDK.Keys
             byte[] key2Bytes = key2.ToBytesRaw();
             PublicKey key3 = PublicKey.FromBytes(key1Bytes);
             byte[] key3Bytes = key3.ToBytesRaw();
-            Assert.Same(key2Bytes, key1Bytes);
-            Assert.Same(key3Bytes, key1Bytes);
+            Assert.True(key2Bytes.SequenceEqual(key1Bytes));
+            Assert.True(key3Bytes.SequenceEqual(key1Bytes));
         }
         [Fact]
         /// <include file="tets-keys-publickey-ed25519.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Keys.Ed25519PublicKeyTest.KeyByteSerialization3"]' />
@@ -119,8 +119,8 @@ namespace Hiero.Tests.SDK.Keys
             byte[] key2Bytes = key2.ToBytesDER();
             PublicKey key3 = PublicKey.FromBytes(key1Bytes);
             byte[] key3Bytes = key3.ToBytesDER();
-            Assert.Same(key2Bytes, key1Bytes);
-            Assert.Same(key3Bytes, key1Bytes);
+            Assert.True(key2Bytes.SequenceEqual(key1Bytes));
+            Assert.True(key3Bytes.SequenceEqual(key1Bytes));
         }
         [Fact]
         /// <include file="tets-keys-publickey-ed25519.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Keys.Ed25519PublicKeyTest.KeyByteSerializationThroughTransaction"]' />

@@ -49,11 +49,11 @@ namespace Hiero.SDK.Hook
 		{
 			if (this == o)
 				return true;
-			if (o == null || GetType() != o.GetType())
-				return false;
-			EvmHookMappingEntries that = (EvmHookMappingEntries)o;
 
-			return Equals(MappingSlot, that.MappingSlot) && Entries.Equals(that.Entries);
+			if (o is not EvmHookMappingEntries that)
+				return false;
+
+			return MappingSlot.SequenceEqual(that.MappingSlot) && Entries.SequenceEqual(that.Entries);
 		}
 		public override int GetHashCode()
 		{

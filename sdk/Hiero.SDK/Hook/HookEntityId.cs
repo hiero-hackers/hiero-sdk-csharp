@@ -55,9 +55,9 @@ namespace Hiero.SDK.Hook
         {
             if (this == o)
                 return true;
-            if (o == null || GetType() != o?.GetType())
+
+            if (o is not HookEntityId that)
                 return false;
-            HookEntityId that = (HookEntityId)o;
 
             return Equals(AccountId, that.AccountId) && Equals(ContractId, that.ContractId);
         }

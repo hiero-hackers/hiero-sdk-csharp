@@ -162,7 +162,6 @@ namespace Hiero.SDK
                 throw new ArgumentException("invalid entropy byte length: " + entropy.Length);
             }
 
-
             // checksum for 256 bits is one byte
             IList<string> wordList;
             List<string> words;

@@ -32,10 +32,9 @@ namespace Hiero.SDK.Hook
         {
             if (this == o)
                 return true;
-            if (o == null || GetType() != o?.GetType())
-                return false;
 
-            HookCall hookCall = (HookCall)o;
+            if (o is not HookCall hookCall)
+                return false;
 
             return Equals(HookId, hookCall.HookId) && EvmHookCall.Equals(hookCall.EvmHookCall);
         }

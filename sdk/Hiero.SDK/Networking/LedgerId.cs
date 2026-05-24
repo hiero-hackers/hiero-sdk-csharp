@@ -109,7 +109,7 @@ namespace Hiero.SDK.Networking
 			if (o is not LedgerId otherId)
 				return false;
 
-			return Equals(IdBytes, otherId.IdBytes);
+			return IdBytes.SequenceEqual(otherId.IdBytes);
 		}
 	}
 }

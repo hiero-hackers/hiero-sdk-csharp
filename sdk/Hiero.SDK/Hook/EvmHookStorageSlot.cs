@@ -44,12 +44,13 @@ namespace Hiero.SDK.Hook
         {
             if (this == o)
                 return true;
-            if (o == null || GetType() != o.GetType())
-                return false;
-            EvmHookStorageSlot that = (EvmHookStorageSlot)o;
 
-            return Equals(Key, that.Key) && Equals(Value, that.Value);
+            if (o is not EvmHookStorageSlot that)
+                return false;
+
+            return Key.SequenceEqual(that.Key) && Value.SequenceEqual(that.Value);
         }
+
         public override int GetHashCode()
         {
             return HashCode.Combine(Key.GetHashCode(), Value.GetHashCode());

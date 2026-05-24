@@ -189,15 +189,15 @@ namespace Hiero.Tests.SDK.Node
 					NodeUpdate = transactionBodyBuilder
 				});
 
-            Assert.Equal(nodeUpdateTransaction.NodeId, TEST_NODE_ID);
-            Assert.Equal(nodeUpdateTransaction.AccountId, TEST_ACCOUNT_ID);
-            Assert.Equal(nodeUpdateTransaction.Description, TEST_DESCRIPTION);
-            Assert.Equal(nodeUpdateTransaction.GossipEndpoints.Count, TEST_GOSSIP_ENDPOINTS.Count);
-            Assert.Equal(nodeUpdateTransaction.ServiceEndpoints.Count, TEST_SERVICE_ENDPOINTS.Count);
-            Assert.Equal(nodeUpdateTransaction.GossipCaCertificate, TEST_GOSSIP_CA_CERTIFICATE);
-            Assert.Equal(nodeUpdateTransaction.GrpcCertificateHash, TEST_GRPC_CERTIFICATE_HASH);
-            Assert.Equal(nodeUpdateTransaction.AdminKey, TEST_ADMIN_KEY);
-            Assert.Equal(nodeUpdateTransaction.DeclineReward, true);
+            Assert.Equal(TEST_NODE_ID, nodeUpdateTransaction.NodeId);
+            Assert.Equal(TEST_ACCOUNT_ID, nodeUpdateTransaction.AccountId);
+            Assert.Equal(TEST_DESCRIPTION, nodeUpdateTransaction.Description);
+            Assert.Equal(TEST_GOSSIP_ENDPOINTS.Count, nodeUpdateTransaction.GossipEndpoints.Count);
+            Assert.Equal(TEST_SERVICE_ENDPOINTS.Count, nodeUpdateTransaction.ServiceEndpoints.Count);
+            Assert.Equal(TEST_GOSSIP_CA_CERTIFICATE, nodeUpdateTransaction.GossipCaCertificate);
+            Assert.Equal(TEST_GRPC_CERTIFICATE_HASH, nodeUpdateTransaction.GrpcCertificateHash);
+            Assert.Equal(TEST_ADMIN_KEY, nodeUpdateTransaction.AdminKey);
+            Assert.Equal(true, nodeUpdateTransaction.DeclineReward);
         }
         [Fact]
         /// <include file="test-node-update-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeUpdateTransactionTest.GetSetNodeId"]' />

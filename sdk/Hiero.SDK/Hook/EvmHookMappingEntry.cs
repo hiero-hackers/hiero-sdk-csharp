@@ -77,11 +77,11 @@ namespace Hiero.SDK.Hook
         {
             if (this == o)
                 return true;
-            if (o == null || GetType() != o.GetType())
-                return false;
-            EvmHookMappingEntry that = (EvmHookMappingEntry)o;
 
-            return Equals(Key, that.Key) && Equals(PreImage, that.PreImage) && Equals(Value, that.Value);
+            if (o is not EvmHookMappingEntry that)
+                return false;
+
+            return Key.SequenceEqual(that.Key) && PreImage.SequenceEqual(that.PreImage) && Value.SequenceEqual(that.Value);
         }
         public override int GetHashCode()
         {

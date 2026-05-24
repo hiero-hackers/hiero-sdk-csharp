@@ -58,10 +58,9 @@ namespace Hiero.SDK.Hook
         {
             if (this == o)
                 return true;
-            if (o == null || GetType() != o?.GetType())
+
+            if (o is not HookCreationDetails that)
                 return false;
-            
-            HookCreationDetails that = (HookCreationDetails)o;
 
             return HookId == that.HookId && ExtensionPoint == that.ExtensionPoint && Hook.Equals(that.Hook) && Equals(AdminKey, that.AdminKey);
         }

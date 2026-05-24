@@ -77,7 +77,7 @@ namespace Hiero.Tests.SDK.Schedule
                     _.PayerAccountId = AccountId.FromString("0.0.222");
                     _.ScheduleMemo = "with-duration";
                     _.MaxTransactionFee = new Hbar(1);
-                    _.ExpirationTime = DateTime.UtcNow.AddSeconds(1234).ToInstant();
+                    _.ExpirationTime = DateTimeOffset.UtcNow.AddSeconds(1234).ToInstant();
                 });
 
             // When expiration is set via Duration, NodaTime.Instant getter should be null

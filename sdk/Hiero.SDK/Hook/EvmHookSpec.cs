@@ -17,9 +17,9 @@ namespace Hiero.SDK.Hook
         {
             if (this == o)
                 return true;
-            if (o == null || GetType() != o?.GetType())
+
+            if (o is not EvmHookSpec that)
                 return false;
-            EvmHookSpec that = (EvmHookSpec)o;
 
             return ContractId.Equals(that.ContractId);
         }

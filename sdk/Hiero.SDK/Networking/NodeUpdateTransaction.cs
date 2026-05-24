@@ -103,7 +103,7 @@ namespace Hiero.SDK.Networking
 					throw new ArgumentException("Service endpoints list must not contain more than 8 entries");
 				}
 
-				foreach (Endpoint endpoint in _ServiceEndpoints)
+				foreach (Endpoint endpoint in value)
 				{
 					Endpoint.ValidateNoIpAndDomain(endpoint);
 				}
@@ -211,10 +211,8 @@ namespace Hiero.SDK.Networking
             var builder = new Proto.Services.NodeUpdateTransactionBody
 			{
 				DeclineReward = DeclineReward,
-			};
-
-			if (NodeId != null)
-				builder.NodeId = NodeId.Value;
+				NodeId = NodeId ?? throw new InvalidOperationException("NodeUpdateTransaction: 'nodeId' has not been set")
+            };
 
 			if (AccountId != null)
 				builder.AccountId = AccountId.ToProtobuf();

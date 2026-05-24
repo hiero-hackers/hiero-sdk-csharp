@@ -39,12 +39,11 @@ namespace Hiero.SDK.Hook
         {
             if (this == o)
                 return true;
-            if (o == null || GetType() != o?.GetType())
+
+            if (o is not EvmHookCall that)
                 return false;
 
-            EvmHookCall that = (EvmHookCall)o;
-
-            return GasLimit == that.GasLimit && Equals(Data, that.Data);
+            return GasLimit == that.GasLimit && Data.SequenceEqual(that.Data);
         }
         public override int GetHashCode()
         {
