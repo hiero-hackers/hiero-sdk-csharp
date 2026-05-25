@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
 // Using fully qualified names to avoid conflicts with generated classes
 using Google.Protobuf;
-
 using System;
+using System.Collections;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Hiero.SDK.Hook
 {
@@ -85,7 +86,7 @@ namespace Hiero.SDK.Hook
         }
         public override int GetHashCode()
         {
-            return HashCode.Combine(Key?.GetHashCode(), PreImage?.GetHashCode(), Value.GetHashCode());
+            return HashCode.Combine(Key?.GetHashCodeEnumerable(), PreImage?.GetHashCodeEnumerable(), Value.GetHashCodeEnumerable());
         }
     }
 }

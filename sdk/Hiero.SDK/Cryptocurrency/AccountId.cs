@@ -276,7 +276,7 @@ namespace Hiero.SDK.Cryptocurrency
 
 		public override int GetHashCode()
         {
-            return HashCode.Combine(Shard, Realm, Num, HashCode.Combine(AliasKey?.ToBytes() ?? EvmAddress?.ToBytes()));
+            return HashCode.Combine(Shard, Realm, Num, AliasKey?.ToBytes().GetHashCodeEnumerable() ?? EvmAddress?.ToBytes().GetHashCodeEnumerable());
         }
         public override bool Equals(object? o)
         {

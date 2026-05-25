@@ -94,7 +94,7 @@ namespace Hiero.SDK.Fee
         }
         public override int GetHashCode()
         {
-            return HashCode.Combine(Mode, NetworkFee, NodeFee, Notes, ServiceFee, Total);
+            return HashCode.Combine(Mode, NetworkFee, NodeFee, Notes.GetHashCodeEnumerable(), ServiceFee, Total);
         }
     }
 }

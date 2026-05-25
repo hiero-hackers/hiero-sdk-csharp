@@ -104,7 +104,7 @@ namespace Hiero.SDK.Cryptography
 
 		public override int GetHashCode()
 		{
-			return HashCode.Combine(KeyData);
+			return HashCode.Combine(KeyData.GetHashCodeEnumerable());
 		}
 		public override bool Equals(object? o)
         {

@@ -86,7 +86,7 @@ namespace Hiero.SDK.Contract
 		/// <include file="ContractFunctionResult.cs.xml" path='docs/member[@name="F:ContractFunctionResult.ContractId"]' />
 		public ContractId ContractId { get; }
         /// <include file="ContractFunctionResult.cs.xml" path='docs/member[@name="F:ContractFunctionResult.EvmAddress"]' />
-        public ContractId EvmAddress { get; }
+        public ContractId? EvmAddress { get; }
         /// <include file="ContractFunctionResult.cs.xml" path='docs/member[@name="F:ContractFunctionResult.ErrorMessage"]' />
         public string? ErrorMessage { get; }
         /// <include file="ContractFunctionResult.cs.xml" path='docs/member[@name="F:ContractFunctionResult.Bloom"]' />
@@ -106,7 +106,7 @@ namespace Hiero.SDK.Contract
         /// <include file="ContractFunctionResult.cs.xml" path='docs/member[@name="F:ContractFunctionResult.ContractFunctionParametersBytes"]' />
         public byte[] ContractFunctionParametersBytes { get; }
         /// <include file="ContractFunctionResult.cs.xml" path='docs/member[@name="F:ContractFunctionResult.SenderAccountId"]' />
-        public AccountId SenderAccountId { get; }
+        public AccountId? SenderAccountId { get; }
         /// <include file="ContractFunctionResult.cs.xml" path='docs/member[@name="F:ContractFunctionResult.ContractNonces"]' />
         public List<ContractNonceInfo> ContractNonces { get; }
         /// <include file="ContractFunctionResult.cs.xml" path='docs/member[@name="F:ContractFunctionResult.SignerNonce"]' />

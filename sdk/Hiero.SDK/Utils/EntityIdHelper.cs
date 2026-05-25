@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
+using Hiero.Reference;
 using Hiero.SDK.Ethereum;
 using Hiero.SDK.Exceptions;
 using Hiero.SDK.Networking;

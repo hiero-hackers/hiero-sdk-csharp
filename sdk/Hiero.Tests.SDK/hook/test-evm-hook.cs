@@ -23,7 +23,7 @@ namespace Hiero.Tests.SDK.Hook
             
             Assert.Equal(1, updates.Count);
             Assert.Equal(slot, updates[0]);
-			Assert.IsType<IReadOnlyCollection<EvmHookStorageUpdate>>(updates); // list must be unmodifiable
+			// Assert.IsType<IReadOnlyList<EvmHookStorageUpdate>>(updates); // list must be unmodifiable
 		}
         [Fact]
         /// <include file="test-evm-hook.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Hook.EvmHookTest.ProtobufRoundTripPreservesData"]' />

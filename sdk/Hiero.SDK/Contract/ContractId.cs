@@ -189,7 +189,7 @@ namespace Hiero.SDK.Contract
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Shard, Realm, Num, HashCode.Combine(EvmAddress));
+            return HashCode.Combine(Shard, Realm, Num, EvmAddress?.GetHashCodeEnumerable());
         }
 
         public override bool Equals(object? o)

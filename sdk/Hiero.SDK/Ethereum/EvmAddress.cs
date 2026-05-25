@@ -10,15 +10,10 @@ using System;
 namespace Hiero.SDK.Ethereum
 {
     /// <include file="EvmAddress.cs.xml" path='docs/member[@name="T:EvmAddress"]' />
-    public sealed class EvmAddress : Key
+    /// <include file="EvmAddress.cs.xml" path='docs/member[@name="M:EvmAddress.#ctor(System.Byte[])"]' />
+    public sealed class EvmAddress(byte[] bytes) : Key
     {
-        private readonly byte[] bytes = [];
-
-        /// <include file="EvmAddress.cs.xml" path='docs/member[@name="M:EvmAddress.#ctor(System.Byte[])"]' />
-        public EvmAddress(byte[] bytes)
-        {
-            Array.Copy(bytes, bytes, bytes.Length);
-        }
+        private readonly byte[] Bytes = [.. bytes];
 
         /// <include file="EvmAddress.cs.xml" path='docs/member[@name="M:EvmAddress.FromString(System.String)"]' />
         public static EvmAddress FromString(string evmAddress)
@@ -50,15 +45,15 @@ namespace Hiero.SDK.Ethereum
         }
         public override byte[] ToBytes()
         {
-            return bytes.CopyArray();
+            return Bytes.CopyArray();
         }
         public override string ToString()
         {
-            return Hex.ToHexString(bytes);
+            return Hex.ToHexString(Bytes);
         }
         public override int GetHashCode()
         {
-            return HashCode.Combine(bytes);
+            return HashCode.Combine(Bytes.GetHashCodeEnumerable());
         }
         public override bool Equals(object? o)
         {
@@ -68,7 +63,7 @@ namespace Hiero.SDK.Ethereum
 			if (o is not EvmAddress other)
 				return false;
 
-            return Equals(bytes, other.bytes);
+            return Equals(Bytes, other.Bytes);
         }
     }
 }

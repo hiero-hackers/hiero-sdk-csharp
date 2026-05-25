@@ -47,7 +47,7 @@ namespace Hiero.SDK.Hook
         }
         public override int GetHashCode()
         {
-            int result = HashCode.Combine(Data);
+            int result = HashCode.Combine(Data.GetHashCodeEnumerable());
             result = 31 * result + GasLimit.GetHashCode();
             return result;
         }

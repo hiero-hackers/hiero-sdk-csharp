@@ -12,7 +12,10 @@ namespace Hiero.SDK.Hook
 	{
 		public EvmHookMappingEntries(byte[] mappingSlot, IEnumerable<EvmHookMappingEntry> entries)
 		{
-			MappingSlot = mappingSlot.CopyArray();
+            ArgumentNullException.ThrowIfNull(mappingSlot, nameof(mappingSlot));
+            ArgumentNullException.ThrowIfNull(entries, nameof(entries));
+
+            MappingSlot = mappingSlot.CopyArray();
 			Entries = [.. entries];
 		}
 		public static EvmHookMappingEntries FromProtobuf(Proto.Services.EvmHookMappingEntries proto)
@@ -57,7 +60,7 @@ namespace Hiero.SDK.Hook
 		}
 		public override int GetHashCode()
 		{
-			return HashCode.Combine(MappingSlot.GetHashCode(), Entries);
+			return HashCode.Combine(MappingSlot.GetHashCodeEnumerable(), Entries.GetHashCodeEnumerable());
 		}
     }
 }

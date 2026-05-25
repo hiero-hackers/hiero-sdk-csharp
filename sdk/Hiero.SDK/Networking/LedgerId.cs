@@ -87,7 +87,7 @@ namespace Hiero.SDK.Networking
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(IdBytes);
+            return HashCode.Combine(IdBytes.GetHashCodeEnumerable());
         }
 		/// <include file="LedgerId.cs.xml" path='docs/member[@name="M:LedgerId.ToString"]' />
 		public override string ToString()

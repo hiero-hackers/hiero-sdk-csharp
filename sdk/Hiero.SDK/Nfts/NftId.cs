@@ -79,12 +79,11 @@ namespace Hiero.SDK.Nfts
                 return true;
             }
 
-            if (!(o is NftId))
+            if (o is not NftId otherId)
             {
                 return false;
             }
 
-            NftId otherId = (NftId)o;
             return TokenId.Equals(otherId.TokenId) && Serial == otherId.Serial;
         }
 

@@ -19,7 +19,7 @@ namespace Hiero.Tests.SDK.Account
         public virtual void TestAccountCreateTransactionWithHooks()
         {
             // Create a test contract ID
-            ContractId contractId = new ContractId(100);
+            ContractId contractId = new (100);
 
             // Create a test admin key
             PrivateKey adminKey = PrivateKey.GenerateED25519();
@@ -35,7 +35,7 @@ namespace Hiero.Tests.SDK.Account
             var hookWithAdmin = new HookCreationDetails(HookExtensionPoint.AccountAllowanceHook, 1, lambdaHookWithStorage, adminKey.GetPublicKey());
             var simpleLambdaHook = new EvmHook(contractId);
             var simpleHook = new HookCreationDetails(HookExtensionPoint.AccountAllowanceHook, 2, simpleLambdaHook);
-            AccountCreateTransaction transaction = new AccountCreateTransaction
+            AccountCreateTransaction transaction = new ()
             {
 				Key = PrivateKey.GenerateED25519().GetPublicKey(),
 				InitialBalance = Hbar.From(100),
@@ -53,7 +53,7 @@ namespace Hiero.Tests.SDK.Account
             Assert.Equal(1, firstHook.HookId);
             Assert.Equal(adminKey.GetPublicKey(), firstHook.AdminKey);
             Assert.NotNull(firstHook.HookId);
-            Assert.Equal(1, firstHook.Hook.StorageUpdates.Count);
+            Assert.Single(firstHook.Hook.StorageUpdates);
 
             // Verify second hook
             HookCreationDetails secondHook = hookDetails[1];
@@ -67,14 +67,14 @@ namespace Hiero.Tests.SDK.Account
         /// <include file="test-account-create-transaction-hooks.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Account.AccountCreateTransactionHooksTest.TestAccountCreateTransactionSetHooks"]' />
         public virtual void TestAccountCreateTransactionSetHooks()
         {
-            ContractId contractId = new ContractId(200);
+            ContractId contractId = new (200);
 
             // Create hook details manually
-            EvmHook lambdaEvmHook = new EvmHook(contractId);
-            HookCreationDetails hookDetails = new HookCreationDetails(HookExtensionPoint.AccountAllowanceHook, 1, lambdaEvmHook);
+            EvmHook lambdaEvmHook = new (contractId);
+            HookCreationDetails hookDetails = new (HookExtensionPoint.AccountAllowanceHook, 1, lambdaEvmHook);
 
             // Set hooks using setHookCreationDetails
-            AccountCreateTransaction transaction = new AccountCreateTransaction
+            AccountCreateTransaction transaction = new ()
             {
 				Key = PrivateKey.GenerateED25519().GetPublicKey(),
 				InitialBalance = Hbar.From(50),
@@ -83,7 +83,7 @@ namespace Hiero.Tests.SDK.Account
 
             // Verify hooks were set
             List<HookCreationDetails> retrievedHooks = transaction.HookCreationDetails;
-            Assert.Equal(1, retrievedHooks.Count);
+            Assert.Single(retrievedHooks);
             Assert.Equal(hookDetails, retrievedHooks[0]);
         }
         [Fact]
@@ -131,7 +131,7 @@ namespace Hiero.Tests.SDK.Account
             var protoBody = transaction.ToProtobuf();
 
             // Verify hook creation details are included
-            Assert.Equal(1, protoBody.HookCreationDetails.Count);
+            Assert.Single(protoBody.HookCreationDetails);
             var protoHookDetails = protoBody.HookCreationDetails[0];
             Assert.Equal(Proto.Services.HookExtensionPoint.AccountAllowanceHook, protoHookDetails.ExtensionPoint);
             Assert.Equal(1, protoHookDetails.HookId);
@@ -142,7 +142,7 @@ namespace Hiero.Tests.SDK.Account
         public virtual void TestAccountCreateTransactionEmptyHooks()
         {
             // Test transaction without hooks
-            AccountCreateTransaction transaction = new AccountCreateTransaction
+            AccountCreateTransaction transaction = new ()
             {
 				Key = PrivateKey.GenerateED25519().GetPublicKey(),
 				InitialBalance = Hbar.From(100)
@@ -150,24 +150,24 @@ namespace Hiero.Tests.SDK.Account
 
             // Verify no hooks
             List<HookCreationDetails> hookDetails = transaction.HookCreationDetails;
-            Assert.True(hookDetails.Count == 0);
+            Assert.Empty(hookDetails);
 
             // Should build successfully
             var protoBody = transaction.ToProtobuf();
 
-            Assert.Equal(0, protoBody.HookCreationDetails.Count);
+            Assert.Empty(protoBody.HookCreationDetails);
         }
         [Fact]
         /// <include file="test-account-create-transaction-hooks.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Account.AccountCreateTransactionHooksTest.TestAccountCreateTransactionHooksPersistThroughBytesRoundTrip"]' />
         public virtual void TestAccountCreateTransactionHooksPersistThroughBytesRoundTrip()
         {
             // Create contract and hook details
-            ContractId contractId = new ContractId(500);
-            EvmHook lambdaEvmHook = new EvmHook(contractId);
-            HookCreationDetails hookDetails = new HookCreationDetails(HookExtensionPoint.AccountAllowanceHook, 3, lambdaEvmHook);
+            ContractId contractId = new (500);
+            EvmHook lambdaEvmHook = new (contractId);
+            HookCreationDetails hookDetails = new (HookExtensionPoint.AccountAllowanceHook, 3, lambdaEvmHook);
 
             // Create transaction with set hooks
-            AccountCreateTransaction originalTx = new AccountCreateTransaction
+            AccountCreateTransaction originalTx = new ()
             {
 				Key = PrivateKey.GenerateED25519().GetPublicKey(),
 				InitialBalance = Hbar.From(123),
@@ -183,12 +183,12 @@ namespace Hiero.Tests.SDK.Account
             // Verify hook information persisted
             List<HookCreationDetails> parsedHooks = parsedTx.HookCreationDetails;
 
-            Assert.Equal(1, parsedHooks.Count);
+            Assert.Single(parsedHooks);
             HookCreationDetails parsedHook = parsedHooks[0];
             Assert.Equal(HookExtensionPoint.AccountAllowanceHook, parsedHook.ExtensionPoint);
             Assert.Equal(3, parsedHook.HookId);
             Assert.NotNull(parsedHook.HookId);
-            Assert.True(parsedHook.Hook.StorageUpdates.Count == 0);
+            Assert.Empty(parsedHook.Hook.StorageUpdates);
         }
     }
 }

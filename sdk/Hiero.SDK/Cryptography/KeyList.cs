@@ -52,7 +52,7 @@ namespace Hiero.SDK.Cryptography
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Keys.GetHashCode(), (int?)Threshold ?? -1);
+            return HashCode.Combine(Keys.GetHashCodeEnumerable(), (int?)Threshold ?? -1);
         }
 		public override bool Equals(object? o)
 		{

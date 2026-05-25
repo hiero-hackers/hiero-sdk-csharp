@@ -1,4 +1,4 @@
-﻿
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace System
@@ -17,5 +17,18 @@ namespace System
 
 			return [.. ts.Skip(start).Take(length)];
 		}
-	}
+
+        public static int GetHashCodeEnumerable<T>(this T[] ts)
+        {
+            return GetHashCodeEnumerable<T>(ts as IEnumerable<T>);
+        }
+        public static int GetHashCodeEnumerable<T>(this IEnumerable<T> ts)
+        {
+            HashCode result = new();
+
+            foreach (T t in ts) result.Add(t);
+
+            return result.ToHashCode();
+        }
+    }
 }

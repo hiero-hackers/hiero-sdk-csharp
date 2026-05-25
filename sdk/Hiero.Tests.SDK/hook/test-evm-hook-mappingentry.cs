@@ -94,13 +94,16 @@ namespace Hiero.Tests.SDK.Hook
         /// <include file="test-evm-hook-mappingentry.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Hook.EvmHookMappingEntryTest.EqualsHashCodeAndToString"]' />
         public virtual void EqualsHashCodeAndToString()
         {
-            var a = EvmHookMappingEntry.OfKey(new byte[] { 0x01 }, new byte[] { 0x02 });
-            var b = EvmHookMappingEntry.OfKey(new byte[] { 0x01 }, new byte[] { 0x02 });
-            var c = EvmHookMappingEntry.OfKey(new byte[] { 0x03 }, new byte[] { 0x04 });
+            var a = EvmHookMappingEntry.OfKey([ 0x01 ], [ 0x02 ]);
+            var b = EvmHookMappingEntry.OfKey([ 0x01 ], [ 0x02 ]);
+            var c = EvmHookMappingEntry.OfKey([ 0x03 ], [ 0x04 ]);
+
             Assert.Equal(a, b);
             Assert.Equal(a.GetHashCode(), b.GetHashCode());
             Assert.NotEqual(a, c);
+            
             var s = a.ToString();
+
             Assert.True(s.Contains("key") || s.Contains("preimage"));
             Assert.True(s.Contains("value"));
         }

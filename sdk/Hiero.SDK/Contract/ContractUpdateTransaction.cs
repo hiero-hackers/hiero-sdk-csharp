@@ -177,14 +177,14 @@ namespace Hiero.SDK.Contract
             var body = SourceTransactionBody.ContractUpdateInstance;
 
             ContractId = body.ContractId is null? null : ContractId.FromProtobuf(body.ContractId);
-            ProxyAccountId = body.ProxyAccountId is null ? null: AccountId.FromProtobuf(body.ProxyAccountId);
-            ExpirationTime = body.ExpirationTime.ToNodaTimeInstant();
+            ProxyAccountId = body.ProxyAccountId is null ? null : AccountId.FromProtobuf(body.ProxyAccountId);
+            ExpirationTime = body.ExpirationTime is null ? null : body.ExpirationTime.ToNodaTimeInstant();
 
             if (body.AdminKey is not null)
 				AdminKey = Key.FromProtobufKey(body.AdminKey);
 
 			MaxAutomaticTokenAssociations = body.MaxAutomaticTokenAssociations;
-            AutoRenewPeriod = body.AutoRenewPeriod.ToNodaDuration();
+            AutoRenewPeriod = body.AutoRenewPeriod is null ? null : body.AutoRenewPeriod.ToNodaDuration();
             ContractMemo = body.MemoWrapper;
             DeclineStakingReward = body.DeclineReward;
             StakedAccountId = body.StakedAccountId is null ? null : AccountId.FromProtobuf(body.StakedAccountId);

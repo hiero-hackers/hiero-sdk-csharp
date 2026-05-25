@@ -63,7 +63,7 @@ namespace Hiero.SDK.Hook
         }
         public override int GetHashCode()
         {
-            return HashCode.Combine(base.GetHashCode(), StorageUpdates);
+            return HashCode.Combine(base.GetHashCode(), StorageUpdates.GetHashCodeEnumerable());
         }
     }
 }

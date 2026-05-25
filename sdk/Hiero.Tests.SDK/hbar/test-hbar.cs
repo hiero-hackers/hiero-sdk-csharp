@@ -82,13 +82,13 @@ namespace Hiero.Tests.SDK.HBar
         /// <include file="test-hbar.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.HBar.HbarTest.FromString"]' />
         public virtual void FromString()
         {
-            Assert.Equal(Hbar.FromString("1").ToTinybars(), 100000000);
-            Assert.Equal(Hbar.FromString("1 ℏ").ToTinybars(), 100000000);
-            Assert.Equal(Hbar.FromString("1.5 mℏ").ToTinybars(), 150000);
-            Assert.Equal(Hbar.FromString("+1.5 mℏ").ToTinybars(), 150000);
-            Assert.Equal(Hbar.FromString("-1.5 mℏ").ToTinybars(), -150000);
-            Assert.Equal(Hbar.FromString("+3").ToTinybars(), 300000000);
-            Assert.Equal(Hbar.FromString("-3").ToTinybars(), -300000000);
+            Assert.Equal(100000000, Hbar.FromString("1").ToTinybars());
+            Assert.Equal( 100000000, Hbar.FromString("1 ℏ").ToTinybars());
+            Assert.Equal( 150000, Hbar.FromString("1.5 mℏ").ToTinybars());
+            Assert.Equal( 150000, Hbar.FromString("+1.5 mℏ").ToTinybars());
+            Assert.Equal(-150000, Hbar.FromString("-1.5 mℏ").ToTinybars());
+            Assert.Equal( 300000000, Hbar.FromString("+3").ToTinybars());
+            Assert.Equal(-300000000, Hbar.FromString("-3").ToTinybars());
             Assert.Throws<ArgumentException>(() =>
             {
                 Hbar.FromString("1 h");

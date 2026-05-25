@@ -95,7 +95,7 @@ namespace Hiero.SDK.Transactions
 				Proto.Services.TransactionBody.DataOneofCase.NodeCreate => new NodeCreateTransaction(txs) as T,
 				Proto.Services.TransactionBody.DataOneofCase.NodeUpdate => new NodeUpdateTransaction(txs) as T,
 				Proto.Services.TransactionBody.DataOneofCase.NodeDelete => new NodeDeleteTransaction(txs) as T,
-				Proto.Services.TransactionBody.DataOneofCase.SystemDelete => new SystemDeleteTransaction(txs) as T,
+                Proto.Services.TransactionBody.DataOneofCase.SystemDelete => new SystemDeleteTransaction(txs) as T,
 				Proto.Services.TransactionBody.DataOneofCase.SystemUndelete => new SystemUndeleteTransaction(txs) as T,
 				Proto.Services.TransactionBody.DataOneofCase.Freeze => new FreezeTransaction(txs) as T,
 				Proto.Services.TransactionBody.DataOneofCase.ConsensusCreateTopic => new TopicCreateTransaction(txs) as T,

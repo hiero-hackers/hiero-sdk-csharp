@@ -30,8 +30,6 @@ namespace Hiero.SDK.Cryptocurrency
      */
     public sealed class AccountCreateTransaction : Transaction<AccountCreateTransaction>
     {
-        private List<HookCreationDetails> _HookCreationDetails = [];
-
 		/// <include file="AccountCreateTransaction.cs.xml" path='docs/member[@name="M:AccountCreateTransaction"]' />
 		public AccountCreateTransaction()
         {
@@ -258,7 +256,7 @@ namespace Hiero.SDK.Cryptocurrency
             Alias = EvmAddress.FromAliasBytes(body.Alias);
 
 			// Initialize hook creation details
-			_HookCreationDetails = [.. body.HookCreationDetails.Select(_ => Hook.HookCreationDetails.FromProtobuf(_))];
+			HookCreationDetails.Operate(_ => _.AddRange(body.HookCreationDetails.Select(_ => Hook.HookCreationDetails.FromProtobuf(_))));
         }
 
 		public override MethodDescriptor GetMethodDescriptor()

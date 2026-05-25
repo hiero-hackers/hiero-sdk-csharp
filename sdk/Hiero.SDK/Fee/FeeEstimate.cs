@@ -49,7 +49,7 @@ namespace Hiero.SDK.Fee
         }
         public override int GetHashCode()
         {
-            return HashCode.Combine(Base, Extras);
+            return HashCode.Combine(Base, Extras.GetHashCodeEnumerable());
         }
     }
 }

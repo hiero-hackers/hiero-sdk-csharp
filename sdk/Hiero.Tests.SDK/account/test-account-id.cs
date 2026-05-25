@@ -214,9 +214,9 @@ namespace Hiero.Tests.SDK.Account
         public virtual void FromEvmAddress()
         {
             var id = AccountId.FromEvmAddress(TestData.EVM_ADDRESS_HEX, 5, 9);
-            Assert.Equal(id.EvmAddress.ToString(), TestData.EVM_ADDRESS_HEX);
-            Assert.Equal(id.Shard, 5);
-            Assert.Equal(id.Realm, 9);
+            Assert.Equal(TestData.EVM_ADDRESS_HEX, id.EvmAddress?.ToString());
+            Assert.Equal(5, id.Shard);
+            Assert.Equal(9, id.Realm);
         }
         [Fact]
         /// <include file="test-account-id.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Account.AccountIdTest.FromEvmAddressWithPrefix"]' />
@@ -233,10 +233,10 @@ namespace Hiero.Tests.SDK.Account
         {
             byte[] expectedBytes = Hex.Decode(TestData.EVM_ADDRESS_NORMAL);
             AccountId id = AccountId.FromEvmAddress(TestData.EVM_ADDRESS_NORMAL, 0, 0);
-            Assert.Equal(id.Shard, 0);
-            Assert.Equal(id.Realm, 0);
-            Assert.Equal(id.Num, 0);
-            Assert.Equal(id.EvmAddress.ToBytes(), expectedBytes);
+            Assert.Equal(0, id.Shard);
+            Assert.Equal(0, id.Realm);
+            Assert.Equal(0, id.Num);
+            Assert.Equal(expectedBytes, id.EvmAddress?.ToBytes());
         }
         [Fact]
         /// <include file="test-account-id.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Account.AccountIdTest.FromEvmAddressWithDifferentShardAndRealm"]' />
@@ -244,10 +244,10 @@ namespace Hiero.Tests.SDK.Account
         {
             byte[] expectedBytes = Hex.Decode(TestData.EVM_ADDRESS_NORMAL);
             AccountId id = AccountId.FromEvmAddress(TestData.EVM_ADDRESS_NORMAL, 1, 1);
-            Assert.Equal(id.Shard, 1);
-            Assert.Equal(id.Realm, 1);
-            Assert.Equal(id.Num, 0);
-            Assert.Equal(id.EvmAddress.ToBytes(), expectedBytes);
+            Assert.Equal(1, id.Shard);
+            Assert.Equal(1, id.Realm);
+            Assert.Equal(0, id.Num);
+            Assert.Equal(expectedBytes, id.EvmAddress?.ToBytes());
         }
         [Fact]
         /// <include file="test-account-id.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Account.AccountIdTest.FromEvmAddressLongZeroAddress"]' />
@@ -255,10 +255,10 @@ namespace Hiero.Tests.SDK.Account
         {
             byte[] expectedBytes = Hex.Decode(TestData.EVM_ADDRESS_LONG_ZERO);
             AccountId id = AccountId.FromEvmAddress(TestData.EVM_ADDRESS_LONG_ZERO, 0, 0);
-            Assert.Equal(id.Shard, 0);
-            Assert.Equal(id.Realm, 0);
-            Assert.Equal(id.Num, 0);
-            Assert.Equal(id.EvmAddress.ToBytes(), expectedBytes);
+            Assert.Equal(0, id.Shard);
+            Assert.Equal(0, id.Realm);
+            Assert.Equal(0, id.Num);
+            Assert.Equal(expectedBytes, id.EvmAddress?.ToBytes());
         }
         [Fact]
         /// <include file="test-account-id.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Account.AccountIdTest.FromEvmAddressLongZeroAddressWithShardAndRealm"]' />
@@ -266,31 +266,31 @@ namespace Hiero.Tests.SDK.Account
         {
             byte[] expectedBytes = Hex.Decode(TestData.EVM_ADDRESS_LONG_ZERO);
             AccountId id = AccountId.FromEvmAddress(TestData.EVM_ADDRESS_LONG_ZERO, 1, 1);
-            Assert.Equal(id.Shard, 1);
-            Assert.Equal(id.Realm, 1);
-            Assert.Equal(id.Num, 0);
-            Assert.Equal(id.EvmAddress.ToBytes(), expectedBytes);
+            Assert.Equal(1, id.Shard);
+            Assert.Equal(1, id.Realm);
+            Assert.Equal(0, id.Num);
+            Assert.Equal(expectedBytes, id.EvmAddress?.ToBytes());
         }
         [Fact]
         /// <include file="test-account-id.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Account.AccountIdTest.ToEvmAddressNormalAccountId"]' />
         public virtual void ToEvmAddressNormalAccountId()
         {
-            AccountId id = new AccountId(0, 0, 123);
-            Assert.Equal(id.ToEvmAddress(), "000000000000000000000000000000000000007b");
+            AccountId id = new (0, 0, 123);
+            Assert.Equal("000000000000000000000000000000000000007b", id.ToEvmAddress());
         }
         [Fact]
         /// <include file="test-account-id.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Account.AccountIdTest.ToEvmAddressWithDifferentShardAndRealm"]' />
         public virtual void ToEvmAddressWithDifferentShardAndRealm()
         {
-            AccountId id = new AccountId(1, 1, 123);
-            Assert.Equal(id.ToEvmAddress(), "000000000000000000000000000000000000007b");
+            AccountId id = new (1, 1, 123);
+            Assert.Equal("000000000000000000000000000000000000007b", id.ToEvmAddress());
         }
         [Fact]
         /// <include file="test-account-id.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Account.AccountIdTest.ToEvmAddressLongZeroAddress"]' />
         public virtual void ToEvmAddressLongZeroAddress()
         {
             AccountId id = AccountId.FromEvmAddress(TestData.EVM_ADDRESS_LONG_ZERO, 1, 1);
-            Assert.Equal(id.ToEvmAddress(), TestData.EVM_ADDRESS_LONG_ZERO.ToLower());
+            Assert.Equal(TestData.EVM_ADDRESS_LONG_ZERO.ToLower(), id.ToEvmAddress());
         }
         [Fact]
         /// <include file="test-account-id.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Account.AccountIdTest.ToEvmAddressNormalEvmAddress"]' />
@@ -298,7 +298,7 @@ namespace Hiero.Tests.SDK.Account
         {
             AccountId id = AccountId.FromEvmAddress(TestData.EVM_ADDRESS_NORMAL, 0, 0);
             string expected = TestData.EVM_ADDRESS_NORMAL.ToLower();
-            Assert.Equal(id.ToEvmAddress(), expected);
+            Assert.Equal(expected, id.ToEvmAddress());
         }
         [Fact]
         /// <include file="test-account-id.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Account.AccountIdTest.ToEvmAddressNormalEvmAddressWithShardAndRealm"]' />
@@ -306,7 +306,7 @@ namespace Hiero.Tests.SDK.Account
         {
             AccountId id = AccountId.FromEvmAddress(TestData.EVM_ADDRESS_NORMAL, 1, 1);
             string expected = TestData.EVM_ADDRESS_NORMAL.ToLower();
-            Assert.Equal(id.ToEvmAddress(), expected);
+            Assert.Equal(expected, id.ToEvmAddress());
         }
     }
 }

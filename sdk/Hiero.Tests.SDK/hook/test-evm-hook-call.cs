@@ -12,7 +12,8 @@ namespace Hiero.Tests.SDK.Hook
         {
             byte[] data = [1,2,3];
             ulong gas = 25000;
-            var call = new EvmHookCall(data, gas);
+
+            EvmHookCall call = new (data, gas);
 
             // getters
             Assert.Equal(call.GasLimit, gas);
@@ -26,7 +27,7 @@ namespace Hiero.Tests.SDK.Hook
 
             // proto round-trip
             var proto = call.ToProtobuf();
-            var parsed = EvmHookCall.FromProtobuf(proto);
+            EvmHookCall parsed = EvmHookCall.FromProtobuf(proto);
 
             Assert.Equal(parsed, call);
             Assert.Equal(parsed.GetHashCode(), call.GetHashCode());
