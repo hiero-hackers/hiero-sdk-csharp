@@ -20,7 +20,7 @@ namespace Hiero.Tests.SDK.Token
         private static readonly AccountId testAccountId = AccountId.FromString("6.9.0");
         private readonly NodaTime.Instant validStart = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
 
-        public virtual void ShouldSerialize()
+        [Fact] public virtual void ShouldSerialize()
         {
             Verifier.Verify(SpawnTestTransaction().ToString());
         }

@@ -52,13 +52,13 @@ namespace Hiero.Tests.Integration.Transactions
 					Key = publicKey,
 					InitialBalance = new Hbar(1),
 				};
-                var expectedNodeAccountIds = accountCreateTransaction.NodeAccountIds.Read;
+                var expectedNodeAccountIds = accountCreateTransaction.NodeAccountIds;
                 var expectedBalance = new Hbar(1);
                 var transactionBytesSerialized = accountCreateTransaction.ToBytes();
                 
                 AccountCreateTransaction accountCreateTransactionDeserialized = Transaction.FromBytes<AccountCreateTransaction>(transactionBytesSerialized);
                 
-                Assert.Equal(expectedNodeAccountIds, accountCreateTransactionDeserialized.NodeAccountIds.Read);
+                Assert.Equal(expectedNodeAccountIds, accountCreateTransactionDeserialized.NodeAccountIds);
                 Assert.Equal(expectedBalance, accountCreateTransactionDeserialized.InitialBalance);
                 Assert.Throws<InvalidOperationException>(() => _ = accountCreateTransactionDeserialized.TransactionId);
             }
@@ -77,13 +77,13 @@ namespace Hiero.Tests.Integration.Transactions
 					Key = publicKey,
 					InitialBalance = new Hbar(1),
 				};
-                var expectedNodeAccountIds = accountCreateTransaction.NodeAccountIds.Read;
+                var expectedNodeAccountIds = accountCreateTransaction.NodeAccountIds;
                 var expectedBalance = new Hbar(1);
                 var transactionBytesSerialized = accountCreateTransaction.ToBytes();
                 
                 AccountCreateTransaction accountCreateTransactionDeserialized = Transaction.FromBytes<AccountCreateTransaction>(transactionBytesSerialized);
                 
-                Assert.Equal(expectedNodeAccountIds.Count, accountCreateTransactionDeserialized.NodeAccountIds.Read.Count);
+                Assert.Equal(expectedNodeAccountIds.Count, accountCreateTransactionDeserialized.NodeAccountIds.Count);
                 Assert.Equal(expectedBalance, accountCreateTransactionDeserialized.InitialBalance);
                 Assert.Throws<InvalidOperationException>(() => _ = accountCreateTransactionDeserialized.TransactionId);
             }
@@ -629,9 +629,9 @@ namespace Hiero.Tests.Integration.Transactions
 				Assert.Equal(tx.GetHbarTransfers()[new AccountId(0, 0, 542348)].ToTinybars(), -10);
 				Assert.Equal(tx.GetHbarTransfers()[new AccountId(0, 0, 47439)].ToTinybars(), 10);
 
-				Assert.NotNull(tx.NodeAccountIds.Read);
-				Assert.Equal(tx.NodeAccountIds.Read.Count, 1);
-				Assert.Equal(tx.NodeAccountIds.Read[0], new AccountId(0, 0, 3));
+				Assert.NotNull(tx.NodeAccountIds);
+				Assert.Equal(tx.NodeAccountIds.Count, 1);
+				Assert.Equal(tx.NodeAccountIds[0], new AccountId(0, 0, 3));
 				
                 Dictionary<AccountId, Dictionary<PublicKey, byte[]>> signatures = tx.GetSignatures();
 

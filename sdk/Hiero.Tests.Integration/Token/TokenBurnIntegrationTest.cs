@@ -161,7 +161,7 @@ namespace Hiero.Tests.Integration.Token
 
                 new TokenBurnTransaction
                 {
-					Serials = mintReceipt.Serials[0..4],
+					Serials = [.. mintReceipt.Serials[0..4]],
 					TokenId = tokenId,
 
 				}.Execute(testEnv.Client).GetReceipt(testEnv.Client);
@@ -222,7 +222,7 @@ namespace Hiero.Tests.Integration.Token
                 {
                     new TokenBurnTransaction
                     {
-						Serials = serials,
+						Serials = [..serials],
 						TokenId = tokenId,
 
 					}.Execute(testEnv.Client).GetReceipt(testEnv.Client);

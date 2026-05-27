@@ -137,8 +137,8 @@ namespace Hiero.SDK.Networking
             Description = body.Description;
             DeclineReward = body.DeclineReward;
 
-            GossipEndpoints = new(body.GossipEndpoint.Select(_ => Endpoint.FromProtobuf(_)));
-            ServiceEndpoints = new(body.ServiceEndpoint.Select(_ => Endpoint.FromProtobuf(_)));
+            GossipEndpoints = [.. body.GossipEndpoint.Select(_ => Endpoint.FromProtobuf(_)) ];
+            ServiceEndpoints = [.. body.ServiceEndpoint.Select(_ => Endpoint.FromProtobuf(_)) ];
 
             if (body.AccountId is not null)
                 AccountId = AccountId.FromProtobuf(body.AccountId);
@@ -247,10 +247,10 @@ namespace Hiero.SDK.Networking
             list.OnValidatePost = _ =>
             {
                 if (_.Count == 0)
-                    throw new ArgumentException("Gossip endpoints list must not be empty");
+                    throw new InvalidOperationException("Gossip endpoints list must not be empty");
 
-                if (_.Count >= 10)
-                    throw new ArgumentException("Gossip endpoints list must not contain more than 10 entries");
+                if (_.Count > 10)
+                    throw new InvalidOperationException("Gossip endpoints list must not contain more than 10 entries");
             };
         }
 		private void InitServiceEndpoints(ListGuarded<Endpoint> list)
@@ -259,10 +259,10 @@ namespace Hiero.SDK.Networking
             list.OnValidatePost = _ =>
             {
                 if (_.Count == 0)
-                    throw new ArgumentException("Service endpoints list must not be empty");
+                    throw new InvalidOperationException("Service endpoints list must not be empty");
 
-                if (list.Count >= 8)
-                    throw new ArgumentException("Service endpoints list must not contain more than 8 entries");
+                if (list.Count > 8)
+                    throw new InvalidOperationException("Service endpoints list must not contain more than 8 entries");
             };
         }
     }

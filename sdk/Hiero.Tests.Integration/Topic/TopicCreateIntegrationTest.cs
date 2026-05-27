@@ -87,8 +87,8 @@ namespace Hiero.Tests.Integration.Topic
 					FeeScheduleKey = testEnv.OperatorKey,
 					SubmitKey = testEnv.OperatorKey,
 					AdminKey = testEnv.OperatorKey,
-					FeeExemptKeys = feeExemptKeys,
-					CustomFees = customFixedFees,
+					FeeExemptKeys = [..feeExemptKeys],
+					CustomFees = [..customFixedFees],
 				}
                 .Execute(testEnv.Client);
 
@@ -145,9 +145,9 @@ namespace Hiero.Tests.Integration.Topic
 				var updateResponse = new TopicUpdateTransaction
                 {
 					TopicId = topicId,
-					FeeExemptKeys = newFeeExemptKeys,
+					FeeExemptKeys = [..newFeeExemptKeys],
 					FeeScheduleKey = newFeeScheduleKey.GetPublicKey(),
-					CustomFees = newCustomFixedFees,
+					CustomFees = [..newCustomFixedFees],
 				
                 }.Execute(testEnv.Client);
                 
@@ -188,7 +188,7 @@ namespace Hiero.Tests.Integration.Topic
 				Action duplicatesExecutable = () => new TopicCreateTransaction
                 {
 					AdminKey = testEnv.OperatorKey,
-					FeeExemptKeys = feeExemptKeyListWithDuplicates,
+					FeeExemptKeys = [..feeExemptKeyListWithDuplicates],
 				
                 }.Execute(testEnv.Client);
 
@@ -215,7 +215,7 @@ namespace Hiero.Tests.Integration.Topic
                 Action exceedKeyListLimitExecutable = () => new TopicCreateTransaction
                 {
 					AdminKey = testEnv.OperatorKey,
-					FeeExemptKeys = feeExemptKeyListExceedingLimit
+					FeeExemptKeys = [..feeExemptKeyListExceedingLimit]
 
                 }.Execute(testEnv.Client).GetReceipt(testEnv.Client);
 
@@ -284,7 +284,7 @@ namespace Hiero.Tests.Integration.Topic
 				Action updateExecutable = () => new TopicUpdateTransaction
                 {
 					TopicId = topicId,
-					CustomFees = customFees,
+					CustomFees = [..customFees],
 				
                 }.Execute(testEnv.Client).GetReceipt(testEnv.Client);
 
@@ -462,8 +462,8 @@ namespace Hiero.Tests.Integration.Topic
 					FeeScheduleKey = testEnv.OperatorKey,
 					SubmitKey = testEnv.OperatorKey,
 					AdminKey = testEnv.OperatorKey,
-					FeeExemptKeys = feeExemptKeys,
-					CustomFees = customFixedFees
+					FeeExemptKeys = [..feeExemptKeys],
+					CustomFees = [..customFixedFees]
 
                 }.Execute(testEnv.Client);
 				var topicId = response.GetReceipt(testEnv.Client).TopicId;
@@ -547,8 +547,8 @@ namespace Hiero.Tests.Integration.Topic
 					FeeScheduleKey = testEnv.OperatorKey,
 					SubmitKey = testEnv.OperatorKey,
 					AdminKey = testEnv.OperatorKey,
-					FeeExemptKeys = feeExemptKeys,
-					CustomFees = customFixedFees,
+					FeeExemptKeys = [..feeExemptKeys],
+					CustomFees = [..customFixedFees],
 				}
 				.Execute(testEnv.Client);
 

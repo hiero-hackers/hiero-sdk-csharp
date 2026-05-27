@@ -225,7 +225,7 @@ namespace Hiero.Tests.Integration.Token
                 List<PendingAirdropId> pendingAirdropIDs = [..record.PendingAirdropRecords.Select(_ => _.PendingAirdropId)];
                 record = new TokenCancelAirdropTransaction
                 {
-					PendingAirdropIds = pendingAirdropIDs,
+					PendingAirdropIds = [..pendingAirdropIDs],
 
 				}.Execute(testEnv.Client).GetRecord(testEnv.Client);
 
@@ -304,7 +304,7 @@ namespace Hiero.Tests.Integration.Token
                 // cancel the all the tokens with the receiver
                 var record = new TokenCancelAirdropTransaction
                 {
-					PendingAirdropIds = pendingAirdropIDs,
+					PendingAirdropIds = [..pendingAirdropIDs],
 
 				}.Execute(testEnv.Client).GetRecord(testEnv.Client);
 

@@ -35,7 +35,7 @@ namespace Hiero.Tests.Integration.Transactions
                 }.Batchify(testEnv.Client, testEnv.OperatorKey);
 				var batchTransaction = new BatchTransaction { InnerTransactions = tx };
 				batchTransaction.Execute(testEnv.Client).GetReceipt(testEnv.Client);
-                var accountIdInnerTransaction = batchTransaction.InnerTransactions.Read.Select(_ => _.TransactionId).ElementAt(0).AccountId;
+                var accountIdInnerTransaction = batchTransaction.InnerTransactions.Select(_ => _.TransactionId).ElementAt(0).AccountId;
                 var execute = new AccountInfoQuery
                 {
 					AccountId = accountIdInnerTransaction
@@ -90,12 +90,12 @@ namespace Hiero.Tests.Integration.Transactions
 					
                     }.Batchify(testEnv.Client, testEnv.OperatorKey);
 
-                    batchTransaction.InnerTransactions.Operate(_ => _.Add(tx));
+                    batchTransaction.InnerTransactions.Add(tx);
                 }
 
                 batchTransaction.Execute(testEnv.Client).GetReceipt(testEnv.Client);
 
-                foreach (var innerTransactionID in batchTransaction.InnerTransactions.Read.Select(_ => _.TransactionId))
+                foreach (var innerTransactionID in batchTransaction.InnerTransactions.Select(_ => _.TransactionId))
                 {
                     var receipt = new TransactionReceiptQuery
                     {
@@ -133,7 +133,7 @@ namespace Hiero.Tests.Integration.Transactions
 				
                 }.Batchify(testEnv.Client, testEnv.OperatorKey);
                 
-                ArgumentException exception1 = Assert.Throws<ArgumentException>(() => new BatchTransaction().InnerTransactions.Operate(_ => _.Add(freezeTransaction)));
+                ArgumentException exception1 = Assert.Throws<ArgumentException>(() => new BatchTransaction().InnerTransactions.Add(freezeTransaction));
                 Assert.Contains(exception1.Message, "Transaction type FreezeTransaction is not allowed in a batch transaction");
                 
                 var key = PrivateKey.GenerateECDSA();
@@ -150,7 +150,7 @@ namespace Hiero.Tests.Integration.Transactions
                 
                 }.Batchify(testEnv.Client, testEnv.OperatorKey);
 
-                ArgumentException exception2 = Assert.Throws<ArgumentException>(() => new BatchTransaction().InnerTransactions.Operate(_ => _.Add(batchTransaction)));
+                ArgumentException exception2 = Assert.Throws<ArgumentException>(() => new BatchTransaction().InnerTransactions.Add(batchTransaction));
 
                 Assert.Contains(exception2.Message, "Transaction type BatchTransaction is not allowed in a batch transaction");
             }
@@ -174,7 +174,7 @@ namespace Hiero.Tests.Integration.Transactions
 
                 ReceiptStatusException exception = Assert.Throws<ReceiptStatusException>(() =>
                 {
-                    batchTransaction.InnerTransactions.Operate(_ => _.Add(tx));
+                    batchTransaction.InnerTransactions.Add(tx);
                     batchTransaction.Execute(testEnv.Client).GetReceipt(testEnv.Client);
                 });
                 

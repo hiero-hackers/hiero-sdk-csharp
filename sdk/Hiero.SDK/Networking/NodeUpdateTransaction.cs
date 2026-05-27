@@ -62,58 +62,21 @@ namespace Hiero.SDK.Networking
 				field = value;
 			}
 		}
-		/// <include file="NodeUpdateTransaction.cs.xml" path='docs/member[@name="M:NodeUpdateTransaction.RequireNotFrozen_4"]' />
-		public IList<Endpoint> GossipEndpoints
-		{
-			get { RequireNotFrozen(); return _GossipEndpoints; }
-			set
-			{
-				if (value.Count == 0)
-				{
-					throw new ArgumentException("Gossip endpoints list must not be empty");
-				}
+        /// <include file="NodeUpdateTransaction.cs.xml" path='docs/member[@name="M:NodeUpdateTransaction.RequireNotFrozen_4"]' />
+        public ListGuarded<Endpoint> GossipEndpoints
+        {
+            set => field = GenerateListGuarded(value, InitGossipEndpoints);
+            internal get => field ??= GenerateListGuarded<Endpoint>(null, InitGossipEndpoints);
+        }
+        /// <include file="NodeUpdateTransaction.cs.xml" path='docs/member[@name="M:NodeUpdateTransaction.RequireNotFrozen_5"]' />
+        public ListGuarded<Endpoint> ServiceEndpoints
+        {
+            set => field = GenerateListGuarded(value, InitServiceEndpoints);
+            internal get => field ??= GenerateListGuarded<Endpoint>(null, InitServiceEndpoints);
+        }
 
-				if (value.Count > 10)
-				{
-					throw new ArgumentException("Gossip endpoints list must not contain more than 10 entries");
-				}
-
-				foreach (Endpoint endpoint in value)
-				{
-					Endpoint.ValidateNoIpAndDomain(endpoint);
-				}
-
-				_GossipEndpoints = [.. value];
-			}
-		}
-		public IReadOnlyList<Endpoint> GossipEndpoints_Read => _GossipEndpoints.AsReadOnly();
-		/// <include file="NodeUpdateTransaction.cs.xml" path='docs/member[@name="M:NodeUpdateTransaction.RequireNotFrozen_5"]' />
-		public IList<Endpoint> ServiceEndpoints
-		{
-			get { RequireNotFrozen(); return _ServiceEndpoints; }
-			set
-			{
-				if (value.Count == 0)
-				{
-					throw new ArgumentException("Service endpoints list must not be empty");
-				}
-
-				if (value.Count > 8)
-				{
-					throw new ArgumentException("Service endpoints list must not contain more than 8 entries");
-				}
-
-				foreach (Endpoint endpoint in value)
-				{
-					Endpoint.ValidateNoIpAndDomain(endpoint);
-				}
-
-				_ServiceEndpoints = [.. value];
-			}
-		}
-		public IReadOnlyList<Endpoint> ServiceEndpoints_Read => ServiceEndpoints.AsReadOnly();
-		/// <include file="NodeUpdateTransaction.cs.xml" path='docs/member[@name="M:NodeUpdateTransaction.RequireNotFrozen_6"]' />
-		public byte[]? GossipCaCertificate
+        /// <include file="NodeUpdateTransaction.cs.xml" path='docs/member[@name="M:NodeUpdateTransaction.RequireNotFrozen_6"]' />
+        public byte[]? GossipCaCertificate
 		{
 			get;
 			set
@@ -274,5 +237,30 @@ namespace Hiero.SDK.Networking
 
 			return Proto.Services.AddressBookService.Descriptor.FindMethodByName(methodname);
 		}
+
+        private void InitGossipEndpoints(ListGuarded<Endpoint> list)
+        {
+            list.OnValidateItem = _ => Endpoint.ValidateNoIpAndDomain(_);
+            list.OnValidatePost = _ =>
+            {
+                if (_.Count == 0)
+                    throw new InvalidOperationException("Gossip endpoints list must not be empty");
+
+                if (_.Count > 10)
+                    throw new InvalidOperationException("Gossip endpoints list must not contain more than 10 entries");
+            };
+        }
+        private void InitServiceEndpoints(ListGuarded<Endpoint> list)
+        {
+            list.OnValidateItem = _ => Endpoint.ValidateNoIpAndDomain(_);
+            list.OnValidatePost = _ =>
+            {
+                if (_.Count == 0)
+                    throw new InvalidOperationException("Service endpoints list must not be empty");
+
+                if (list.Count > 8)
+                    throw new InvalidOperationException("Service endpoints list must not contain more than 8 entries");
+            };
+        }
     }
 }

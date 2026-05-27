@@ -41,7 +41,7 @@ namespace Hiero.Tests.SDK.Token
             }.Freeze().Sign(privateKey);
         }
 
-        public virtual void ShouldSerialize()
+        [Fact] public virtual void ShouldSerialize()
         {
             Verifier.Verify(SpawnTestTransaction().ToString());
         }

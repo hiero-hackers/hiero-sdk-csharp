@@ -199,7 +199,7 @@ namespace Hiero.Tests.Integration
                 {
 					HookId = hookId,
 					NodeAccountIds = new(testEnv.Client.Network_.Nodes.Select(_ => _.AccountId)),
-					StorageUpdates = updates
+					StorageUpdates = [..updates]
                 }
                 .FreezeWith(testEnv.Client)
                 .Sign(adminKey);

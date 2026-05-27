@@ -30,7 +30,7 @@ namespace Hiero.Tests.SDK.Node
         private static readonly PublicKey TEST_ADMIN_KEY = PrivateKey.FromString("302e020100300506032b65700422042062c4b69e9f45a554e5424fb5a6fe5e6ac1f19ead31dc7718c2d980fd1f998d4b").GetPublicKey();
         readonly NodaTime.Instant TEST_VALID_START = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
 
-        public virtual void ShouldSerialize()
+        [Fact] public virtual void ShouldSerialize()
         {
             Verifier.Verify(SpawnTestTransaction().ToString());
         }
@@ -132,7 +132,7 @@ namespace Hiero.Tests.SDK.Node
         {
             var tx = new NodeCreateTransaction();
             string tooLong = string.Join(string.Empty, Enumerable.Repeat("a", 101));
-			Assert.Throws<ArgumentException>(() => tx.Description = tooLong);
+			Assert.Throws<InvalidOperationException>(() => tx.Description = tooLong);
         }
 		[Fact]
         /// <include file="test-node-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeCreateTransactionTest.SetDescriptionAcceptsExactly100Utf8Bytes"]' />
@@ -157,8 +157,7 @@ namespace Hiero.Tests.SDK.Node
 					Port = 5000 + i,
 				});
 
-
-            Assert.Throws<ArgumentException>(() => tx.GossipEndpoints = [..endpoints]);
+            Assert.Throws<InvalidOperationException>(() => tx.GossipEndpoints = [..endpoints]);
         }
 		[Fact]
         /// <include file="test-node-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeCreateTransactionTest.AddGossipEndpointRejectsMoreThan10"]' />
@@ -173,7 +172,7 @@ namespace Hiero.Tests.SDK.Node
 					Port = 5000 + i
 				});
 
-			Assert.Throws<ArgumentException>(() => tx.GossipEndpoints.Add(new Endpoint
+			Assert.Throws<InvalidOperationException>(() => tx.GossipEndpoints.Add(new Endpoint
             {
 				DomainName = "gossipX.test",
 				Port = 6000
@@ -191,7 +190,7 @@ namespace Hiero.Tests.SDK.Node
 				Port = 5000,
 			};
 
-            Assert.Throws<ArgumentException>(() => tx.GossipEndpoints = [invalid]);
+            Assert.Throws<InvalidOperationException>(() => tx.GossipEndpoints = [invalid]);
         }
 		[Fact]
         /// <include file="test-node-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeCreateTransactionTest.SetServiceEndpointsRejectsMoreThan8"]' />
@@ -206,7 +205,7 @@ namespace Hiero.Tests.SDK.Node
 					Port = 6000 + i,
 				});
 
-			Assert.Throws<ArgumentException>(() => tx.ServiceEndpoints = [..endpoints]);
+			Assert.Throws<InvalidOperationException>(() => tx.ServiceEndpoints = [..endpoints]);
         }
 		[Fact]
         /// <include file="test-node-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeCreateTransactionTest.AddServiceEndpointRejectsMoreThan8"]' />
@@ -220,7 +219,7 @@ namespace Hiero.Tests.SDK.Node
 					Port = 7000 + i,
 				});
 
-			Assert.Throws<ArgumentException>(() => tx.ServiceEndpoints.Add(new Endpoint
+			Assert.Throws<InvalidOperationException>(() => tx.ServiceEndpoints.Add(new Endpoint
 			{
 				DomainName = "svcX.test",
 				Port = 8000,
@@ -238,7 +237,7 @@ namespace Hiero.Tests.SDK.Node
 				Port = 6000
 			};
 
-            Assert.Throws<ArgumentException>(() => tx.ServiceEndpoints = [invalid]);
+            Assert.Throws<InvalidOperationException>(() => tx.ServiceEndpoints = [invalid]);
         }
 		[Fact]
         /// <include file="test-node-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeCreateTransactionTest.SetGossipCaCertificateRejectsEmpty"]' />
@@ -246,7 +245,7 @@ namespace Hiero.Tests.SDK.Node
         {
             var tx = new NodeCreateTransaction();
 
-            Assert.Throws<ArgumentException>(() => tx.GossipCaCertificate = new byte[] { });
+            Assert.Throws<InvalidOperationException>(() => tx.GossipCaCertificate = new byte[] { });
         }
 		[Fact]
         /// <include file="test-node-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeCreateTransactionTest.BuildRewritesGossipFqdnWithServiceIpFallback"]' />
@@ -278,7 +277,7 @@ namespace Hiero.Tests.SDK.Node
 			var rewritten = tx.GossipEndpoints[0];
 
 			// gossip endpoint should now carry IP and no domain
-			Assert.Equal(rewritten.Address, serviceIp);
+			Assert.True(rewritten.Address.SequenceEqual(serviceIp));
             Assert.Empty(rewritten.DomainName);
             Assert.Equal(50211, rewritten.Port);
         }
@@ -342,9 +341,9 @@ namespace Hiero.Tests.SDK.Node
 			};
             var ge = tx.GossipEndpoints[0];
 
-            Assert.True(ge.Address.Length == 0);
-            Assert.Equal(ge.DomainName, "fqdn.example.com");
-            Assert.Equal(ge.Port, 50213);
+            Assert.Empty(ge.Address);
+            Assert.Equal("fqdn.example.com", ge.DomainName);
+            Assert.Equal(50213, ge.Port);
         }
 		[Fact]
         /// <include file="test-node-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeCreateTransactionTest.ConstructNodeCreateTransactionFromTransactionBodyProtobuf"]' />

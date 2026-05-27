@@ -45,7 +45,7 @@ namespace Hiero.Tests.SDK.Ethereum
             Assert.Equal(tx2.ToString(), tx.ToString());
         }
 
-        public virtual void ShouldSerialize()
+        [Fact] public virtual void ShouldSerialize()
         {
             Verifier.Verify(SpawnTestTransaction().ToString());
         }

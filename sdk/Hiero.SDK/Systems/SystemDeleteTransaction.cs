@@ -39,7 +39,7 @@ namespace Hiero.SDK.Systems
 			{
 				RequireNotFrozen();
 				field = value;
-				ContractId = null; // Reset ContractId
+                if (field is not null && ContractId is not null) ContractId = null; // Reset ContractId
 			}
 		}
         /// <include file="SystemDeleteTransaction.cs.xml" path='docs/member[@name="M:RequireNotFrozen_2"]' />
@@ -50,8 +50,8 @@ namespace Hiero.SDK.Systems
             {
 				RequireNotFrozen();
 				field = value;
-				FileId = null; // Reset FileIds
-			}
+				if (field is not null && FileId is not null) FileId = null; // Reset FileIds
+            }
         }
 		/// <include file="SystemDeleteTransaction.cs.xml" path='docs/member[@name="M:RequireNotFrozen_3"]' />
 		public NodaTime.Instant? ExpirationTime
@@ -92,9 +92,9 @@ namespace Hiero.SDK.Systems
         {
 			var body = SourceTransactionBody.SystemDelete;
 
-			FileId = FileId.FromProtobuf(body.FileId);
-			ContractId = ContractId.FromProtobuf(body.ContractId);
-			ExpirationTime = body.ExpirationTime.ToNodaTimeInstant();
+			FileId = body.FileId is null ? null : FileId.FromProtobuf(body.FileId);
+			ContractId = body.ContractId is null ? null : ContractId.FromProtobuf(body.ContractId);
+			ExpirationTime = body.ExpirationTime?.ToNodaTimeInstant();
 		}
 
         public override void ValidateChecksums(Client client)

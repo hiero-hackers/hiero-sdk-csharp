@@ -13,7 +13,7 @@ namespace Hiero.Tests.SDK.Token
     {
         private static readonly TokenId testTokenId = TokenId.FromString("4.2.0");
         
-        public virtual void ShouldSerialize()
+        [Fact] public virtual void ShouldSerialize()
         {
             var builder = new Proto.Services.Query();
             new TokenInfoQuery

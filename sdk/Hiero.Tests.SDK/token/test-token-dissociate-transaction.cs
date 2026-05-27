@@ -22,7 +22,7 @@ namespace Hiero.Tests.SDK.Token
         private static readonly List<TokenId> testTokenIds = [TokenId.FromString("4.2.0"), TokenId.FromString("4.2.1"), TokenId.FromString("4.2.2") ];
         private readonly NodaTime.Instant validStart = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
         
-        public virtual void ShouldSerialize()
+        [Fact] public virtual void ShouldSerialize()
         {
             Verifier.Verify(SpawnTestTransaction().ToString());
         }

@@ -51,6 +51,9 @@ namespace System.Collections.Generic
 
         public int Advance()
         {
+            OnRequireNotFrozen?.Invoke();
+            OnRequireNotLocked?.Invoke();
+
             int index = Index;
             Index = (Index + 1) % Count;
             return index;
@@ -61,10 +64,13 @@ namespace System.Collections.Generic
         }
         public void Set(params T[] items)
         {
-            Set(items);
+            Set(items as IEnumerable<T>);
         }
         public void Set(IEnumerable<T> items)
         {
+            OnRequireNotFrozen?.Invoke();
+            OnRequireNotLocked?.Invoke();
+
             OnValidatePre?.Invoke(AsReadOnly());
 
             base.Clear();
@@ -93,6 +99,9 @@ namespace System.Collections.Generic
 
         public new void Add(T item)
         {
+            OnRequireNotFrozen?.Invoke();
+            OnRequireNotLocked?.Invoke();
+
             OnValidatePre?.Invoke(AsReadOnly());
             OnValidateItem?.Invoke(item);
             base.Add(item);
@@ -100,6 +109,9 @@ namespace System.Collections.Generic
         }
         public new void AddRange(IEnumerable<T> items)
         {
+            OnRequireNotFrozen?.Invoke();
+            OnRequireNotLocked?.Invoke();
+
             OnValidatePre?.Invoke(AsReadOnly());
 
             foreach (T item in items)
@@ -112,20 +124,18 @@ namespace System.Collections.Generic
         }
         public new void Clear()
         {
+            OnRequireNotFrozen?.Invoke();
+            OnRequireNotLocked?.Invoke();
+
             OnValidatePre?.Invoke(AsReadOnly());
             base.Clear();
             OnValidatePost?.Invoke(AsReadOnly());
         }
-        public new void CopyTo(T[] array, int arrayIndex)
-        {
-            base.CopyTo(array, arrayIndex);
-        }
-        public new int IndexOf(T item)
-        {
-            return base.IndexOf(item);
-        }
         public new void Insert(int index, T item)
         {
+            OnRequireNotFrozen?.Invoke();
+            OnRequireNotLocked?.Invoke();
+
             OnValidatePre?.Invoke(AsReadOnly());
             OnValidateItem?.Invoke(item);
             base.Insert(index, item);
@@ -133,6 +143,9 @@ namespace System.Collections.Generic
         }
         public new bool Remove(T item)
         {
+            OnRequireNotFrozen?.Invoke();
+            OnRequireNotLocked?.Invoke();
+
             bool result;
             OnValidatePre?.Invoke(AsReadOnly());
             result = base.Remove(item);
@@ -142,6 +155,9 @@ namespace System.Collections.Generic
         }
         public new void RemoveAt(int index)
         {
+            OnRequireNotFrozen?.Invoke();
+            OnRequireNotLocked?.Invoke();
+
             OnValidatePre?.Invoke(AsReadOnly());
             base.RemoveAt(index);
             OnValidatePost?.Invoke(AsReadOnly());

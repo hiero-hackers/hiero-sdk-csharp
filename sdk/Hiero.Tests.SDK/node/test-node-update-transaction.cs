@@ -75,8 +75,8 @@ namespace Hiero.Tests.SDK.Node
 				NodeId = TEST_NODE_ID,
 				AccountId = TEST_ACCOUNT_ID,
 				Description = TEST_DESCRIPTION,
-				GossipEndpoints = TEST_GOSSIP_ENDPOINTS,
-				ServiceEndpoints = TEST_SERVICE_ENDPOINTS,
+				GossipEndpoints = [..TEST_GOSSIP_ENDPOINTS],
+				ServiceEndpoints = [..TEST_SERVICE_ENDPOINTS],
 				GossipCaCertificate = TEST_GOSSIP_CA_CERTIFICATE,
 				GrpcCertificateHash = TEST_GRPC_CERTIFICATE_HASH,
 				AdminKey = TEST_ADMIN_KEY,
@@ -257,7 +257,7 @@ namespace Hiero.Tests.SDK.Node
         {
             var nodeUpdateTransaction = new NodeUpdateTransaction
             { 
-                GossipEndpoints = TEST_GOSSIP_ENDPOINTS
+                GossipEndpoints = [..TEST_GOSSIP_ENDPOINTS]
             };
             Assert.Equal(nodeUpdateTransaction.GossipEndpoints, TEST_GOSSIP_ENDPOINTS);
         }
@@ -266,7 +266,7 @@ namespace Hiero.Tests.SDK.Node
         public virtual void SetTestGossipEndpointsFrozen()
         {
             var tx = SpawnTestTransaction();
-            Assert.Throws<InvalidOperationException>(() => tx.GossipEndpoints = TEST_GOSSIP_ENDPOINTS);
+            Assert.Throws<InvalidOperationException>(() => tx.GossipEndpoints = [..TEST_GOSSIP_ENDPOINTS]);
         }
         [Fact]
         /// <include file="test-node-update-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeUpdateTransactionTest.GetSetServiceEndpoints"]' />
@@ -274,7 +274,7 @@ namespace Hiero.Tests.SDK.Node
         {
             var nodeUpdateTransaction = new NodeUpdateTransaction
             { 
-                ServiceEndpoints = TEST_SERVICE_ENDPOINTS
+                ServiceEndpoints = [..TEST_SERVICE_ENDPOINTS]
             };
             Assert.Equal(nodeUpdateTransaction.ServiceEndpoints, TEST_SERVICE_ENDPOINTS);
         }
@@ -283,7 +283,7 @@ namespace Hiero.Tests.SDK.Node
         public virtual void GetSetServiceEndpointsFrozen()
         {
             var tx = SpawnTestTransaction();
-            Assert.Throws<InvalidOperationException>(() => tx.ServiceEndpoints = TEST_SERVICE_ENDPOINTS);
+            Assert.Throws<InvalidOperationException>(() => tx.ServiceEndpoints = [..TEST_SERVICE_ENDPOINTS]);
         }
         [Fact]
         /// <include file="test-node-update-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeUpdateTransactionTest.GetSetGossipCaCertificate"]' />
@@ -526,7 +526,7 @@ namespace Hiero.Tests.SDK.Node
                 SpawnTestEndpointIpOnly((byte)9), 
                 SpawnTestEndpointIpOnly((byte)10)];
 
-            var exception = Assert.Throws<ArgumentException>(() => transaction.GossipEndpoints = endpoints);
+            var exception = Assert.Throws<ArgumentException>(() => transaction.GossipEndpoints = [..endpoints]);
             Assert.Equal(exception.Message, "Gossip endpoints list must not contain more than 10 entries");
         }
         [Fact]
@@ -546,7 +546,7 @@ namespace Hiero.Tests.SDK.Node
                 SpawnTestEndpointIpOnly((byte)8), 
                 SpawnTestEndpointIpOnly((byte)9)];
 
-            transaction.GossipEndpoints = endpoints;
+            transaction.GossipEndpoints = [..endpoints];
 		}
         [Fact]
         /// <include file="test-node-update-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeUpdateTransactionTest.ShouldThrowErrorWhenGossipEndpointHasBothIpAndDomain"]' />
@@ -588,7 +588,7 @@ namespace Hiero.Tests.SDK.Node
                 SpawnTestEndpointIpOnly((byte)7), 
                 SpawnTestEndpointIpOnly((byte)8)];
 
-            var exception = Assert.Throws<ArgumentException>(() => transaction.ServiceEndpoints = endpoints);
+            var exception = Assert.Throws<ArgumentException>(() => transaction.ServiceEndpoints = [..endpoints]);
             
             Assert.Equal(exception.Message, "Service endpoints list must not contain more than 8 entries");
         }
@@ -608,7 +608,7 @@ namespace Hiero.Tests.SDK.Node
                 SpawnTestEndpointIpOnly((byte)6), 
                 SpawnTestEndpointIpOnly((byte)7)];
 
-            transaction.ServiceEndpoints = endpoints;
+            transaction.ServiceEndpoints = [..endpoints];
 
 		}
         [Fact]

@@ -46,7 +46,7 @@ namespace Hiero.SDK.Contract
 			{
 				RequireNotFrozen();
 				field = value;
-                if (field == null && ExpirationTimeDuration is not null)
+                if (ExpirationTimeDuration is not null)
                     ExpirationTimeDuration = null;
             }
 		}
@@ -57,7 +57,7 @@ namespace Hiero.SDK.Contract
 			{
 				RequireNotFrozen();
 				field = value;
-                if (field == null && ExpirationTime is not null)
+                if (ExpirationTime is not null)
                     ExpirationTime = null;
             }
 		}
@@ -125,7 +125,7 @@ namespace Hiero.SDK.Contract
 			{
 				RequireNotFrozen();
 				field = value;
-                StakedNodeId = null;
+                if (StakedNodeId is not null) StakedNodeId = null;
 			}
 		}
 		public long? StakedNodeId
@@ -135,7 +135,7 @@ namespace Hiero.SDK.Contract
 			{
 				RequireNotFrozen();
 				field = value;
-                StakedAccountId = null;
+                if (StakedAccountId is not null) StakedAccountId = null;
 			}
 		}
 		/// <include file="ContractUpdateTransaction.cs.xml" path='docs/member[@name="M:ContractUpdateTransaction.RequireNotFrozen_9"]' />
@@ -179,13 +179,13 @@ namespace Hiero.SDK.Contract
 
             ContractId = body.ContractId is null? null : ContractId.FromProtobuf(body.ContractId);
             ProxyAccountId = body.ProxyAccountId is null ? null : AccountId.FromProtobuf(body.ProxyAccountId);
-            ExpirationTime = body.ExpirationTime is null ? null : body.ExpirationTime.ToNodaTimeInstant();
+            ExpirationTime = body.ExpirationTime?.ToNodaTimeInstant();
 
             if (body.AdminKey is not null)
 				AdminKey = Key.FromProtobufKey(body.AdminKey);
 
 			MaxAutomaticTokenAssociations = body.MaxAutomaticTokenAssociations;
-            AutoRenewPeriod = body.AutoRenewPeriod is null ? null : body.AutoRenewPeriod.ToNodaDuration();
+            AutoRenewPeriod = body.AutoRenewPeriod?.ToNodaDuration();
             ContractMemo = body.MemoWrapper;
             DeclineStakingReward = body.DeclineReward;
             StakedAccountId = body.StakedAccountId is null ? null : AccountId.FromProtobuf(body.StakedAccountId);

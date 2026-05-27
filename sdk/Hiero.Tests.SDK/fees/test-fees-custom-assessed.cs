@@ -29,6 +29,7 @@ namespace Hiero.Tests.SDK.Fees
         {
             return new AssessedCustomFee(201, TokenId.FromString("1.2.3"), AccountId.FromString("4.5.6"), [ AccountId.FromString("0.0.1"), AccountId.FromString("0.0.2"), AccountId.FromString("0.0.3") ]);
         }
+
         [Fact]
         /// <include file="test-fees-custom-assessed.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Fees.AssessedCustomFeeTest.ShouldSerialize"]' />
         public virtual void ShouldSerialize()
@@ -42,11 +43,13 @@ namespace Hiero.Tests.SDK.Fees
             Verifier.Verify(Regex.Replace(originalAssessedCustomFee.ToString(), "@[A-Za-z0-9]+", ""));
         }
 
+        [Fact]
         public virtual void FromProtobuf()
         {
             Verifier.Verify(AssessedCustomFee.FromProtobuf(fee).ToString());
         }
 
+        [Fact]
         public virtual void ToProtobuf()
         {
             Verifier.Verify(AssessedCustomFee.FromProtobuf(fee).ToProtobuf().ToString());

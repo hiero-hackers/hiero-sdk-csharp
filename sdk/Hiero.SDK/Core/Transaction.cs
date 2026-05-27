@@ -338,12 +338,16 @@ namespace Hiero.SDK.Core
 
         protected virtual ListGuarded<TType> GenerateListGuarded<TType>(ListGuarded<TType>? list = null, Action<ListGuarded<TType>>? init = null)
         {
-			list ??= [];
-			list.OnRequireNotFrozen = RequireNotFrozen;
+			ListGuarded<TType> _list = new()
+			{
+                OnRequireNotFrozen = RequireNotFrozen
+            };
 
-			init?.Invoke(list);
+			init?.Invoke(_list);
 
-            return list;
+			if (list is not null) _list.AddRange(list);
+            
+			return _list;
         }
 
         /// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.AddSignature(PublicKey,System.Byte[])"]' />

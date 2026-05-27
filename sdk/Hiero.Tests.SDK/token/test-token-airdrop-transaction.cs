@@ -25,7 +25,7 @@ namespace Hiero.Tests.SDK.Token
             transaction = new TokenAirdropTransaction();
         }
 
-        public virtual void ShouldSerialize()
+        [Fact] public virtual void ShouldSerialize()
         {
             Verifier.Verify(SpawnTestTransaction().ToString());
         }

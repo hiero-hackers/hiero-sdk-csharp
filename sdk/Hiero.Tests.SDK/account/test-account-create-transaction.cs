@@ -1,12 +1,12 @@
 ﻿// SPDX-License-Identifier: Apache-2.0
+using VerifyXunit;
+
+using Hiero.SDK;
+using Hiero.SDK.Core;
 using Hiero.SDK.Cryptocurrency;
 using Hiero.SDK.Ethereum;
 using Hiero.SDK.Cryptography;
 using Hiero.SDK.Transactions;
-
-using VerifyXunit;
-using Hiero.SDK;
-using Hiero.SDK.Core;
 
 namespace Hiero.Tests.SDK.Account
 {
@@ -63,6 +63,7 @@ namespace Hiero.Tests.SDK.Account
             .Sign(privateKeyED25519);
         }
 
+        [Fact]
         public virtual void ShouldSerialize()
         {
             Verifier.Verify(SpawnTestTransaction().ToString());
@@ -74,9 +75,10 @@ namespace Hiero.Tests.SDK.Account
             var tx = SpawnTestTransaction();
             var tx2 = Transaction.FromBytes<AccountCreateTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
 
+        [Fact]
         public virtual void ShouldSerialize2()
         {
             Verifier.Verify(SpawnTestTransaction2().ToString());
@@ -88,7 +90,7 @@ namespace Hiero.Tests.SDK.Account
             var tx = SpawnTestTransaction2();
             var tx2 = Transaction.FromBytes<AccountCreateTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-account-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Account.AccountCreateTransactionTest.ShouldBytesNoSetters"]' />
@@ -107,11 +109,11 @@ namespace Hiero.Tests.SDK.Account
             Assert.Equal(tx.Key, privateKeyED25519);
             Assert.Equal(tx.InitialBalance, Hbar.FromTinybars(450));
             Assert.True(tx.ReceiverSigRequired);
-            Assert.Equal(tx.ProxyAccountId.ToString(), "0.0.1001");
-            Assert.Equal(tx.AutoRenewPeriod.Hours, 10);
-            Assert.Equal(tx.MaxAutomaticTokenAssociations, 100);
-            Assert.Equal(tx.AccountMemo, "some dumb memo");
-            Assert.Equal(tx.StakedAccountId.ToString(), "0.0.3");
+            Assert.Equal("0.0.1001", tx.ProxyAccountId?.ToString());
+            Assert.Equal(10, tx.AutoRenewPeriod.Hours);
+            Assert.Equal(100, tx.MaxAutomaticTokenAssociations);
+            Assert.Equal("some dumb memo", tx.AccountMemo);
+            Assert.Equal("0.0.3", tx.StakedAccountId?.ToString());
             Assert.Null(tx.StakedNodeId);
             Assert.False(tx.DeclineStakingReward);
             Assert.Equal(tx.Alias, EvmAddress.FromString(ALIAS));

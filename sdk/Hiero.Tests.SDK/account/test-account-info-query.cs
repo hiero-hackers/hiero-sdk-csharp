@@ -10,7 +10,7 @@ namespace Hiero.Tests.SDK.Account
 {
     public class AccountInfoQueryTest
     {
-        public virtual void ShouldSerialize()
+        [Fact] public virtual void ShouldSerialize()
         {
             var builder = new Proto.Services.Query();
             new AccountInfoQuery()

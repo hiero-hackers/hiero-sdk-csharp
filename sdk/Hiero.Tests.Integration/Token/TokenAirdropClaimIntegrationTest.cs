@@ -140,7 +140,7 @@ namespace Hiero.Tests.Integration.Token
 
                 record = new TokenClaimAirdropTransaction
                 {
-					PendingAirdropIds = pendingAirdropIDs,
+					PendingAirdropIds = [..pendingAirdropIDs],
 				
                 }.FreezeWith(testEnv.Client).Sign(receiver1AccountKey).Sign(receiver2AccountKey).Execute(testEnv.Client).GetRecord(testEnv.Client);
 
@@ -227,7 +227,7 @@ namespace Hiero.Tests.Integration.Token
                 // claim the all the tokens with the receiver
                 var record = new TokenClaimAirdropTransaction
                 {
-					PendingAirdropIds = pendingAirdropIDs,
+					PendingAirdropIds = [..pendingAirdropIDs],
 
 				}.FreezeWith(testEnv.Client).Sign(receiverAccountKey).Execute(testEnv.Client).GetRecord(testEnv.Client);
 

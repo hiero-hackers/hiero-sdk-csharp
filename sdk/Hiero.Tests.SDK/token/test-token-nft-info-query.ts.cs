@@ -13,7 +13,7 @@ namespace Hiero.Tests.SDK.Token
     /// <include file="test-token-nft-info-query.ts.cs.xml" path='docs/member[@name="T:Hiero.Tests.SDK.Token.TokenNftInfoQueryTest"]' />
     public class TokenNftInfoQueryTest
     {
-        public virtual void ShouldSerialize()
+        [Fact] public virtual void ShouldSerialize()
         {
             var builder = new Proto.Services.Query();
             new TokenNftInfoQuery

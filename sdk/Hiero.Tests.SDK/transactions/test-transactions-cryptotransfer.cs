@@ -11,6 +11,7 @@ using Google.Protobuf;
 
 using VerifyXunit;
 using Hiero.SDK;
+using Hiero.SDK.Core;
 
 namespace Hiero.Tests.SDK.Transactions
 {
@@ -20,7 +21,7 @@ namespace Hiero.Tests.SDK.Transactions
         private static readonly PrivateKey unusedPrivateKey = KeyTestDataFactory.ED25519_TEST_KEY;
         private readonly NodaTime.Instant validStart = TransactionTestFactory.DEFAULT_VALID_START;
 
-        public virtual void ShouldSerialize()
+        [Fact] public virtual void ShouldSerialize()
         {
             Verifier.Verify(SpawnTestTransaction().ToString());
         }
@@ -131,7 +132,7 @@ namespace Hiero.Tests.SDK.Transactions
 
             Assert.Throws<ArgumentException>(() =>
             {
-                Transaction.FromBytes<TransferTransaction>(brokenTxBytes);
+                ITransaction.FromBytes(brokenTxBytes);
             });
         }
         [Fact]
@@ -142,7 +143,7 @@ namespace Hiero.Tests.SDK.Transactions
             {
                 CryptoTransfer = new Proto.Services.CryptoTransferTransactionBody()
 			};
-            var tx = Transaction.FromScheduledTransaction<TransferTransaction>(transactionBody);
+            var tx = Transaction.FromScheduledTransaction(transactionBody);
             Assert.IsType<TransferTransaction>(tx);
         }
     }

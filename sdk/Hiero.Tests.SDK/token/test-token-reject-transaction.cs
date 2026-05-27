@@ -25,7 +25,7 @@ namespace Hiero.Tests.SDK.Token
         private static readonly List<NftId> TEST_NFT_IDS = [ new NftId(TokenId.FromString("4.5.6"), 2), new NftId(TokenId.FromString("7.8.9"), 3) ];
         readonly NodaTime.Instant TEST_VALID_START = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
 
-        public virtual void ShouldSerialize()
+        [Fact] public virtual void ShouldSerialize()
         {
             Verifier.Verify(SpawnTestTransaction().ToString());
         }

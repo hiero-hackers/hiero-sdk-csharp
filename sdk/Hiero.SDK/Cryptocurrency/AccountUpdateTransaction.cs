@@ -61,7 +61,7 @@ namespace Hiero.SDK.Cryptocurrency
                 RequireNotFrozen();
                 field = value;
 
-                if (field == null && ExpirationTimeDuration is not null)
+                if (ExpirationTimeDuration is not null)
                     ExpirationTimeDuration = null;
             }
         }
@@ -73,7 +73,7 @@ namespace Hiero.SDK.Cryptocurrency
                 RequireNotFrozen(); 
                 field = value;
 
-                if (field == null && ExpirationTime is not null)
+                if (ExpirationTime is not null)
                     ExpirationTime = null;
             } 
         }
@@ -104,13 +104,29 @@ namespace Hiero.SDK.Cryptocurrency
         /// <include file="AccountUpdateTransaction.cs.xml" path='docs/member[@name="M:AccountUpdateTransaction.RequireNotFrozen_10"]' />
         public AccountId? StakedAccountId 
         {
-            get; 
-            set { RequireNotFrozen(); field = value; StakedNodeId = null; ; } }
+            get;
+            set
+            {
+                RequireNotFrozen();
+                field = value;
+
+                if (StakedNodeId is not null)
+                    StakedNodeId = null;
+            }
+        }
         /// <include file="AccountUpdateTransaction.cs.xml" path='docs/member[@name="M:AccountUpdateTransaction.RequireNotFrozen_11"]' />
         public long? StakedNodeId 
         {
-            get; 
-            set { RequireNotFrozen(); field = value; StakedAccountId = null; } }
+            get;
+            set
+            {
+                RequireNotFrozen();
+                field = value;
+
+                if (StakedAccountId is not null)
+                    StakedAccountId = null;
+            }
+        }
         /// <include file="AccountUpdateTransaction.cs.xml" path='docs/member[@name="M:AccountUpdateTransaction.RequireNotFrozen_12"]' />
         public bool? DeclineStakingReward 
         {

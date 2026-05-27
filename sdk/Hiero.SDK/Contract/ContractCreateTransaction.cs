@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 using Google.Protobuf;
 using Google.Protobuf.Reflection;
-using Google.Protobuf.WellKnownTypes;
 
+using Hiero.SDK.Core;
 using Hiero.SDK.Cryptocurrency;
 using Hiero.SDK.File;
 using Hiero.SDK.Hook;
@@ -11,7 +11,6 @@ using Hiero.SDK.Transactions;
 
 using System;
 using System.Collections.Generic;
-using Hiero.SDK.Core;
 using System.Linq;
 
 namespace Hiero.SDK.Contract
@@ -43,9 +42,10 @@ namespace Hiero.SDK.Contract
 			set
 			{
 				RequireNotFrozen();
-				Bytecode = null;
-				field = value;
-			}
+                field = value;
+				if (Bytecode is not null)
+                    Bytecode = null;
+            }
 		}
 		/// <include file="ContractCreateTransaction.cs.xml" path='docs/member[@name="M:ContractCreateTransaction.CopyArray"]' />
 		public byte[]? Bytecode
@@ -54,8 +54,10 @@ namespace Hiero.SDK.Contract
 			set
 			{
 				RequireNotFrozen();
-				BytecodeFileId = null;
-				field = value?.CopyArray();
+                field = value?.CopyArray();
+
+                if (BytecodeFileId is not null)
+                    BytecodeFileId = null;
 			}
 		}
 		/// <include file="ContractCreateTransaction.cs.xml" path='docs/member[@name="M:ContractCreateTransaction.RequireNotFrozen_2"]' />
@@ -158,9 +160,10 @@ namespace Hiero.SDK.Contract
 			set
 			{
 				RequireNotFrozen();
-				StakedNodeId = null;
 				field = value;
-			}
+                if (StakedNodeId is not null)
+                    StakedNodeId = null;
+            }
 		}
 		/// <include file="ContractCreateTransaction.cs.xml" path='docs/member[@name="M:ContractCreateTransaction.RequireNotFrozen_10"]' />
 		public long? StakedNodeId
@@ -169,9 +172,10 @@ namespace Hiero.SDK.Contract
 			set
 			{
 				RequireNotFrozen();
-				StakedAccountId = null;
 				field = value;
-			}
+				if (StakedAccountId is not null)
+                    StakedAccountId = null;
+            }
 		}
 		/// <include file="ContractCreateTransaction.cs.xml" path='docs/member[@name="M:ContractCreateTransaction.RequireNotFrozen_11"]' />
 		public bool DeclineStakingReward
