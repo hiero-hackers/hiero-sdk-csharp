@@ -34,7 +34,6 @@ namespace Hiero.SDK.Nfts
             init => field = GenerateListGuarded(value);
             internal get => field ??= GenerateListGuarded(field);
         }
-        public ListGuarded.Operator<long> SerialsOperator => field ??= new(Serials);
 
         /// <include file="TokenUpdateNftsTransaction.cs.xml" path='docs/member[@name="M:TokenUpdateNftsTransaction.RequireNotFrozen_2"]' />
         public virtual byte[]? Metadata { get; set { RequireNotFrozen(); field = value; } } = [];
@@ -47,7 +46,7 @@ namespace Hiero.SDK.Nfts
             if (body.Token is not null)
 				TokenId = TokenId.FromProtobuf(body.Token);
 
-			SerialsOperator.Operate(_ => [.. body.SerialNumbers]);
+			Serials.Set(body.SerialNumbers);
 
             if (body.Metadata is not null)
                 Metadata = body.Metadata.ToByteArray();

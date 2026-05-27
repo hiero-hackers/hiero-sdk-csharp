@@ -31,8 +31,7 @@ namespace Hiero.SDK.Cryptography
                 // Validate the key if it's not all zero public key, see HIP-540
                 if (!Equals(publicKey, new byte[32]))
 					// Will throw if the key is invalid
-					new Ed25519PublicKeyParameters(publicKey, 0);
-
+					_ = new Ed25519PublicKeyParameters(publicKey, 0);
 
 				// If this is a 32 byte string, assume an Ed25519 public key
 				return new PublicKeyED25519(publicKey);

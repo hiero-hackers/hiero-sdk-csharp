@@ -23,10 +23,13 @@ namespace Hiero.SDK.Hook
 
             return ContractId.Equals(that.ContractId);
         }
-
         public override int GetHashCode()
         {
             return HashCode.Combine(ContractId);
+        }
+        public override string ToString()
+        {
+            return string.Format("EvmHookSpec{{contractId=\"{0}\"}}", ContractId);
         }
     }
 }

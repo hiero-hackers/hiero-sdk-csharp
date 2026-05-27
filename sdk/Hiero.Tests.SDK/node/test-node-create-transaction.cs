@@ -167,17 +167,17 @@ namespace Hiero.Tests.SDK.Node
             var tx = new NodeCreateTransaction();
             
 			for (int i = 0; i < 10; i++)
-				tx.GossipEndpointsOperator.Operate(_ => _.Add(new Endpoint
+				tx.GossipEndpoints.Add(new Endpoint
 				{
 					DomainName = "gossip" + i + ".test",
 					Port = 5000 + i
-				}));
+				});
 
-			Assert.Throws<ArgumentException>(() => tx.GossipEndpointsOperator.Operate(_ => _.Add(new Endpoint
+			Assert.Throws<ArgumentException>(() => tx.GossipEndpoints.Add(new Endpoint
             {
 				DomainName = "gossipX.test",
 				Port = 6000
-			})));
+			}));
         }
 		[Fact]
         /// <include file="test-node-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeCreateTransactionTest.SetGossipEndpointsRejectsIpAndDomainTogether"]' />
@@ -214,17 +214,17 @@ namespace Hiero.Tests.SDK.Node
         {
             var tx = new NodeCreateTransaction();
             for (int i = 0; i < 8; i++)
-				tx.ServiceEndpointsOperator.Operate(_ => _.Add(new Endpoint
+				tx.ServiceEndpoints.Add(new Endpoint
 				{
 					DomainName = "svc" + i + ".test",
 					Port = 7000 + i,
-				}));
+				});
 
-			Assert.Throws<ArgumentException>(() => tx.ServiceEndpointsOperator.Operate(_ => _.Add(new Endpoint
+			Assert.Throws<ArgumentException>(() => tx.ServiceEndpoints.Add(new Endpoint
 			{
 				DomainName = "svcX.test",
 				Port = 8000,
-			})));
+			}));
         }
 		[Fact]
         /// <include file="test-node-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeCreateTransactionTest.SetServiceEndpointsRejectsIpAndDomainTogether"]' />

@@ -276,19 +276,43 @@ namespace Hiero.Tests.SDK.Keys
         {
             // https://github.com/hashgraph/hedera-sdk-reference/issues/93#issue-1665972122
             
-            var PRIVATE_KEY_PEM1 = "-----BEGIN EC PRIVATE KEY-----\n" + "MHQCAQEEIG8I+jKi+iGVa7ttbfnlnML5AdvPugbgBWnseYjrle6qoAcGBSuBBAAK\n" + "oUQDQgAEqf5BmMeBzkU1Ra9UAbZJo3tytVOlb7erTc36LRLP20mOLU7+mFY+3Cfe\n" + "fAZgBtPXRAmDtRvYGODswAalW85GKA==\n" + "-----END EC PRIVATE KEY-----";
+            var PRIVATE_KEY_PEM1 = 
+                "-----BEGIN EC PRIVATE KEY-----\n" 
+                + "MHQCAQEEIG8I+jKi+iGVa7ttbfnlnML5AdvPugbgBWnseYjrle6qoAcGBSuBBAAK\n" 
+                + "oUQDQgAEqf5BmMeBzkU1Ra9UAbZJo3tytVOlb7erTc36LRLP20mOLU7+mFY+3Cfe\n" 
+                + "fAZgBtPXRAmDtRvYGODswAalW85GKA==\n" 
+                + "-----END EC PRIVATE KEY-----";
             var PRIVATE_KEY1 = "6f08fa32a2fa21956bbb6d6df9e59cc2f901dbcfba06e00569ec7988eb95eeaa";
             var PUBLIC_KEY1 = "02a9fe4198c781ce453545af5401b649a37b72b553a56fb7ab4dcdfa2d12cfdb49";
             
-            var PRIVATE_KEY_PEM2 = "-----BEGIN EC PRIVATE KEY-----\n" + "MFQCAQEEIOHyhclwHbha3f281Kvd884rhBzltxGJxCZyaQCagH9joAcGBSuBBAAK\n" + "oSQDIgACREr6gFZa4K7hBP+bA25VdgQ+0ABFgM+g5RYw/W6T1Og=\n" + "-----END EC PRIVATE KEY-----";
+            var PRIVATE_KEY_PEM2 = 
+                "-----BEGIN EC PRIVATE KEY-----\n" 
+                + "MFQCAQEEIOHyhclwHbha3f281Kvd884rhBzltxGJxCZyaQCagH9joAcGBSuBBAAK\n" 
+                + "oSQDIgACREr6gFZa4K7hBP+bA25VdgQ+0ABFgM+g5RYw/W6T1Og=\n" 
+                + "-----END EC PRIVATE KEY-----";
             var PRIVATE_KEY2 = "e1f285c9701db85addfdbcd4abddf3ce2b841ce5b71189c4267269009a807f63";
             var PUBLIC_KEY2 = "02444afa80565ae0aee104ff9b036e5576043ed0004580cfa0e51630fd6e93d4e8";
             
-            var PRIVATE_KEY_PEM3 = "-----BEGIN EC PRIVATE KEY-----\n" + "Proc-Type: 4,ENCRYPTED\n" + "DEK-Info: AES-128-CBC,0046A9EED8D16F0CAA66A197CE8BE8BD\n" + "\n" + "9VU9gReUmrn4XywjMx0F0A3oGzpHIksEXma72TCSdcxI7zHy0mtzuGq4Wd25O38s\n" + "H9c6kvhTPS1N/c6iNhx154B0HUoND8jvAvfxbGR/R87vpZJsOoKCmRxGqrxG8HER\n" + "FIHQ1jy16DrAbU95kDyLsiF1dy2vUY/HoqFZwxl/IVc=\n" + "-----END EC PRIVATE KEY-----";
+            var PRIVATE_KEY_PEM3 = 
+                "-----BEGIN EC PRIVATE KEY-----\n" 
+                + "Proc-Type: 4,ENCRYPTED\n" 
+                + "DEK-Info: AES-128-CBC,0046A9EED8D16F0CAA66A197CE8BE8BD\n" 
+                + "\n" 
+                + "9VU9gReUmrn4XywjMx0F0A3oGzpHIksEXma72TCSdcxI7zHy0mtzuGq4Wd25O38s\n" 
+                + "H9c6kvhTPS1N/c6iNhx154B0HUoND8jvAvfxbGR/R87vpZJsOoKCmRxGqrxG8HER\n" 
+                + "FIHQ1jy16DrAbU95kDyLsiF1dy2vUY/HoqFZwxl/IVc=\n" 
+                + "-----END EC PRIVATE KEY-----";
             var PRIVATE_KEY3 = "cf49eb5206c1b0468854d6ea7b370590619625514f71ff93608a18465e4012ad";
             var PUBLIC_KEY3 = "025f0d14a7562d6319e5b8f91620d2ce9ad13d9abf21cfe9bd0a092c0f35bf1701";
             
-            var PRIVATE_KEY_PEM4 = "-----BEGIN EC PRIVATE KEY-----\n" + "Proc-Type: 4,ENCRYPTED\n" + "DEK-Info: AES-128-CBC,4A9B3B987EC2EFFA405818327D14FFF7\n" + "\n" + "Wh756RkK5fn1Ke2denR1OYfqE9Kr4BXhgrEMTU/6o0SNhMULUhWGHrCWvmNeEQwp\n" + "ZVZYUxgYoTlJBeREzKAZithcvxIcTbQfLABo1NZbjA6YKqAqlGpM6owwL/f9e2ST\n" + "-----END EC PRIVATE KEY-----";
+            var PRIVATE_KEY_PEM4 = 
+                "-----BEGIN EC PRIVATE KEY-----\n" 
+                + "Proc-Type: 4,ENCRYPTED\n" 
+                + "DEK-Info: AES-128-CBC,4A9B3B987EC2EFFA405818327D14FFF7\n" 
+                + "\n" 
+                + "Wh756RkK5fn1Ke2denR1OYfqE9Kr4BXhgrEMTU/6o0SNhMULUhWGHrCWvmNeEQwp\n" 
+                + "ZVZYUxgYoTlJBeREzKAZithcvxIcTbQfLABo1NZbjA6YKqAqlGpM6owwL/f9e2ST\n" 
+                + "-----END EC PRIVATE KEY-----";
             var PRIVATE_KEY4 = "c0d3e16ba5a1abbeac4cd327a3c3c1cc10438431d0bac019054e573e67768bb5";
             var PUBLIC_KEY4 = "02065f736378134c53c7a2ee46f199fb93b9b32337be4e95660677046476995544";
 

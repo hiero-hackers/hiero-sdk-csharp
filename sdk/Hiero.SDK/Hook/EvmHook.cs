@@ -65,5 +65,9 @@ namespace Hiero.SDK.Hook
         {
             return HashCode.Combine(base.GetHashCode(), StorageUpdates.GetHashCodeEnumerable());
         }
+		public override string ToString() 
+		{
+			return string.Format("EvmHook{{contractId=\"{0}\", storageUpdates=\"{1}\"}}", ContractId, StorageUpdates);
+		}
     }
 }

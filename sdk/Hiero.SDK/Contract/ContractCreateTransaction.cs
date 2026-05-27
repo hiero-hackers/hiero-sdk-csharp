@@ -12,6 +12,7 @@ using Hiero.SDK.Transactions;
 using System;
 using System.Collections.Generic;
 using Hiero.SDK.Core;
+using System.Linq;
 
 namespace Hiero.SDK.Contract
 {
@@ -76,7 +77,7 @@ namespace Hiero.SDK.Contract
 				RequireNotFrozen();
 
 				if (value < 0)
-					throw new ArgumentException("Gas must be non-negative", nameof(value));
+					throw new ArgumentException("Gas must be non-negative", nameof(Gas));
 
 				field = value;
 			}
@@ -200,8 +201,6 @@ namespace Hiero.SDK.Contract
             init => field = GenerateListGuarded(value);
             internal get => field ??= GenerateListGuarded(field);
         }
-        public ListGuarded.Operator<HookCreationDetails> HookCreationDetailsOperator => field ??= new(HookCreationDetails);
-
 
         /// <include file="ContractCreateTransaction.cs.xml" path='docs/member[@name="M:ContractCreateTransaction.ToProtobuf_2"]' />
         public Proto.Services.ContractCreateTransactionBody ToProtobuf()
@@ -277,10 +276,7 @@ namespace Hiero.SDK.Contract
 			if (body.AutoRenewAccountId is not null) AutoRenewAccountId = AccountId.FromProtobuf(body.AutoRenewAccountId);
 
             // Initialize hook creation details
-            HookCreationDetailsOperator.Operate(_ => _.Clear());
-
-            foreach (var protoHookDetails in body.HookCreationDetails)
-                HookCreationDetailsOperator.Operate(_ => _.Add(Hook.HookCreationDetails.FromProtobuf(protoHookDetails)));
+            HookCreationDetails.Set(body.HookCreationDetails.Select(_ => Hook.HookCreationDetails.FromProtobuf(_)));
 		}
 
 		public override MethodDescriptor GetMethodDescriptor()

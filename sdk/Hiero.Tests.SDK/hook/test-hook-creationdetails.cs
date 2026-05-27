@@ -69,9 +69,9 @@ namespace Hiero.Tests.SDK.Hook
             var details = new HookCreationDetails(HookExtensionPoint.AccountAllowanceHook, 7, lambda);
             var s = details.ToString();
 
-            Assert.True(s.Contains("extensionPoint"));
-            Assert.True(s.Contains("hookId"));
-            Assert.True(s.Contains("hook"));
+            Assert.Contains("extensionPoint", s);
+            Assert.Contains("hookId", s);
+            Assert.Contains("hook", s);
         }
     }
 }

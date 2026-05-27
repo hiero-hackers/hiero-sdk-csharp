@@ -35,7 +35,6 @@ namespace Hiero.SDK.Transactions
             init => field = GenerateListGuarded(value);
             internal get => field ??= GenerateListGuarded(field);
         }
-        public ListGuarded.Operator<ITransaction> InnerTransactionsOperator => field ??= new(InnerTransactions);
 
         private ListGuarded<ITransaction> GenerateListGuarded_Transaction(ListGuarded<ITransaction>? list = null, Action<ListGuarded<ITransaction>>? init = null)
         {
@@ -58,7 +57,7 @@ namespace Hiero.SDK.Transactions
 					SignedTransactionBytes = atomicTransactionBytes
 				};
 
-				InnerTransactionsOperator.Operate(_ => _.Add(ITransaction.FromBytes(transaction.ToByteArray())));
+				InnerTransactions.Add(ITransaction.FromBytes(transaction.ToByteArray()));
 			}
 		}
 		/// <include file="BatchTransaction.cs.xml" path='docs/member[@name="M:BatchTransaction.ValidateInnerTransaction(ITransaction)"]' />

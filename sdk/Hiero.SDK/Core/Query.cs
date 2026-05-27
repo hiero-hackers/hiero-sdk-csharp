@@ -144,7 +144,7 @@ namespace Hiero.SDK
 				// Get a list of node AccountId's if the user has not set them manually.
 				try
 				{
-					NodeAccountIdsOperator.Operate(_ => client.Network_.GetNodeAccountIdsForExecute());
+					NodeAccountIds.Set(client.Network_.GetNodeAccountIdsForExecute());
 				}
 				catch (ThreadInterruptedException e)
 				{

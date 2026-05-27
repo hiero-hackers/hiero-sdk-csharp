@@ -62,5 +62,9 @@ namespace Hiero.SDK.Hook
 		{
 			return HashCode.Combine(MappingSlot.GetHashCodeEnumerable(), Entries.GetHashCodeEnumerable());
 		}
+        public override string ToString()
+        {
+			return string.Format("EvmHookMappingEntries {{ mappingSlot=\"[{0}]\", entries=\"{1}\" }}", string.Join("; ", MappingSlot), string.Join("; ", Entries));
+        }
     }
 }

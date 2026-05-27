@@ -1,29 +1,6 @@
 ﻿
-using System.Numerics;
-
 namespace System.Collections.Generic
 {
-    public class ListGuarded
-    {
-        public class Operator<T>(ListGuarded<T> list)
-        {
-            private ListGuarded<T> List { get; set; } = list;
-            public IReadOnlyList<T> Read => List.AsReadOnly();
-
-            public IReadOnlyList<T> Operate(Action<ListGuarded<T>> operation)
-            {
-                operation.Invoke(List);
-
-                return List.AsReadOnly();
-            }
-            public IReadOnlyList<T> Operate(Func<ListGuarded<T>, IEnumerable<T>> operation)
-            {
-                List = [.. operation.Invoke(List)];
-
-                return List.AsReadOnly();
-            }
-        }
-    }
 	public class ListGuarded<T> : List<T>
 	{
 		public ListGuarded() : this(_ => { }) { }
@@ -82,19 +59,11 @@ namespace System.Collections.Generic
         {
             AddRange(items as IEnumerable<T>);
         }
-        public void ClearAndAdd(T item)
+        public void Set(params T[] items)
         {
-            OnValidatePre?.Invoke(AsReadOnly());
-            OnValidateItem?.Invoke(item);
-            base.Clear();
-            base.Add(item);
-            OnValidatePost?.Invoke(AsReadOnly());
+            Set(items);
         }
-        public void ClearAndAddRange(params T[] items)
-        {
-            ClearAndAddRange(items);
-        }
-        public void ClearAndAddRange(IEnumerable<T> items)
+        public void Set(IEnumerable<T> items)
         {
             OnValidatePre?.Invoke(AsReadOnly());
 
@@ -179,6 +148,5 @@ namespace System.Collections.Generic
         }
 
         public static implicit operator ListGuarded<T>(T item) => [item];
-        public static implicit operator ListGuarded<T>(T[] items) => [..items];
     }
 }

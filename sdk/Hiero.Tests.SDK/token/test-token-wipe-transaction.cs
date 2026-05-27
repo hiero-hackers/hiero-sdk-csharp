@@ -180,7 +180,7 @@ namespace Hiero.Tests.SDK.Token
         public virtual void GetSetSerialNumbersFrozen()
         {
             var tx = SpawnTestTransaction();
-            Assert.Throws<InvalidOperationException>(() => tx.SerialsOperator.Operate(_ => testSerialNumbers));
+            Assert.Throws<InvalidOperationException>(() => tx.Serials.Set(testSerialNumbers));
         }
     }
 }

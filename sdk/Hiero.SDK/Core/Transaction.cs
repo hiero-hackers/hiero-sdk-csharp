@@ -87,13 +87,13 @@ namespace Hiero.SDK.Core
                 {
                     if (!transactionEntry.Key.Equals(Transaction.DUMMY_TRANSACTION_ID))
                     {
-                        TransactionIdsOperator.Operate(_ => _.Add(transactionEntry.Key));
+                        TransactionIds.Add(transactionEntry.Key);
                     }
 
                     foreach (var nodeEntry in transactionEntry.Value)
                     {
                         if (NodeAccountIds.Count != nodeCount)
-							NodeAccountIdsOperator.Operate(_ => _.Add(nodeEntry.Key));
+							NodeAccountIds.Add(nodeEntry.Key);
 
 						var transaction = Proto.Services.SignedTransaction.Parser.ParseFrom(nodeEntry.Value.SignedTransactionBytes);
                         OuterTransactions.Add(nodeEntry.Value);
@@ -108,7 +108,7 @@ namespace Hiero.SDK.Core
                     }
                 }
 
-                NodeAccountIdsOperator.Operate(_ => _.Remove(new AccountId(0, 0, 0)));
+                NodeAccountIds.Remove(new AccountId(0, 0, 0));
 
                 // Verify that transaction bodies match
                 for (int i = 0; i < txCount; i++)
@@ -208,7 +208,7 @@ namespace Hiero.SDK.Core
 			}
 			set
 			{
-				TransactionIdsOperator.Operate(_ => [value]);
+				TransactionIds.Set(value);
 				TransactionIds.IsLocked = true;
 			}
 		}
@@ -224,7 +224,6 @@ namespace Hiero.SDK.Core
 		
 		/// <include file="Transaction.cs.xml" path='docs/member[@name="P:Transaction.TransactionIds"]' />
 		public ListGuarded<TransactionId> TransactionIds { internal get; init; }
-        public ListGuarded.Operator<TransactionId> TransactionIdsOperator => field ??= new(TransactionIds);
 
         /// <include file="Transaction.cs.xml" path='docs/member[@name="P:Transaction.PublicKeys"]' />
         public IList<PublicKey> PublicKeys { get; internal set; } = [];
@@ -446,7 +445,7 @@ namespace Hiero.SDK.Core
 					if (@operator != null)
 					{
 						// Set a default transaction ID, generated from the operator account ID
-						TransactionIdsOperator.Operate(_ => [TransactionId.Generate(@operator.AccountId)]);
+						TransactionIds.Set(TransactionId.Generate(@operator.AccountId));
 					}
 					else
 					{
@@ -468,9 +467,9 @@ namespace Hiero.SDK.Core
 				try
 				{
 					if (BatchKey == null)
-						NodeAccountIdsOperator.Operate(_ => client.Network_.GetNodeAccountIdsForExecute());
+						NodeAccountIds.Set(client.Network_.GetNodeAccountIdsForExecute());
 					else 
-						NodeAccountIdsOperator.Operate(_ => [AccountId.FromString(Transaction.ATOMIC_BATCH_NODE_ACCOUNT_ID)]);
+						NodeAccountIds.Set(AccountId.FromString(Transaction.ATOMIC_BATCH_NODE_ACCOUNT_ID));
 				}
 				catch (ThreadInterruptedException e)
 				{
@@ -603,16 +602,16 @@ namespace Hiero.SDK.Core
 
 			if (count == 1)
 			{
-				TransactionIdsOperator.Operate(_ => [initialTransactionId]);
+				TransactionIds.Set(initialTransactionId);
 				return;
 			}
 
 			var nextTransactionId = initialTransactionId.ToProtobuf();
 			TransactionIds.EnsureCapacity(count);
-			TransactionIdsOperator.Operate(_ => _.Clear());
+			TransactionIds.Clear();
 			for (int i = 0; i < count; i++)
 			{
-				TransactionIdsOperator.Operate(_ => _.Add(TransactionId.FromProtobuf(nextTransactionId)));
+				TransactionIds.Add(TransactionId.FromProtobuf(nextTransactionId));
 
 				// add 1 ns to the validStart to make cascading transaction IDs
 				var nextValidStart = nextTransactionId.TransactionValidStart;
@@ -894,7 +893,7 @@ namespace Hiero.SDK.Core
 		{
 			RequireNotFrozen();
 
-			NodeAccountIdsOperator.Operate(_ => nodeaccountids);
+			NodeAccountIds.Set(nodeaccountids);
 
 			return (T)this;
 		}

@@ -49,7 +49,6 @@ namespace Hiero.SDK.Token
             init => field = GenerateListGuarded(value);
             internal get => field ??= GenerateListGuarded(field);
         }
-        public ListGuarded.Operator<long> SerialsOperator => field ??= new(Serials);
 
         /// <include file="TokenWipeTransaction.cs.xml" path='docs/member[@name="M:TokenWipeTransaction.InitFromTransactionBody_2"]' />
         private void InitFromTransactionBody()
@@ -63,7 +62,7 @@ namespace Hiero.SDK.Token
                 AccountId = AccountId.FromProtobuf(body.Account);
 
             Amount = body.Amount;
-            SerialsOperator.Operate(_ => [.. body.SerialNumbers]);
+            Serials.Set(body.SerialNumbers);
         }
 
         /// <include file="TokenWipeTransaction.cs.xml" path='docs/member[@name="M:TokenWipeTransaction.ToProtobuf"]' />

@@ -64,5 +64,9 @@ namespace Hiero.SDK.Hook
 
             return HookId == that.HookId && ExtensionPoint == that.ExtensionPoint && Hook.Equals(that.Hook) && Equals(AdminKey, that.AdminKey);
         }
+        public override string ToString()
+        {
+            return string.Format("HookCreationDetails{{ extensionPoint=\"{0}\", hookId=\"{1}\", hook=\"{2}\", adminKey=\"{3}\"}}", ExtensionPoint, HookId, Hook, AdminKey);
+        }
     }
 }

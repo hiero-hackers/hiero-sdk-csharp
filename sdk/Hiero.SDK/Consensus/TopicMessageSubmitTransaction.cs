@@ -45,7 +45,6 @@ namespace Hiero.SDK.Consensus
             init => field = GenerateListGuarded(value);
             internal get => field ??= GenerateListGuarded(field);
         }
-        public ListGuarded.Operator<CustomFeeLimit> CustomFeeLimitsOperator => field ??= new(CustomFeeLimits);
 
         /// <include file="TopicMessageSubmitTransaction.cs.xml" path='docs/member[@name="M:TopicMessageSubmitTransaction.InitFromTransactionBody_2"]' />
         void InitFromTransactionBody()

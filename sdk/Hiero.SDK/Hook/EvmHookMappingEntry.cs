@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Using fully qualified names to avoid conflicts with generated classes
 using Google.Protobuf;
+using Google.Protobuf.WellKnownTypes;
 using System;
 using System.Collections;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -87,6 +88,19 @@ namespace Hiero.SDK.Hook
         public override int GetHashCode()
         {
             return HashCode.Combine(Key?.GetHashCodeEnumerable(), PreImage?.GetHashCodeEnumerable(), Value.GetHashCodeEnumerable());
+        }
+        public override string ToString()
+        {
+            return true switch
+            {
+                true when Key is not null 
+                    => string.Format("EvmHookMappingEntry {{ key=\"[{0}]\", value=\"{1}\" }}", string.Join("; ", Key), string.Join("; ", Value)),
+                
+                true when PreImage is not null 
+                    => string.Format("EvmHookMappingEntry {{ preimage=\"[{0}]\", value=\"{1}\" }}", string.Join("; ", PreImage), string.Join("; ", Value)),
+
+                _ => throw new ArgumentException("Both 'Key' and Preimage'' cannot both be null")
+            };
         }
     }
 }

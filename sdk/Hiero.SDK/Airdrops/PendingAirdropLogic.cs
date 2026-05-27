@@ -20,7 +20,6 @@ namespace Hiero.SDK.Airdrops
             init => field = GenerateListGuarded(value);
             internal get => field ??= GenerateListGuarded(field);
         }
-        public ListGuarded.Operator<PendingAirdropId> PendingAirdropIdsOperator => field ??= new(PendingAirdropIds);
 
         public override void ValidateChecksums(Client client)
         {

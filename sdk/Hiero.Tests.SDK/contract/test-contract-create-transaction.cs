@@ -120,7 +120,7 @@ namespace Hiero.Tests.SDK.Contract
             var tx = new ContractCreateTransaction();
             var ex = Assert.Throws<ArgumentException>(() => tx.Gas = -1);
 
-            Assert.Equal(ex.Message, "Gas must be non-negative");
+            Assert.Contains("Gas must be non-negative", ex.Message);
         }
         [Fact]
         /// <include file="test-contract-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Contract.ContractCreateTransactionTest.SetGasShouldAcceptZeroAndPositiveValues"]' />
@@ -128,9 +128,9 @@ namespace Hiero.Tests.SDK.Contract
         {
             var tx = new ContractCreateTransaction();
             tx.Gas = 0;
-            Assert.Equal(tx.Gas, 0);
+            Assert.Equal(0, tx.Gas);
             tx.Gas = 123456;
-            Assert.Equal(tx.Gas, 123456);
+            Assert.Equal(123456, tx.Gas);
         }
     }
 }

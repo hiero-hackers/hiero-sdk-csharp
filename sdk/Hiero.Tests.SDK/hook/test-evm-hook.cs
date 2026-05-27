@@ -69,8 +69,8 @@ namespace Hiero.Tests.SDK.Hook
             var hook = new EvmHook(spec);
             var s = hook.ToString();
 
-            Assert.True(s.Contains("contractId"));
-            Assert.True(s.Contains("storageUpdates"));
+            Assert.Contains("contractId", s);
+            Assert.Contains("storageUpdates", s);
         }
     }
 }

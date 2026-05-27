@@ -36,7 +36,6 @@ namespace Hiero.SDK.Token
             init => field = GenerateListGuarded(value);
             internal get => field ??= GenerateListGuarded(field);
         }
-        public ListGuarded.Operator<long> SerialsOperator => field ??= new(Serials);
 
         /// <include file="TokenBurnTransaction.cs.xml" path='docs/member[@name="M:TokenBurnTransaction.ToProtobuf_2"]' />
         public virtual Proto.Services.TokenBurnTransactionBody ToProtobuf()
@@ -66,7 +65,7 @@ namespace Hiero.SDK.Token
 				TokenId = TokenId.FromProtobuf(body.Token);
 
 			Amount = body.Amount;
-            SerialsOperator.Operate(_ => [.. body.SerialNumbers]);
+            Serials.Set(body.SerialNumbers);
         }
 
         public override void ValidateChecksums(Client client)

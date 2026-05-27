@@ -123,7 +123,6 @@ namespace Hiero.SDK.Cryptocurrency
             init => field = GenerateListGuarded(value);
             internal get => field ??= GenerateListGuarded(field);
         }
-        public ListGuarded.Operator<HookCreationDetails> HookCreationDetailsOperator => field ??= new (HookCreationDetails);
 
         /// <include file="AccountUpdateTransaction.cs.xml" path='docs/member[@name="M:AccountUpdateTransaction.InitFromTransactionBody"]' />
         public ListGuarded<long> HookIdsToDelete
@@ -131,7 +130,6 @@ namespace Hiero.SDK.Cryptocurrency
             init => field = GenerateListGuarded(value);
             internal get => field ??= GenerateListGuarded(field);
         }
-        public ListGuarded.Operator<long> HookIdsToDeleteOperator => field ??= new(HookIdsToDelete);
 
         /// <include file="AccountUpdateTransaction.cs.xml" path='docs/member[@name="M:AccountUpdateTransaction.InitFromTransactionBody_2"]' />
         private void InitFromTransactionBody()
@@ -171,8 +169,8 @@ namespace Hiero.SDK.Cryptocurrency
             StakedNodeId = body.StakedNodeId;
 
 			// Initialize hook create/delete details
-			HookCreationDetailsOperator.Operate(_ => body.HookCreationDetails.Select(_ => Hook.HookCreationDetails.FromProtobuf(_)));
-            HookIdsToDeleteOperator.Operate(_ => [.. body.HookIdsToDelete]);
+			HookCreationDetails.Set(body.HookCreationDetails.Select(_ => Hook.HookCreationDetails.FromProtobuf(_)));
+            HookIdsToDelete.Set(body.HookIdsToDelete);
         }
 
         /// <include file="AccountUpdateTransaction.cs.xml" path='docs/member[@name="M:AccountUpdateTransaction.ToProtobuf"]' />

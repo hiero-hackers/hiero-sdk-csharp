@@ -138,7 +138,7 @@ namespace Hiero.Tests.SDK.Nfts
         public virtual void GetSetSerialNumbersFrozen()
         {
             var tx = SpawnTestTransaction();
-            Assert.Throws<InvalidOperationException>(() => tx.SerialsOperator.Operate(_ => _.AddRange(testSerialNumbers)));
+            Assert.Throws<InvalidOperationException>(() => tx.Serials.AddRange(testSerialNumbers));
         }
     }
 }

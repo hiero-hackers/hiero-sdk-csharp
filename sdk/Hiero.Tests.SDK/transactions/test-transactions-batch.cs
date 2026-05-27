@@ -80,7 +80,7 @@ namespace Hiero.Tests.SDK.Transactions
         {
             var batchTransaction = new BatchTransaction();
             List<ITransaction> newInnerTransactions = [ SpawnTestTransactionAccountCreate(), SpawnTestTransactionAccountCreate() ];
-            batchTransaction.InnerTransactionsOperator.Operate(_ => newInnerTransactions);
+            batchTransaction.InnerTransactions.Set(newInnerTransactions);
             
 			Assert.Equal(batchTransaction.InnerTransactions.Count, 2);
 			Assert.Equal(batchTransaction.InnerTransactions[0], newInnerTransactions[0]);
@@ -92,7 +92,7 @@ namespace Hiero.Tests.SDK.Transactions
         {
             var batchTransaction = new BatchTransaction();
             var newTransaction = SpawnTestTransactionAccountCreate();
-            batchTransaction.InnerTransactionsOperator.Operate(_ => _.Add(newTransaction));
+            batchTransaction.InnerTransactions.Add(newTransaction);
 
             Assert.Equal(batchTransaction.InnerTransactions.Count, 1);
             Assert.Equal(batchTransaction.InnerTransactions[0], newTransaction);
@@ -140,7 +140,7 @@ namespace Hiero.Tests.SDK.Transactions
 
 			InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() =>
             {
-                batchTransaction.InnerTransactionsOperator.Operate(_ => _.Add(freezeTransaction));
+                batchTransaction.InnerTransactions.Add(freezeTransaction);
             });
             Assert.Contains("Transaction type FreezeTransaction is not allowed in a batch transaction", exception.Message);
 		}
@@ -156,7 +156,7 @@ namespace Hiero.Tests.SDK.Transactions
 
 			}.Freeze();
 
-			InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => batchTransaction.InnerTransactionsOperator.Operate(_ => _.Add(innerBatchTransaction)));
+			InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => batchTransaction.InnerTransactions.Add(innerBatchTransaction));
             Assert.Contains("Transaction type BatchTransaction is not allowed in a batch transaction", exception.Message);
 		}
         [Fact]
@@ -174,7 +174,7 @@ namespace Hiero.Tests.SDK.Transactions
 			
             }.Freeze();
 			
-            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => batchTransaction.InnerTransactionsOperator.Operate(_ => _.AddRange([validTransaction, freezeTransaction])));
+            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => batchTransaction.InnerTransactions.AddRange([validTransaction, freezeTransaction]));
             Assert.Contains("Transaction type FreezeTransaction is not allowed in a batch transaction", exception.Message);
 		}
         [Fact]
@@ -188,7 +188,7 @@ namespace Hiero.Tests.SDK.Transactions
 				TransactionId = TransactionId.WithValidStart(AccountId.FromString("0.0.5006"), validStart),
 			};
 
-            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => batchTransaction.InnerTransactionsOperator.Operate(_ => _.Add(unfrozenTransaction)));
+            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => batchTransaction.InnerTransactions.Add(unfrozenTransaction));
 			Assert.Contains("Inner transaction should be frozen", exception.Message);
         }
         [Fact]
@@ -202,7 +202,7 @@ namespace Hiero.Tests.SDK.Transactions
 			
             }.Freeze();
             
-            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => batchTransaction.InnerTransactionsOperator.Operate(_ => _.Add(SpawnTestTransactionAccountCreate())));
+            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => batchTransaction.InnerTransactions.Add(SpawnTestTransactionAccountCreate()));
             Assert.Contains("transaction is immutable", exception.Message);
 		}
         [Fact]
@@ -216,7 +216,7 @@ namespace Hiero.Tests.SDK.Transactions
 			
             }.Freeze();
             
-            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => batchTransaction.InnerTransactionsOperator.Operate(_ => _.AddRange(INNER_TRANSACTIONS)));
+            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => batchTransaction.InnerTransactions.AddRange(INNER_TRANSACTIONS));
 			Assert.Contains("transaction is immutable", exception.Message);
 		}
         [Fact]
@@ -229,7 +229,7 @@ namespace Hiero.Tests.SDK.Transactions
             var transaction3 = SpawnTestTransactionAccountCreate();
             
             List<ITransaction> transactions = [transaction1, transaction2, transaction3];
-            batchTransaction.InnerTransactionsOperator.Operate(_ => transactions);
+            batchTransaction.InnerTransactions.Set(transactions);
             
             Assert.Equal(batchTransaction.InnerTransactions, [transaction1, transaction2, transaction3]);
         }
@@ -239,7 +239,7 @@ namespace Hiero.Tests.SDK.Transactions
         {
             var batchTransaction = new BatchTransaction();
             List<ITransaction> mutableList = [.. INNER_TRANSACTIONS];
-            batchTransaction.InnerTransactionsOperator.Operate(_ => mutableList);
+            batchTransaction.InnerTransactions.Set(mutableList);
             mutableList.Clear();
 
             Assert.Equal(batchTransaction.InnerTransactions, INNER_TRANSACTIONS);
@@ -256,7 +256,7 @@ namespace Hiero.Tests.SDK.Transactions
 			
             }.Freeze();
 
-            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => batchTransaction.InnerTransactionsOperator.Operate(_ => _.Add(transactionWithoutBatchKey)));
+            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => batchTransaction.InnerTransactions.Add(transactionWithoutBatchKey));
 			Assert.Contains("Batch key needs to be set", exception.Message);
 		}
         [Fact]
@@ -272,7 +272,7 @@ namespace Hiero.Tests.SDK.Transactions
 
 			}.Freeze();
 
-            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => batchTransaction.InnerTransactionsOperator.Operate(_ => _.AddRange([validTransaction, transactionWithoutBatchKey])));
+            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => batchTransaction.InnerTransactions.AddRange([validTransaction, transactionWithoutBatchKey]));
 			Assert.Contains("Batch key needs to be set", exception.Message);
 		}
         [Fact]
@@ -287,12 +287,12 @@ namespace Hiero.Tests.SDK.Transactions
 				NodeAccountIds = new (AccountId.FromString("0.0.5005"), AccountId.FromString("0.0.5006")),
 				TransactionId = TransactionId.WithValidStart(AccountId.FromString("0.0.5006"), validStart),
 			};
-            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => batchTransaction.InnerTransactionsOperator.Operate(_ => _.Add(unfrozenTransactionWithoutBatchKey)));
+            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => batchTransaction.InnerTransactions.Add(unfrozenTransactionWithoutBatchKey));
             Assert.Contains("Inner transaction should be frozen", exception.Message);
 
 			// Test frozen transaction with no batch key
 			var frozenTransactionWithoutBatchKey = unfrozenTransactionWithoutBatchKey.Freeze();
-            InvalidOperationException exception1 = Assert.Throws<InvalidOperationException>(() => batchTransaction.InnerTransactionsOperator.Operate(_ => _.Add(frozenTransactionWithoutBatchKey)));
+            InvalidOperationException exception1 = Assert.Throws<InvalidOperationException>(() => batchTransaction.InnerTransactions.Add(frozenTransactionWithoutBatchKey));
             Assert.Contains("Batch key needs to be set", exception1.Message);
 
 			// Test blacklisted transaction with batch key
@@ -306,7 +306,7 @@ namespace Hiero.Tests.SDK.Transactions
 			
             }.Freeze();
 
-            InvalidOperationException exception2 = Assert.Throws<InvalidOperationException>(() => batchTransaction.InnerTransactionsOperator.Operate(_ => _.Add(blacklistedTransaction)));
+            InvalidOperationException exception2 = Assert.Throws<InvalidOperationException>(() => batchTransaction.InnerTransactions.Add(blacklistedTransaction));
             Assert.Contains("FreezeTransaction is not allowed in a batch transaction", exception2.Message);
 		}
         [Fact]
@@ -322,7 +322,7 @@ namespace Hiero.Tests.SDK.Transactions
 
 			}.Freeze();
             
-            batchTransaction.InnerTransactionsOperator.Operate(_ => _.Add(validTransaction));
+            batchTransaction.InnerTransactions.Add(validTransaction);
 
             Assert.Equal(batchTransaction.InnerTransactions, [validTransaction]);
         }
@@ -338,12 +338,12 @@ namespace Hiero.Tests.SDK.Transactions
             };
 
             // First check should be for frozen state
-            InvalidOperationException exception1 = Assert.Throws<InvalidOperationException>(() => batchTransaction.InnerTransactionsOperator.Operate(_ => _.Add(transaction)));
+            InvalidOperationException exception1 = Assert.Throws<InvalidOperationException>(() => batchTransaction.InnerTransactions.Add(transaction));
 			Assert.Contains(exception1.Message, "Inner transaction should be frozen");
 
 			// After freezing, next check should be for batch key
 			var frozenTransaction = transaction.Freeze();
-            InvalidOperationException exception2 = Assert.Throws<InvalidOperationException>(() => batchTransaction.InnerTransactionsOperator.Operate(_ => _.Add(frozenTransaction)));
+            InvalidOperationException exception2 = Assert.Throws<InvalidOperationException>(() => batchTransaction.InnerTransactions.Add(frozenTransaction));
             Assert.Contains(exception2.Message, "Batch key needs to be set");
         }
     }

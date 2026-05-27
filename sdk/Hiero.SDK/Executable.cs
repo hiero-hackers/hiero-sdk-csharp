@@ -85,9 +85,8 @@ namespace Hiero.SDK
         public ListGuarded<AccountId> NodeAccountIds
         {
             internal get => field ??= [];
-			init;
+			set;
         }
-		public ListGuarded.Operator<AccountId> NodeAccountIdsOperator => field ??= new(NodeAccountIds);
 
         public abstract void OnExecute(Client client);
         public abstract Task OnExecuteAsync(Client client);

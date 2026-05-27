@@ -44,7 +44,7 @@ namespace Hiero.Tests.SDK.Hook
             var restoredSlot = (EvmHookStorageSlot)restored;
             Assert.Equal(new byte[] { 0x0A }, restoredSlot.Key);
             Assert.Equal(new byte[] { 0x0B }, restoredSlot.Value);
-            Assert.True(original.ToString().Contains("key"));
+            Assert.Contains("key", original.ToString());
         }
         [Fact]
         /// <include file="test-evm-hook-storageupdate.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Hook.EvmHookStorageUpdateTest.EvmHookMappingEntriesConstructsValidatesAndCopies"]' />
@@ -100,7 +100,7 @@ namespace Hiero.Tests.SDK.Hook
             var restoredME = (EvmHookMappingEntries)restored;
             Assert.Equal(new byte[] { 0x09 }, restoredME.MappingSlot);
             Assert.Equal([entry1, entry2], restoredME.Entries);
-            Assert.True(original.ToString().Contains("mappingSlot"));
+            Assert.Contains("mappingSlot", original.ToString());
         }
         [Fact]
         /// <include file="test-evm-hook-storageupdate.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Hook.EvmHookStorageUpdateTest.FromProtobufWithoutUpdateThrows"]' />

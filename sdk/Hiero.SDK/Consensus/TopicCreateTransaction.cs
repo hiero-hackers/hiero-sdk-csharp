@@ -53,7 +53,6 @@ namespace Hiero.SDK.Consensus
             init => field = GenerateListGuarded(value);
             internal get => field ??= GenerateListGuarded(field);
         }
-        public ListGuarded.Operator<Key> FeeExemptKeysOperator => field ??= new(FeeExemptKeys);
 
         /// <include file="TopicCreateTransaction.cs.xml" path='docs/member[@name="M:TopicCreateTransaction.InitFromTransactionBody"]' />
         public ListGuarded<CustomFixedFee> CustomFees
@@ -61,7 +60,6 @@ namespace Hiero.SDK.Consensus
             init => field = GenerateListGuarded(value);
             internal get => field ??= GenerateListGuarded(field);
         }
-        public ListGuarded.Operator<CustomFixedFee> CustomFeesOperator => field ??= new(CustomFees);
 
         /// <include file="TopicCreateTransaction.cs.xml" path='docs/member[@name="M:TopicCreateTransaction.InitFromTransactionBody_2"]' />
         void InitFromTransactionBody()
@@ -84,10 +82,10 @@ namespace Hiero.SDK.Consensus
                 FeeScheduleKey = Key.FromProtobufKey(body.FeeScheduleKey);
 
             if (body.FeeExemptKeyList is not null)
-				FeeExemptKeysOperator.Operate(_ => body.FeeExemptKeyList.Select(_ => Key.FromProtobufKey(_)).OfType<Key>());
+				FeeExemptKeys.Set(body.FeeExemptKeyList.Select(_ => Key.FromProtobufKey(_)).OfType<Key>());
 
             if (body.CustomFees is not null)
-				CustomFeesOperator.Operate(_ => body.CustomFees.Select((x) => CustomFixedFee.FromProtobuf(x.FixedFee)));
+				CustomFees.Set(body.CustomFees.Select((x) => CustomFixedFee.FromProtobuf(x.FixedFee)));
 
             TopicMemo = body.Memo;
         }

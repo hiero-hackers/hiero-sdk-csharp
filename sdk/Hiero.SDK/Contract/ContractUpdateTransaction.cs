@@ -164,7 +164,6 @@ namespace Hiero.SDK.Contract
             init => field = GenerateListGuarded(value);
             internal get => field ??= GenerateListGuarded(field);
         }
-        public ListGuarded.Operator<HookCreationDetails> HookCreationDetailsOperator => field ??= new(HookCreationDetails);
 
         /// <include file="ContractUpdateTransaction.cs.xml" path='docs/member[@name="M:ContractUpdateTransaction.InitFromTransactionBody"]' />
         public ListGuarded<long> HookIdsToDelete
@@ -172,7 +171,6 @@ namespace Hiero.SDK.Contract
             init => field = GenerateListGuarded(value);
             internal get => field ??= GenerateListGuarded(field);
         }
-        public ListGuarded.Operator<long> HookIdsToDeleteOperator => field ??= new(HookIdsToDelete);
 
         /// <include file="ContractUpdateTransaction.cs.xml" path='docs/member[@name="M:ContractUpdateTransaction.InitFromTransactionBody_2"]' />
         void InitFromTransactionBody()
@@ -195,8 +193,8 @@ namespace Hiero.SDK.Contract
 
             AutoRenewAccountId = body.AutoRenewAccountId is null ? null : AccountId.FromProtobuf(body.AutoRenewAccountId);
 
-			HookCreationDetailsOperator.Operate(_ => body.HookCreationDetails.Select(_ => Hook.HookCreationDetails.FromProtobuf(_)));
-			HookIdsToDeleteOperator.Operate(_ => [.. body.HookIdsToDelete]);
+			HookCreationDetails.Set(body.HookCreationDetails.Select(_ => Hook.HookCreationDetails.FromProtobuf(_)));
+			HookIdsToDelete.Set(body.HookIdsToDelete);
         }
 
 		/// <include file="ContractUpdateTransaction.cs.xml" path='docs/member[@name="M:ContractUpdateTransaction.ToProtobuf"]' />

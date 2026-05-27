@@ -169,8 +169,6 @@ namespace Hiero.SDK.Cryptocurrency
             init => field = GenerateListGuarded(value);
             internal get => field ??= GenerateListGuarded(field);
         }
-        public ListGuarded.Operator<HookCreationDetails> HookCreationDetailsOperator => field ??= new(HookCreationDetails);
-
 
         /// <include file="AccountCreateTransaction.cs.xml" path='docs/member[@name="M:ToProtobuf_2"]' />
         public Proto.Services.CryptoCreateTransactionBody ToProtobuf()
@@ -251,7 +249,7 @@ namespace Hiero.SDK.Cryptocurrency
             Alias = EvmAddress.FromAliasBytes(body.Alias);
 
 			// Initialize hook creation details
-			HookCreationDetailsOperator.Operate(_ => _.AddRange(body.HookCreationDetails.Select(_ => Hook.HookCreationDetails.FromProtobuf(_))));
+			HookCreationDetails.AddRange(body.HookCreationDetails.Select(_ => Hook.HookCreationDetails.FromProtobuf(_)));
         }
 
 		public override MethodDescriptor GetMethodDescriptor()
