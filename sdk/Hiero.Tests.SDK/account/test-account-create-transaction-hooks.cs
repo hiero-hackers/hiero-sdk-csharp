@@ -44,7 +44,7 @@ namespace Hiero.Tests.SDK.Account
 			}; // Simple hook without admin key or storage
 
             // Verify hooks were added
-            List<HookCreationDetails> hookDetails = transaction.HookCreationDetails;
+            List<HookCreationDetails> hookDetails = transaction.HookCreationDetailsOperator.Read;
             Assert.Equal(2, hookDetails.Count);
 
             // Verify first hook
@@ -82,7 +82,7 @@ namespace Hiero.Tests.SDK.Account
 			};
 
             // Verify hooks were set
-            List<HookCreationDetails> retrievedHooks = transaction.HookCreationDetails;
+            List<HookCreationDetails> retrievedHooks = transaction.HookCreationDetailsOperator.Read;
             Assert.Single(retrievedHooks);
             Assert.Equal(hookDetails, retrievedHooks[0]);
         }
@@ -149,7 +149,7 @@ namespace Hiero.Tests.SDK.Account
 			};
 
             // Verify no hooks
-            List<HookCreationDetails> hookDetails = transaction.HookCreationDetails;
+            List<HookCreationDetails> hookDetails = transaction.HookCreationDetailsOperator.Read;
             Assert.Empty(hookDetails);
 
             // Should build successfully
@@ -181,7 +181,7 @@ namespace Hiero.Tests.SDK.Account
             AccountCreateTransaction parsedTx = (AccountCreateTransaction)parsed;
 
             // Verify hook information persisted
-            List<HookCreationDetails> parsedHooks = parsedTx.HookCreationDetails;
+            List<HookCreationDetails> parsedHooks = parsedTx.HookCreationDetailsOperator.Read;
 
             Assert.Single(parsedHooks);
             HookCreationDetails parsedHook = parsedHooks[0];

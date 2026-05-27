@@ -306,7 +306,7 @@ namespace Hiero.SDK.Transactions
                 {
                     new TransactionReceiptQuery
                     {
-						NodeAccountIds = response.NodeId,
+						NodeAccountIds = [response.NodeId],
 						TransactionId = response.TransactionId,
 
 					}.Execute(client, timeoutPerChunk);

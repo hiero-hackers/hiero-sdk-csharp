@@ -12,10 +12,10 @@ using Hiero.SDK.Schedule;
 using Hiero.SDK.Systems;
 using Hiero.SDK.Token;
 using Hiero.SDK.Consensus;
+using Hiero.SDK.Transactions;
 
 using System;
 using System.Collections.Generic;
-using Hiero.SDK.Transactions;
 
 namespace Hiero.SDK.Core
 {
@@ -28,7 +28,7 @@ namespace Hiero.SDK.Core
 		/// <include file="Transaction.Interface.cs.xml" path='docs/member[@name="P:.SigPairLists"]' />
 		List<Proto.Services.SignatureMap> SigPairLists { get; }
 		/// <include file="Transaction.Interface.cs.xml" path='docs/member[@name="P:.TransactionIds"]' />
-		ListGuarded<TransactionId> TransactionIds { get; }
+		ListGuarded<TransactionId> TransactionIds { init; }
 		/// <include file="Transaction.Interface.cs.xml" path='docs/member[@name="P:.PublicKeys"]' />
 		IList<PublicKey> PublicKeys { get; }
 		/// <include file="Transaction.Interface.cs.xml" path='docs/member[@name="M:operator(paying)"]' />

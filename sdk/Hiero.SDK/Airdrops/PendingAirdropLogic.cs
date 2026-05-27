@@ -17,11 +17,10 @@ namespace Hiero.SDK.Airdrops
         /// <include file="PendingAirdropLogic.cs.xml" path='docs/member[@name="M:RequireNotFrozen"]' />
         public virtual ListGuarded<PendingAirdropId> PendingAirdropIds
         {
-            init; get => field ??= new ListGuarded<PendingAirdropId>
-            {
-                OnRequireNotFrozen = RequireNotFrozen
-            };
+            init => field = GenerateListGuarded(value);
+            internal get => field ??= GenerateListGuarded(field);
         }
+        public ListGuarded.Operator<PendingAirdropId> PendingAirdropIdsOperator => field ??= new(PendingAirdropIds);
 
         public override void ValidateChecksums(Client client)
         {

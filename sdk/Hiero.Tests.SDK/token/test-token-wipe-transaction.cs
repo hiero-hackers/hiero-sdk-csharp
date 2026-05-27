@@ -46,7 +46,7 @@ namespace Hiero.Tests.SDK.Token
 				TokenId = TokenId.FromString("0.0.111"),
 				AccountId = testAccountId,
 				Amount = testAmount,
-				Serials = testSerialNumbers,
+				Serials = [..testSerialNumbers],
 				MaxTransactionFee = new Hbar(1)
 			}
             .Freeze()
@@ -180,7 +180,7 @@ namespace Hiero.Tests.SDK.Token
         public virtual void GetSetSerialNumbersFrozen()
         {
             var tx = SpawnTestTransaction();
-            Assert.Throws<InvalidOperationException>(() => tx.Serials.Operate(_ => testSerialNumbers));
+            Assert.Throws<InvalidOperationException>(() => tx.SerialsOperator.Operate(_ => testSerialNumbers));
         }
     }
 }

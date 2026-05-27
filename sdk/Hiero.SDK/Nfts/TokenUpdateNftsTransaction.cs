@@ -25,18 +25,19 @@ namespace Hiero.SDK.Nfts
             InitFromTransactionBody();
         }
 
-		private List<long> _Serials = [];
-
 		/// <include file="TokenUpdateNftsTransaction.cs.xml" path='docs/member[@name="M:TokenUpdateNftsTransaction.RequireNotFrozen"]' />
 		public virtual TokenId? TokenId { get; set { RequireNotFrozen(); field = value; } }
+
 		/// <include file="TokenUpdateNftsTransaction.cs.xml" path='docs/member[@name="T:TokenUpdateNftsTransaction_2"]' />
 		public virtual ListGuarded<long> Serials
-		{
-			init => field = GenerateListGuarded(value); 
-			get => field ??= GenerateListGuarded<long>();
-		}
-		/// <include file="TokenUpdateNftsTransaction.cs.xml" path='docs/member[@name="M:TokenUpdateNftsTransaction.RequireNotFrozen_2"]' />
-		public virtual byte[]? Metadata { get; set { RequireNotFrozen(); field = value; } } = [];
+        {
+            init => field = GenerateListGuarded(value);
+            internal get => field ??= GenerateListGuarded(field);
+        }
+        public ListGuarded.Operator<long> SerialsOperator => field ??= new(Serials);
+
+        /// <include file="TokenUpdateNftsTransaction.cs.xml" path='docs/member[@name="M:TokenUpdateNftsTransaction.RequireNotFrozen_2"]' />
+        public virtual byte[]? Metadata { get; set { RequireNotFrozen(); field = value; } } = [];
 
 		/// <include file="TokenUpdateNftsTransaction.cs.xml" path='docs/member[@name="M:TokenUpdateNftsTransaction.InitFromTransactionBody"]' />
 		private void InitFromTransactionBody()
@@ -46,7 +47,7 @@ namespace Hiero.SDK.Nfts
             if (body.Token is not null)
 				TokenId = TokenId.FromProtobuf(body.Token);
 
-			Serials.Operate(_ => [.. body.SerialNumbers]);
+			SerialsOperator.Operate(_ => [.. body.SerialNumbers]);
 
             if (body.Metadata is not null)
                 Metadata = body.Metadata.ToByteArray();

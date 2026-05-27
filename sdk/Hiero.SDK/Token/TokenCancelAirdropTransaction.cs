@@ -48,7 +48,7 @@ namespace Hiero.SDK.Token
 
             foreach (var pendingAirdropId in body.PendingAirdrops)
             {
-                PendingAirdropIds.Operate(_ => _.Add(PendingAirdropId.FromProtobuf(pendingAirdropId)));
+                PendingAirdropIdsOperator.Operate(_ => _.Add(PendingAirdropId.FromProtobuf(pendingAirdropId)));
             }
         }
 

@@ -32,7 +32,7 @@ namespace Hiero.SDK
 			{
 				Parent.ChosenQueryPayment = Cost;
 				Parent.PaymentOperator = Operator;
-				Parent.PaymentTransactions = [.. Enumerable.Range(0, Parent.NodeAccountIds.Read.Count).Select<int, Proto.Services.Transaction?>(_ => null)];
+				Parent.PaymentTransactions = [.. Enumerable.Range(0, Parent.NodeAccountIds.Count).Select<int, Proto.Services.Transaction?>(_ => null)];
 			}
 			public bool ShouldError()
 			{

@@ -65,7 +65,7 @@ namespace Hiero.SDK
 			return new TransferTransaction
 			{
 				TransactionId = paymentTransactionId,
-				NodeAccountIds = nodeId,
+				NodeAccountIds = [nodeId],
 				MaxTransactionFee = new Hbar(1),
 
 			}.SignWith(operator_.PublicKey, operator_.TransactionSigner).MakeRequest();
@@ -144,7 +144,7 @@ namespace Hiero.SDK
 				// Get a list of node AccountId's if the user has not set them manually.
 				try
 				{
-					NodeAccountIds.Operate(_ => client.Network_.GetNodeAccountIdsForExecute());
+					NodeAccountIdsOperator.Operate(_ => client.Network_.GetNodeAccountIdsForExecute());
 				}
 				catch (ThreadInterruptedException e)
 				{

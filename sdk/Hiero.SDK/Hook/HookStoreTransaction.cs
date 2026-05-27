@@ -29,7 +29,7 @@ namespace Hiero.SDK.Hook
 			var body = SourceTransactionBody.HookStore;
 
 			HookId = HookId.FromProtobuf(body.HookId);
-			StorageUpdates.Operate(_ => body.StorageUpdates.Select(_ => EvmHookStorageUpdate.FromProtobuf(_)));
+			StorageUpdatesOperator.Operate(_ => body.StorageUpdates.Select(_ => EvmHookStorageUpdate.FromProtobuf(_)));
 		}
 
 		public virtual HookId? HookId { get; set { RequireNotFrozen(); field = value; } }
@@ -39,10 +39,11 @@ namespace Hiero.SDK.Hook
 			{
 				OnRequireNotFrozen = RequireNotFrozen
 			};
-		}
+        }
+        public ListGuarded.Operator<EvmHookStorageUpdate> StorageUpdatesOperator => field ??= new(StorageUpdates);
 
-		/// <include file="HookStoreTransaction.cs.xml" path='docs/member[@name="M:HookStoreTransaction.ToProtobuf"]' />
-		public Proto.Services.HookStoreTransactionBody ToProtobuf()
+        /// <include file="HookStoreTransaction.cs.xml" path='docs/member[@name="M:HookStoreTransaction.ToProtobuf"]' />
+        public Proto.Services.HookStoreTransactionBody ToProtobuf()
 		{
 			Proto.Services.HookStoreTransactionBody builder = new ();
 

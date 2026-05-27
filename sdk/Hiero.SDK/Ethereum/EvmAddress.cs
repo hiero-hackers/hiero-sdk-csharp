@@ -63,7 +63,7 @@ namespace Hiero.SDK.Ethereum
 			if (o is not EvmAddress other)
 				return false;
 
-            return Equals(Bytes, other.Bytes);
+            return Bytes.SequenceEqual(other.Bytes);
         }
     }
 }

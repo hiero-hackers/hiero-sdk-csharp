@@ -154,7 +154,7 @@ namespace Hiero.Tests.SDK.Topic
                     } ]
                 }
             };
-            var topicMessageSubmitTransaction = new TopicMessageSubmitTransaction { CustomFeeLimits = customFeeLimits };
+            var topicMessageSubmitTransaction = new TopicMessageSubmitTransaction { CustomFeeLimits = [..customFeeLimits] };
             Assert.Equal(topicMessageSubmitTransaction.CustomFeeLimits, customFeeLimits);
         }
         [Fact]

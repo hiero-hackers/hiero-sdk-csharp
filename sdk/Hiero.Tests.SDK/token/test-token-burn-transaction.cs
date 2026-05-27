@@ -61,7 +61,7 @@ namespace Hiero.Tests.SDK.Token
                 NodeAccountIds = new (AccountId.FromString("0.0.5005"), AccountId.FromString("0.0.5006")),
                 TransactionId = TransactionId.WithValidStart(AccountId.FromString("0.0.5006"), validStart),
                 TokenId = testTokenId,
-                Serials = testSerials,
+                Serials = [..testSerials],
                 MaxTransactionFee = new Hbar(1),
             }
             .Freeze()
@@ -152,7 +152,7 @@ namespace Hiero.Tests.SDK.Token
         {
             var tokenBurnTransaction = new TokenBurnTransaction
             {
-				Serials = testSerials
+				Serials = [..testSerials]
             };
             
             Assert.Equal(tokenBurnTransaction.Serials, testSerials);
@@ -163,7 +163,7 @@ namespace Hiero.Tests.SDK.Token
         {
             var tx = SpawnTestTransactionNft();
             
-            // Assert.Throws<InvalidOperationException>(() => tx.Serials = testSerials);
+            // Assert.Throws<InvalidOperationException>(() => tx.Serials = [..testSerials]);
         }
     }
 }

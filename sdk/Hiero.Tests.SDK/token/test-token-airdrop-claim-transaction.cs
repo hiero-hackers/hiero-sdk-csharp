@@ -36,7 +36,7 @@ namespace Hiero.Tests.SDK.Token
 				NodeAccountIds = new (AccountId.FromString("0.0.5005"), AccountId.FromString("0.0.5006")),
 				TransactionId = TransactionId.WithValidStart(AccountId.FromString("0.0.5006"), validStart),
 				MaxTransactionFee = Hbar.FromTinybars(100000),
-				PendingAirdropIds = pendingAirdropIds,
+				PendingAirdropIds = [..pendingAirdropIds],
 			
             }.Freeze().Sign(privateKey);
         }
@@ -74,7 +74,7 @@ namespace Hiero.Tests.SDK.Token
                 new PendingAirdropId(new AccountId(0, 0, 457), new AccountId(0, 0, 456), new TokenId(0, 0, 123)),
                 new PendingAirdropId(new AccountId(0, 0, 457), new AccountId(0, 0, 456), new NftId(new TokenId(0, 0, 1234), 123)),
             ];
-            transaction.PendingAirdropIds.Operate(_ => pendingAirdropIds);
+            transaction.PendingAirdropIdsOperator.Operate(_ => pendingAirdropIds);
 
             Assert.Equal(pendingAirdropIds, transaction.PendingAirdropIds);
         }
@@ -85,8 +85,8 @@ namespace Hiero.Tests.SDK.Token
             List<PendingAirdropId> pendingAirdropIds = [];
             PendingAirdropId pendingAirdropId = new (new AccountId(0, 0, 457), new AccountId(0, 0, 456), new TokenId(0, 0, 123));
             pendingAirdropIds.Add(pendingAirdropId);
-            transaction.PendingAirdropIds.Operate(_ => pendingAirdropIds);
-            transaction.PendingAirdropIds.Operate(_ => _.Clear());
+            transaction.PendingAirdropIdsOperator.Operate(_ => pendingAirdropIds);
+            transaction.PendingAirdropIdsOperator.Operate(_ => _.Clear());
             Assert.True(transaction.PendingAirdropIds.Count == 0);
         }
         [Fact]
@@ -96,12 +96,12 @@ namespace Hiero.Tests.SDK.Token
             PendingAirdropId pendingAirdropId1 = new (new AccountId(0, 0, 457), new AccountId(0, 0, 456), new TokenId(0, 0, 123));
             PendingAirdropId pendingAirdropId2 = new (new AccountId(0, 0, 458), new AccountId(0, 0, 459), new TokenId(0, 0, 123));
             
-            transaction.PendingAirdropIds.Operate(_ => _.Add(pendingAirdropId1));
-            transaction.PendingAirdropIds.Operate(_ => _.Add(pendingAirdropId2));
+            transaction.PendingAirdropIdsOperator.Operate(_ => _.Add(pendingAirdropId1));
+            transaction.PendingAirdropIdsOperator.Operate(_ => _.Add(pendingAirdropId2));
 
             Assert.Equal(2, transaction.PendingAirdropIds.Count);
-            Assert.True(transaction.PendingAirdropIds.Read.Contains(pendingAirdropId1));
-            Assert.True(transaction.PendingAirdropIds.Read.Contains(pendingAirdropId2));
+            Assert.True(transaction.PendingAirdropIds.Contains(pendingAirdropId1));
+            Assert.True(transaction.PendingAirdropIds.Contains(pendingAirdropId2));
         }
         [Fact]
         /// <include file="test-token-airdrop-claim-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Token.TokenClaimAirdropTransactionTest.TestBuildTransactionBody"]' />
@@ -109,7 +109,7 @@ namespace Hiero.Tests.SDK.Token
         {
             PendingAirdropId pendingAirdropId = new (new AccountId(0, 0, 457), new AccountId(0, 0, 456), new NftId(new TokenId(0, 0, 1234), 123));
 
-            transaction.PendingAirdropIds.Operate(_ => _.Add(pendingAirdropId));
+            transaction.PendingAirdropIdsOperator.Operate(_ => _.Add(pendingAirdropId));
             Proto.Services.TokenClaimAirdropTransactionBody builder = transaction.ToProtobuf();
             
             Assert.Equal(1, builder.PendingAirdrops.Count);

@@ -165,14 +165,15 @@ namespace Hiero.SDK.Cryptocurrency
 
         /// <include file="AccountCreateTransaction.cs.xml" path='docs/member[@name="M:ToProtobuf"]' />
         public ListGuarded<HookCreationDetails> HookCreationDetails
-		{
+        {
             init => field = GenerateListGuarded(value);
-            get => field ??= GenerateListGuarded<HookCreationDetails>();
+            internal get => field ??= GenerateListGuarded(field);
         }
+        public ListGuarded.Operator<HookCreationDetails> HookCreationDetailsOperator => field ??= new(HookCreationDetails);
 
 
-		/// <include file="AccountCreateTransaction.cs.xml" path='docs/member[@name="M:ToProtobuf_2"]' />
-		public Proto.Services.CryptoCreateTransactionBody ToProtobuf()
+        /// <include file="AccountCreateTransaction.cs.xml" path='docs/member[@name="M:ToProtobuf_2"]' />
+        public Proto.Services.CryptoCreateTransactionBody ToProtobuf()
         {
             var builder = new Proto.Services.CryptoCreateTransactionBody
             {
@@ -196,7 +197,7 @@ namespace Hiero.SDK.Cryptocurrency
 
             if (Alias != null)
             {
-                builder.Alias = ByteString.CopyFrom(Alias.ToBytes());
+                builder.Alias = ByteString.CopyFromUtf8(Alias.ToString());
             }
 
             if (StakedAccountId != null)
@@ -227,36 +228,30 @@ namespace Hiero.SDK.Cryptocurrency
         {
             var body = SourceTransactionBody.CryptoCreateAccount;
 
+            if (body.StakedAccountId is not null)
+                StakedAccountId = AccountId.FromProtobuf(body.StakedAccountId);
+
+            if (body.HasStakedNodeId)
+                StakedNodeId = body.StakedNodeId;
+
             if (body.ProxyAccountId is not null)
-            {
                 ProxyAccountId = AccountId.FromProtobuf(body.ProxyAccountId);
-            }
 
             if (body.Key is not null)
-            {
                 Key = Key.FromProtobufKey(body.Key);
-            }
 
             if (body.AutoRenewPeriod is not null)
-            {
                 AutoRenewPeriod = body.AutoRenewPeriod.ToNodaDuration();
-            }
 
             InitialBalance = Hbar.FromTinybars((long)body.InitialBalance);
             AccountMemo = body.Memo;
             ReceiverSigRequired = body.ReceiverSigRequired;
             MaxAutomaticTokenAssociations = body.MaxAutomaticTokenAssociations;
             DeclineStakingReward = body.DeclineReward;
-            if (body.StakedAccountId is not null)
-            {
-                StakedAccountId = AccountId.FromProtobuf(body.StakedAccountId);
-            }
-
-			StakedNodeId = body.StakedNodeId;
             Alias = EvmAddress.FromAliasBytes(body.Alias);
 
 			// Initialize hook creation details
-			HookCreationDetails.Operate(_ => _.AddRange(body.HookCreationDetails.Select(_ => Hook.HookCreationDetails.FromProtobuf(_))));
+			HookCreationDetailsOperator.Operate(_ => _.AddRange(body.HookCreationDetails.Select(_ => Hook.HookCreationDetails.FromProtobuf(_))));
         }
 
 		public override MethodDescriptor GetMethodDescriptor()

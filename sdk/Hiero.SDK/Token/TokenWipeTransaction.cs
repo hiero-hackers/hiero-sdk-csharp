@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: Apache-2.0
 using Google.Protobuf.Reflection;
+
 using Hiero.SDK.Core;
 using Hiero.SDK.Cryptocurrency;
 
+using System;
 using System.Collections.Generic;
 
 namespace Hiero.SDK.Token
@@ -43,19 +45,14 @@ namespace Hiero.SDK.Token
         }
         /// <include file="TokenWipeTransaction.cs.xml" path='docs/member[@name="M:TokenWipeTransaction.InitFromTransactionBody"]' />
         public virtual ListGuarded<long> Serials
-		{
-			init => field = new ListGuarded<long>(value)
-            {
-                OnRequireNotFrozen = RequireNotFrozen
-            }; 
-            get => field ??= new ListGuarded<long>
-			{
-				OnRequireNotFrozen = RequireNotFrozen
-			};
-		}
+        {
+            init => field = GenerateListGuarded(value);
+            internal get => field ??= GenerateListGuarded(field);
+        }
+        public ListGuarded.Operator<long> SerialsOperator => field ??= new(Serials);
 
-		/// <include file="TokenWipeTransaction.cs.xml" path='docs/member[@name="M:TokenWipeTransaction.InitFromTransactionBody_2"]' />
-		private void InitFromTransactionBody()
+        /// <include file="TokenWipeTransaction.cs.xml" path='docs/member[@name="M:TokenWipeTransaction.InitFromTransactionBody_2"]' />
+        private void InitFromTransactionBody()
         {
             var body = SourceTransactionBody.TokenWipe;
 
@@ -66,7 +63,7 @@ namespace Hiero.SDK.Token
                 AccountId = AccountId.FromProtobuf(body.Account);
 
             Amount = body.Amount;
-            Serials.Operate(_ => [.. body.SerialNumbers]);
+            SerialsOperator.Operate(_ => [.. body.SerialNumbers]);
         }
 
         /// <include file="TokenWipeTransaction.cs.xml" path='docs/member[@name="M:TokenWipeTransaction.ToProtobuf"]' />

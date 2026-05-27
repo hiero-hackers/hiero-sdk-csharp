@@ -38,7 +38,7 @@ namespace Hiero.Tests.Integration.Contract
                 {
 					ContractId = createdContractId,
 					MaxTransactionFee = Hbar.From(20),
-                    HookCreationDetails_ = hookDetails,
+                    HookCreationDetails = hookDetails,
                 }
                 .Execute(testEnv.Client);
                 var receipt = response.GetReceipt(testEnv.Client);
@@ -73,7 +73,7 @@ namespace Hiero.Tests.Integration.Contract
 					{
 						ContractId = createdContractId,
 						MaxTransactionFee = Hbar.From(20),
-						HookCreationDetails_ = new(hookDetails, hookDetails),
+						HookCreationDetails = new(hookDetails, hookDetails),
 
 					}.Execute(testEnv.Client);
 				
@@ -106,7 +106,7 @@ namespace Hiero.Tests.Integration.Contract
                 {
 					ContractId = createdContractId,
 					MaxTransactionFee = Hbar.From(20),
-                    HookCreationDetails_ = hookDetails,
+                    HookCreationDetails = hookDetails,
                 }
                 .Execute(testEnv.Client)
                 .GetReceipt(testEnv.Client);
@@ -117,7 +117,7 @@ namespace Hiero.Tests.Integration.Contract
                     {
                         ContractId = createdContractId,
                         MaxTransactionFee = Hbar.From(20),
-                        HookCreationDetails_ = hookDetails,
+                        HookCreationDetails = hookDetails,
                     }
                     .Execute(testEnv.Client);
 
@@ -153,7 +153,7 @@ namespace Hiero.Tests.Integration.Contract
                 {
 					ContractId = createdContractId,
 					MaxTransactionFee = Hbar.From(20),
-                    HookCreationDetails_ = hookDetails,
+                    HookCreationDetails = hookDetails,
 
                 }.Execute(testEnv.Client);
 
@@ -187,7 +187,7 @@ namespace Hiero.Tests.Integration.Contract
                 {
                     MaxTransactionFee = Hbar.From(20), 
                     ContractId = createdContractId,
-                    HookCreationDetails_ = hookDetails1,
+                    HookCreationDetails = hookDetails1,
                 }
                 .Execute(testEnv.Client)
                 .GetReceipt(testEnv.Client);
@@ -201,7 +201,7 @@ namespace Hiero.Tests.Integration.Contract
                     {
 						ContractId = createdContractId,
 						MaxTransactionFee = Hbar.From(20),
-                        HookCreationDetails_ = hookDetails2,
+                        HookCreationDetails = hookDetails2,
                     }
                     .Execute(testEnv.Client)
                     .GetReceipt(testEnv.Client);
@@ -235,7 +235,7 @@ namespace Hiero.Tests.Integration.Contract
                 {
                     MaxTransactionFee = Hbar.From(20), 
                     ContractId = createdContractId,
-                    HookCreationDetails_ = hookDetails,
+                    HookCreationDetails = hookDetails,
                 }
                 .Execute(testEnv.Client)
                 .GetReceipt(testEnv.Client);
@@ -277,7 +277,7 @@ namespace Hiero.Tests.Integration.Contract
                 {
 					MaxTransactionFee = Hbar.From(20),
 					ContractId = createdContractId,
-                    HookCreationDetails_ = hookDetails,
+                    HookCreationDetails = hookDetails,
                 }
                 .Execute(testEnv.Client)
                 .GetReceipt(testEnv.Client);
@@ -324,7 +324,7 @@ namespace Hiero.Tests.Integration.Contract
                     {
 						ContractId = createdContractId,
 						MaxTransactionFee = Hbar.From(20),
-						HookCreationDetails_ = hookDetails,
+						HookCreationDetails = hookDetails,
 						HookIdsToDelete = 1,
 					
                     }.Execute(testEnv.Client);
@@ -361,7 +361,7 @@ namespace Hiero.Tests.Integration.Contract
                 {
                     MaxTransactionFee = Hbar.From(20), 
                     ContractId = createdContractId,
-                    HookCreationDetails_ = hookDetails,
+                    HookCreationDetails = hookDetails,
                 }
                 .Execute(testEnv.Client)
                 .GetReceipt(testEnv.Client);

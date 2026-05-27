@@ -97,19 +97,22 @@ namespace Hiero.SDK.Consensus
         }
 		/// <include file="TopicUpdateTransaction.cs.xml" path='docs/member[@name="T:TopicUpdateTransaction_2"]' />
 		public ListGuarded<Key> FeeExemptKeys
-		{
+        {
             init => field = GenerateListGuarded(value);
-            get => field ??= GenerateListGuarded<Key>();
+            internal get => field ??= GenerateListGuarded(field);
         }
-		/// <include file="TopicUpdateTransaction.cs.xml" path='docs/member[@name="M:TopicUpdateTransaction.InitFromTransactionBody"]' />
-		public ListGuarded<CustomFixedFee> CustomFees
-		{
-            init => field = GenerateListGuarded(value);
-            get => field ??= GenerateListGuarded<CustomFixedFee>();
-        }
+        public ListGuarded.Operator<Key> FeeExemptKeysOperator => field ??= new(FeeExemptKeys);
 
-		/// <include file="TopicUpdateTransaction.cs.xml" path='docs/member[@name="M:TopicUpdateTransaction.InitFromTransactionBody_2"]' />
-		void InitFromTransactionBody()
+        /// <include file="TopicUpdateTransaction.cs.xml" path='docs/member[@name="M:TopicUpdateTransaction.InitFromTransactionBody"]' />
+        public ListGuarded<CustomFixedFee> CustomFees
+        {
+            init => field = GenerateListGuarded(value);
+            internal get => field ??= GenerateListGuarded(field);
+        }
+        public ListGuarded.Operator<CustomFixedFee> CustomFeesOperator => field ??= new(CustomFees);
+
+        /// <include file="TopicUpdateTransaction.cs.xml" path='docs/member[@name="M:TopicUpdateTransaction.InitFromTransactionBody_2"]' />
+        void InitFromTransactionBody()
         {
             var body = SourceTransactionBody.ConsensusUpdateTopic;
             if (body.TopicId is not null)
@@ -137,10 +140,10 @@ namespace Hiero.SDK.Consensus
                 FeeScheduleKey = Key.FromProtobufKey(body.FeeScheduleKey);
 
 			if (body.FeeExemptKeyList is not null)
-				FeeExemptKeys.Operate(_ => body.FeeExemptKeyList.Keys.Select(_ => Key.FromProtobufKey(_)).OfType<Key>());
+				FeeExemptKeysOperator.Operate(_ => body.FeeExemptKeyList.Keys.Select(_ => Key.FromProtobufKey(_)).OfType<Key>());
 
 			if (body.CustomFees is not null)
-				CustomFees.Operate(_ => body.CustomFees.Fees.Select((x) => CustomFixedFee.FromProtobuf(x.FixedFee)));
+				CustomFeesOperator.Operate(_ => body.CustomFees.Fees.Select((x) => CustomFixedFee.FromProtobuf(x.FixedFee)));
 		}
 
         /// <include file="TopicUpdateTransaction.cs.xml" path='docs/member[@name="M:TopicUpdateTransaction.ToProtobuf"]' />

@@ -58,14 +58,18 @@ namespace Hiero.SDK.Networking
 		public ListGuarded<Endpoint> GossipEndpoints
 		{
 			set => field = GenerateListGuarded(value, InitGossipEndpoints);
-			get => field ??= GenerateListGuarded<Endpoint>(null, InitGossipEndpoints);
-		}
-		/// <include file="NodeCreateTransaction.cs.xml" path='docs/member[@name="M:NodeCreateTransaction.RequireNotFrozen_4"]' />
-		public ListGuarded<Endpoint> ServiceEndpoints
+            internal get => field ??= GenerateListGuarded<Endpoint>(null, InitGossipEndpoints);
+        }
+        public ListGuarded.Operator<Endpoint> GossipEndpointsOperator => field ??= new(GossipEndpoints);
+
+        /// <include file="NodeCreateTransaction.cs.xml" path='docs/member[@name="M:NodeCreateTransaction.RequireNotFrozen_4"]' />
+        public ListGuarded<Endpoint> ServiceEndpoints
         {
             set => field = GenerateListGuarded(value, InitServiceEndpoints);
-            get => field ??= GenerateListGuarded<Endpoint>(null, InitServiceEndpoints);
+            internal get => field ??= GenerateListGuarded<Endpoint>(null, InitServiceEndpoints);
         }
+        public ListGuarded.Operator<Endpoint> ServiceEndpointsOperator => field ??= new(ServiceEndpoints);
+
         /// <include file="NodeCreateTransaction.cs.xml" path='docs/member[@name="M:NodeCreateTransaction.RequireNotFrozen_5"]' />
         public byte[]? GossipCaCertificate
 		{

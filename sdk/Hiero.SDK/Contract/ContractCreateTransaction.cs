@@ -35,8 +35,6 @@ namespace Hiero.SDK.Contract
             InitFromTransactionBody();
         }
 
-		private List<HookCreationDetails> _HookCreationDetails = [];
-
 		/// <include file="ContractCreateTransaction.cs.xml" path='docs/member[@name="M:ContractCreateTransaction.RequireNotFrozen"]' />
 		public FileId? BytecodeFileId
 		{
@@ -197,14 +195,16 @@ namespace Hiero.SDK.Contract
 		}
 
 		/// <include file="ContractCreateTransaction.cs.xml" path='docs/member[@name="M:ContractCreateTransaction.ToProtobuf"]' />
-		public ListGuarded<HookCreationDetails> HookCreationDetails_
-		{
+		public ListGuarded<HookCreationDetails> HookCreationDetails
+        {
             init => field = GenerateListGuarded(value);
-            get => field ??= GenerateListGuarded<HookCreationDetails>();
+            internal get => field ??= GenerateListGuarded(field);
         }
+        public ListGuarded.Operator<HookCreationDetails> HookCreationDetailsOperator => field ??= new(HookCreationDetails);
 
-		/// <include file="ContractCreateTransaction.cs.xml" path='docs/member[@name="M:ContractCreateTransaction.ToProtobuf_2"]' />
-		public Proto.Services.ContractCreateTransactionBody ToProtobuf()
+
+        /// <include file="ContractCreateTransaction.cs.xml" path='docs/member[@name="M:ContractCreateTransaction.ToProtobuf_2"]' />
+        public Proto.Services.ContractCreateTransactionBody ToProtobuf()
         {
             var builder = new Proto.Services.ContractCreateTransactionBody();
             
@@ -239,7 +239,7 @@ namespace Hiero.SDK.Contract
 			if (AutoRenewAccountId != null)
 				builder.AutoRenewAccountId = AutoRenewAccountId.ToProtobuf();
 
-			foreach (HookCreationDetails hookDetails in HookCreationDetails_)
+			foreach (HookCreationDetails hookDetails in HookCreationDetails)
 				builder.HookCreationDetails.Add(hookDetails.ToProtobuf());
 
 			return builder;
@@ -277,10 +277,10 @@ namespace Hiero.SDK.Contract
 			if (body.AutoRenewAccountId is not null) AutoRenewAccountId = AccountId.FromProtobuf(body.AutoRenewAccountId);
 
             // Initialize hook creation details
-            HookCreationDetails_.Operate(_ => _.Clear());
+            HookCreationDetailsOperator.Operate(_ => _.Clear());
 
             foreach (var protoHookDetails in body.HookCreationDetails)
-				HookCreationDetails_.Operate(_ => _.Add(HookCreationDetails.FromProtobuf(protoHookDetails)));
+                HookCreationDetailsOperator.Operate(_ => _.Add(Hook.HookCreationDetails.FromProtobuf(protoHookDetails)));
 		}
 
 		public override MethodDescriptor GetMethodDescriptor()

@@ -35,7 +35,7 @@ namespace Hiero.Tests.Integration.Contract
                     AdminKey = testEnv.OperatorKey,
                     Gas = 400000, 
                     BytecodeFileId = fileId,
-                    HookCreationDetails_ = hookDetails
+                    HookCreationDetails = hookDetails
                 
                 }.Execute(testEnv.Client);
                 var receipt = response.GetReceipt(testEnv.Client);
@@ -61,7 +61,7 @@ namespace Hiero.Tests.Integration.Contract
                     AdminKey = testEnv.OperatorKey,
                     Gas = 400000,
                     BytecodeFileId = fileId,
-					HookCreationDetails_ = hookDetails
+					HookCreationDetails = hookDetails
                 
                 }.Execute(testEnv.Client);
                 var receipt = response.GetReceipt(testEnv.Client);
@@ -87,7 +87,7 @@ namespace Hiero.Tests.Integration.Contract
                         AdminKey = testEnv.OperatorKey,
                         Gas = 400000,
                         BytecodeFileId = fileId,
-						HookCreationDetails_ = new (hookDetails1, hookDetails2),
+						HookCreationDetails = new (hookDetails1, hookDetails2),
 					}
                     .Execute(testEnv.Client)
                     .GetReceipt(testEnv.Client);
@@ -111,7 +111,7 @@ namespace Hiero.Tests.Integration.Contract
                     AdminKey = testEnv.OperatorKey,
                     Gas = 400000, 
                     BytecodeFileId = fileId,
-					HookCreationDetails_ = hookDetails
+					HookCreationDetails = hookDetails
                 
                 }.FreezeWith(testEnv.Client).Sign(adminKey);
 

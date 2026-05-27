@@ -84,12 +84,10 @@ namespace Hiero.SDK
         /// <include file="Executable.cs.xml" path='docs/member[@name="T:Executable_6"]' />
         public ListGuarded<AccountId> NodeAccountIds
         {
-            get => field ??= [];
-            set
-            {
-                field = value;
-            }
+            internal get => field ??= [];
+			init;
         }
+		public ListGuarded.Operator<AccountId> NodeAccountIdsOperator => field ??= new(NodeAccountIds);
 
         public abstract void OnExecute(Client client);
         public abstract Task OnExecuteAsync(Client client);
@@ -257,24 +255,21 @@ namespace Hiero.SDK
         }
 		public virtual void SetNodesFromNodeAccountIds(Client client)
 		{
-			Nodes.Operate(_ => _.Clear());
+            Nodes.Clear();
 
 			// When a single node is explicitly set we get all of its proxies so in case of
 			// failure the system can retry with different proxy on each attempt
 			if (NodeAccountIds.Count == 1)
 			{
 				var nodeProxies = client.Network_.GetNodeProxies(NodeAccountIds[0]);
-				if (nodeProxies == null || nodeProxies.Count == 0)
-				{
-					throw new InvalidOperationException("Account ID did not map to valid node in the client's network");
-				}
 
-				Nodes.Operate(_ =>
-				{
-					_.AddRange(nodeProxies);
-					_.Shuffle();
-				});
-				return;
+				if (nodeProxies == null || nodeProxies.Count == 0)
+                    throw new InvalidOperationException("Account ID did not map to valid node in the client's network");
+
+                Nodes.AddRange(nodeProxies);
+                Nodes.Shuffle();
+
+                return;
 			}
 
 
@@ -291,7 +286,7 @@ namespace Hiero.SDK
 
 				 Node node = nodeProxies[random.Next(nodeProxies.Count)];
 
-				Nodes.Operate(_ => _.Add(node));
+                Nodes.Add(node);
 			}
 
 			if (Nodes.Count == 0)

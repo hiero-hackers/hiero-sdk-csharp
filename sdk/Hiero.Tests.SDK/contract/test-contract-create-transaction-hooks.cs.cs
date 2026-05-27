@@ -34,14 +34,14 @@ namespace Hiero.Tests.SDK.Contract
 			{
 				Gas = 1000000,
 				InitialBalance = Hbar.From(10),
-				HookCreationDetails_ = new
+				HookCreationDetails = new
 				(
 					new HookCreationDetails(HookExtensionPoint.AccountAllowanceHook, 1, new EvmHook(targetContractId, storageUpdates), adminKey.GetPublicKey()),
 					new HookCreationDetails(HookExtensionPoint.AccountAllowanceHook, 2, new EvmHook(targetContractId))
 				)
 			};
 
-            var hooks = tx.HookCreationDetails_;
+            var hooks = tx.HookCreationDetails;
             Assert.Equal(2, hooks.Count);
             var first = hooks[0];
             Assert.Equal(HookExtensionPoint.AccountAllowanceHook, first.ExtensionPoint);
@@ -67,9 +67,9 @@ namespace Hiero.Tests.SDK.Contract
             {
 				Gas = 500000,
 				InitialBalance = Hbar.From(5),
-				HookCreationDetails_ = hookDetails
+				HookCreationDetails = hookDetails
             };
-            var retrieved = tx.HookCreationDetails_;
+            var retrieved = tx.HookCreationDetails;
             Assert.Equal(1, retrieved.Count);
             Assert.Equal(hookDetails, retrieved[0]);
         }
@@ -82,7 +82,7 @@ namespace Hiero.Tests.SDK.Contract
             {
                 Gas = 250000,
                 InitialBalance = Hbar.From(3),
-                HookCreationDetails_ = new 
+                HookCreationDetails = new 
                 (
 					new HookCreationDetails(HookExtensionPoint.AccountAllowanceHook, 1, new EvmHook(targetContractId)),
 				    new HookCreationDetails(HookExtensionPoint.AccountAllowanceHook, 1, new EvmHook(targetContractId))
@@ -104,7 +104,7 @@ namespace Hiero.Tests.SDK.Contract
 			{
 				Gas = 750000,
 				InitialBalance = Hbar.From(7),
-				HookCreationDetails_ = new HookCreationDetails(HookExtensionPoint.AccountAllowanceHook, 1, new EvmHook(targetContractId))
+				HookCreationDetails = new HookCreationDetails(HookExtensionPoint.AccountAllowanceHook, 1, new EvmHook(targetContractId))
             };
 
             var protoBody = tx.ToProtobuf();
@@ -124,7 +124,7 @@ namespace Hiero.Tests.SDK.Contract
 				Gas = 123456,
 				InitialBalance = Hbar.From(1),
 			};
-            var hooks = tx.HookCreationDetails_;
+            var hooks = tx.HookCreationDetails;
             Assert.True(hooks.Count == 0);
             var proto = tx.ToProtobuf();
             Assert.Equal(0, proto.HookCreationDetails.Count);
@@ -140,14 +140,14 @@ namespace Hiero.Tests.SDK.Contract
             {
 				Gas = 999999,
 				InitialBalance = Hbar.From(9),
-				HookCreationDetails_ = hookDetails,
+				HookCreationDetails = hookDetails,
 			};
 
             byte[] bytes = original.ToBytes();
             ITransaction parsed = ITransaction.FromBytes(bytes);
             Assert.True(parsed is ContractCreateTransaction);
             var parsedTx = (ContractCreateTransaction)parsed;
-            var parsedHooks = parsedTx.HookCreationDetails_;
+            var parsedHooks = parsedTx.HookCreationDetails;
             Assert.Equal(1, parsedHooks.Count);
             var parsedHook = parsedHooks[0];
             Assert.Equal(HookExtensionPoint.AccountAllowanceHook, parsedHook.ExtensionPoint);

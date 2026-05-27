@@ -312,7 +312,7 @@ namespace Hiero.Tests.SDK.Topic
         {
             TopicUpdateTransaction topicUpdateTransaction = new TopicUpdateTransaction();
             PrivateKey feeExemptKeyToBeAdded = PrivateKey.GenerateECDSA();
-            topicUpdateTransaction.FeeExemptKeys.Operate(_ => _.Add(feeExemptKeyToBeAdded));
+            topicUpdateTransaction.FeeExemptKeysOperator.Operate(_ => _.Add(feeExemptKeyToBeAdded));
             Assert.Equal(topicUpdateTransaction.FeeExemptKeys.Count, 1);
             Assert.Equal(topicUpdateTransaction.FeeExemptKeys, [feeExemptKeyToBeAdded]);
         }
@@ -327,7 +327,7 @@ namespace Hiero.Tests.SDK.Topic
             };
 
             PrivateKey feeExemptKeyToBeAdded = PrivateKey.GenerateECDSA();
-            topicUpdateTransaction.FeeExemptKeys.Operate(_ => _.Add(feeExemptKeyToBeAdded));
+            topicUpdateTransaction.FeeExemptKeysOperator.Operate(_ => _.Add(feeExemptKeyToBeAdded));
             Assert.Equal(topicUpdateTransaction.FeeExemptKeys.Count, 2);
             Assert.Equal(topicUpdateTransaction.FeeExemptKeys, [feeExemptKey, feeExemptKeyToBeAdded]);
         }
@@ -355,7 +355,7 @@ namespace Hiero.Tests.SDK.Topic
             ];
             TopicUpdateTransaction topicUpdateTransaction = new()
             {
-                CustomFees = customFixedFees
+                CustomFees = [..customFixedFees]
             };
             Assert.Equal(3, topicUpdateTransaction.CustomFees.Count);
             Assert.Equal(topicUpdateTransaction.CustomFees, customFixedFees);
@@ -391,9 +391,9 @@ namespace Hiero.Tests.SDK.Topic
             expectedCustomFees.Add(customFixedFeeToBeAdded);
             TopicUpdateTransaction topicUpdateTransaction = new()
             {
-                CustomFees = customFixedFees
+                CustomFees = [..customFixedFees]
             };
-            topicUpdateTransaction.CustomFees.Operate(_ => _.Add(customFixedFeeToBeAdded));
+            topicUpdateTransaction.CustomFeesOperator.Operate(_ => _.Add(customFixedFeeToBeAdded));
 
             Assert.Equal(4, topicUpdateTransaction.CustomFees.Count);
             Assert.True(topicUpdateTransaction.CustomFees.SequenceEqual(expectedCustomFees));
@@ -408,7 +408,7 @@ namespace Hiero.Tests.SDK.Topic
                 DenominatingTokenId = new TokenId(0, 0, 3)
             };
             TopicUpdateTransaction topicUpdateTransaction = new ();
-            topicUpdateTransaction.CustomFees.Operate(_ => _.Add(customFixedFeeToBeAdded));
+            topicUpdateTransaction.CustomFeesOperator.Operate(_ => _.Add(customFixedFeeToBeAdded));
             Assert.Equal(topicUpdateTransaction.CustomFees.Count, 1);
             Assert.Equal(topicUpdateTransaction.CustomFees, [customFixedFeeToBeAdded]);
         }
@@ -436,9 +436,9 @@ namespace Hiero.Tests.SDK.Topic
             ];
             TopicUpdateTransaction topicUpdateTransaction = new()
             {
-                CustomFees = customFixedFees
+                CustomFees = [..customFixedFees]
             };
-            topicUpdateTransaction.CustomFees.Operate(_ => _.Clear());
+            topicUpdateTransaction.CustomFeesOperator.Operate(_ => _.Clear());
             Assert.Empty(topicUpdateTransaction.CustomFees);
         }
     }

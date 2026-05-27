@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: Apache-2.0
 using Google.Protobuf.Reflection;
+
 using Hiero.SDK.Core;
 using Hiero.SDK.Cryptocurrency;
 
+using System;
 using System.Collections.Generic;
 
 namespace Hiero.SDK.Token
@@ -23,8 +25,6 @@ namespace Hiero.SDK.Token
             InitFromTransactionBody();
         }
 
-		private List<long> _Serials = [];
-
 		/// <include file="TokenBurnTransaction.cs.xml" path='docs/member[@name="M:TokenBurnTransaction.RequireNotFrozen"]' />
 		public virtual TokenId? TokenId { get; set { RequireNotFrozen(); field = value; } }
 		/// <include file="TokenBurnTransaction.cs.xml" path='docs/member[@name="M:TokenBurnTransaction.RequireNotFrozen_2"]' />
@@ -32,15 +32,14 @@ namespace Hiero.SDK.Token
 
 		/// <include file="TokenBurnTransaction.cs.xml" path='docs/member[@name="M:TokenBurnTransaction.ToProtobuf"]' />
 		public virtual ListGuarded<long> Serials
-		{
-			init; get => field ??= new ListGuarded<long>
-			{
-				OnRequireNotFrozen = RequireNotFrozen
-			};
-		}
+        {
+            init => field = GenerateListGuarded(value);
+            internal get => field ??= GenerateListGuarded(field);
+        }
+        public ListGuarded.Operator<long> SerialsOperator => field ??= new(Serials);
 
-		/// <include file="TokenBurnTransaction.cs.xml" path='docs/member[@name="M:TokenBurnTransaction.ToProtobuf_2"]' />
-		public virtual Proto.Services.TokenBurnTransactionBody ToProtobuf()
+        /// <include file="TokenBurnTransaction.cs.xml" path='docs/member[@name="M:TokenBurnTransaction.ToProtobuf_2"]' />
+        public virtual Proto.Services.TokenBurnTransactionBody ToProtobuf()
         {
             var builder = new Proto.Services.TokenBurnTransactionBody
 			{
@@ -67,7 +66,7 @@ namespace Hiero.SDK.Token
 				TokenId = TokenId.FromProtobuf(body.Token);
 
 			Amount = body.Amount;
-            Serials.Operate(_ => [.. body.SerialNumbers]);
+            SerialsOperator.Operate(_ => [.. body.SerialNumbers]);
         }
 
         public override void ValidateChecksums(Client client)

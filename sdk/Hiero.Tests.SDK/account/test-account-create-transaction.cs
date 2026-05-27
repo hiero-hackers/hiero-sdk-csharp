@@ -4,8 +4,6 @@ using Hiero.SDK.Ethereum;
 using Hiero.SDK.Cryptography;
 using Hiero.SDK.Transactions;
 
-using System;
-
 using VerifyXunit;
 using Hiero.SDK;
 using Hiero.SDK.Core;
@@ -18,6 +16,7 @@ namespace Hiero.Tests.SDK.Account
         private static readonly PrivateKey privateKeyED25519 = PrivateKey.FromString("302e020100300506032b657004220420db484b828e64b2d8f12ce3c0a0e93a0b8cce7af1bb8f39c97732394482538e10");
         PrivateKey privateKeyECDSA = PrivateKey.FromStringECDSA("7f109a9e3b0d8ecfba9cc23a3614433ce0fa7ddcc80f2a8f10b222179a5a80d6");
         private readonly NodaTime.Instant validStart = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
+        private readonly string ALIAS = "0x5c562e90feaf0eebd33ea75d21024f249d451417";
 
         public virtual AccountCreateTransaction SpawnTestTransaction()
         {
@@ -32,7 +31,7 @@ namespace Hiero.Tests.SDK.Account
 				ReceiverSigRequired = true,
 				AutoRenewPeriod = NodaTime.Duration.FromHours(10),
 				StakedAccountId = AccountId.FromString("0.0.3"),
-				Alias = EvmAddress.FromString("0x5c562e90feaf0eebd33ea75d21024f249d451417"),
+				Alias = EvmAddress.FromString(ALIAS),
 				MaxAutomaticTokenAssociations = 100,
 				MaxTransactionFee = Hbar.FromTinybars(100000),
             }
@@ -98,7 +97,7 @@ namespace Hiero.Tests.SDK.Account
             var tx = new AccountCreateTransaction();
             var tx2 = Transaction.FromBytes<AccountCreateTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-account-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Account.AccountCreateTransactionTest.PropertiesTest"]' />
@@ -115,7 +114,7 @@ namespace Hiero.Tests.SDK.Account
             Assert.Equal(tx.StakedAccountId.ToString(), "0.0.3");
             Assert.Null(tx.StakedNodeId);
             Assert.False(tx.DeclineStakingReward);
-            Assert.Equal(tx.Alias, EvmAddress.FromString("0x5c562e90feaf0eebd33ea75d21024f249d451417"));
+            Assert.Equal(tx.Alias, EvmAddress.FromString(ALIAS));
         }
         [Fact]
         /// <include file="test-account-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Account.AccountCreateTransactionTest.FromScheduledTransaction"]' />

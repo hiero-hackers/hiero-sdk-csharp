@@ -41,15 +41,14 @@ namespace Hiero.SDK.Consensus
         } = ByteString.Empty;
 		/// <include file="TopicMessageSubmitTransaction.cs.xml" path='docs/member[@name="M:TopicMessageSubmitTransaction.InitFromTransactionBody"]' />
 		public ListGuarded<CustomFeeLimit> CustomFeeLimits
-		{
-			init; get => field ??= new ListGuarded<CustomFeeLimit>
-			{
-				OnRequireNotFrozen = RequireNotFrozen
-			};
-		}
+        {
+            init => field = GenerateListGuarded(value);
+            internal get => field ??= GenerateListGuarded(field);
+        }
+        public ListGuarded.Operator<CustomFeeLimit> CustomFeeLimitsOperator => field ??= new(CustomFeeLimits);
 
-		/// <include file="TopicMessageSubmitTransaction.cs.xml" path='docs/member[@name="M:TopicMessageSubmitTransaction.InitFromTransactionBody_2"]' />
-		void InitFromTransactionBody()
+        /// <include file="TopicMessageSubmitTransaction.cs.xml" path='docs/member[@name="M:TopicMessageSubmitTransaction.InitFromTransactionBody_2"]' />
+        void InitFromTransactionBody()
         {
             var body = SourceTransactionBody.ConsensusSubmitMessage;
 

@@ -20,11 +20,11 @@ namespace Hiero.Tests.SDK.Contract
             var contractId = new ContractId(0, 0, 1);
             var lambdaHook = new EvmHook(contractId);
             var hookDetails = new HookCreationDetails(HookExtensionPoint.AccountAllowanceHook, 1, lambdaHook);
-            tx.HookCreationDetails_.Operate(_ => _.Add(hookDetails));
+            tx.HookCreationDetailsOperator.Operate(_ => _.Add(hookDetails));
             var result = tx;
             Assert.Equal(result, tx);
-            Assert.Single(tx.HookCreationDetails_);
-            Assert.Equal(tx.HookCreationDetails_[0], hookDetails);
+            Assert.Single(tx.HookCreationDetails);
+            Assert.Equal(tx.HookCreationDetails[0], hookDetails);
         }
         [Fact]
         /// <include file="test-contract-update-transaction-hooks.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Contract.ContractUpdateTransactionHooksTest.ShouldSetHooksToCreate"]' />
@@ -36,12 +36,12 @@ namespace Hiero.Tests.SDK.Contract
             var hookDetails1 = new HookCreationDetails(HookExtensionPoint.AccountAllowanceHook, 1, lambdaHook);
             var hookDetails2 = new HookCreationDetails(HookExtensionPoint.AccountAllowanceHook, 2, lambdaHook);
             
-            tx.HookCreationDetails_.Operate(_ => [hookDetails1, hookDetails2]);
+            tx.HookCreationDetailsOperator.Operate(_ => [hookDetails1, hookDetails2]);
             var result = tx;
             Assert.Equal(result, tx);
             //Assert.Equal(2, tx.HbarTransfers.Count);
-            Assert.Contains(hookDetails1, tx.HookCreationDetails_);
-            Assert.Contains(hookDetails2, tx.HookCreationDetails_);
+            Assert.Contains(hookDetails1, tx.HookCreationDetails);
+            Assert.Contains(hookDetails2, tx.HookCreationDetails);
         }
         [Fact]
         /// <include file="test-contract-update-transaction-hooks.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Contract.ContractUpdateTransactionHooksTest.ShouldAddHookToDelete"]' />
@@ -49,7 +49,7 @@ namespace Hiero.Tests.SDK.Contract
         {
             var tx = new ContractUpdateTransaction();
             var hookId = 123;
-            tx.HookIdsToDelete.Operate(_ => _.Add(hookId));
+            tx.HookIdsToDeleteOperator.Operate(_ => _.Add(hookId));
             var result = tx;
             Assert.Equal(result, tx);
             Assert.Single(tx.HookIdsToDelete);
@@ -61,7 +61,7 @@ namespace Hiero.Tests.SDK.Contract
         {
             var tx = new ContractUpdateTransaction();
             long[] hookIds = [123, 456, 789];
-            tx.HookIdsToDelete.Operate(_ => hookIds);
+            tx.HookIdsToDeleteOperator.Operate(_ => hookIds);
             var result = tx;
             Assert.Equal(result, tx);
             //Assert.Equal(2, tx.HbarTransfers.Count);
@@ -77,27 +77,27 @@ namespace Hiero.Tests.SDK.Contract
             var contractId = new ContractId(0, 0, 1);
             var lambdaHook = new EvmHook(contractId);
             var hookDetails = new HookCreationDetails(HookExtensionPoint.AccountAllowanceHook, 1, lambdaHook);
-            tx.HookCreationDetails_.Operate(_ => _.Add(hookDetails));
-            var result = tx.HookCreationDetails_;
+            tx.HookCreationDetailsOperator.Operate(_ => _.Add(hookDetails));
+            var result = tx.HookCreationDetails;
             Assert.Single(result);
             Assert.Equal(result[0], hookDetails);
 
             // Verify it returns a copy
-            result.Operate(_ => _.Clear());
-            Assert.Single(tx.HookCreationDetails_);
+            result.Operator.Operate(_ => _.Clear());
+            Assert.Single(tx.HookCreationDetails);
         }
         [Fact]
         /// <include file="test-contract-update-transaction-hooks.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Contract.ContractUpdateTransactionHooksTest.ShouldGetHooksToDelete"]' />
         public virtual void ShouldGetHooksToDelete()
 		{
             var tx = new ContractUpdateTransaction();
-            tx.HookIdsToDelete.Operate(_ => _.Add(123));
+            tx.HookIdsToDeleteOperator.Operate(_ => _.Add(123));
             var result = tx.HookIdsToDelete;
             Assert.Single(result);
             Assert.True(result.Contains(123L));
 
             // Verify it returns a copy
-            result.Operate(_ => _.Clear());
+            resultOperator.Operate(_ => _.Clear());
             Assert.Single(tx.HookIdsToDelete);
         }
         [Fact]
@@ -115,7 +115,7 @@ namespace Hiero.Tests.SDK.Contract
             var lambdaHook = new EvmHook(contractId);
             var hookDetails = new HookCreationDetails(HookExtensionPoint.AccountAllowanceHook, 1, lambdaHook);
 
-            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => tx.HookCreationDetails_.Operate(_ => _.Add(hookDetails)));
+            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => tx.HookCreationDetailsOperator.Operate(_ => _.Add(hookDetails)));
             Assert.Contains("transaction is immutable", exception.Message);
         }
         [Fact]
@@ -133,7 +133,7 @@ namespace Hiero.Tests.SDK.Contract
             var lambdaHook = new EvmHook(contractId);
             var hookDetails = new HookCreationDetails(HookExtensionPoint.AccountAllowanceHook, 1, lambdaHook);
             
-            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => tx.HookCreationDetails_.Operate(_ => _.Add(hookDetails)));
+            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => tx.HookCreationDetailsOperator.Operate(_ => _.Add(hookDetails)));
             Assert.Contains("transaction is immutable", exception.Message);
         }
         [Fact]
@@ -148,7 +148,7 @@ namespace Hiero.Tests.SDK.Contract
 
 			tx.Freeze();
             
-            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => tx.HookIdsToDelete.Operate(_ => _.Add(123)));
+            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => tx.HookIdsToDeleteOperator.Operate(_ => _.Add(123)));
             Assert.Contains("transaction is immutable", exception.Message);
         }
         [Fact]
@@ -163,7 +163,7 @@ namespace Hiero.Tests.SDK.Contract
 
             tx.Freeze();
 
-            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => tx.HookIdsToDelete.Operate(_ => _.AddRange(123, 456)));
+            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => tx.HookIdsToDeleteOperator.Operate(_ => _.AddRange(123, 456)));
             Assert.Contains("transaction is immutable", exception.Message);
         }
         [Fact]
@@ -175,8 +175,8 @@ namespace Hiero.Tests.SDK.Contract
             var lambdaHook = new EvmHook(contractId);
             var hookDetails = new HookCreationDetails(HookExtensionPoint.AccountAllowanceHook, 1, lambdaHook);
             
-            tx.HookCreationDetails_.Operate(_ => _.Add(hookDetails));
-            tx.HookIdsToDelete.Operate(_ => _.Add(123));
+            tx.HookCreationDetailsOperator.Operate(_ => _.Add(hookDetails));
+            tx.HookIdsToDeleteOperator.Operate(_ => _.Add(123));
 
             var builder = tx.ToProtobuf();
             Assert.Single(builder.HookCreationDetails);
@@ -192,13 +192,13 @@ namespace Hiero.Tests.SDK.Contract
             var lambdaHook = new EvmHook(contractId);
             var hookDetails = new HookCreationDetails(HookExtensionPoint.AccountAllowanceHook, 1, lambdaHook);
             
-            tx.HookCreationDetails_.Operate(_ => _.Add(hookDetails));
-            tx.HookIdsToDelete.Operate(_ => _.Add(123));
+            tx.HookCreationDetailsOperator.Operate(_ => _.Add(hookDetails));
+            tx.HookIdsToDeleteOperator.Operate(_ => _.Add(123));
             
             var bytes = tx.ToBytes();
             var deserializedTx = Transaction.FromBytes<ContractUpdateTransaction>(bytes);
 
-            Assert.Single(deserializedTx.HookCreationDetails_);
+            Assert.Single(deserializedTx.HookCreationDetails);
             Assert.Single(deserializedTx.HookIdsToDelete);
             Assert.Contains(123, deserializedTx.HookIdsToDelete);
         }
@@ -207,7 +207,7 @@ namespace Hiero.Tests.SDK.Contract
         public virtual void ShouldHandleEmptyHooks()
         {
             var tx = new ContractUpdateTransaction();
-            Assert.Empty(tx.HookCreationDetails_);
+            Assert.Empty(tx.HookCreationDetails);
             Assert.Empty(tx.HookIdsToDelete);
             var builder = tx.ToProtobuf();
 
@@ -224,10 +224,10 @@ namespace Hiero.Tests.SDK.Contract
             var hookDetails1 = new HookCreationDetails(HookExtensionPoint.AccountAllowanceHook, 1, lambdaHook);
             var hookDetails2 = new HookCreationDetails(HookExtensionPoint.AccountAllowanceHook, 2, lambdaHook);
             
-            tx.HookCreationDetails_.Operate(_ => _.Add(hookDetails1));
-            tx.HookCreationDetails_.Operate(_ => _.Add(hookDetails2));
-            tx.HookIdsToDelete.Operate(_ => _.Add(100));
-            tx.HookIdsToDelete.Operate(_ => _.Add(200));
+            tx.HookCreationDetailsOperator.Operate(_ => _.Add(hookDetails1));
+            tx.HookCreationDetailsOperator.Operate(_ => _.Add(hookDetails2));
+            tx.HookIdsToDeleteOperator.Operate(_ => _.Add(100));
+            tx.HookIdsToDeleteOperator.Operate(_ => _.Add(200));
 
             //Assert.Equal(2, tx.HbarTransfers.Count);
 

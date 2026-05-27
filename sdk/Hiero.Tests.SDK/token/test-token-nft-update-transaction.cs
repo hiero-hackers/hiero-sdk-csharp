@@ -38,7 +38,7 @@ namespace Hiero.Tests.SDK.Nfts
 				TransactionId = TransactionId.WithValidStart(AccountId.FromString("0.0.5006"), validStart),
 				TokenId = testTokenId,
 				Metadata = testMetadata,
-				Serials = testSerialNumbers,
+				Serials = [..testSerialNumbers],
 				MaxTransactionFee = new Hbar(1),
             }
             .Freeze()
@@ -138,7 +138,7 @@ namespace Hiero.Tests.SDK.Nfts
         public virtual void GetSetSerialNumbersFrozen()
         {
             var tx = SpawnTestTransaction();
-            Assert.Throws<InvalidOperationException>(() => tx.Serials.Operate(_ => _.AddRange(testSerialNumbers)));
+            Assert.Throws<InvalidOperationException>(() => tx.SerialsOperator.Operate(_ => _.AddRange(testSerialNumbers)));
         }
     }
 }

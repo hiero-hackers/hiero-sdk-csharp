@@ -35,9 +35,6 @@ namespace Hiero.SDK.Consensus
             InitFromTransactionBody();
         }
 
-        private List<CustomFixedFee> _CustomFees = [];
-        private List<Key> _FeeExemptKeys = [];
-
 		/// <include file="TopicCreateTransaction.cs.xml" path='docs/member[@name="M:TopicCreateTransaction.RequireNotFrozen"]' />
 		public string TopicMemo { get; set { RequireNotFrozen(); field = value; } } = string.Empty;
 		/// <include file="TopicCreateTransaction.cs.xml" path='docs/member[@name="M:TopicCreateTransaction.RequireNotFrozen_2"]' />
@@ -53,22 +50,21 @@ namespace Hiero.SDK.Consensus
 		/// <include file="TopicCreateTransaction.cs.xml" path='docs/member[@name="T:TopicCreateTransaction_2"]' />
 		public ListGuarded<Key> FeeExemptKeys
 		{
-			init; get => field ??= new ListGuarded<Key>
-			{
-				OnRequireNotFrozen = RequireNotFrozen
-			};
-		}
-		/// <include file="TopicCreateTransaction.cs.xml" path='docs/member[@name="M:TopicCreateTransaction.InitFromTransactionBody"]' />
-		public ListGuarded<CustomFixedFee> CustomFees
-		{
-			init; get => field ??= new ListGuarded<CustomFixedFee>
-			{
-				OnRequireNotFrozen = RequireNotFrozen
-			};
-		}
+            init => field = GenerateListGuarded(value);
+            internal get => field ??= GenerateListGuarded(field);
+        }
+        public ListGuarded.Operator<Key> FeeExemptKeysOperator => field ??= new(FeeExemptKeys);
 
-		/// <include file="TopicCreateTransaction.cs.xml" path='docs/member[@name="M:TopicCreateTransaction.InitFromTransactionBody_2"]' />
-		void InitFromTransactionBody()
+        /// <include file="TopicCreateTransaction.cs.xml" path='docs/member[@name="M:TopicCreateTransaction.InitFromTransactionBody"]' />
+        public ListGuarded<CustomFixedFee> CustomFees
+		{
+            init => field = GenerateListGuarded(value);
+            internal get => field ??= GenerateListGuarded(field);
+        }
+        public ListGuarded.Operator<CustomFixedFee> CustomFeesOperator => field ??= new(CustomFees);
+
+        /// <include file="TopicCreateTransaction.cs.xml" path='docs/member[@name="M:TopicCreateTransaction.InitFromTransactionBody_2"]' />
+        void InitFromTransactionBody()
         {
             var body = SourceTransactionBody.ConsensusCreateTopic;
 
@@ -88,10 +84,10 @@ namespace Hiero.SDK.Consensus
                 FeeScheduleKey = Key.FromProtobufKey(body.FeeScheduleKey);
 
             if (body.FeeExemptKeyList is not null)
-				FeeExemptKeys.Operate(_ => body.FeeExemptKeyList.Select(_ => Key.FromProtobufKey(_)).OfType<Key>());
+				FeeExemptKeysOperator.Operate(_ => body.FeeExemptKeyList.Select(_ => Key.FromProtobufKey(_)).OfType<Key>());
 
             if (body.CustomFees is not null)
-				CustomFees.Operate(_ => body.CustomFees.Select((x) => CustomFixedFee.FromProtobuf(x.FixedFee)));
+				CustomFeesOperator.Operate(_ => body.CustomFees.Select((x) => CustomFixedFee.FromProtobuf(x.FixedFee)));
 
             TopicMemo = body.Memo;
         }

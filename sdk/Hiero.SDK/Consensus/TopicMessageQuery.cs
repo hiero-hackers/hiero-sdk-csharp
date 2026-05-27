@@ -40,7 +40,7 @@ namespace Hiero.SDK.Consensus
         public Action CompletionHandler 
         { 
             set;
-            private get => field ??= () =>
+            internal get => field ??= () =>
             {
 				LOGGER.Info("Subscription to topic {} complete", TopicId.FromProtobuf(_Proto.TopicId));
 			};
@@ -48,7 +48,7 @@ namespace Hiero.SDK.Consensus
         public Action<Exception, TopicMessage?> ErrorHandler
         {
             set;
-            private get => field ??= ((exception, topicmessage) =>
+            internal get => field ??= ((exception, topicmessage) =>
             {
                 var topicId = TopicId.FromProtobuf(_Proto.TopicId);
 
@@ -73,7 +73,7 @@ namespace Hiero.SDK.Consensus
         public Predicate<Exception> RetryHandler 
         { 
             set; 
-            private get => field ??= (Predicate<Exception>)((exception) => 
+            internal get => field ??= (Predicate<Exception>)((exception) => 
             {
 				if (exception is RpcException rpcexception)
 				{
