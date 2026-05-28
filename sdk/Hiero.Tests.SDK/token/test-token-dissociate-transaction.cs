@@ -33,7 +33,7 @@ namespace Hiero.Tests.SDK.Token
             var tx = new TokenDissociateTransaction();
             var tx2 = Transaction.FromBytes<TokenDissociateTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
 
         private TokenDissociateTransaction SpawnTestTransaction()
@@ -43,7 +43,7 @@ namespace Hiero.Tests.SDK.Token
 				NodeAccountIds = new (AccountId.FromString("0.0.5005"), AccountId.FromString("0.0.5006")),
 				TransactionId = TransactionId.WithValidStart(AccountId.FromString("0.0.5006"), validStart),
 				AccountId = testAccountId,
-				TokenIds = testTokenIds,
+				TokenIds = [.. testTokenIds],
 				MaxTransactionFee = new Hbar(1),
 			}
             .Freeze()
@@ -55,8 +55,8 @@ namespace Hiero.Tests.SDK.Token
         {
             var tx = SpawnTestTransaction();
             var tx2 = Transaction.FromBytes<TokenDissociateTransaction>(tx.ToBytes());
-            
-            Assert.Equal(tx2.ToString(), tx.ToString());
+
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-token-dissociate-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Token.TokenDissociateTransactionTest.FromScheduledTransaction"]' />
@@ -74,21 +74,17 @@ namespace Hiero.Tests.SDK.Token
         /// <include file="test-token-dissociate-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Token.TokenDissociateTransactionTest.ConstructTokenDissociateTransactionFromTransactionBodyProtobuf"]' />
         public virtual void ConstructTokenDissociateTransactionFromTransactionBodyProtobuf()
         {
-            var transactionBody = new Proto.Services.TokenDissociateTransactionBody
+            var tx = new TokenDissociateTransaction(new Proto.Services.TransactionBody
             {
-                Account = testAccountId.ToProtobuf(),
+                TokenDissociate = new Proto.Services.TokenDissociateTransactionBody
+                {
+                    Account = testAccountId.ToProtobuf(),
+                    Tokens = { testTokenIds.Select(_ => _.ToProtobuf()) }
+                }
+            });
 
-            };
-            transactionBody.Tokens.AddRange(testTokenIds.Select(_ => _.ToProtobuf()));
-
-            var tx = new Proto.Services.TransactionBody
-            {
-				TokenDissociate = transactionBody
-			};
-            var tokenDissociateTransaction = new TokenDissociateTransaction(tx);
-
-            Assert.Equal(testAccountId, tokenDissociateTransaction.AccountId);
-            Assert.Equal(testTokenIds.Count, tokenDissociateTransaction.TokenIds.Count);
+            Assert.Equal(testAccountId, tx.AccountId);
+            Assert.Equal(testTokenIds.Count, tx.TokenIds.Count);
         }
         [Fact]
         /// <include file="test-token-dissociate-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Token.TokenDissociateTransactionTest.GetSetAccountId"]' />
@@ -113,8 +109,8 @@ namespace Hiero.Tests.SDK.Token
         {
             var tokenDissociateTransaction = new TokenDissociateTransaction
             {
-				TokenIds = testTokenIds
-			};
+				TokenIds = [.. testTokenIds]
+            };
             Assert.Equal(tokenDissociateTransaction.TokenIds, testTokenIds);
         }
         [Fact]
@@ -122,7 +118,7 @@ namespace Hiero.Tests.SDK.Token
         public virtual void GetSetTokenIdsFrozen()
         {
             var tx = SpawnTestTransaction();
-            Assert.Throws<InvalidOperationException>(() => tx.TokenIds = testTokenIds);
+            Assert.Throws<InvalidOperationException>(() => tx.TokenIds = [..testTokenIds]);
         }
     }
 }

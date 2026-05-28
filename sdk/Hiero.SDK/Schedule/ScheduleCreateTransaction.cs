@@ -33,7 +33,7 @@ namespace Hiero.SDK.Schedule
             {
 				RequireNotFrozen();
 				field = value;
-                if (field == null && ExpirationTimeDuration is not null)
+                if (field is not null && ExpirationTimeDuration is not null)
                     ExpirationTimeDuration = null;
             }
         }
@@ -45,7 +45,7 @@ namespace Hiero.SDK.Schedule
 			{
 				RequireNotFrozen();
 				field = value;
-                if (field == null && ExpirationTime is not null)
+                if (field is not null && ExpirationTime is not null)
                     ExpirationTime = null;
             }
 		}

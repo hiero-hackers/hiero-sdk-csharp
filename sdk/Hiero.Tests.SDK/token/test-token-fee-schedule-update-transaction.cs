@@ -19,28 +19,27 @@ namespace Hiero.Tests.SDK.Token
 
         private TokenFeeScheduleUpdateTransaction SpawnTestTransaction()
         {
-			List<CustomFee> customFees =
-            [
-				new CustomFixedFee
-			    {
-				    FeeCollectorAccountId = new AccountId(0, 0, 4322),
-				    DenominatingTokenId = new TokenId(0, 0, 483902),
-				    Amount = 10,
-			    },
-			    new CustomFractionalFee
-			    {
-				    FeeCollectorAccountId = new AccountId(0, 0, 389042),
-				    Numerator = 3,
-				    Denominator = 7,
-				    Min = 3,
-				    Max = 100,
-				    AssessmentMethod = FeeAssessmentMethod.Exclusive
-			    }
-			];
             return new TokenFeeScheduleUpdateTransaction
             {
 				TokenId = new TokenId(0, 0, 8798),
-				CustomFees = customFees,
+				CustomFees =
+                [
+                    new CustomFixedFee
+                    {
+                        FeeCollectorAccountId = new AccountId(0, 0, 4322),
+                        DenominatingTokenId = new TokenId(0, 0, 483902),
+                        Amount = 10,
+                    },
+                    new CustomFractionalFee
+                    {
+                        FeeCollectorAccountId = new AccountId(0, 0, 389042),
+                        Numerator = 3,
+                        Denominator = 7,
+                        Min = 3,
+                        Max = 100,
+                        AssessmentMethod = FeeAssessmentMethod.Exclusive
+                    }
+                ],
 				NodeAccountIds = new (AccountId.FromString("0.0.5005"), AccountId.FromString("0.0.5006")),
 				TransactionId = TransactionId.WithValidStart(AccountId.FromString("0.0.5006"), validStart),
 			
@@ -53,19 +52,18 @@ namespace Hiero.Tests.SDK.Token
             var tx = new TokenFeeScheduleUpdateTransaction();
             var tx2 = Transaction.FromBytes<TokenFeeScheduleUpdateTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-token-fee-schedule-update-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Token.TokenFeeScheduleUpdateTransactionTest.ShouldSerialize"]' />
         public virtual void ShouldSerialize()
         {
-            var originalUpdate = SpawnTestTransaction();
-            byte[] updateBytes = originalUpdate.ToBytes();
-            var copyUpdate = Transaction.FromBytes<TokenFeeScheduleUpdateTransaction>(updateBytes);
+            var tx = SpawnTestTransaction();
+            var tx2 = Transaction.FromBytes<TokenFeeScheduleUpdateTransaction>(tx.ToBytes());
             
-            Assert.Equal(copyUpdate.ToString(), originalUpdate.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
 
-            Verifier.Verify(originalUpdate.ToString());
+            Verifier.Verify(tx.ToString());
         }
         [Fact]
         /// <include file="test-token-fee-schedule-update-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Token.TokenFeeScheduleUpdateTransactionTest.FromScheduledTransaction"]' />

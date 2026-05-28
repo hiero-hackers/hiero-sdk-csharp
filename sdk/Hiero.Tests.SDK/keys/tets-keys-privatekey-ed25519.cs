@@ -159,8 +159,8 @@ namespace Hiero.Tests.SDK.Keys
         /// <include file="tets-keys-privatekey-ed25519.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Keys.Ed25519PrivateKeyTest.KeyFromPem"]' />
         public virtual void KeyFromPem()
         {
-            StringReader stringReader = new StringReader(TEST_KEY_PEM);
-            PemReader pemreader = new PemReader(stringReader);
+            StringReader stringReader = new (TEST_KEY_PEM);
+            PemReader pemreader = new (stringReader);
 			PrivateKey privateKey = PrivateKey.ReadPem(pemreader);
             Assert.Equal(privateKey.ToString(), TEST_KEY_STR);
         }
@@ -173,6 +173,7 @@ namespace Hiero.Tests.SDK.Keys
             PrivateKey key2 = PrivateKey.FromString(MNEMONIC_PRIVATE_KEY);
             Assert.Equal(key2.ToBytes(), key.ToBytes());
         }
+        [Fact]
         public virtual void ValidateGenerated12()
         {
             Mnemonic mnemonic = Mnemonic.Generate12();
@@ -186,6 +187,7 @@ namespace Hiero.Tests.SDK.Keys
             PrivateKey key = mnemonic.ToLegacyPrivateKey();
             Assert.Equal(key.LegacyDerive(-1).ToString(), MNEMONIC_LEGACY_PRIVATE_KEY);
         }
+        [Fact]
         public virtual void ValidateGenerated24()
         {
             Mnemonic mnemonic = Mnemonic.Generate24();
@@ -239,7 +241,7 @@ namespace Hiero.Tests.SDK.Keys
         {
             BadKeyException exception = Assert.Throws<BadKeyException>(() => PrivateKey.FromPem(ENCRYPTED_PEM));
             
-            Assert.Contains("PEM file contained an encrypted private key but no passphrase was given", exception.Message);
+            Assert.Equal("PEM file contained an encrypted private key but no passphrase was given", exception.Message);
         }
         [Theory]
         [InlineData("")]

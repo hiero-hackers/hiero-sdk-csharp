@@ -94,24 +94,20 @@ namespace Hiero.SDK.Transactions
 		/// <include file="TransferTransaction.cs.xml" path='docs/member[@name="M:TransferTransaction.ToProtobuf"]' />
 		public virtual Proto.Services.CryptoTransferTransactionBody ToProtobuf()
 		{
-			var transfers = SortTransfersAndBuild();
-			var builder = new Proto.Services.CryptoTransferTransactionBody();
-
-			var hbarTransfersList = new Proto.Services.TransferList();
-
-			foreach (var transfer in hbarTransfers.OrderBy(_ => _.AccountId).ThenBy(_ => _.IsApproved))
-			{
-				hbarTransfersList.AccountAmounts.Add(transfer.ToProtobuf());
-			}
-
-			builder.Transfers = hbarTransfersList;
-
-			foreach (var transfer in transfers)
-			{
-				builder.TokenTransfers.Add(transfer.ToProtobuf());
-			}
-
-			return builder;
+            return new Proto.Services.CryptoTransferTransactionBody
+            {
+                TokenTransfers = { SortTransfersAndBuild().Select(_ => _.ToProtobuf()) },
+                Transfers = new Proto.Services.TransferList
+                {
+                    AccountAmounts =
+                    {
+                        hbarTransfers
+                            .OrderBy(_ => _.AccountId)
+                            .ThenBy(_ => _.IsApproved)
+                            .Select(_ => _.ToProtobuf())
+                    }
+                }
+            };
 		}
 		/// <include file="TransferTransaction.cs.xml" path='docs/member[@name="M:TransferTransaction.AddHbarTransfer(AccountId,Hbar)"]' />
 		public virtual TransferTransaction AddHbarTransfer(AccountId accountId, Hbar value)

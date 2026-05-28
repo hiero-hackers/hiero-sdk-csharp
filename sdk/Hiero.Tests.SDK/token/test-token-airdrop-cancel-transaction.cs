@@ -51,7 +51,7 @@ namespace Hiero.Tests.SDK.Token
             var tx = new TokenCancelAirdropTransaction();
             var tx2 = Transaction.FromBytes<TokenCancelAirdropTransaction>(tx.ToBytes());
             
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         public TokenCancelAirdropTransactionTest()
         {

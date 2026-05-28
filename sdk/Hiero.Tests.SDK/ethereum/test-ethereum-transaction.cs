@@ -42,7 +42,7 @@ namespace Hiero.Tests.SDK.Ethereum
             var tx = new EthereumTransaction();
             var tx2 = Transaction.FromBytes<EthereumTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
 
         [Fact] public virtual void ShouldSerialize()

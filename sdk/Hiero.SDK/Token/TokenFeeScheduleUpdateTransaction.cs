@@ -28,15 +28,11 @@ namespace Hiero.SDK.Token
         /// <include file="TokenFeeScheduleUpdateTransaction.cs.xml" path='docs/member[@name="M:TokenFeeScheduleUpdateTransaction.RequireNotFrozen"]' />
         public virtual TokenId? TokenId { get; set { RequireNotFrozen(); field = value; } }
 		/// <include file="TokenFeeScheduleUpdateTransaction.cs.xml" path='docs/member[@name="M:TokenFeeScheduleUpdateTransaction.DeepCloneList(field)"]' />
-		public virtual IList<CustomFee> CustomFees 
-        { 
-            get => CustomFee.DeepCloneList(field);
-			set 
-            { 
-                RequireNotFrozen(); 
-                field = CustomFee.DeepCloneList(value); 
-            } 
-        } = [];
+		public virtual ListGuarded<CustomFee> CustomFees 
+        {
+            set => field = GenerateListGuarded(value);
+            get => field ??= GenerateListGuarded<CustomFee>(null); 
+        }
 
         /// <include file="TokenFeeScheduleUpdateTransaction.cs.xml" path='docs/member[@name="M:TokenFeeScheduleUpdateTransaction.InitFromTransactionBody"]' />
         private void InitFromTransactionBody()

@@ -42,7 +42,7 @@ namespace Hiero.Tests.SDK.Token
             var tx = new TokenMintTransaction();
             var tx2 = Transaction.FromBytes<TokenMintTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
 
         private TokenMintTransaction SpawnTestTransaction()
@@ -77,16 +77,16 @@ namespace Hiero.Tests.SDK.Token
         public virtual void ShouldBytes()
         {
             var tx = SpawnTestTransaction();
-            var tx2 = Transaction.FromBytes<TokenUpdateTransaction>(tx.ToBytes());
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            var tx2 = Transaction.FromBytes<TokenMintTransaction>(tx.ToBytes());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-token-mint-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Token.TokenMintTransactionTest.ShouldBytesMetadata"]' />
         public virtual void ShouldBytesMetadata()
         {
             var tx = SpawnMetadataTestTransaction();
-            var tx2 = Transaction.FromBytes<TokenUpdateTransaction>(tx.ToBytes());
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            var tx2 = Transaction.FromBytes<TokenMintTransaction>(tx.ToBytes());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-token-mint-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Token.TokenMintTransactionTest.FromScheduledTransaction"]' />

@@ -56,18 +56,8 @@ namespace Hiero.SDK.Cryptography
             // we pre-derive most of the path as the mobile wallets don't expose more than the index
             // https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki
             // https://github.com/satoshilabs/slips/blob/master/slip-0044.md
-            foreach (int index in new int[]
-            {
-                44,
-                3030,
-                0,
-                0
-            }
-
-            )
-            {
+            foreach (int index in new int[] { 44, 3030, 0, 0 })
                 derivedKey = derivedKey.Derive(index);
-            }
 
             return derivedKey;
         }
@@ -189,9 +179,7 @@ namespace Hiero.SDK.Cryptography
         public abstract byte[] ToBytesDER();
         /// <include file="PrivateKey.cs.xml" path='docs/member[@name="M:PrivateKey.ToBytesRaw"]' />
         public abstract byte[] ToBytesRaw();
-        public abstract override byte[] ToBytes();
-
-        
+        public abstract override byte[] ToBytes();        
 
         /// <include file="PrivateKey.cs.xml" path='docs/member[@name="M:PrivateKey.LegacyDerive(System.Int32)"]' />
         public virtual PrivateKey LegacyDerive(int index)

@@ -44,7 +44,7 @@ namespace Hiero.Tests.SDK.Node
             var tx = SpawnTestTransaction();
             var tx2 = Transaction.FromBytes<NodeDeleteTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-node-delete-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeDeleteTransactionTest.ShouldBytesNoSetters"]' />
@@ -53,7 +53,7 @@ namespace Hiero.Tests.SDK.Node
             var tx = new NodeDeleteTransaction();
             var tx2 = Transaction.FromBytes<NodeDeleteTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-node-delete-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeDeleteTransactionTest.FromScheduledTransaction"]' />

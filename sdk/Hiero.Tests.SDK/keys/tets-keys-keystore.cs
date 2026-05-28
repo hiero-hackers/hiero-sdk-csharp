@@ -36,7 +36,7 @@ namespace Hiero.Tests.SDK.Keys
         public virtual void KeystoreToStream()
         {
             PrivateKey privateKey = PrivateKey.FromString(TEST_KEY_STR);
-            Keystore keystore = new Keystore(privateKey);
+            Keystore keystore = new (privateKey);
 			MemoryStream outputStream = new ();
             keystore.Export(outputStream, PASSPHRASE);
             Keystore keystore2 = Keystore.FromStream(outputStream, PASSPHRASE);

@@ -52,7 +52,7 @@ namespace Hiero.Tests.SDK.Token
             var tx = new TokenClaimAirdropTransaction();
             var tx2 = Transaction.FromBytes<TokenClaimAirdropTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
 
         public TokenClaimAirdropTransactionTest()

@@ -1,11 +1,14 @@
 // SPDX-License-Identifier: Apache-2.0
 using Google.Protobuf;
 using Google.Protobuf.Reflection;
+
 using Hiero.SDK.Core;
 using Hiero.SDK.Cryptocurrency;
 using Hiero.SDK.Cryptography;
 using Hiero.SDK.Transactions;
+
 using NodaTime;
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -32,11 +35,11 @@ namespace Hiero.SDK.File
             InitFromTransactionBody();
         }
 
-        private NodaTime.Instant? _ExpirationTime = null;
-		private NodaTime.Duration? _ExpirationTimeDuration = null;
+        private Instant? _ExpirationTime = null;
+		private Duration? _ExpirationTimeDuration = null;
 
         /// <include file="FileCreateTransaction.cs.xml" path='docs/member[@name="M:FileCreateTransaction.RequireNotFrozen"]' />
-        public NodaTime.Instant? ExpirationTime
+        public Instant? ExpirationTime
 		{
 			get => _ExpirationTime;
 			set
@@ -47,7 +50,7 @@ namespace Hiero.SDK.File
 			}
 		}
 		/// <include file="FileCreateTransaction.cs.xml" path='docs/member[@name="M:FileCreateTransaction.RequireNotFrozen_2"]' />
-		public NodaTime.Duration? ExpirationTimeDuration
+		public Duration? ExpirationTimeDuration
 		{
 			get => _ExpirationTimeDuration;
 			set
@@ -61,7 +64,7 @@ namespace Hiero.SDK.File
 		public KeyList? Keys
         {
 			private get;
-            set => field = value is null ? null : KeyList.Of(null, value);
+            set => field = value;
         }
 		public IReadOnlyList<Key>? Keys_Read { get => Keys?.AsReadOnly(); }
 
@@ -122,8 +125,7 @@ namespace Hiero.SDK.File
 		{
 			var builder = new Proto.Services.FileCreateTransactionBody();
 
-
-			if (ExpirationTime != null)
+            if (ExpirationTime != null)
 				builder.ExpirationTime = ExpirationTime.Value.ToProtoTimestamp();
 			else if (ExpirationTimeDuration != null)
 				builder.ExpirationTime = ExpirationTimeDuration.Value.ToProtoTimestamp();

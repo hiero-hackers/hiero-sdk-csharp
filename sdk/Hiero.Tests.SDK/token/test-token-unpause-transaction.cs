@@ -37,7 +37,7 @@ namespace Hiero.Tests.SDK.Token
         {
             var tx = new TokenUnpauseTransaction();
             var tx2 = Transaction.FromBytes<TokenUnpauseTransaction>(tx.ToBytes());
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact] public virtual void ShouldSerialize()
         {
@@ -49,7 +49,7 @@ namespace Hiero.Tests.SDK.Token
         {
             var tx = SpawnTestTransaction();
             var tx2 = Transaction.FromBytes<TokenUnpauseTransaction>(tx.ToBytes());
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-token-unpause-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Token.TokenUnpauseTransactionTest.FromScheduledTransaction"]' />

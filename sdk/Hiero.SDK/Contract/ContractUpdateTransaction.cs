@@ -179,22 +179,24 @@ namespace Hiero.SDK.Contract
 
             ContractId = body.ContractId is null? null : ContractId.FromProtobuf(body.ContractId);
             ProxyAccountId = body.ProxyAccountId is null ? null : AccountId.FromProtobuf(body.ProxyAccountId);
-            ExpirationTime = body.ExpirationTime?.ToNodaTimeInstant();
+            StakedAccountId = body.StakedAccountId is null ? null : AccountId.FromProtobuf(body.StakedAccountId);
+            AutoRenewAccountId = body.AutoRenewAccountId is null ? null : AccountId.FromProtobuf(body.AutoRenewAccountId);
 
             if (body.AdminKey is not null)
 				AdminKey = Key.FromProtobufKey(body.AdminKey);
 
-			MaxAutomaticTokenAssociations = body.MaxAutomaticTokenAssociations;
+            if (body.HasStakedNodeId) 
+				StakedNodeId = body.StakedNodeId;
+
             AutoRenewPeriod = body.AutoRenewPeriod?.ToNodaDuration();
+            ExpirationTime = body.ExpirationTime?.ToNodaTimeInstant();
+
             ContractMemo = body.MemoWrapper;
             DeclineStakingReward = body.DeclineReward;
-            StakedAccountId = body.StakedAccountId is null ? null : AccountId.FromProtobuf(body.StakedAccountId);
-            StakedNodeId = body.StakedNodeId;
+            MaxAutomaticTokenAssociations = body.MaxAutomaticTokenAssociations;
 
-            AutoRenewAccountId = body.AutoRenewAccountId is null ? null : AccountId.FromProtobuf(body.AutoRenewAccountId);
-
-			HookCreationDetails.Set(body.HookCreationDetails.Select(_ => Hook.HookCreationDetails.FromProtobuf(_)));
-			HookIdsToDelete.Set(body.HookIdsToDelete);
+            HookIdsToDelete.Set(body.HookIdsToDelete);
+            HookCreationDetails.Set(body.HookCreationDetails.Select(_ => Hook.HookCreationDetails.FromProtobuf(_)));
         }
 
 		/// <include file="ContractUpdateTransaction.cs.xml" path='docs/member[@name="M:ContractUpdateTransaction.ToProtobuf"]' />

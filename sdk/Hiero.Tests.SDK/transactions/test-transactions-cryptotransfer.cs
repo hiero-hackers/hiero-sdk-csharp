@@ -32,7 +32,7 @@ namespace Hiero.Tests.SDK.Transactions
             var tx = new TransferTransaction();
             var tx2 = Transaction.FromBytes<TransferTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
 
         private TransferTransaction SpawnTestTransaction()
@@ -96,7 +96,7 @@ namespace Hiero.Tests.SDK.Transactions
             var tx = SpawnTestTransaction();
             var tx2 = Transaction.FromBytes<TransferTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
 
         public virtual void DecimalsMustBeConsistent()

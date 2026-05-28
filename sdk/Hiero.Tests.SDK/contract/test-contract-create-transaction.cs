@@ -39,7 +39,7 @@ namespace Hiero.Tests.SDK.Contract
             var tx = new ContractCreateTransaction();
             var tx2 = Transaction.FromBytes<ContractCreateTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
 
         private ContractCreateTransaction SpawnTestTransaction()
@@ -91,7 +91,7 @@ namespace Hiero.Tests.SDK.Contract
             var tx = SpawnTestTransaction();
             var tx2 = Transaction.FromBytes<ContractCreateTransaction>(tx.ToBytes());
             
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-contract-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Contract.ContractCreateTransactionTest.ShouldBytes2"]' />
@@ -100,7 +100,7 @@ namespace Hiero.Tests.SDK.Contract
             var tx = SpawnTestTransaction2();
             var tx2 = Transaction.FromBytes<ContractCreateTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx2.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-contract-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Contract.ContractCreateTransactionTest.FromScheduledTransaction"]' />
@@ -126,8 +126,10 @@ namespace Hiero.Tests.SDK.Contract
         /// <include file="test-contract-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Contract.ContractCreateTransactionTest.SetGasShouldAcceptZeroAndPositiveValues"]' />
         public virtual void SetGasShouldAcceptZeroAndPositiveValues()
         {
-            var tx = new ContractCreateTransaction();
-            tx.Gas = 0;
+            var tx = new ContractCreateTransaction
+            {
+                Gas = 0
+            };
             Assert.Equal(0, tx.Gas);
             tx.Gas = 123456;
             Assert.Equal(123456, tx.Gas);

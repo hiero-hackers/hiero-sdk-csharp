@@ -41,7 +41,7 @@ namespace Hiero.Tests.SDK.LiveHashes
         {
             var tx = SpawnTestTransaction();
             var tx2 = Transaction.FromBytes<LiveHashDeleteTransaction>(tx.ToBytes());
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-livehashes-delete-transaction.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.LiveHashes.LiveHashDeleteTransactionTest.ShouldBytesNoSetters"]' />
@@ -49,7 +49,7 @@ namespace Hiero.Tests.SDK.LiveHashes
         {
             var tx = new LiveHashDeleteTransaction();
             var tx2 = Transaction.FromBytes<LiveHashDeleteTransaction>(tx.ToBytes());
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
     }
 }

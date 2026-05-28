@@ -52,7 +52,7 @@ namespace Hiero.Tests.SDK.Transactions
         {
             var tx = SpawnTestTransaction();
             var tx2 = Transaction.FromBytes<FreezeTransaction>(tx.ToBytes());
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-transactions-freeze.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Transactions.FreezeTransactionTest.ShouldBytesNoSetters"]' />
@@ -60,7 +60,7 @@ namespace Hiero.Tests.SDK.Transactions
         {
             var tx = new FreezeTransaction();
             var tx2 = Transaction.FromBytes<FreezeTransaction>(tx.ToBytes());
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-transactions-freeze.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Transactions.FreezeTransactionTest.FromScheduledTransaction"]' />

@@ -29,7 +29,7 @@ namespace Hiero.Tests.SDK.File
             var tx = new FileDeleteTransaction();
             var tx2 = Transaction.FromBytes<FileDeleteTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
 
         private FileDeleteTransaction SpawnTestTransaction()
@@ -51,7 +51,7 @@ namespace Hiero.Tests.SDK.File
             var tx = SpawnTestTransaction();
             var tx2 = Transaction.FromBytes<FileDeleteTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-file-delete-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.File.FileDeleteTransactionTest.FromScheduledTransaction"]' />

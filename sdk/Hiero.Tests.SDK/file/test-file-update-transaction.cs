@@ -48,7 +48,7 @@ namespace Hiero.Tests.SDK.File
             var tx = SpawnTestTransaction();
             var tx2 = Transaction.FromBytes<FileUpdateTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-file-update-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.File.FileUpdateTransactionTest.ShouldBytesNoSetters"]' />
@@ -57,7 +57,7 @@ namespace Hiero.Tests.SDK.File
             var tx = new FileUpdateTransaction();
             var tx2 = Transaction.FromBytes<FileUpdateTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-file-update-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.File.FileUpdateTransactionTest.FromScheduledTransaction"]' />

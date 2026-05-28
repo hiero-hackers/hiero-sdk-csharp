@@ -43,7 +43,7 @@ namespace Hiero.Tests.SDK.Contract
         {
             var tx = SpawnTestTransaction();
             var tx2 = Transaction.FromBytes<ContractDeleteTransaction>(tx.ToBytes());
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-contract-delete-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Contract.ContractDeleteTransactionTest.ShouldBytesNoSetters"]' />
@@ -51,7 +51,7 @@ namespace Hiero.Tests.SDK.Contract
         {
             var tx = new ContractDeleteTransaction();
             var tx2 = Transaction.FromBytes<ContractDeleteTransaction>(tx.ToBytes());
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-contract-delete-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Contract.ContractDeleteTransactionTest.FromScheduledTransaction"]' />
@@ -102,7 +102,7 @@ namespace Hiero.Tests.SDK.Contract
 
             var tx2 = Transaction.FromBytes<ContractDeleteTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
             Assert.True(tx2.PermanentRemoval);
             Assert.Equal(tx2.ContractId, tx.ContractId);
             Assert.Equal(tx2.TransferAccountId, tx.TransferAccountId);

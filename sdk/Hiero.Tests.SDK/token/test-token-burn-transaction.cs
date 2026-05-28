@@ -46,7 +46,7 @@ namespace Hiero.Tests.SDK.Token
         {
             var tx = new TokenBurnTransaction();
             var tx2 = ITransaction.FromBytes(tx.ToBytes());
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
 
         public virtual void ShouldSerializeNft()
@@ -73,7 +73,7 @@ namespace Hiero.Tests.SDK.Token
         {
             var tx = SpawnTestTransaction();
             var tx2 = Transaction.FromBytes<TokenBurnTransaction>(tx.ToBytes());
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-token-burn-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Token.TokenBurnTransactionTest.ShouldBytesNft"]' />
@@ -81,7 +81,7 @@ namespace Hiero.Tests.SDK.Token
         {
             var tx = SpawnTestTransactionNft();
             var tx2 = Transaction.FromBytes<TokenBurnTransaction>(tx.ToBytes());
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-token-burn-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Token.TokenBurnTransactionTest.FromScheduledTransaction"]' />

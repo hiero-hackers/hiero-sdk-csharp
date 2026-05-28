@@ -53,7 +53,7 @@ namespace Hiero.SDK.File
 			set
 			{
 				RequireNotFrozen();
-				field = value is null ? null : KeyList.Of(null, value);
+				field = value;
 			}
 		}
 		public IReadOnlyList<Key>? Keys_Read { get => Keys?.AsReadOnly(); }
@@ -68,25 +68,6 @@ namespace Hiero.SDK.File
 				field = ByteString.CopyFrom(value?.ToByteArray());
 			}
 		}
-		/// <include file="FileUpdateTransaction.cs.xml" path='docs/member[@name="M:FileUpdateTransaction.RequireNotFrozen_5"]' />
-		public byte[]? Contents_Bytes
-		{
-			set
-			{
-				RequireNotFrozen();
-				Contents = ByteString.CopyFrom(value);
-			}
-		}
-		/// <include file="FileUpdateTransaction.cs.xml" path='docs/member[@name="M:FileUpdateTransaction.RequireNotFrozen_6"]' />
-		public string? Contents_String
-		{
-			set
-			{
-				RequireNotFrozen();
-				Contents = ByteString.CopyFromUtf8(value);
-			}
-		}
-
 		/// <include file="FileUpdateTransaction.cs.xml" path='docs/member[@name="M:FileUpdateTransaction.RequireNotFrozen_7"]' />
 		public NodaTime.Instant? ExpirationTime
 		{
@@ -95,7 +76,7 @@ namespace Hiero.SDK.File
 			{
 				RequireNotFrozen();
 				field = value;
-                if (field == null && ExpirationTimeDuration is not null)
+                if (field is not null && ExpirationTimeDuration is not null)
                     ExpirationTimeDuration = null;
             }
 		}
@@ -106,7 +87,7 @@ namespace Hiero.SDK.File
 			{
 				RequireNotFrozen();
 				field = value;
-                if (field == null && ExpirationTime is not null)
+                if (field is not null && ExpirationTime is not null)
                     ExpirationTime = null;
             }
 		}

@@ -762,7 +762,6 @@ namespace Hiero.SDK.Core
 			}
 			else
 			{
-
 				// Generate the SignedTransaction protobuf objects if the Transaction's not frozen.
 				if (!IsFrozen())
 				{
@@ -781,7 +780,6 @@ namespace Hiero.SDK.Core
 
 					WipeTransactionLists(requiredChunks);
 				}
-
 
 				// Build all the Transaction protobuf objects and add them to the TransactionList protobuf object.
 				BuildAllTransactions();

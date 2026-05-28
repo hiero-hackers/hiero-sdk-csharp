@@ -55,7 +55,7 @@ namespace Hiero.Tests.SDK.Token
             var tx = new TokenUpdateTransaction();
             var tx2 = Transaction.FromBytes<TokenUpdateTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
 
         private TokenUpdateTransaction SpawnTestTransaction()
@@ -93,7 +93,7 @@ namespace Hiero.Tests.SDK.Token
             var tx = SpawnTestTransaction();
             var tx2 = Transaction.FromBytes<TokenUpdateTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-token-update-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Token.TokenUpdateTransactionTest.FromScheduledTransaction"]' />

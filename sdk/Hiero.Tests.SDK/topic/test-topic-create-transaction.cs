@@ -31,7 +31,7 @@ namespace Hiero.Tests.SDK.Topic
         {
             var tx = new TopicCreateTransaction();
             var tx2 = Transaction.FromBytes<TopicCreateTransaction>(tx.ToBytes());
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
 
         private TopicCreateTransaction SpawnTestTransaction()
@@ -56,7 +56,7 @@ namespace Hiero.Tests.SDK.Topic
         {
             var tx = SpawnTestTransaction();
             var tx2 = Transaction.FromBytes<TopicCreateTransaction>(tx.ToBytes());
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-topic-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Topic.TopicCreateTransactionTest.FromScheduledTransaction"]' />

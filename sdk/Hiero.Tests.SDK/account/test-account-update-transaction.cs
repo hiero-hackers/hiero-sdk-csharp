@@ -71,7 +71,7 @@ namespace Hiero.Tests.SDK.Account
             var tx = SpawnTestTransaction();
             var tx2 = Transaction.FromBytes<AccountUpdateTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-account-update-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Account.AccountUpdateTransactionTest.ShouldBytesNoSetters"]' />
@@ -80,7 +80,7 @@ namespace Hiero.Tests.SDK.Account
             var tx = new AccountUpdateTransaction();
             var tx2 = Transaction.FromBytes<AccountUpdateTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
 
         public virtual void ShouldSerialize2()
@@ -94,7 +94,7 @@ namespace Hiero.Tests.SDK.Account
             var tx = SpawnTestTransaction2();
             var tx2 = Transaction.FromBytes<AccountUpdateTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-account-update-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Account.AccountUpdateTransactionTest.FromScheduledTransaction"]' />

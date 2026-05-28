@@ -37,7 +37,7 @@ namespace Hiero.Tests.SDK.Token
             var tx = new TokenAirdropTransaction();
             var tx2 = Transaction.FromBytes<TokenAirdropTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
 
         private TokenAirdropTransaction SpawnTestTransaction()
@@ -69,7 +69,7 @@ namespace Hiero.Tests.SDK.Token
         {
             var tx = SpawnTestTransaction();
             var tx2 = Transaction.FromBytes<TokenAirdropTransaction>(tx.ToBytes());
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
 
         [Fact]

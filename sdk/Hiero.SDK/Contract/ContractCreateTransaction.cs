@@ -262,7 +262,7 @@ namespace Hiero.SDK.Contract
             var body = SourceTransactionBody.ContractCreateInstance;
 
 			if (body.FileId is not null) BytecodeFileId = FileId.FromProtobuf(body.FileId);
-			Bytecode = body.Initcode?.ToByteArray();
+			if (body.HasInitcode) Bytecode = body.Initcode.ToByteArray();
             if (body.ProxyAccountId is not null) ProxyAccountId = AccountId.FromProtobuf(body.ProxyAccountId);
 			if (body.AdminKey is not null) AdminKey = Key.FromProtobufKey(body.AdminKey);
 
@@ -275,7 +275,7 @@ namespace Hiero.SDK.Contract
             ContractMemo = body.Memo;
             DeclineStakingReward = body.DeclineReward;
 
-			StakedNodeId = body.StakedNodeId;
+            if (body.HasStakedNodeId) StakedNodeId = body.StakedNodeId;
             if (body.StakedAccountId is not null) StakedAccountId = AccountId.FromProtobuf(body.StakedAccountId);
 			if (body.AutoRenewAccountId is not null) AutoRenewAccountId = AccountId.FromProtobuf(body.AutoRenewAccountId);
 

@@ -45,7 +45,7 @@ namespace Hiero.Tests.SDK.Token
             var tx = new TokenRevokeKycTransaction();
             var tx2 = Transaction.FromBytes<TokenRevokeKycTransaction>(tx.ToBytes());
             
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-token-revoke-kyc-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Token.TokenRevokeKycTransactionTest.ShouldBytes"]' />
@@ -54,7 +54,7 @@ namespace Hiero.Tests.SDK.Token
             var tx = SpawnTestTransaction();
             var tx2 = Transaction.FromBytes<TokenRevokeKycTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-token-revoke-kyc-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Token.TokenRevokeKycTransactionTest.FromScheduledTransaction"]' />

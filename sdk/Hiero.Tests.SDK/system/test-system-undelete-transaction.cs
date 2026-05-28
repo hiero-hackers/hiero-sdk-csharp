@@ -29,7 +29,7 @@ namespace Hiero.Tests.SDK.System
         {
             var tx = new SystemUndeleteTransaction();
             var tx2 = Transaction.FromBytes<SystemUndeleteTransaction>(tx.ToBytes());
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
 
         private SystemUndeleteTransaction SpawnTestTransactionFile()
@@ -68,7 +68,7 @@ namespace Hiero.Tests.SDK.System
         {
             var tx = SpawnTestTransactionContract();
             var tx2 = Transaction.FromBytes<SystemUndeleteTransaction>(tx.ToBytes());
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-system-undelete-transaction.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.System.SystemUndeleteTransactionTest.ShouldBytesFile"]' />
@@ -76,7 +76,7 @@ namespace Hiero.Tests.SDK.System
         {
             var tx = SpawnTestTransactionFile();
             var tx2 = Transaction.FromBytes<SystemUndeleteTransaction>(tx.ToBytes());
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-system-undelete-transaction.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.System.SystemUndeleteTransactionTest.FromScheduledTransaction"]' />

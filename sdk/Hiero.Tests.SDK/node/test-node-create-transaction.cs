@@ -74,7 +74,7 @@ namespace Hiero.Tests.SDK.Node
             var tx = SpawnTestTransaction();
             var tx2 = Transaction.FromBytes<NodeCreateTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
 		[Fact]
         /// <include file="test-node-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeCreateTransactionTest.FromScheduledTransaction"]' />
@@ -95,7 +95,7 @@ namespace Hiero.Tests.SDK.Node
             var tx = new NodeCreateTransaction();
             var tx2 = Transaction.FromBytes<NodeCreateTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
 		[Fact]
         /// <include file="test-node-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeCreateTransactionTest.TestUnrecognizedServicePort"]' />
@@ -111,7 +111,7 @@ namespace Hiero.Tests.SDK.Node
 			};
             var tx2 = Transaction.FromBytes<NodeCreateTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
 		[Fact]
         /// <include file="test-node-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeCreateTransactionTest.TestSetNull"]' />

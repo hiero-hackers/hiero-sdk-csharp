@@ -43,7 +43,7 @@ namespace Hiero.Tests.SDK.LiveHashes
         {
             var tx = new LiveHashAddTransaction();
             var tx2 = Transaction.FromBytes<LiveHashAddTransaction>(tx.ToBytes());
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-livehashes-add-transaction.cs.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.LiveHashes.LiveHashAddTransactionTest.ShouldBytes"]' />
@@ -51,7 +51,7 @@ namespace Hiero.Tests.SDK.LiveHashes
         {
             var tx = SpawnTestTransaction();
             var tx2 = Transaction.FromBytes<LiveHashAddTransaction>(tx.ToBytes());
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
     }
 }

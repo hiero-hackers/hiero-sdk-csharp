@@ -7,7 +7,7 @@ namespace Hiero.Tests.SDK
 {
 	public static class Resources
 	{
-        private static string FullyQualified(string name) => string.Format("Hiero.Tests.SDK.{0}", name);
+        private static string FullyQualified(string name) => string.Format("Hiero.Tests.SDK._resources.{0}", name);
 
 		private const string ClientConfig_Name = "client-config.json";
 		private const string ClientConfigWithOperator_Name = "client-config-with-operator.json";

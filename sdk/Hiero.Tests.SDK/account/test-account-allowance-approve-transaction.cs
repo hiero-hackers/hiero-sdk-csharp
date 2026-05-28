@@ -60,7 +60,7 @@ namespace Hiero.Tests.SDK.Account
         {
             var tx = SpawnTestTransaction();
             var tx2 = Transaction.FromBytes<AccountAllowanceApproveTransaction>(tx.ToBytes());
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-account-allowance-approve-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Account.AccountAllowanceApproveTransactionTest.PropertiesTest"]' />
@@ -80,7 +80,7 @@ namespace Hiero.Tests.SDK.Account
         {
             var tx = new AccountAllowanceApproveTransaction();
             var tx2 = Transaction.FromBytes<AccountAllowanceApproveTransaction>(tx.ToBytes());
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-account-allowance-approve-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Account.AccountAllowanceApproveTransactionTest.FromScheduledTransaction"]' />

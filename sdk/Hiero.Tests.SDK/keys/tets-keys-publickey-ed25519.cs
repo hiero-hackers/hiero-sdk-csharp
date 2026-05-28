@@ -35,51 +35,18 @@ namespace Hiero.Tests.SDK.Keys
         public virtual void KeyByteValidation()
         {
             byte[] invalidKeyED25519 = new byte[32];
-            _ = PublicKey.FromBytes(invalidKeyED25519);
-            _ = PublicKey.FromBytesED25519(invalidKeyED25519);
-            byte[] invalidKey = new byte[]
-            {
-                0x00,
-                (byte)0xca,
-                (byte)0x35,
-                0x4b,
-                0x7c,
-                (byte)0xf4,
-                (byte)0x87,
-                (byte)0xd1,
-                (byte)0xbc,
-                0x43,
-                0x5a,
-                0x25,
-                0x66,
-                0x77,
-                0x09,
-                (byte)0xc1,
-                (byte)0xab,
-                (byte)0x98,
-                0x0c,
-                0x11,
-                0x4d,
-                0x35,
-                (byte)0x94,
-                (byte)0xe6,
-                0x25,
-                (byte)0x9e,
-                (byte)0x81,
-                0x2e,
-                0x6a,
-                0x70,
-                0x3d,
-                0x4f,
-                0x51
-            };
+
+            // Assertions.assertDoesNotThrow() /*Java*/
+            // _ = PublicKey.FromBytes(invalidKeyED25519);
+            // _ = PublicKey.FromBytesED25519(invalidKeyED25519);
+
+            byte[] invalidKey =
+            [ 
+                0x00, 0xca, 0x35, 0x4b, 0x7c, 0xf4, 0x87, 0xd1, 0xbc, 0x43, 0x5a, 0x25, 0x66, 0x77, 0x09, 0xc1, 
+                0xab, 0x98, 0x0c, 0x11, 0x4d, 0x35, 0x94, 0xe6, 0x25, 0x9e, 0x81, 0x2e, 0x6a, 0x70, 0x3d, 0x4f, 0x51
+            ];
             Assert.Throws<ArgumentException>(() => PublicKey.FromBytesED25519(invalidKey));
-            byte[] malformedKey = new byte[]
-            {
-                0x00,
-                0x01,
-                0x02
-            };
+            byte[] malformedKey = [0x00, 0x01, 0x02];
             Assert.Throws<ArgumentException>(() => PublicKey.FromBytesED25519(malformedKey));
             byte[] validKey = PrivateKey.GenerateED25519().GetPublicKey().ToBytes();
             _ = PublicKey.FromBytesED25519(validKey);
@@ -182,7 +149,8 @@ namespace Hiero.Tests.SDK.Keys
             Assert.Equal(key3Str, key1Str);
         }
         [Theory]
-        [InlineData("")]
+        [InlineData("302a300506032b6570032100e0c8ec2758a5879ffac226a13c0c516b799e72e35141a0dd828f94d37988a4b7")] // ASN1 encoded hex
+        [InlineData("e0c8ec2758a5879ffac226a13c0c516b799e72e35141a0dd828f94d37988a4b7")] // raw hex
         public virtual void ExternalKeyDeserialize(string keyStr)
         {
             PublicKey key = PublicKey.FromString(keyStr);

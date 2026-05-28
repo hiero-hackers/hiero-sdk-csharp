@@ -108,7 +108,7 @@ namespace Hiero.SDK.Token
                 RequireNotFrozen(); 
                 field = value;
                 AutoRenewPeriod = null;
-                if (field == null && ExpirationTimeDuration is not null)
+                if (field is not null && ExpirationTimeDuration is not null)
                     ExpirationTimeDuration = null;
 
             } 
@@ -121,7 +121,7 @@ namespace Hiero.SDK.Token
                 RequireNotFrozen(); 
                 field = value;
                 AutoRenewPeriod = null;
-                if (field == null && ExpirationTime is not null)
+                if (field is not null && ExpirationTime is not null)
                     ExpirationTime = null;
 
             } 

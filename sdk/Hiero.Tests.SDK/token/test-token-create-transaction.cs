@@ -66,7 +66,7 @@ namespace Hiero.Tests.SDK.Token
             var tx = new TokenCreateTransaction();
             var tx2 = Transaction.FromBytes<TokenCreateTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         public virtual void ShouldSerializeNft()
         {
@@ -97,7 +97,7 @@ namespace Hiero.Tests.SDK.Token
                 TreasuryAccountId = testTreasuryAccountId,
                 TokenName = testTokenName,
                 TokenMemo = testTokenMemo,
-                CustomFees = testCustomFees,
+                CustomFees = [.. testCustomFees],
                 MaxTransactionFee = new Hbar(1),
                 TokenMetadata = testMetadata
             
@@ -110,7 +110,7 @@ namespace Hiero.Tests.SDK.Token
             var tx = SpawnTestTransactionFungible();
             var tx2 = Transaction.FromBytes<TokenCreateTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
 
         private TokenCreateTransaction SpawnTestTransactionNft()
@@ -148,8 +148,8 @@ namespace Hiero.Tests.SDK.Token
         {
             var tx = SpawnTestTransactionNft();
             var tx2 = Transaction.FromBytes<TokenCreateTransaction>(tx.ToBytes());
-            
-            Assert.Equal(tx2.ToString(), tx.ToString());
+
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-token-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Token.TokenCreateTransactionTest.FromScheduledTransaction"]' />

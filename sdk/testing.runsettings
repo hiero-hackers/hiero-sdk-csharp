@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <RunConfiguration>
+    <!-- Sets maximum printed string length before truncation occurs -->
+    <!-- 0 or a very high integer prevents truncation completely -->
+    <PrintMaxStringLength>0</PrintMaxStringLength>
+  </RunConfiguration>
+</RunSettings>

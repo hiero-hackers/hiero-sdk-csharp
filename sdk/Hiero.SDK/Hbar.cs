@@ -123,7 +123,7 @@ namespace Hiero.SDK
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(valueInTinybar);
+            return valueInTinybar.GetHashCode();
         }
         public override bool Equals(object? o)
         {

@@ -52,7 +52,7 @@ namespace Hiero.Tests.SDK.System
             var tx = new SystemDeleteTransaction();
             var tx2 = Transaction.FromBytes<SystemDeleteTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
 
         private SystemDeleteTransaction SpawnTestTransactionContract()
@@ -74,7 +74,7 @@ namespace Hiero.Tests.SDK.System
         {
             var tx = SpawnTestTransactionContract();
             var tx2 = Transaction.FromBytes<SystemDeleteTransaction>(tx.ToBytes());
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-system-delete-transaction.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.System.SystemDeleteTransactionTest.ShouldBytesFile"]' />
@@ -82,7 +82,7 @@ namespace Hiero.Tests.SDK.System
         {
             var tx = SpawnTestTransactionFile();
             var tx2 = Transaction.FromBytes<SystemDeleteTransaction>(tx.ToBytes());
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-system-delete-transaction.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.System.SystemDeleteTransactionTest.FromScheduledTransaction"]' />

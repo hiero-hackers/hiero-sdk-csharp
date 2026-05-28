@@ -37,15 +37,11 @@ namespace Hiero.SDK.Token
 			}
 		}
 		/// <include file="TokenDissociateTransaction.cs.xml" path='docs/member[@name="M:TokenDissociateTransaction.RequireNotFrozen_2"]' />
-		public IList<TokenId> TokenIds 
-        { 
-            get => [..field]; 
-            set 
-            {
-				RequireNotFrozen();
-				field = [.. value];
-            } 
-        } = [];
+		public ListGuarded<TokenId> TokenIds 
+        {
+            set => field = GenerateListGuarded(value);
+            get => field ??= GenerateListGuarded<TokenId>(null);
+        }
 		
         /// <include file="TokenDissociateTransaction.cs.xml" path='docs/member[@name="M:TokenDissociateTransaction.InitFromTransactionBody"]' />
         private void InitFromTransactionBody()

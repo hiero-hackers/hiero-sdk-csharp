@@ -35,7 +35,7 @@ namespace Hiero.Tests.SDK.Contract
             var tx = new ContractUpdateTransaction();
             var tx2 = ITransaction.FromBytes(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
 
         private ContractUpdateTransaction SpawnTestTransaction()
@@ -86,7 +86,7 @@ namespace Hiero.Tests.SDK.Contract
             var tx = SpawnTestTransaction();
             var tx2 = Transaction.FromBytes<ContractUpdateTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-contract-update-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Contract.ContractUpdateTransactionTest.ShouldBytes2"]' />
@@ -95,7 +95,7 @@ namespace Hiero.Tests.SDK.Contract
             var tx = SpawnTestTransaction2();
             var tx2 = Transaction.FromBytes<ContractUpdateTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-contract-update-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Contract.ContractUpdateTransactionTest.ShouldSupportExpirationTimeDurationBytesRoundTrip"]' />
@@ -111,7 +111,7 @@ namespace Hiero.Tests.SDK.Contract
 				AutoRenewPeriod = Duration.FromDays(1),
 				ContractMemo = "with-duration",
 				StakedAccountId = AccountId.FromString("0.0.3"),
-				ExpirationTime = SystemClock.Instance.GetCurrentInstant().PlusSeconds(1234),
+				ExpirationTimeDuration = Duration.FromSeconds(1234),
 				ProxyAccountId = new AccountId(0, 0, 4),
 				MaxTransactionFee = Hbar.FromTinybars(100000),
 				AutoRenewAccountId = new AccountId(0, 0, 30),
@@ -122,8 +122,8 @@ namespace Hiero.Tests.SDK.Contract
             
             var tx2 = Transaction.FromBytes<ContractUpdateTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
-            Assert.Equal(tx2.ExpirationTime, NodaTime.Instant.FromUnixTimeMilliseconds(1234));
+            Assert.Equal(tx.ToString(), tx2.ToString());
+            Assert.Equal(tx2.ExpirationTime, Instant.FromUnixTimeMilliseconds(1234));
         }
         [Fact]
         /// <include file="test-contract-update-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Contract.ContractUpdateTransactionTest.SetExpirationTimeDurationOnFrozenTransactionShouldThrow"]' />

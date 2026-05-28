@@ -29,7 +29,7 @@ namespace Hiero.Tests.SDK.Schedule
             var tx = new ScheduleSignTransaction();
             var tx2 = Transaction.FromBytes<ScheduleSignTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
 
         private ScheduleSignTransaction SpawnTestTransaction()
@@ -51,7 +51,7 @@ namespace Hiero.Tests.SDK.Schedule
             var tx = SpawnTestTransaction();
             var tx2 = Transaction.FromBytes<ScheduleSignTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
     }
 }

@@ -29,7 +29,7 @@ namespace Hiero.Tests.SDK.File
             var tx = new FileCreateTransaction();
             var tx2 = Transaction.FromBytes<FileCreateTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
 
         private FileCreateTransaction SpawnTestTransaction()
@@ -38,7 +38,7 @@ namespace Hiero.Tests.SDK.File
             {
 				NodeAccountIds = new (AccountId.FromString("0.0.5005"), AccountId.FromString("0.0.5006")),
 				TransactionId = TransactionId.WithValidStart(AccountId.FromString("0.0.5006"), validStart),
-				Contents = new byte[] { 1, 2, 3, 4 },
+				Contents = [1, 2, 3, 4],
 				ExpirationTime = NodaTime.Instant.FromUnixTimeMilliseconds(1554158728),
 				Keys = KeyList.Of(null, unusedPrivateKey),
 				MaxTransactionFee = Hbar.FromTinybars(100000),
@@ -54,7 +54,7 @@ namespace Hiero.Tests.SDK.File
             var tx = SpawnTestTransaction();
             var tx2 = Transaction.FromBytes<FileCreateTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-file-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.File.FileCreateTransactionTest.FromScheduledTransaction"]' />

@@ -152,16 +152,6 @@ namespace Hiero.SDK.Cryptocurrency
             get; 
             set { RequireNotFrozen(); field = value; } 
         }
-		/// <include file="AccountCreateTransaction.cs.xml" path='docs/member[@name="T:Unknown"]' />
-		public string Alias_String 
-        { 
-            set 
-            {
-				if ((value.StartsWith("0x") && value.Length == 42) || value.Length == 40)
-					Alias = EvmAddress.FromString(value);
-				else throw new ArgumentException("evmAddress must be an a valid EVM address with \"0x\" prefix");
-			}
-        }
 
         /// <include file="AccountCreateTransaction.cs.xml" path='docs/member[@name="M:ToProtobuf"]' />
         public ListGuarded<HookCreationDetails> HookCreationDetails
@@ -195,7 +185,7 @@ namespace Hiero.SDK.Cryptocurrency
 
             if (Alias != null)
             {
-                builder.Alias = ByteString.CopyFromUtf8(Alias.ToString());
+                builder.Alias = ByteString.CopyFrom(Alias.ToBytes());
             }
 
             if (StakedAccountId != null)

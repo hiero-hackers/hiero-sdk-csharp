@@ -52,7 +52,7 @@ namespace Hiero.Tests.SDK.Token
             var tx = new TokenRejectTransaction();
             var tx2 = Transaction.FromBytes<TokenRejectTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
 
         [Fact]
@@ -60,9 +60,9 @@ namespace Hiero.Tests.SDK.Token
         public virtual void ShouldBytes()
         {
             var tx = SpawnTestTransaction();
-            var tx2 = Transaction.FromBytes<TokenUpdateNftsTransaction>(tx.ToBytes());
+            var tx2 = Transaction.FromBytes<TokenRejectTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
 
         [Fact]

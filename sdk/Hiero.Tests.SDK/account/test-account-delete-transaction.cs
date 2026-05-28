@@ -42,7 +42,7 @@ namespace Hiero.Tests.SDK.Account
             var tx = SpawnTestTransaction();
             var tx2 = Transaction.FromBytes<AccountDeleteTransaction>(tx.ToBytes());
             
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-account-delete-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Account.AccountDeleteTransactionTest.ShouldBytesNoSetters"]' />
@@ -51,7 +51,7 @@ namespace Hiero.Tests.SDK.Account
             var tx = new AccountDeleteTransaction();
             var tx2 = Transaction.FromBytes<AccountDeleteTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-account-delete-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Account.AccountDeleteTransactionTest.FromScheduledTransaction"]' />

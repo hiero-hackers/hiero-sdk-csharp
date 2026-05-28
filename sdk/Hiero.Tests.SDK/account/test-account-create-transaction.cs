@@ -106,6 +106,7 @@ namespace Hiero.Tests.SDK.Account
         public virtual void PropertiesTest()
         {
             var tx = SpawnTestTransaction();
+
             Assert.Equal(tx.Key, privateKeyED25519);
             Assert.Equal(tx.InitialBalance, Hbar.FromTinybars(450));
             Assert.True(tx.ReceiverSigRequired);

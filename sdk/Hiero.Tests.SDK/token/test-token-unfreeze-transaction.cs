@@ -28,7 +28,7 @@ namespace Hiero.Tests.SDK.Token
         {
             var tx = new TokenUnfreezeTransaction();
             var tx2 = ITransaction.FromBytes(tx.ToBytes());
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
 
         private TokenUnfreezeTransaction SpawnTestTransaction()
@@ -50,7 +50,7 @@ namespace Hiero.Tests.SDK.Token
         {
             var tx = SpawnTestTransaction();
             var tx2 = Transaction.FromBytes<TokenUnfreezeTransaction>(tx.ToBytes());
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-token-unfreeze-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Token.TokenUnfreezeTransactionTest.FromScheduledTransaction"]' />

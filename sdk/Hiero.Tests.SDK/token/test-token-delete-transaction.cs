@@ -28,7 +28,7 @@ namespace Hiero.Tests.SDK.Token
             var tx = new TokenDeleteTransaction();
             var tx2 = Transaction.FromBytes<TokenDeleteTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
 
         private TokenDeleteTransaction SpawnTestTransaction()
@@ -50,7 +50,7 @@ namespace Hiero.Tests.SDK.Token
             var tx = SpawnTestTransaction();
             var tx2 = Transaction.FromBytes<TokenDeleteTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-token-delete-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Token.TokenDeleteTransactionTest.FromScheduledTransaction"]' />

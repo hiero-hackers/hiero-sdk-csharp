@@ -51,7 +51,7 @@ namespace Hiero.Tests.SDK.File
             var tx = new FileAppendTransaction();
             var tx2 = Transaction.FromBytes<FileAppendTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
 
         public virtual void ShouldSerializeBigContents()
@@ -175,7 +175,7 @@ namespace Hiero.Tests.SDK.File
 			var tx = SpawnTestTransactionBigContents(nodeAccountIds);
             var tx2 = Transaction.FromBytes<FileAppendTransaction>(tx.ToBytes());
             
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
             
             Assert.Throws<InvalidOperationException>(() => tx2.GetTransactionHash());
             Assert.Throws<InvalidOperationException>(() => tx2.GetTransactionHashPerNode());

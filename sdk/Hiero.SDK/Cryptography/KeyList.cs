@@ -44,10 +44,10 @@ namespace Hiero.SDK.Cryptography
 		/// <include file="KeyList.cs.xml" path='docs/member[@name="M:KeyList.ToProtobuf"]' />
 		public Proto.Services.KeyList ToProtobuf()
         {
-			Proto.Services.KeyList proto = new ();
-			proto.Keys.AddRange(Keys.Select(_ => _.ToProtobufKey()));
-
-			return proto;
+			return new Proto.Services.KeyList
+            {
+                Keys = { Keys.Select(_ => _.ToProtobufKey()) }
+            };
         }
 
         public override int GetHashCode()
@@ -57,53 +57,41 @@ namespace Hiero.SDK.Cryptography
 		public override bool Equals(object? o)
 		{
 			if (this == o)
-			{
-				return true;
-			}
+			    return true;
 
-			if (o is not KeyList)
-			{
-				return false;
-			}
-
-			KeyList keyList = (KeyList)o;
+			if (o is not KeyList keyList)
+                return false;
 
 			if (keyList.Count != Count)
-			{
-				return false;
-			}
+                return false;
 
-			for (int i = 0; i < keyList.Count; i++)
-			{
-				if (!Equals(keyList.Keys[i].ToBytes(), Keys[i].ToBytes()))
-				{
-					return false;
-				}
-			}
+            for (int i = 0; i < keyList.Count; i++)
+                if (!Equals(keyList.Keys[i].ToBytes(), Keys[i].ToBytes()))
+                    return false;
 
-			return true;
+            return true;
 		}
 		public override Proto.Services.Key ToProtobufKey()
 		{
 			Proto.Services.Key proto = new()
 			{
-				KeyList = new Proto.Services.KeyList { }
+				KeyList = new Proto.Services.KeyList 
+                {
+                    Keys = { Keys.Select(_ => _.ToProtobufKey()) }
+                }
 			};
 
-            proto.KeyList.Keys.AddRange(Keys.Select(_ => _.ToProtobufKey()));
-
 			if (Threshold.HasValue)
-			{
-				proto.ThresholdKey = new Proto.Services.ThresholdKey
-				{
-					Threshold = Threshold.Value,
-					Keys = new Proto.Services.KeyList { }
-				};
+                proto.ThresholdKey = new Proto.Services.ThresholdKey
+                {
+                    Threshold = Threshold.Value,
+                    Keys = new Proto.Services.KeyList
+                    {
+                        Keys = { Keys.Select(_ => _.ToProtobufKey()) }
+                    }
+                };
 
-				proto.ThresholdKey.Keys.Keys.AddRange(Keys.Select(_ => _.ToProtobufKey()));
-			}
-
-			return proto;
+            return proto;
 		}
 
         public int IndexOf(Key item)

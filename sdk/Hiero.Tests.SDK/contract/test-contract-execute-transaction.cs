@@ -31,7 +31,7 @@ namespace Hiero.Tests.SDK.Contract
             var tx = new ContractExecuteTransaction();
             var tx2 = Transaction.FromBytes<ContractExecuteTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
 
         private ContractExecuteTransaction SpawnTestTransaction()
@@ -56,7 +56,7 @@ namespace Hiero.Tests.SDK.Contract
             var tx = SpawnTestTransaction();
             var tx2 = Transaction.FromBytes<ContractExecuteTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-contract-execute-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Contract.ContractExecuteTransactionTest.FromScheduledTransaction"]' />

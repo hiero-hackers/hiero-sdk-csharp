@@ -39,11 +39,11 @@ namespace Hiero.SDK.Token
         /// <include file="TokenCreateTransaction.cs.xml" path='docs/member[@name="M:TokenCreateTransaction.RequireNotFrozen_3"]' />
         public virtual bool FreezeDefault { get; set { RequireNotFrozen(); field = value; } }
 		/// <include file="TokenCreateTransaction.cs.xml" path='docs/member[@name="M:TokenCreateTransaction.DeepCloneList(field)"]' />
-		public virtual IList<CustomFee> CustomFees
-		{
-			get => CustomFee.DeepCloneList(field);
-			set => field = CustomFee.DeepCloneList(value);
-		} = [];
+		public virtual ListGuarded<CustomFee> CustomFees
+        {
+            set => field = GenerateListGuarded(value);
+            get => field ??= GenerateListGuarded<CustomFee>(null);
+		}
 		/// <include file="TokenCreateTransaction.cs.xml" path='docs/member[@name="M:TokenCreateTransaction.RequireNotFrozen_4"]' />
 		public virtual string? TokenName { get; set { RequireNotFrozen(); field = value; } } = string.Empty;
 		/// <include file="TokenCreateTransaction.cs.xml" path='docs/member[@name="M:TokenCreateTransaction.RequireNotFrozen_5"]' />
@@ -76,7 +76,7 @@ namespace Hiero.SDK.Token
 				field = value;
 				AutoRenewPeriod = null;
 
-				if (field == null && ExpirationTimeDuration is not null) 
+				if (field is not null && ExpirationTimeDuration is not null) 
 					ExpirationTimeDuration = null;
 
 			}
@@ -90,7 +90,7 @@ namespace Hiero.SDK.Token
 				field = value;
 				AutoRenewPeriod = null;
 
-                if (field == null && ExpirationTime is not null)
+                if (field is not null && ExpirationTime is not null)
                     ExpirationTime = null;
 
             }

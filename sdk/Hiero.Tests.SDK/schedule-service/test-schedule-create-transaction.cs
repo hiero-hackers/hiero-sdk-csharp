@@ -51,7 +51,7 @@ namespace Hiero.Tests.SDK.Schedule
             var tx = SpawnTestTransaction();
             var tx2 = Transaction.FromBytes<ScheduleCreateTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-schedule-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Schedule.ScheduleCreateTransactionTest.ShouldBytesNoSetters"]' />
@@ -60,7 +60,7 @@ namespace Hiero.Tests.SDK.Schedule
             var tx = new ScheduleCreateTransaction();
             var tx2 = Transaction.FromBytes<ScheduleCreateTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-schedule-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Schedule.ScheduleCreateTransactionTest.ShouldSupportExpirationTimeDurationBytesRoundTrip"]' />
@@ -85,7 +85,7 @@ namespace Hiero.Tests.SDK.Schedule
             
             var tx2 = Transaction.FromBytes<ScheduleCreateTransaction>(tx.ToBytes());
 
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
             Assert.Equal(tx2.ExpirationTime, Instant.FromUnixTimeMilliseconds(1234));
         }
         [Fact]

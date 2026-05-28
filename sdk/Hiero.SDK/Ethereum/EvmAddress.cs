@@ -18,11 +18,10 @@ namespace Hiero.SDK.Ethereum
         /// <include file="EvmAddress.cs.xml" path='docs/member[@name="M:EvmAddress.FromString(System.String)"]' />
         public static EvmAddress FromString(string evmAddress)
         {
-            string address = evmAddress.StartsWith("0x") ? evmAddress.Substring(2) : evmAddress;
+            string address = evmAddress.StartsWith("0x") ? evmAddress[2..] : evmAddress;
+
             if (address.Length == 40)
-            {
                 return new EvmAddress(Hex.Decode(address));
-            }
 
             throw new ArgumentException("Invalid EvmAddress: " + evmAddress);
         }

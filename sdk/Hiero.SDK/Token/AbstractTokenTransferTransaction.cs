@@ -39,39 +39,38 @@ namespace Hiero.SDK.Token
 				{
 					var iTokenId = tokenTransfers[i].TokenId;
 					var jTokenId = nftTransfers[j].TokenId;
-					var last = transferLists.Any() ? transferLists[transferLists.Count - 1] : null;
-					var lastTokenId = last != null ? last.TokenId : null;
-					if (last != null && iTokenId.CompareTo(lastTokenId) == 0)
-					{
-						last.Transfers.Add(tokenTransfers[i++]);
-						continue;
-					}
+					var last = transferLists.Count > 0 ? transferLists[^1] : null;
 
-					if (last != null && jTokenId.CompareTo(lastTokenId) == 0)
+					if (last is not null)
 					{
-						last.NftTransfers.Add(nftTransfers[j++]);
-						continue;
-					}
+                        if (iTokenId.CompareTo(last.TokenId) == 0)
+                        {
+                            last.Transfers.Add(tokenTransfers[i++]);
+                            continue;
+                        }
+
+                        if (jTokenId.CompareTo(last.TokenId) == 0)
+                        {
+                            last.NftTransfers.Add(nftTransfers[j++]);
+                            continue;
+                        }
+                    }
 
 					var result = iTokenId.CompareTo(jTokenId);
+
 					if (result == 0)
-					{
-						transferLists.Add(new TokenTransferList(iTokenId, (uint?)tokenTransfers[i].ExpectedDecimals, tokenTransfers[i++], nftTransfers[j++]));
-					}
+						transferLists.Add(new TokenTransferList(iTokenId, tokenTransfers[i].ExpectedDecimals, tokenTransfers[i++], nftTransfers[j++]));
 					else if (result < 0)
-					{
-						transferLists.Add(new TokenTransferList(iTokenId, (uint?)tokenTransfers[i].ExpectedDecimals, tokenTransfers[i++], null));
-					}
+						transferLists.Add(new TokenTransferList(iTokenId, tokenTransfers[i].ExpectedDecimals, tokenTransfers[i++], null));
 					else
-					{
 						transferLists.Add(new TokenTransferList(jTokenId, null, null, nftTransfers[j++]));
-					}
 				}
 				else if (i < tokenTransfers.Count)
 				{
 					var iTokenId = tokenTransfers[i].TokenId;
                     var last = transferLists.Count == 0 ? null : transferLists[^1];
                     var lastTokenId = last?.TokenId;
+
                     if (last != null && iTokenId.CompareTo(lastTokenId) == 0)
 					{
 						last.Transfers.Add(tokenTransfers[i++]);

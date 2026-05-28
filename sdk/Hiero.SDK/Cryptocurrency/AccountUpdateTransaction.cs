@@ -181,8 +181,8 @@ namespace Hiero.SDK.Cryptocurrency
 
             if (body.StakedAccountId is not null)
                 StakedAccountId = AccountId.FromProtobuf(body.StakedAccountId);
-
-            StakedNodeId = body.StakedNodeId;
+            else if (body.HasStakedNodeId)
+                StakedNodeId = body.StakedNodeId;
 
 			// Initialize hook create/delete details
 			HookCreationDetails.Set(body.HookCreationDetails.Select(_ => Hook.HookCreationDetails.FromProtobuf(_)));

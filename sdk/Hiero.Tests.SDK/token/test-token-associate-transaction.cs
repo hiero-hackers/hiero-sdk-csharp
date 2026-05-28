@@ -33,7 +33,7 @@ namespace Hiero.Tests.SDK.Token
         {
             var tx = new TokenAssociateTransaction();
             var tx2 = Transaction.FromBytes<TokenAssociateTransaction>(tx.ToBytes());
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
 
         private TokenAssociateTransaction SpawnTestTransaction()
@@ -56,7 +56,7 @@ namespace Hiero.Tests.SDK.Token
         {
             var tx = SpawnTestTransaction();
             var tx2 = Transaction.FromBytes<TokenAssociateTransaction>(tx.ToBytes());
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
 
         [Fact]

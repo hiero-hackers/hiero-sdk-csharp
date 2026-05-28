@@ -41,7 +41,7 @@ namespace Hiero.Tests.SDK.Topic
         {
             var tx = new TopicDeleteTransaction();
             var tx2 = ITransaction.FromBytes(tx.ToBytes());
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-topic-delete-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Topic.TopicDeleteTransactionTest.ShouldBytes"]' />
@@ -49,7 +49,7 @@ namespace Hiero.Tests.SDK.Topic
         {
             var tx = SpawnTestTransaction();
             var tx2 = Transaction.FromBytes<TopicDeleteTransaction>(tx.ToBytes());
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-topic-delete-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Topic.TopicDeleteTransactionTest.FromScheduledTransaction"]' />

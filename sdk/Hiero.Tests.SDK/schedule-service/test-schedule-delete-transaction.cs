@@ -41,7 +41,7 @@ namespace Hiero.Tests.SDK.Schedule
         {
             var tx = SpawnTestTransaction();
             var tx2 = Transaction.FromBytes<ScheduleDeleteTransaction>(tx.ToBytes());
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-schedule-delete-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Schedule.ScheduleDeleteTransactionTest.ShouldBytesNoSetters"]' />
@@ -49,7 +49,7 @@ namespace Hiero.Tests.SDK.Schedule
         {
             var tx = new ScheduleDeleteTransaction();
             var tx2 = Transaction.FromBytes<ScheduleDeleteTransaction>(tx.ToBytes());
-            Assert.Equal(tx2.ToString(), tx.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
         }
         [Fact]
         /// <include file="test-schedule-delete-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Schedule.ScheduleDeleteTransactionTest.FromScheduledTransaction"]' />

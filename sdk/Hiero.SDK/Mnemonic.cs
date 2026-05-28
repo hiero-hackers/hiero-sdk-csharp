@@ -207,8 +207,8 @@ namespace Hiero.SDK
 			if (isLegacy)
 				try
 				{
-					using Stream? wordstream = typeof(Mnemonic).Assembly.GetManifestResourceStream("resources.legacy-english.txt");
-					using StreamReader? streamreader = wordstream is null ? null : new StreamReader(wordstream, UTF8Encoding.UTF8);
+					using Stream wordstream = Resources.Legacy_English_Stream;
+					using StreamReader streamreader = new (wordstream, Encoding.UTF8);
 
 					List<string> words = new(4096);
 
@@ -224,8 +224,8 @@ namespace Hiero.SDK
 			else
 				try
 				{
-					using Stream? wordstream = typeof(Mnemonic).Assembly.GetManifestResourceStream("resources.bip39-english.txt");
-					using StreamReader? streamreader = wordstream is null ? null : new StreamReader(wordstream, UTF8Encoding.UTF8);
+                    using Stream wordstream = Resources.BIP29_English_Stream;
+                    using StreamReader streamreader = new (wordstream, Encoding.UTF8);
 
 					List<string> words = new(2048);
 
@@ -313,7 +313,7 @@ namespace Hiero.SDK
 				throw new BadMnemonicException(this, BadMnemonicReason.BadLength);
 			}
 
-			List<int> unknownIndices = new();
+			List<int> unknownIndices = [];
 			for (int i = 0; i < Words.Count; i++)
 			{
 				if (GetWordIndex(Words[i], false) < 0)
@@ -322,7 +322,7 @@ namespace Hiero.SDK
 				}
 			}
 
-			if (unknownIndices.Count == 0)
+			if (unknownIndices.Count != 0)
 			{
 				throw new BadMnemonicException(this, BadMnemonicReason.UnknownWords, [.. unknownIndices]);
 			}
