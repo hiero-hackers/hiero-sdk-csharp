@@ -12,9 +12,11 @@ namespace Hiero.Tests.SDK.Keys
         private static readonly PublicKey mTestPublicKey1 = PrivateKey.FromStringED25519("302e020100300506032b657004220420db484b828e64b2d8f12ce3c0a0e93a0b8cce7af1bb8f39c97732394482538e10").GetPublicKey();
         private static readonly PublicKey mTestPublicKey2 = PrivateKey.FromStringED25519("302e020100300506032b657004220420db484b828e64b2d8f12ce3c0a0e93a0b8cce7af1bb8f39c97732394482538e11").GetPublicKey();
         private static readonly PublicKey mTestPublicKey3 = PrivateKey.FromStringED25519("302e020100300506032b657004220420db484b828e64b2d8f12ce3c0a0e93a0b8cce7af1bb8f39c97732394482538e12").GetPublicKey();
+
+
+        [Fact]
         public virtual void FromProtobuf()
         {
-
             // Given
             var protoKey1 = new Proto.Services.Key { Ed25519 = ByteString.CopyFrom(mTestPublicKey1.ToBytes()) };
             var protoKey3 = new Proto.Services.Key { Ed25519 = ByteString.CopyFrom(mTestPublicKey2.ToBytes()) };
@@ -35,7 +37,6 @@ namespace Hiero.Tests.SDK.Keys
         /// <include file="tets-keys-keylist.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Keys.KeyListTest.OfKeys"]' />
         public virtual void OfKeys()
         {
-
             // Given / When
             var keyList = KeyList.Of(null, mTestPublicKey1, mTestPublicKey2, mTestPublicKey3);
 
@@ -48,7 +49,6 @@ namespace Hiero.Tests.SDK.Keys
         /// <include file="tets-keys-keylist.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Keys.KeyListTest.ToProtobufKey"]' />
         public virtual void ToProtobufKey()
         {
-
             // Given
             var keyList = KeyList.Of(null, mTestPublicKey1, mTestPublicKey2, mTestPublicKey3);
 
@@ -65,7 +65,6 @@ namespace Hiero.Tests.SDK.Keys
         /// <include file="tets-keys-keylist.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Keys.KeyListTest.ToProtobuf"]' />
         public virtual void ToProtobuf()
         {
-
             // Given
             var keyList = KeyList.Of(null, mTestPublicKey1, mTestPublicKey2, mTestPublicKey3);
 
@@ -82,7 +81,6 @@ namespace Hiero.Tests.SDK.Keys
         /// <include file="tets-keys-keylist.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Keys.KeyListTest.Size"]' />
         public virtual void Size()
         {
-
             // Given / When
             var keyList = KeyList.Of(null, mTestPublicKey1, mTestPublicKey2, mTestPublicKey3);
             var emptyKeyList = new KeyList();
@@ -93,7 +91,6 @@ namespace Hiero.Tests.SDK.Keys
         [Fact]
         public virtual void Contains()
         {
-
             // Given / When
             var keyList = KeyList.Of(null, mTestPublicKey1, mTestPublicKey2, mTestPublicKey3);
             var emptyKeyList = new KeyList();
@@ -110,7 +107,6 @@ namespace Hiero.Tests.SDK.Keys
         /// <include file="tets-keys-keylist.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Keys.KeyListTest.Add"]' />
         public virtual void Add()
         {
-
             // Given
             var keyList = KeyList.Of(null, mTestPublicKey1, mTestPublicKey2);
 
@@ -124,7 +120,6 @@ namespace Hiero.Tests.SDK.Keys
         /// <include file="tets-keys-keylist.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Keys.KeyListTest.Remove"]' />
         public virtual void Remove()
         {
-
             // Given
             var keyList = KeyList.Of(null, mTestPublicKey1, mTestPublicKey2, mTestPublicKey3);
 
@@ -140,7 +135,6 @@ namespace Hiero.Tests.SDK.Keys
         /// <include file="tets-keys-keylist.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Keys.KeyListTest.Clear"]' />
         public virtual void Clear()
         {
-
             // Given
             var keyList = KeyList.Of(null, mTestPublicKey1, mTestPublicKey2, mTestPublicKey3);
 

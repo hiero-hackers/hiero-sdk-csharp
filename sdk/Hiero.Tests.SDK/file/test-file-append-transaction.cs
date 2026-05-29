@@ -26,7 +26,8 @@ namespace Hiero.Tests.SDK.File
         private static readonly PrivateKey secondPrivateKey = PrivateKey.FromString("302e020100300506032b65700422042099b8587e5abccf6999b0d42b88c581c45284290450487ce90095561c85af11e4");
         private readonly NodaTime.Instant validStart = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
 
-        [Fact] public virtual void ShouldSerialize()
+        [Fact] 
+        public virtual void ShouldSerialize()
         {
             Verifier.Verify(SpawnTestTransaction([AccountId.FromString("0.0.5005")]).ToString());
         }
@@ -54,6 +55,7 @@ namespace Hiero.Tests.SDK.File
             Assert.Equal(tx.ToString(), tx2.ToString());
         }
 
+        [Fact]
         public virtual void ShouldSerializeBigContents()
         {
             var nodeAccountIds = new List<AccountId>();
@@ -97,6 +99,7 @@ namespace Hiero.Tests.SDK.File
             return outString + "]";
         }
 
+        [Fact]
         public virtual void ShouldHash()
         {
             var nodeAccountIds = new List<AccountId>
@@ -138,6 +141,7 @@ namespace Hiero.Tests.SDK.File
             return outString + "]";
         }
 
+        [Fact]
         public virtual void ShouldGetSignatures()
         {
             var nodeAccountIds = new List<AccountId>
@@ -150,6 +154,7 @@ namespace Hiero.Tests.SDK.File
             Verifier.Verify(SignaturesToString(signatures));
         }
 
+        [Fact]
         public virtual void ShouldGetAllSignatures()
         {
             var nodeAccountIds = new List<AccountId>

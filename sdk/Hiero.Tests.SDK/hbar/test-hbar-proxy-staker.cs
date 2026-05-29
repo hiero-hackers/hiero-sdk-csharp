@@ -13,6 +13,7 @@ namespace Hiero.Tests.SDK.HBar
             Amount = 10
         };
 
+        [Fact]
         public virtual void FromProtobuf()
         {
             Verifier.Verify(ProxyStaker.FromProtobuf(proxyStaker).ToString());

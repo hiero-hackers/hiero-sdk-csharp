@@ -48,18 +48,17 @@ namespace Hiero.SDK.Transactions
 		/// <include file="BatchTransaction.cs.xml" path='docs/member[@name="M:BatchTransaction.InitFromTransactionBody_2"]' />
 		private void InitFromTransactionBody()
 		{
-			var body = SourceTransactionBody.AtomicBatch;
-
-			foreach (var atomicTransactionBytes in body.Transactions)
+			foreach (var atomicTransactionBytes in SourceTransactionBody.AtomicBatch.Transactions)
 			{
-				var transaction = new Proto.Services.Transaction
+				ITransaction transaction = ITransaction.FromBytes(new Proto.Services.Transaction
 				{
 					SignedTransactionBytes = atomicTransactionBytes
-				};
 
-				InnerTransactions.Add(ITransaction.FromBytes(transaction.ToByteArray()));
+				}.ToByteArray());
+
+                InnerTransactions.Add(transaction);
 			}
-		}
+        }
 		/// <include file="BatchTransaction.cs.xml" path='docs/member[@name="M:BatchTransaction.ValidateInnerTransaction(ITransaction)"]' />
 		private void ValidateInnerTransaction(ITransaction transaction) 
 		{

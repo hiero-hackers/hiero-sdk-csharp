@@ -9,7 +9,8 @@ namespace Hiero.Tests.SDK.Topic
 {
     public class TopicInfoQueryTest
     {
-        [Fact] public virtual void ShouldSerialize()
+        [Fact] 
+        public virtual void ShouldSerialize()
         {
             var builder = new Proto.Services.Query();
             new TopicInfoQuery()

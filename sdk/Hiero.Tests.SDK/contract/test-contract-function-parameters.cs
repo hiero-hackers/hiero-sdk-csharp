@@ -15,7 +15,7 @@ namespace Hiero.Tests.SDK.Contract
 {
     public class ContractFunctionParametersTest
     {
-        private static List<object[]> Int256Arguments()
+        public static IEnumerable<object?[]> Int256Arguments()
         {
             return
             [
@@ -35,8 +35,7 @@ namespace Hiero.Tests.SDK.Contract
                 [ 0xdeadbeef, "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffdeadbeef" ]
             ];
         }
-
-        private static List<object[]> UInt256Arguments()
+        public static IEnumerable<object?[]> UInt256Arguments()
         {
             return
             [
@@ -57,6 +56,7 @@ namespace Hiero.Tests.SDK.Contract
             ];
         }
 
+        [Fact]
         public virtual void IntTypes()
         {
             ContractFunctionParameters @params = new ContractFunctionParameters()
@@ -79,14 +79,14 @@ namespace Hiero.Tests.SDK.Contract
 
             Assert.Equal("11bcd903" + "0000000000000000000000000000000000000000000000000000000000000001" + "fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe" + "0000000000000000000000000000000000000000000000000000000000000003" + "fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc" + "0000000000000000000000000000000000000000000000000000000000000004" + "fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffb" + "0000000000000000000000000000000000000000000000000000000000000006" + "fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff9" + "0000000000000000000000000000000000000000000000000000000000000200" + "00000000000000000000000000000000000000000000000000000000000002a0" + "0000000000000000000000000000000000000000000000000000000000000340" + "00000000000000000000000000000000000000000000000000000000000003e0" + "0000000000000000000000000000000000000000000000000000000000000480" + "0000000000000000000000000000000000000000000000000000000000000520" + "00000000000000000000000000000000000000000000000000000000000005c0" + "0000000000000000000000000000000000000000000000000000000000000600" + "0000000000000000000000000000000000000000000000000000000000000004" + "0000000000000000000000000000000000000000000000000000000000000001" + "0000000000000000000000000000000000000000000000000000000000000002" + "0000000000000000000000000000000000000000000000000000000000000003" + "0000000000000000000000000000000000000000000000000000000000000004" + "0000000000000000000000000000000000000000000000000000000000000004" + "fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffb" + "0000000000000000000000000000000000000000000000000000000000000006" + "0000000000000000000000000000000000000000000000000000000000000007" + "fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff8" + "0000000000000000000000000000000000000000000000000000000000000004" + "0000000000000000000000000000000000000000000000000000000000000009" + "000000000000000000000000000000000000000000000000000000000000000a" + "000000000000000000000000000000000000000000000000000000000000000b" + "000000000000000000000000000000000000000000000000000000000000000c" + "0000000000000000000000000000000000000000000000000000000000000004" + "fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff3" + "000000000000000000000000000000000000000000000000000000000000000e" + "000000000000000000000000000000000000000000000000000000000000000f" + "fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0" + "0000000000000000000000000000000000000000000000000000000000000004" + "0000000000000000000000000000000000000000000000000000000000000011" + "0000000000000000000000000000000000000000000000000000000000000012" + "0000000000000000000000000000000000000000000000000000000000000013" + "0000000000000000000000000000000000000000000000000000000000000014" + "0000000000000000000000000000000000000000000000000000000000000004" + "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffeb" + "0000000000000000000000000000000000000000000000000000000000000016" + "0000000000000000000000000000000000000000000000000000000000000017" + "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe8" + "0000000000000000000000000000000000000000000000000000000000000001" + "0000000000000000000000000000000000000000000000000000000000000019" + "0000000000000000000000000000000000000000000000000000000000000001" + "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe6", Hex.ToHexString(@params.ToBytes("foo").ToByteArray()));
         }
-
+        [Fact]
         public virtual void Uint256BitLength()
         {
             var @params = new ContractFunctionParameters()
                 .AddUint256(new BigInteger(2).Pow(255));
             Assert.Equal("2fbebd38" + "8000000000000000000000000000000000000000000000000000000000000000", Hex.ToHexString(@params.ToBytes("foo").ToByteArray()));
         }
-
+        [Fact]
         public virtual void Uint256Errors()
         {
             Assert.Throws<ArgumentException>(() =>
@@ -100,7 +100,7 @@ namespace Hiero.Tests.SDK.Contract
         });
          */
         }
-
+        [Fact]
         public virtual void Addresses()
         {
             var @params = new ContractFunctionParameters()
@@ -109,7 +109,7 @@ namespace Hiero.Tests.SDK.Contract
                 .AddAddressArray(new string[] { "1122334455667788990011223344556677889900", "1122334455667788990011223344556677889900" });
             Assert.Equal("7d48c86d" + "0000000000000000000000001122334455667788990011223344556677889900" + "0000000000000000000000001122334455667788990011223344556677889900" + "0000000000000000000000000000000000000000000000000000000000000060" + "0000000000000000000000000000000000000000000000000000000000000002" + "0000000000000000000000001122334455667788990011223344556677889900" + "0000000000000000000000001122334455667788990011223344556677889900", Hex.ToHexString(@params.ToBytes("foo").ToByteArray()));
         }
-
+        [Fact]
         public virtual void AddressesError()
         {
             Assert.Throws<ArgumentException>(() =>
@@ -118,7 +118,7 @@ namespace Hiero.Tests.SDK.Contract
                 .AddAddress("112233445566778899001122334455667788990011");
             });
         }
-
+        [Fact]
         public virtual void Functions()
         {
             var @params = new ContractFunctionParameters()
@@ -127,7 +127,7 @@ namespace Hiero.Tests.SDK.Contract
                 .AddBool());
             Assert.Equal("c99c40cd" + "1122334455667788990011223344556677889900010203040000000000000000" + "112233445566778899001122334455667788990063441d820000000000000000", Hex.ToHexString(@params.ToBytes("foo").ToByteArray()));
         }
-
+        [Fact]
         public virtual void FunctionsError()
         {
             Assert.Throws<ArgumentException>(() =>
@@ -139,13 +139,13 @@ namespace Hiero.Tests.SDK.Contract
                 new ContractFunctionParameters().AddFunction("1122334455667788990011223344556677889900", new byte[] { 1, 2, 3, 4, 5 });
             });
         }
-
+        [Fact]
         public virtual void Bytes4Encoding()
         {
             var @params = new ContractFunctionParameters().AddBytes4(new byte[] { 1, 2, 3, 4 });
             Assert.Equal("580526ee" + "0102030400000000000000000000000000000000000000000000000000000000", Hex.ToHexString(@params.ToBytes("foo").ToByteArray()));
         }
-
+        [Fact]
         public virtual void Bytes4EncodingError()
         {
             Assert.Throws<ArgumentException>(() =>
@@ -153,13 +153,13 @@ namespace Hiero.Tests.SDK.Contract
                 new ContractFunctionParameters().AddBytes4(new byte[] { 1, 2, 3, 4, 5 });
             });
         }
-
+        [Fact]
         public virtual void Bytes4UTF8Encoding()
         {
             var @params = new ContractFunctionParameters().AddBytes4(Encoding.UTF8.GetBytes("ABCD"));
             Assert.Equal("580526ee" + "4142434400000000000000000000000000000000000000000000000000000000", Hex.ToHexString(@params.ToBytes("foo").ToByteArray()));
         }
-
+        [Fact]
         public virtual void Bytes4UTF8EncodingError()
         {
             Assert.Throws<ArgumentException>(() =>
@@ -167,14 +167,14 @@ namespace Hiero.Tests.SDK.Contract
                 new ContractFunctionParameters().AddBytes4(Encoding.UTF8.GetBytes("ABCDE"));
             });
         }
-
+        [Fact]
         public virtual void Bytes()
         {
             var @params = new ContractFunctionParameters()
                 .AddBytes32(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32 });
             Assert.Equal("11e814c1" + "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20", Hex.ToHexString(@params.ToBytes("foo").ToByteArray()));
         }
-
+        [Fact]
         public virtual void BytesError()
         {
             Assert.Throws<ArgumentException>(() =>
@@ -183,7 +183,7 @@ namespace Hiero.Tests.SDK.Contract
                 .AddBytes32(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33 });
             });
         }
-
+        [Fact]
         public virtual void Bool()
         {
             var @params = new ContractFunctionParameters()
@@ -191,7 +191,7 @@ namespace Hiero.Tests.SDK.Contract
                 .AddBool(false);
             Assert.Equal("b3cedfcf" + "0000000000000000000000000000000000000000000000000000000000000001" + "0000000000000000000000000000000000000000000000000000000000000000", Hex.ToHexString(@params.ToBytes("foo").ToByteArray()));
         }
-
+        [Fact]
         public virtual void DynamicParamsEncoding()
         {
             ByteString @paramsStringArg = new ContractFunctionParameters()
@@ -205,7 +205,7 @@ namespace Hiero.Tests.SDK.Contract
             // signature should encode differently but the contents are identical
             Assert.Equal("010473a7" + "0000000000000000000000000000000000000000000000000000000000000020" + "000000000000000000000000000000000000000000000000000000000000000d" + "48656c6c6f2c20776f726c642100000000000000000000000000000000000000", @paramsBytesArgHex);
         }
-
+        [Fact]
         public virtual void StaticParamsEncoding()
         {
             ContractFunctionParameters @params = new ContractFunctionParameters()
@@ -216,7 +216,7 @@ namespace Hiero.Tests.SDK.Contract
             string @paramsHex = Hex.ToHexString(@params.ToBytes(null).ToByteArray());
             Assert.Equal("0000000000000000000000000000000000000000000000000000000011223344" + "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000" + "000000000000000000000000000000000000000000000000ffffffffffff0000" + "00000000000000000000000000112233445566778899aabbccddeeff00112233", @paramsHex);
         }
-
+        [Fact]
         public virtual void MixedParamsEncoding()
         {
             ContractFunctionParameters @params = new ContractFunctionParameters()
@@ -228,7 +228,7 @@ namespace Hiero.Tests.SDK.Contract
             string @paramsHex = Hex.ToHexString(@params.ToBytes("foo").ToByteArray());
             Assert.Equal("6a5bb8f2" + "ffffffffffffffffffffffffffffffffffffffffffffffffffffffdeadbeef00" + "00000000000000000000000000000000000000000000000000000000000000a0" + "00000000000000000000000000000000000000000000000000000000000000e0" + "0000000000000000000000000000000000000000000000000000000000000001" + "0000000000000000000000000000000000000000000000000000000000000120" + "000000000000000000000000000000000000000000000000000000000000000d" + "48656c6c6f2c20776f726c642100000000000000000000000000000000000000" + "0000000000000000000000000000000000000000000000000000000000000004" + "ffee3f7f00000000000000000000000000000000000000000000000000000000" + "0000000000000000000000000000000000000000000000000000000000000002" + "00000000000000000000000000000000000000000000000000000000000000ff" + "000000000000000000000000000000000000000000000000000000000000007f", @paramsHex);
         }
-
+        [Fact]
         public virtual void ArrayTypesEncoding()
         {
             ContractFunctionParameters @params = new ContractFunctionParameters()
@@ -237,14 +237,14 @@ namespace Hiero.Tests.SDK.Contract
                 .AddInt256Array(new BigInteger[] { new BigInteger(0x1111) });
             Assert.Equal("025838fc" + "0000000000000000000000000000000000000000000000000000000000000060" + "00000000000000000000000000000000000000000000000000000000000001a0" + "0000000000000000000000000000000000000000000000000000000000000240" + "0000000000000000000000000000000000000000000000000000000000000003" + "0000000000000000000000000000000000000000000000000000000000000060" + "00000000000000000000000000000000000000000000000000000000000000a0" + "00000000000000000000000000000000000000000000000000000000000000e0" + "0000000000000000000000000000000000000000000000000000000000000005" + "68656c6c6f000000000000000000000000000000000000000000000000000000" + "0000000000000000000000000000000000000000000000000000000000000001" + "2c00000000000000000000000000000000000000000000000000000000000000" + "0000000000000000000000000000000000000000000000000000000000000006" + "776f726c64210000000000000000000000000000000000000000000000000000" + "0000000000000000000000000000000000000000000000000000000000000004" + "0000000000000000000000000000000000000000000000000000000000000088" + "0000000000000000000000000000000000000000000000000000000000000099" + "00000000000000000000000000000000000000000000000000000000000000aa" + "00000000000000000000000000000000000000000000000000000000000000bb" + "0000000000000000000000000000000000000000000000000000000000000001" + "0000000000000000000000000000000000000000000000000000000000001111", Hex.ToHexString(@params.ToBytes("foo").ToByteArray()));
         }
-
+        [Fact]
         public virtual void FixedBytes4ArrayEncoding()
         {
             ContractFunctionParameters @params = new ContractFunctionParameters()
                 .AddBytes4Array(new byte[][] { [ 1, 2, 3, 4 ], [ 5, 6, 7, 8 ], [ 9, 10, 11, 12 ] });
             Assert.Equal("0000000000000000000000000000000000000000000000000000000000000020" + "0000000000000000000000000000000000000000000000000000000000000003" + "0102030400000000000000000000000000000000000000000000000000000000" + "0506070800000000000000000000000000000000000000000000000000000000" + "090a0b0c00000000000000000000000000000000000000000000000000000000", Hex.ToHexString(@params.ToBytes(null).ToByteArray()));
         }
-
+        [Fact]
         public virtual void FixedBytesArrayEncoding()
         {
             // each string should be padded to 32 bytes and have no length prefix
@@ -252,7 +252,7 @@ namespace Hiero.Tests.SDK.Contract
                 .AddBytes32Array(new byte[][] { Encoding.UTF8.GetBytes("Hello"), Encoding.UTF8.GetBytes(","), Encoding.UTF8.GetBytes("world!") });
             Assert.Equal("0000000000000000000000000000000000000000000000000000000000000020" + "0000000000000000000000000000000000000000000000000000000000000003" + "48656c6c6f000000000000000000000000000000000000000000000000000000" + "2c00000000000000000000000000000000000000000000000000000000000000" + "776f726c64210000000000000000000000000000000000000000000000000000", Hex.ToHexString(@params.ToBytes(null).ToByteArray()));
         }
-
+        [Fact]
         public virtual void DynBytesArrayEncoding()
         {
 
@@ -261,14 +261,14 @@ namespace Hiero.Tests.SDK.Contract
                 .AddBytesArray(new byte[][] { Encoding.UTF8.GetBytes("Hello"), Encoding.UTF8.GetBytes(","), Encoding.UTF8.GetBytes("world!") });
             Assert.Equal("0000000000000000000000000000000000000000000000000000000000000020" + "0000000000000000000000000000000000000000000000000000000000000003" + "0000000000000000000000000000000000000000000000000000000000000060" + "00000000000000000000000000000000000000000000000000000000000000a0" + "00000000000000000000000000000000000000000000000000000000000000e0" + "0000000000000000000000000000000000000000000000000000000000000005" + "48656c6c6f000000000000000000000000000000000000000000000000000000" + "0000000000000000000000000000000000000000000000000000000000000001" + "2c00000000000000000000000000000000000000000000000000000000000000" + "0000000000000000000000000000000000000000000000000000000000000006" + "776f726c64210000000000000000000000000000000000000000000000000000", Hex.ToHexString(@params.ToBytes(null).ToByteArray()));
         }
-
+        [Fact]
         public virtual void StringArrayEncoding()
         {
             ContractFunctionParameters @params = new ContractFunctionParameters()
                 .AddStringArray(new string[] { "Hello", ",", "world!" });
             Assert.Equal("0000000000000000000000000000000000000000000000000000000000000020" + "0000000000000000000000000000000000000000000000000000000000000003" + "0000000000000000000000000000000000000000000000000000000000000060" + "00000000000000000000000000000000000000000000000000000000000000a0" + "00000000000000000000000000000000000000000000000000000000000000e0" + "0000000000000000000000000000000000000000000000000000000000000005" + "48656c6c6f000000000000000000000000000000000000000000000000000000" + "0000000000000000000000000000000000000000000000000000000000000001" + "2c00000000000000000000000000000000000000000000000000000000000000" + "0000000000000000000000000000000000000000000000000000000000000006" + "776f726c64210000000000000000000000000000000000000000000000000000", Hex.ToHexString(@params.ToBytes(null).ToByteArray()));
         }
-
+        [Fact]
         public virtual void BigIntChecks()
         {
             ContractFunctionParameters @params = new ();
@@ -286,7 +286,7 @@ namespace Hiero.Tests.SDK.Contract
             ArgumentException exception2 = Assert.Throws<ArgumentException>(() => @params.AddInt256(BigInteger.One.Negate() << 256));
             Assert.Equal(exception2.Message, rangeErr);
         }
-
+        [Fact]
         public virtual void AddressParamChecks()
         {
             ContractFunctionParameters @params = new ();
@@ -305,15 +305,20 @@ namespace Hiero.Tests.SDK.Contract
             Assert.Equal(exception4.Message, "failed to decode Solidity address as hex");
         }
 
+        [Theory]
+        [MemberData(nameof(Int256Arguments))]
         public virtual void Int256EncodesCorrectly(long val, string hexString)
         {
             Assert.Equal(hexString, Hex.ToHexString(ContractFunctionParameters.Int256(val, 64).ToByteArray()));
         }
+
+        [Theory]
+        [MemberData(nameof(UInt256Arguments))]
         public virtual void UInt256EncodesCorrectly(long val, string hexString, int bitWidth)
         {
             Assert.Equal(hexString, Hex.ToHexString(ContractFunctionParameters.Uint256(val, bitWidth).ToByteArray()));
         }
-
+        [Fact]
         public virtual void IntSizesEncodeCorrectly()
         {
             List<string> snapshotStrings = [];

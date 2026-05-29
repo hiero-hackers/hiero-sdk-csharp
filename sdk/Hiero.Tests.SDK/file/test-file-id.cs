@@ -12,26 +12,31 @@ namespace Hiero.Tests.SDK.File
     /// <include file="test-file-id.cs.xml" path='docs/member[@name="T:Hiero.Tests.SDK.File.FileIdTest"]' />
     public class FileIdTest
     {
+        [Fact]
         public virtual void ShouldSerializeFromString()
         {
             Verifier.Verify(FileId.FromString("0.0.5005").ToString());
         }
 
+        [Fact]
         public virtual void ToBytes()
         {
             Verifier.Verify(Hex.ToHexString(new FileId(0, 0, 5005).ToBytes()));
         }
 
+        [Fact]
         public virtual void FromBytes()
         {
             Verifier.Verify(FileId.FromBytes(new FileId(0, 0, 5005).ToBytes()).ToString());
         }
 
+        [Fact]
         public virtual void FromSolidityAddress()
         {
             Verifier.Verify(FileId.FromSolidityAddress("000000000000000000000000000000000000138D").ToString());
         }
 
+        [Fact]
         public virtual void ToSolidityAddress()
         {
             Verifier.Verify(new FileId(0, 0, 5005).ToEvmAddress());

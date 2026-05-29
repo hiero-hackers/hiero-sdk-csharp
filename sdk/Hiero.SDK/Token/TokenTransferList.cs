@@ -19,38 +19,23 @@ namespace Hiero.SDK.Token
             ExpectDecimals = expectDecimals;
 
             if (transfer != null)
-            {
-				Transfers.Add(transfer);
-            }
+                Transfers.Add(transfer);
 
             if (nftTransfer != null)
-            {
                 NftTransfers.Add(nftTransfer);
-            }
         }
 
         public virtual Proto.Services.TokenTransferList ToProtobuf()
         {
-            var transfers = new List<Proto.Services.AccountAmount>();
-            var nftTransfers = new List<Proto.Services.NftTransfer>();
-
-            foreach (var transfer in Transfers)
-				transfers.Add(transfer.ToProtobuf());
-
-			foreach (var nfttransfers in NftTransfers.Select(_ => _.ToProtobuf()))
-				nftTransfers.Add(nfttransfers);
-
 			Proto.Services.TokenTransferList proto = new()
             {
                 Token = TokenId.ToProtobuf(),
+                Transfers = { Transfers.Select(_ => _.ToProtobuf()) },
+                NftTransfers = { NftTransfers.Select(_ => _.ToProtobuf()) }
 			};
 
             if (ExpectDecimals.HasValue)
                 proto.ExpectedDecimals = ExpectDecimals;
-
-
-			proto.Transfers.AddRange(transfers);
-            proto.NftTransfers.AddRange(nftTransfers);
 
             return proto;
         }

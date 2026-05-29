@@ -17,9 +17,9 @@ namespace Hiero.Tests.Integration.Token
     /// <include file="TokenCreateIntegrationTest.cs.xml" path='docs/member[@name="T:Hiero.Tests.Integration.TokenCreateIntegrationTest"]' />
     public class TokenCreateIntegrationTest
     {
-        private static List<CustomFee> CreateFixedFeeList(int count, AccountId feeCollector)
+        private static ListGuarded<CustomFee> CreateFixedFeeList(int count, AccountId feeCollector)
         {
-            var feeList = new List<CustomFee>();
+            var feeList = new ListGuarded<CustomFee>();
             for (int i = 0; i < count; i++)
 				feeList.Add(new CustomFixedFee
 				{
@@ -29,9 +29,9 @@ namespace Hiero.Tests.Integration.Token
 
 			return feeList;
         }
-        private static List<CustomFee> CreateFractionalFeeList(int count, AccountId feeCollector)
+        private static ListGuarded<CustomFee> CreateFractionalFeeList(int count, AccountId feeCollector)
         {
-            var feeList = new List<CustomFee>();
+            var feeList = new ListGuarded<CustomFee>();
             for (int i = 0; i < count; i++)
 				feeList.Add(new CustomFractionalFee
 				{

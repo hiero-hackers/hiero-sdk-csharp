@@ -17,21 +17,25 @@ namespace Hiero.Tests.SDK.Contract
 			Nonce = 2,
 		};
 
+        [Fact]
         public virtual void FromProtobuf()
         {
             Verifier.Verify(ContractNonceInfo.FromProtobuf(info).ToString());
         }
 
+        [Fact]
         public virtual void ToProtobuf()
         {
             Verifier.Verify(ContractNonceInfo.FromProtobuf(info).ToProtobuf());
         }
 
+        [Fact]
         public virtual void ToBytes()
         {
             Verifier.Verify(Hex.ToHexString(ContractNonceInfo.FromProtobuf(info).ToBytes()));
         }
 
+        [Fact]
         public virtual void FromBytes()
         {
             Verifier.Verify(ContractNonceInfo.FromBytes(info.ToByteArray()).ToString());

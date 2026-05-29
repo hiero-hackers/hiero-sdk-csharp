@@ -19,21 +19,25 @@ namespace Hiero.Tests.SDK.Contract
 			Data = ByteString.CopyFromUtf8("data"),
 		};
 
+        [Fact]
         public virtual void FromProtobuf()
         {
             Verifier.Verify(ContractLogInfo.FromProtobuf(info).ToString());
         }
 
+        [Fact]
         public virtual void ToProtobuf()
         {
             Verifier.Verify(ContractLogInfo.FromProtobuf(info).ToProtobuf().ToString());
         }
 
+        [Fact]
         public virtual void FromBytes()
         {
             Verifier.Verify(ContractLogInfo.FromBytes(info.ToByteArray()).ToString());
         }
 
+        [Fact]
         public virtual void ToBytes()
         {
             Verifier.Verify(Hex.ToHexString(ContractLogInfo.FromProtobuf(info).ToBytes()));

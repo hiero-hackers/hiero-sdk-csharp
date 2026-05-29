@@ -38,7 +38,6 @@ namespace Hiero.Tests.SDK.Account
             .Freeze()
             .Sign(unusedPrivateKey);
         }
-
         public virtual AccountUpdateTransaction SpawnTestTransaction2()
         {
             return new AccountUpdateTransaction
@@ -60,7 +59,8 @@ namespace Hiero.Tests.SDK.Account
             .Sign(unusedPrivateKey);
         }
 
-        [Fact] public virtual void ShouldSerialize()
+        [Fact] 
+        public virtual void ShouldSerialize()
         {
             Verifier.Verify(SpawnTestTransaction().ToString());
         }
@@ -83,6 +83,7 @@ namespace Hiero.Tests.SDK.Account
             Assert.Equal(tx.ToString(), tx2.ToString());
         }
 
+        [Fact]
         public virtual void ShouldSerialize2()
         {
             Verifier.Verify(SpawnTestTransaction2().ToString());

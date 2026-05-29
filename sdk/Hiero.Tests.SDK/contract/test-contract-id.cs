@@ -12,31 +12,37 @@ namespace Hiero.Tests.SDK.Contract
     /// <include file="test-contract-id.cs.xml" path='docs/member[@name="T:Hiero.Tests.SDK.Contract.ContractIdTest"]' />
     public class ContractIdTest
     {
+        [Fact]
         public virtual void FromString()
         {
             Verifier.Verify(ContractId.FromString(TestData.DEFAULT_ENTITY_ID).ToString());
         }
 
+        [Fact]
         public virtual void FromSolidityAddress()
         {
             Verifier.Verify(ContractId.FromSolidityAddress(TestData.SOLIDITY_ADDRESS).ToString());
         }
 
+        [Fact]
         public virtual void FromSolidityAddressWith0x()
         {
             Verifier.Verify(ContractId.FromSolidityAddress($"0x{TestData.SOLIDITY_ADDRESS}").ToString());
         }
 
+        [Fact]
         public virtual void FromEvmAddress()
         {
             Verifier.Verify(ContractId.FromEvmAddress(1, 2, "98329e006610472e6B372C080833f6D79ED833cf").ToString());
         }
 
+        [Fact]
         public virtual void FromEvmAddressWith0x()
         {
             Verifier.Verify(ContractId.FromEvmAddress(1, 2, "0x98329e006610472e6B372C080833f6D79ED833cf").ToString());
         }
 
+        [Fact]
         public virtual void FromStringWithEvmAddress()
         {
             Verifier.Verify(ContractId.FromString("1.2.98329e006610472e6B372C080833f6D79ED833cf").ToString());
@@ -51,21 +57,25 @@ namespace Hiero.Tests.SDK.Contract
             Assert.Equal(ContractId.FromBytes(b.ToBytes()), b);
         }
 
+        [Fact]
         public virtual void ToBytes()
         {
             Verifier.Verify(Hex.ToHexString(ContractId.FromString(TestData.DEFAULT_ENTITY_ID).ToBytes()));
         }
 
+        [Fact]
         public virtual void FromBytes()
         {
             Verifier.Verify(ContractId.FromBytes(ContractId.FromString(TestData.DEFAULT_ENTITY_ID).ToBytes()).ToString());
         }
 
+        [Fact]
         public virtual void ToSolidityAddress()
         {
             Verifier.Verify(ContractId.FromString(TestData.DEFAULT_ENTITY_ID).ToEvmAddress());
         }
 
+        [Fact]
         public virtual void ToSolidityAddress2()
         {
             Verifier.Verify(ContractId.FromEvmAddress(1, 2, "0x98329e006610472e6B372C080833f6D79ED833cf").ToEvmAddress());

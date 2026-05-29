@@ -316,6 +316,7 @@ namespace Hiero.Tests.SDK.Topic
             Assert.Equal((ulong)1, received[0].SequenceNumber);
             secondHandle.Unsubscribe();
         }
+
         private void SubscribeToMirror(Action<TopicMessage> onNext)
         {
             SubscriptionHandle subscriptionHandle = topicMessageQuery.Subscribe(client, onNext);
@@ -337,12 +338,10 @@ namespace Hiero.Tests.SDK.Topic
                 TopicId = new Proto.Services.TopicID { TopicNum = 1000 }
             };
         }
-
         private static Proto.Mirror.ConsensusTopicResponse Response(long sequenceNumber)
         {
             return Response(sequenceNumber, 0);
         }
-
         private static Proto.Mirror.ConsensusTopicResponse Response(long sequenceNumber, int total)
         {
             var response = new Proto.Mirror.ConsensusTopicResponse();
@@ -371,6 +370,7 @@ namespace Hiero.Tests.SDK.Topic
 
             return response;
         }
+
         private class ConsensusServiceStub : Proto.Mirror.ConsensusService.ConsensusServiceBase
         {
             public readonly Queue<Proto.Mirror.ConsensusTopicQuery> requests = new();

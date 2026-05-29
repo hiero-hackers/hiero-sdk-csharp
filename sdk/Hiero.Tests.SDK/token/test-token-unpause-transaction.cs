@@ -39,7 +39,8 @@ namespace Hiero.Tests.SDK.Token
             var tx2 = Transaction.FromBytes<TokenUnpauseTransaction>(tx.ToBytes());
             Assert.Equal(tx.ToString(), tx2.ToString());
         }
-        [Fact] public virtual void ShouldSerialize()
+        [Fact] 
+        public virtual void ShouldSerialize()
         {
             Verifier.Verify(SpawnTestTransaction().ToString());
         }

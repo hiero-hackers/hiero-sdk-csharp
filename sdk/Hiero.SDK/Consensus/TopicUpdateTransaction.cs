@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: Apache-2.0
 using Google.Protobuf.Reflection;
 
+using Hiero.SDK.Core;
 using Hiero.SDK.Cryptocurrency;
-using Hiero.SDK.Fee;
 using Hiero.SDK.Cryptography;
+using Hiero.SDK.Fee;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Hiero.SDK.Core;
 
 namespace Hiero.SDK.Consensus
 {
@@ -176,28 +176,16 @@ namespace Hiero.SDK.Consensus
                 builder.FeeScheduleKey = FeeScheduleKey.ToProtobufKey();
 
             if (FeeExemptKeys != null)
-            {
-                var feeExemptKeyList = new Proto.Services.FeeExemptKeyList();
-                
-                foreach (var feeExemptKey in FeeExemptKeys)
+                builder.FeeExemptKeyList = new Proto.Services.FeeExemptKeyList
                 {
-                    feeExemptKeyList.Keys.Add(feeExemptKey.ToProtobufKey());
-                }
-
-                builder.FeeExemptKeyList = feeExemptKeyList;
-            }
+                    Keys = { FeeExemptKeys.Select(_ => _.ToProtobufKey()) }
+                };
 
             if (CustomFees != null)
-            {
-                var protoCustomFeeList = new Proto.Services.FixedCustomFeeList();
-                
-                foreach (CustomFixedFee customFee in CustomFees)
+                builder.CustomFees = new Proto.Services.FixedCustomFeeList
                 {
-                    protoCustomFeeList.Fees.Add(customFee.ToTopicFeeProtobuf());
-                }
-
-                builder.CustomFees = protoCustomFeeList;
-            }
+                    Fees = { CustomFees.Select(_ => _.ToTopicFeeProtobuf()) }
+                };
 
             return builder;
         }

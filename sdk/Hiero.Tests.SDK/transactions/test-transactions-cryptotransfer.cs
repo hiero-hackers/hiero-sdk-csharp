@@ -21,7 +21,8 @@ namespace Hiero.Tests.SDK.Transactions
         private static readonly PrivateKey unusedPrivateKey = KeyTestDataFactory.ED25519_TEST_KEY;
         private readonly NodaTime.Instant validStart = TransactionTestFactory.DEFAULT_VALID_START;
 
-        [Fact] public virtual void ShouldSerialize()
+        [Fact] 
+        public virtual void ShouldSerialize()
         {
             Verifier.Verify(SpawnTestTransaction().ToString());
         }
@@ -99,6 +100,7 @@ namespace Hiero.Tests.SDK.Transactions
             Assert.Equal(tx.ToString(), tx2.ToString());
         }
 
+        [Fact]
         public virtual void DecimalsMustBeConsistent()
         {
             Assert.Throws<ArgumentException>(() =>

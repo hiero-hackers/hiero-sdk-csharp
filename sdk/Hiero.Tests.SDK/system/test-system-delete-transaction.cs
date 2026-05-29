@@ -22,6 +22,7 @@ namespace Hiero.Tests.SDK.System
         private static readonly ContractId testContractId = ContractId.FromString("0.6.9");
         private readonly NodaTime.Instant validStart = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
 
+        [Fact]
         public virtual void ShouldSerializeFile()
         {
             Verifier.Verify(SpawnTestTransactionFile().ToString());
@@ -41,6 +42,7 @@ namespace Hiero.Tests.SDK.System
             .Sign(unusedPrivateKey);
         }
 
+        [Fact]
         public virtual void ShouldSerializeContract()
         {
             Verifier.Verify(SpawnTestTransactionContract().ToString());
@@ -159,7 +161,7 @@ namespace Hiero.Tests.SDK.System
             Assert.NotNull(systemDeleteTransaction.ContractId);
             Assert.Equal(systemDeleteTransaction.ContractId, testContractId);
         }
-
+        [Fact]
         public virtual void GetSetContractIdFrozen()
         {
             var tx = SpawnTestTransactionContract();

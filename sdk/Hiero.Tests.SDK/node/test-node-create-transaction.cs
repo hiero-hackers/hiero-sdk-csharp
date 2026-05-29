@@ -30,7 +30,8 @@ namespace Hiero.Tests.SDK.Node
         private static readonly PublicKey TEST_ADMIN_KEY = PrivateKey.FromString("302e020100300506032b65700422042062c4b69e9f45a554e5424fb5a6fe5e6ac1f19ead31dc7718c2d980fd1f998d4b").GetPublicKey();
         readonly NodaTime.Instant TEST_VALID_START = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
 
-        [Fact] public virtual void ShouldSerialize()
+        [Fact] 
+		public virtual void ShouldSerialize()
         {
             Verifier.Verify(SpawnTestTransaction().ToString());
         }
@@ -107,7 +108,7 @@ namespace Hiero.Tests.SDK.Node
 				{
 					DomainName = "unit.test.com",
 					Port = 50111,
-				}]
+				}],
 			};
             var tx2 = Transaction.FromBytes<NodeCreateTransaction>(tx.ToBytes());
 

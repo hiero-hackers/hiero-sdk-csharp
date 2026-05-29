@@ -18,20 +18,16 @@ namespace Hiero.SDK.Fee
             {
                 PayerId = AccountId.FromProtobuf(customFeeLimit.AccountId),
                 CustomFees = [.. customFeeLimit.Fees.Select(_ => CustomFixedFee.FromProtobuf(_))]
-
             };
         }
 
 		public virtual Proto.Services.CustomFeeLimit ToProtobuf()
         {
-			Proto.Services.CustomFeeLimit protobuf = new ()
+			return new Proto.Services.CustomFeeLimit
             {
                 AccountId = PayerId?.ToProtobuf(),
+                Fees = { CustomFees.Select(_ => _.ToFixedFeeProtobuf()) }
 			};
-
-            protobuf.Fees.AddRange(CustomFees.Select(_ => _.ToFixedFeeProtobuf()));
-
-            return protobuf;
         }
     }
 }

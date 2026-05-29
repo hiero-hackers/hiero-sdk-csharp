@@ -266,7 +266,6 @@ namespace Hiero.Tests.SDK.Keys
             Assert.False(key.IsECDSA());
         }
 
-        // TODO: replace with HexFormat.of().parseHex when the required Java version is 17
         public static byte[] HexStringToByteArray(string s)
         {
             int len = s.Length;

@@ -34,11 +34,7 @@ namespace Hiero.Tests.SDK
             return transaction;
         }
 
-        public static AccountCreateTransaction SpawnAccountCreateTransaction(
-            PrivateKey edKey = null,
-            PrivateKey ecdsaKey = null,
-            bool freeze = true,
-            bool sign = true)
+        public static AccountCreateTransaction SpawnAccountCreateTransaction(PrivateKey? edKey = null, PrivateKey? ecdsaKey = null, bool freeze = true, bool sign = true)
         {
             edKey ??= PrivateKey.FromString("302e020100300506032b657004220420db484b828e64b2d8f12ce3c0a0e93a0b8cce7af1bb8f39c97732394482538e10");
             ecdsaKey ??= PrivateKey.FromStringECDSA("7f109a9e3b0d8ecfba9cc23a3614433ce0fa7ddcc80f2a8f10b222179a5a80d6");
@@ -62,14 +58,10 @@ namespace Hiero.Tests.SDK
             .SetKeyWithAlias(edKey, ecdsaKey);
 
             if (freeze)
-            {
-                transaction = transaction.Freeze() as AccountCreateTransaction;
-            }
+                transaction = transaction.Freeze();
 
             if (sign && freeze)
-            {
-                transaction = transaction.Sign(edKey) as AccountCreateTransaction;
-            }
+                transaction = transaction.Sign(edKey);
 
             return transaction;
         }

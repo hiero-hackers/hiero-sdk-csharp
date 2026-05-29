@@ -21,7 +21,7 @@ namespace Hiero.Tests.SDK.Account
 			Duration = NodaTime.Duration.FromDays(11).ToProtoDuration(),
 			Hash = ByteString.CopyFrom(hash),
 
-			// Keys = new Proto.KeyList([privateKey.GetPublicKey().ToProtobufKey()]) 
+			Keys = new Proto.Services.KeyList { Keys = { privateKey.GetPublicKey().ToProtobufKey() } } 
         };
 
         private static readonly Proto.Services.CryptoGetInfoResponse.Types.AccountInfo info = new()
@@ -39,24 +39,28 @@ namespace Hiero.Tests.SDK.Account
             ProxyAccountId = new AccountId(0, 0, 8).ToProtobuf(),
             LedgerId = LedgerId.PREVIEWNET.ToByteString(),
             EthereumNonce = 1001,
-            // .AddLiveHashes(liveHash)
+            LiveHashes = { liveHash }
         };
 
+        [Fact]
         public virtual void FromProtobufWithOtherOptions()
         {
             Verifier.Verify(AccountInfo.FromProtobuf(info).ToString());
         }
 
+        [Fact]
         public virtual void FromBytes()
         {
             Verifier.Verify(AccountInfo.FromBytes(info.ToByteArray()).ToString());
         }
 
+        [Fact]
         public virtual void ToBytes()
         {
             Verifier.Verify(AccountInfo.FromBytes(info.ToByteArray()).ToBytes());
         }
 
+        [Fact]
         public virtual void ToProtobuf()
         {
             Verifier.Verify(AccountInfo.FromProtobuf(info).ToProtobuf().ToString());

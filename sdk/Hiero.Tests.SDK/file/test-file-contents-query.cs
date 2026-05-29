@@ -9,7 +9,8 @@ namespace Hiero.Tests.SDK.File
 {
     public class FileContentsQueryTest
     {
-        [Fact] public virtual void ShouldSerialize()
+        [Fact] 
+        public virtual void ShouldSerialize()
         {
             var builder = new Proto.Services.Query();
             new FileContentsQuery

@@ -12,11 +12,12 @@ namespace Hiero.Tests.SDK.Transactions
     /// <include file="test-transactions-id.cs.xml" path='docs/member[@name="T:Hiero.Tests.SDK.Transactions.TransactionIdTest"]' />
     public class TransactionIdTest
     {
-        [Fact] public virtual void ShouldSerialize()
+        [Fact] 
+        public virtual void ShouldSerialize()
         {
             Verifier.Verify(TransactionId.FromString("0.0.23847@1588539964.632521325").ToString());
         }
-
+        [Fact]
         public virtual void ShouldSerialize2()
         {
             Verifier.Verify(TransactionId.FromString("0.0.23847@1588539964.632521325?scheduled/3").ToString());

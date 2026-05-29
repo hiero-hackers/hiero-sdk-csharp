@@ -40,8 +40,8 @@ namespace Hiero.SDK.Consensus
 		/// <include file="TopicInfo.cs.xml" path='docs/member[@name="M:TopicInfo.FromProtobuf(Proto.Services.ConsensusGetTopicInfoResponse)"]' />
 		public static TopicInfo FromProtobuf(Proto.Services.ConsensusGetTopicInfoResponse topicInfoResponse)
         {
-            return new TopicInfo(TopicId.FromProtobuf(
-                topicInfoResponse.TopicId),
+            return new TopicInfo(
+				TopicId.FromProtobuf(topicInfoResponse.TopicId),
 				topicInfoResponse.TopicInfo.Memo, 
                 topicInfoResponse.TopicInfo.RunningHash, 
                 topicInfoResponse.TopicInfo.SequenceNumber,

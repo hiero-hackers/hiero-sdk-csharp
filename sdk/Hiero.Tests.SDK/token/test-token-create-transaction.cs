@@ -55,6 +55,7 @@ namespace Hiero.Tests.SDK.Token
         };
         private readonly NodaTime.Instant validStart = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
 
+        [Fact]
         public virtual void ShouldSerializeFungible()
         {
             Verifier.Verify(SpawnTestTransactionFungible().ToString());
@@ -68,6 +69,7 @@ namespace Hiero.Tests.SDK.Token
 
             Assert.Equal(tx.ToString(), tx2.ToString());
         }
+        [Fact]
         public virtual void ShouldSerializeNft()
         {
             Verifier.Verify(SpawnTestTransactionNft().ToString());

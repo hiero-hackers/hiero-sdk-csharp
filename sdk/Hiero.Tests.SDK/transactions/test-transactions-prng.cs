@@ -41,11 +41,13 @@ namespace Hiero.Tests.SDK.Transactions
             .Sign(unusedPrivateKey);
         }
 
-        [Fact] public virtual void ShouldSerialize()
+        [Fact] 
+        public virtual void ShouldSerialize()
         {
             Verifier.Verify(SpawnTestTransaction().ToString());
         }
 
+        [Fact]
         public virtual void ShouldSerialize2()
         {
             Verifier.Verify(SpawnTestTransaction2().ToString());

@@ -41,7 +41,6 @@ namespace Hiero.Tests.SDK.Schedule
                 LedgerId.TESTNET, 
                 true);
         }
-
         public virtual ScheduleInfo SpawnScheduleInfoDeletedExample()
         {
             return new ScheduleInfo(
@@ -65,6 +64,7 @@ namespace Hiero.Tests.SDK.Schedule
                 LedgerId.TESTNET, 
                 true);
         }
+
         [Fact]
         /// <include file="test-schedule-info.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Schedule.ScheduleInfoTest.ShouldSerialize"]' />
         public virtual void ShouldSerialize()

@@ -21,6 +21,7 @@ namespace Hiero.Tests.SDK.Fees
 			DenominatingTokenId = tokenId.ToProtobuf(),
 		};
 
+        [Fact]
         public virtual void FromProtobuf()
         {
             Verifier.Verify(CustomFixedFee.FromProtobuf(fee).ToString());
@@ -40,11 +41,13 @@ namespace Hiero.Tests.SDK.Fees
             Assert.Equal(clonedCustomFixedFee.AllCollectorsAreExempt, allCollectorsAreExempt);
         }
 
+        [Fact]
         public virtual void ToProtobuf()
         {
             Verifier.Verify(CustomFixedFee.FromProtobuf(fee).ToProtobuf().ToString());
         }
 
+        [Fact]
         public virtual void ToFixedFeeProtobuf()
         {
             Verifier.Verify(CustomFixedFee.FromProtobuf(fee).ToFixedFeeProtobuf().ToString());

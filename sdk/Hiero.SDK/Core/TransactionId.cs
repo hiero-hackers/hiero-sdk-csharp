@@ -302,11 +302,17 @@ namespace Hiero.SDK.Core
         }
 		public override bool Equals(object? @object)
         {
-            return 
-                @object is TransactionId id && 
-                id.ValidStart.Equals(ValidStart) && 
-                Scheduled == id.Scheduled &&
-                ((AccountId is null && id.AccountId is null) || (id.AccountId?.Equals(AccountId) ?? false));
+            if (@object is not TransactionId id)
+                return false;
+
+            if (AccountId != null && ValidStart != null && id.AccountId != null && id.ValidStart != null)
+                return
+                    id.AccountId.Equals(accountId) &&
+                    id.ValidStart.Equals(validStart) &&
+                    Scheduled == id.Scheduled &&
+                    Equals(Nonce, id.Nonce);
+
+            return false;
         }        
     }
 }

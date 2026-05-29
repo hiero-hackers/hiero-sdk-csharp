@@ -10,7 +10,8 @@ namespace Hiero.Tests.SDK.Schedule
 {
     public class ScheduleInfoQueryTest
     {
-        [Fact] public virtual void ShouldSerialize()
+        [Fact] 
+        public virtual void ShouldSerialize()
         {
             var builder = new Proto.Services.Query();
             new ScheduleInfoQuery

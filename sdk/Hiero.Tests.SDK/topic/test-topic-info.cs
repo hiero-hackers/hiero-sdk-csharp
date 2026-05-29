@@ -38,6 +38,8 @@ namespace Hiero.Tests.SDK.Topic
         ];
         private static readonly Proto.Services.ConsensusGetTopicInfoResponse info = new Proto.Services.ConsensusGetTopicInfoResponse
         {
+            TopicId = new Proto.Services.TopicID { },
+            //TopicId = new Proto.Services.TopicID { RealmNum = 0, ShardNum = 0, TopicNum = 0 },
             TopicInfo = new Proto.Services.ConsensusTopicInfo
             {
                 Memo = "1",
@@ -54,22 +56,26 @@ namespace Hiero.Tests.SDK.Topic
                 CustomFees = { customFees.Select(_ => _.ToTopicFeeProtobuf()) },
             }
         };
-            
+
+        [Fact]
         public virtual void FromProtobuf()
         {
             Verifier.Verify(TopicInfo.FromProtobuf(info).ToString());
         }
 
+        [Fact]
         public virtual void ToProtobuf()
         {
             Verifier.Verify(TopicInfo.FromProtobuf(info).ToProtobuf().ToString());
         }
 
+        [Fact]
         public virtual void FromBytes()
         {
             Verifier.Verify(TopicInfo.FromBytes(info.ToByteArray()).ToString());
         }
 
+        [Fact]
         public virtual void ToBytes()
         {
             Verifier.Verify(Hex.ToHexString(TopicInfo.FromProtobuf(info).ToBytes()));

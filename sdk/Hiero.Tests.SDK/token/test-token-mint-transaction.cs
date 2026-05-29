@@ -26,10 +26,12 @@ namespace Hiero.Tests.SDK.Token
         private static readonly ByteString testMetadataByteString = ByteString.CopyFrom(new byte[] { 1, 2, 3, 4, 5 });
         private readonly NodaTime.Instant validStart = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
         
-        [Fact] public virtual void ShouldSerialize()
+        [Fact] 
+        public virtual void ShouldSerialize()
         {
             Verifier.Verify(SpawnTestTransaction().ToString());
         }
+        [Fact]
         public virtual void ShouldSerializeMetadata()
         {
             Verifier.Verify(SpawnMetadataTestTransaction().ToString());

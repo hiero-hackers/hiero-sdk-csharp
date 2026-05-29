@@ -43,17 +43,17 @@ namespace Hiero.Tests.SDK.Contract
                 .AddStringArray()
                 .Finish();
 
-            Assert.Equal(Hex.ToHexString(signature), "4438e4ce");
+            Assert.Equal("4438e4ce", Hex.ToHexString(signature));
         }
         [Fact]
         /// <include file="test-contract-function-selector.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Contract.ContractFunctionSelectorTest.SelectorError"]' />
         public virtual void SelectorError()
         {
-            var signature = new ContractFunctionSelector("testFunction").AddAddress();
+            var signature = new ContractFunctionSelector("testFunction")
+                .AddAddress();
             
             signature.Finish();
             Assert.Throws<InvalidOperationException>(() => signature.AddStringArray());
-
 			signature.Finish();
         }
     }

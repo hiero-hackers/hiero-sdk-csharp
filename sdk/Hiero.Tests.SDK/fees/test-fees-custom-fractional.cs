@@ -28,6 +28,7 @@ namespace Hiero.Tests.SDK.Fees
 			},
 		};
 
+        [Fact]
         public virtual void FromProtobuf()
         {
             Verifier.Verify(CustomFractionalFee.FromProtobuf(fee).ToString());

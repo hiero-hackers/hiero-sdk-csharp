@@ -10,6 +10,7 @@ namespace Hiero.Tests.SDK.Account
 {
     public class AccountBalanceQueryTest
     {
+        [Fact]
         public virtual void ShouldSerializeWithAccountId()
         {
             var builder = new Proto.Services.Query();
@@ -21,6 +22,7 @@ namespace Hiero.Tests.SDK.Account
 
             Verifier.Verify(Regex.Replace(builder.ToString(), "@[A-Za-z0-9]+", ""));
         }
+        [Fact]
         public virtual void ShouldSerializeWithContractId()
         {
             var builder = new Proto.Services.Query();

@@ -50,7 +50,8 @@ namespace Hiero.Tests.SDK.Account
                 .Sign(unusedPrivateKey);
         }
 
-        [Fact] public virtual void ShouldSerialize()
+        [Fact] 
+        public virtual void ShouldSerialize()
         {
             Verifier.Verify(SpawnTestTransaction().ToString());
         }

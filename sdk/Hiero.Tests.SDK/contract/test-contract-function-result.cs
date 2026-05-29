@@ -101,6 +101,7 @@ namespace Hiero.Tests.SDK.Contract
             Assert.Equal(strings[1], "random bytes");
         }
 
+        [Fact]
         public virtual void CanToFromBytesStateChanges() { }
     }
 }

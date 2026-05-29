@@ -16,9 +16,6 @@ namespace Hiero.SDK.Networking
 	/// <include file="NodeCreateTransaction.cs.xml" path='docs/member[@name="T:NodeCreateTransaction"]' />
 	public class NodeCreateTransaction : Transaction<NodeCreateTransaction>
     {
-		private List<Endpoint> _GossipEndpoints = [];
-		private List<Endpoint> _ServiceEndpoints = [];
-
 		/// <include file="NodeCreateTransaction.cs.xml" path='docs/member[@name="M:NodeCreateTransaction.#ctor"]' />
 		public NodeCreateTransaction() { }
 		/// <include file="NodeCreateTransaction.cs.xml" path='docs/member[@name="M:NodeCreateTransaction.#ctor(Proto.Services.TransactionBody)"]' />
@@ -55,14 +52,14 @@ namespace Hiero.SDK.Networking
 			}
 		}
 		/// <include file="NodeCreateTransaction.cs.xml" path='docs/member[@name="M:NodeCreateTransaction.RequireNotFrozen_3"]' />
-		public ListGuarded<Endpoint> GossipEndpoints
+		public ListGuarded<Endpoint>? GossipEndpoints
 		{
 			set => field = GenerateListGuarded(value, InitGossipEndpoints);
-            internal get => field ??= GenerateListGuarded<Endpoint>(null, InitGossipEndpoints);
-        }
+			internal get => field ??= GenerateListGuarded<Endpoint>(null, InitGossipEndpoints);
+		}
 
         /// <include file="NodeCreateTransaction.cs.xml" path='docs/member[@name="M:NodeCreateTransaction.RequireNotFrozen_4"]' />
-        public ListGuarded<Endpoint> ServiceEndpoints
+        public ListGuarded<Endpoint>? ServiceEndpoints
         {
             set => field = GenerateListGuarded(value, InitServiceEndpoints);
             internal get => field ??= GenerateListGuarded<Endpoint>(null, InitServiceEndpoints);

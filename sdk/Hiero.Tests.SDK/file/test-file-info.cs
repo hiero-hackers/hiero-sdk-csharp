@@ -26,21 +26,25 @@ namespace Hiero.Tests.SDK.File
 			LedgerId = LedgerId.MAINNET.ToByteString(),
 		};
 
+        [Fact]
         public virtual void FromProtobuf()
         {
             Verifier.Verify(FileInfo.FromProtobuf(info).ToString());
         }
 
+        [Fact]
         public virtual void ToProtobuf()
         {
             Verifier.Verify(FileInfo.FromProtobuf(info).ToProtobuf().ToString());
         }
 
+        [Fact]
         public virtual void FromBytes()
         {
             Verifier.Verify(FileInfo.FromBytes(info.ToByteArray()).ToString());
         }
 
+        [Fact]
         public virtual void ToBytes()
         {
             Verifier.Verify(Hex.ToHexString(FileInfo.FromProtobuf(info).ToBytes()));

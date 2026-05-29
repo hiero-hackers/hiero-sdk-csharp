@@ -25,7 +25,8 @@ namespace Hiero.Tests.SDK.Token
             transaction = new TokenAirdropTransaction();
         }
 
-        [Fact] public virtual void ShouldSerialize()
+        [Fact] 
+        public virtual void ShouldSerialize()
         {
             Verifier.Verify(SpawnTestTransaction().ToString());
         }
@@ -94,7 +95,7 @@ namespace Hiero.Tests.SDK.Token
             
             tx.AddTokenTransfer(TokenId.FromString("0.0.5"), AccountId.FromString("0.0.8"), 100);
 
-            Assert.False(tx.GetTokenIdDecimals().TryGetValue(TokenId.FromString("0.0.5"), out _));
+            Assert.Null(tx.GetTokenIdDecimals()[TokenId.FromString("0.0.5")]);
             
             tx.AddTokenTransferWithDecimals(TokenId.FromString("0.0.5"), AccountId.FromString("0.0.7"), -100, 5);
             

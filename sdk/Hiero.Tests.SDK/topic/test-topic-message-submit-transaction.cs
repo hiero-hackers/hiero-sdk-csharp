@@ -34,7 +34,6 @@ namespace Hiero.Tests.SDK.Topic
             .Freeze()
             .Sign(unusedPrivateKey);
         }
-
         private TopicMessageSubmitTransaction SpawnTestTransactionBytes()
         {
             return new TopicMessageSubmitTransaction
@@ -47,6 +46,7 @@ namespace Hiero.Tests.SDK.Topic
             .Freeze()
             .Sign(unusedPrivateKey);
         }
+
         [Fact]
         /// <include file="test-topic-message-submit-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Topic.TopicMessageSubmitTransactionTest.ShouldBytesNoSetters"]' />
         public virtual void ShouldBytesNoSetters()

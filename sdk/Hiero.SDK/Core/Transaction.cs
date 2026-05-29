@@ -29,7 +29,7 @@ namespace Hiero.SDK.Core
 		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.#ctor"]' />
         protected bool? regenerateTransactionId = null;
         private string Memo = "";
-        protected IList<CustomFeeLimit> customFeeLimits = [];
+        protected IList<CustomFeeLimit> CustomFeeLimits = [];
 
 		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.#ctor_2"]' />
 		protected Transaction()
@@ -131,7 +131,7 @@ namespace Hiero.SDK.Core
             MaxTransactionFee = Hbar.FromTinybars(SourceTransactionBody.TransactionFee);
             TransactionMemo = SourceTransactionBody.Memo;
             
-			customFeeLimits = [.. SourceTransactionBody.MaxCustomFees.Select(_ => CustomFeeLimit.FromProtobuf(_))];
+			CustomFeeLimits = [.. SourceTransactionBody.MaxCustomFees.Select(_ => CustomFeeLimit.FromProtobuf(_))];
             BatchKey = Key.FromProtobufKey(SourceTransactionBody.BatchKey);
 
 			// The presence of signatures implies the Transaction should be frozen.
@@ -281,16 +281,12 @@ namespace Hiero.SDK.Core
 			{
 				var sigMap = SigPairLists[i + offset];
 				var nodeAccountId = NodeAccountIds[i];
-				var keyMap = map.TryGetValue(nodeAccountId, out Dictionary<PublicKey, byte[]>? value) 
-					? value 
-					: new Dictionary<PublicKey, byte[]>();
+				var keyMap = map.TryGetValue(nodeAccountId, out Dictionary<PublicKey, byte[]>? value) ? value : [];
 				
 				map.Add(nodeAccountId, keyMap);
 
 				foreach (var sigPair in sigMap.SigPair)
-				{
 					keyMap.Add(PublicKey.FromBytes(sigPair.PubKeyPrefix.ToByteArray()), sigPair.Ed25519.ToByteArray());
-				}
 			}
 
 			return map;
@@ -329,7 +325,7 @@ namespace Hiero.SDK.Core
 			if (BatchKey is not null)
 				builder.BatchKey = BatchKey.ToProtobufKey();
 
-			builder.MaxCustomFees.AddRange(customFeeLimits.Select(_ => _.ToProtobuf()));
+			builder.MaxCustomFees.AddRange(CustomFeeLimits.Select(_ => _.ToProtobuf()));
 
 			oninit?.Invoke(builder);
 
@@ -629,7 +625,7 @@ namespace Hiero.SDK.Core
 		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.IsFrozen"]' />
 		public virtual bool IsFrozen()
 		{
-			return FrozenBodyBuilder != null;
+			return FrozenBodyBuilder is not null;
 		}
 		public override TransactionResponse MapResponse(Proto.Services.TransactionResponse transactionResponse, AccountId nodeId, Proto.Services.Transaction request)
 		{

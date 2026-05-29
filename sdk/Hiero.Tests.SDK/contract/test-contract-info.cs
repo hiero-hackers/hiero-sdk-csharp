@@ -28,21 +28,25 @@ namespace Hiero.Tests.SDK.Contract
 			LedgerId = LedgerId.TESTNET.ToByteString()
 		};
 
+        [Fact]
         public virtual void FromProtobuf()
         {
             Verifier.Verify(ContractInfo.FromProtobuf(info).ToString());
         }
 
+        [Fact]
         public virtual void ToProtobuf()
         {
             Verifier.Verify(ContractInfo.FromProtobuf(info).ToProtobuf());
         }
 
+        [Fact]
         public virtual void ToBytes()
         {
             Verifier.Verify(Hex.ToHexString(ContractInfo.FromProtobuf(info).ToBytes()));
         }
 
+        [Fact]
         public virtual void FromBytes()
         {
             Verifier.Verify(ContractInfo.FromBytes(info.ToByteArray()).ToString());

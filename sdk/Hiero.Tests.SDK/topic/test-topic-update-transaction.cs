@@ -28,6 +28,7 @@ namespace Hiero.Tests.SDK.Topic
         private static readonly AccountId testAutoRenewAccountId = AccountId.FromString("8.8.8");
         private static readonly NodaTime.Instant validStart = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
 
+        [Fact]
         public virtual void ClearShouldSerialize()
         {
             Verifier.Verify(new TopicUpdateTransaction
@@ -43,6 +44,7 @@ namespace Hiero.Tests.SDK.Topic
             }.Freeze().Sign(unusedPrivateKey).ToString());
         }
 
+        [Fact]
         public virtual void SetShouldSerialize()
         {
             Verifier.Verify(SpawnTestTransaction().ToString());
@@ -117,12 +119,17 @@ namespace Hiero.Tests.SDK.Topic
             Assert.Equal(topicUpdateTransaction.AutoRenewAccountId, testAutoRenewAccountId);
         }
 
+        [Fact]
+        // ----------------
         // doesn't throw an exception as opposed to C++ sdk
+        // ----------------
+        // Above is from Java port. Throws in C#
         public virtual void ConstructTopicUpdateTransactionFromWrongTransactionBodyProtobuf()
         {
             var transactionBody = new Proto.Services.CryptoDeleteTransactionBody { };
             var tx = new Proto.Services.TransactionBody { CryptoDelete = transactionBody };
-            new TopicUpdateTransaction(tx);
+
+            Assert.ThrowsAny<Exception>(() => _ = new TopicUpdateTransaction(tx));
         }
         [Fact]
         /// <include file="test-topic-update-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Topic.TopicUpdateTransactionTest.GetSetTopicId"]' />

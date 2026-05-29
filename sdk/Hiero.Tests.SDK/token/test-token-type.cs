@@ -10,15 +10,16 @@ namespace Hiero.Tests.SDK.Token
         private readonly TokenType tokenTypeFungible = TokenType.FungibleCommon;
         private readonly TokenType tokenTypeNonFungible = TokenType.NonFungibleUnique;
 
+        [Fact]
         public virtual void FromProtobuf()
         {
             Verifier.Verify(tokenTypeFungible.ToString(), tokenTypeNonFungible.ToString());
 
         }
-
+        [Fact]
         public virtual void ToProtobuf()
         {
-            //Verifier.Verify((Proto.TokenType)tokenTypeFungible, (Proto.TokenType)tokenTypeNonFungible);
+            //Verifier.Verify((Proto.Services.TokenType)tokenTypeFungible, (Proto.Services.TokenType)tokenTypeNonFungible);
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿// SPDX-License-Identifier: Apache-2.0
 using Google.Protobuf;
 
-using Hiero.SDK;
 using Hiero.SDK.Cryptocurrency;
 using Hiero.SDK.Ethereum;
 using Hiero.SDK.Exceptions;
@@ -17,36 +16,43 @@ namespace Hiero.Tests.SDK.Account
     /// <include file="test-account-id.cs.xml" path='docs/member[@name="T:Hiero.Tests.SDK.Account.AccountIdTest"]' />
     public class AccountIdTest : BaseTestFixture
     {
+        [Fact]
         public virtual void FromString()
         {
             Verifier.Verify(AccountId.FromString(TestData.DEFAULT_ENTITY_ID).ToString());
         }
 
+        [Fact]
         public virtual void FromStringWithChecksumOnMainnet()
         {
             Verifier.Verify(AccountId.FromString(TestData.TEST_ID_MAINNET).ToStringWithChecksum(MainnetClient));
         }
 
+        [Fact]
         public virtual void FromStringWithChecksumOnTestnet()
         {
             Verifier.Verify(AccountId.FromString(TestData.TEST_ID_TESTNET).ToStringWithChecksum(TestnetClient));
         }
 
+        [Fact]
         public virtual void FromStringWithChecksumOnPreviewnet()
         {
             Verifier.Verify(AccountId.FromString(TestData.TEST_ID_PREVIEWNET).ToStringWithChecksum(PreviewnetClient));
         }
 
+        [Fact]
         public virtual void GoodChecksumOnMainnet()
         {
             AccountId.FromString(TestData.TEST_ID_MAINNET).ValidateChecksum(MainnetClient);
         }
 
+        [Fact]
         public virtual void GoodChecksumOnTestnet()
         {
             AccountId.FromString(TestData.TEST_ID_TESTNET).ValidateChecksum(TestnetClient);
         }
 
+        [Fact]
         public virtual void GoodChecksumOnPreviewnet()
         {
             AccountId.FromString(TestData.TEST_ID_PREVIEWNET).ValidateChecksum(PreviewnetClient);
@@ -115,41 +121,49 @@ namespace Hiero.Tests.SDK.Account
             });
         }
 
+        [Fact]
         public virtual void FromStringWithAliasKey()
         {
             Verifier.Verify(AccountId.FromString(TestData.ALIAS_KEY_HEX).ToString());
         }
 
+        [Fact]
         public virtual void FromStringWithEvmAddress()
         {
             Verifier.Verify(AccountId.FromString(TestData.EVM_ADDRESS_SHORT).ToString());
         }
 
+        [Fact]
         public virtual void FromSolidityAddress()
         {
             Verifier.Verify(AccountId.FromSolidityAddress(TestData.SOLIDITY_ADDRESS).ToString());
         }
 
+        [Fact]
         public virtual void FromSolidityAddressWith0x()
         {
             Verifier.Verify(AccountId.FromSolidityAddress($"0x{TestData.SOLIDITY_ADDRESS}").ToString());
         }
 
+        [Fact]
         public virtual void ToBytes()
         {
             Verifier.Verify(Hex.ToHexString(new AccountId(0, 0, 5005).ToProtobuf().ToByteArray()));
         }
 
+        [Fact]
         public virtual void ToBytesAlias()
         {
             Verifier.Verify(Hex.ToHexString(AccountId.FromString(TestData.ALIAS_KEY_HEX).ToBytes()));
         }
 
+        [Fact]
         public virtual void ToBytesEvmAddress()
         {
             Verifier.Verify(Hex.ToHexString(AccountId.FromString(TestData.EVM_ADDRESS_SHORT).ToBytes()));
         }
 
+        [Fact]
         public virtual void FromBytes()
         {
             Verifier.Verify(AccountId.FromBytes(new AccountId(0, 0, 5005).ToBytes()).ToString());
@@ -163,6 +177,7 @@ namespace Hiero.Tests.SDK.Account
             Assert.Equal(id2, id1);
         }
 
+        [Fact]
         public virtual void FromBytesAlias()
         {
             Verifier.Verify(AccountId.FromBytes(AccountId.FromString(TestData.ALIAS_KEY_HEX).ToBytes()).ToString());
@@ -184,6 +199,7 @@ namespace Hiero.Tests.SDK.Account
             Assert.Equal(id2, id1);
         }
 
+        [Fact]
         public virtual void FromBytesEvmAddress()
         {
             Verifier.Verify(AccountId.FromBytes(AccountId.FromString(TestData.EVM_ADDRESS_SHORT).ToBytes()).ToString());
@@ -205,6 +221,7 @@ namespace Hiero.Tests.SDK.Account
             Assert.Equal(id2, id1);
         }
 
+        [Fact]
         public virtual void ToSolidityAddress()
         {
             Verifier.Verify(new AccountId(0, 0, 5005).ToEvmAddress());

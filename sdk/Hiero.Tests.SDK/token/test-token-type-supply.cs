@@ -11,11 +11,12 @@ namespace Hiero.Tests.SDK.Token
         private readonly TokenSupplyType tokenSupplyTypeInfinite = TokenSupplyType.Infinite;
         private readonly TokenSupplyType tokenSupplyTypeFinite = TokenSupplyType.Finite;
 
+        [Fact]
         public virtual void FromProtobuf()
         {
             Verifier.Verify(tokenSupplyTypeInfinite.ToString(), tokenSupplyTypeFinite.ToString());
 		}
-
+        [Fact]
         public virtual void ToProtobuf()
         {
             //Verifier.Verify((Proto.Services.TokenSupplyType)tokenSupplyTypeInfinite, (Proto.Services.TokenSupplyType)tokenSupplyTypeFinite);

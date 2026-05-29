@@ -13,26 +13,31 @@ namespace Hiero.Tests.SDK.Token
     /// <include file="test-token-id.cs.xml" path='docs/member[@name="T:Hiero.Tests.SDK.Token.TokenIdTest"]' />
     public class TokenIdTest
     {
+        [Fact]
         public virtual void ShouldSerializeFromString()
         {
             Verifier.Verify(TokenId.FromString(TestData.DEFAULT_ENTITY_ID).ToString());
         }
 
+        [Fact]
         public virtual void ToBytes()
         {
             Verifier.Verify(Hex.ToHexString(new TokenId(0, 0, 5005).ToBytes()));
         }
 
+        [Fact]
         public virtual void FromBytes()
         {
             Verifier.Verify(TokenId.FromBytes(new TokenId(0, 0, 5005).ToBytes()).ToString());
         }
 
+        [Fact]
         public virtual void FromSolidityAddress()
         {
             Verifier.Verify(TokenId.FromSolidityAddress(TestData.SOLIDITY_ADDRESS).ToString());
         }
 
+        [Fact]
         public virtual void ToSolidityAddress()
         {
             Verifier.Verify(new TokenId(0, 0, 5005).ToSolidityAddress());

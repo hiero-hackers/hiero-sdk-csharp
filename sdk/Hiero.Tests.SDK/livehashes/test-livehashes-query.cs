@@ -12,7 +12,8 @@ namespace Hiero.Tests.SDK.LiveHashes
     {
         private static readonly byte[] hash = [0, 1, 2];
 
-        [Fact] public virtual void ShouldSerialize()
+        [Fact] 
+        public virtual void ShouldSerialize()
         {
             var builder = new Proto.Services.Query();
             new LiveHashQuery

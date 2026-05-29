@@ -44,7 +44,8 @@ namespace Hiero.Tests.SDK.Token
         };
         private readonly NodaTime.Instant validStart = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
  
-        [Fact] public virtual void ShouldSerialize()
+        [Fact] 
+        public virtual void ShouldSerialize()
         {
             Verifier.Verify(SpawnTestTransaction().ToString());
         }
@@ -183,6 +184,7 @@ namespace Hiero.Tests.SDK.Token
             Assert.Throws<InvalidOperationException>(() => tx.TokenId = testTokenId);
         }
 
+        [Fact]
         public virtual void GetSetName()
         {
             var tokenUpdateTransaction = new TokenUpdateTransaction

@@ -36,9 +36,8 @@ namespace Hiero.SDK.Consensus
         /// <include file="TopicMessageSubmitTransaction.cs.xml" path='docs/member[@name="M:TopicMessageSubmitTransaction.RequireNotFrozen_2"]' />
         public ByteString Message
         {
-            get; set { RequireNotFrozen(); field = value; }
-
-        } = ByteString.Empty;
+            get => Data; set => Data = value;
+        }
 		/// <include file="TopicMessageSubmitTransaction.cs.xml" path='docs/member[@name="M:TopicMessageSubmitTransaction.InitFromTransactionBody"]' />
 		public ListGuarded<CustomFeeLimit> CustomFeeLimits
         {

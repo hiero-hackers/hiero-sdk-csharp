@@ -304,15 +304,11 @@ namespace Hiero.SDK.Networking
 						if (node.Channel != null)
 						{
 							var timeoutMillis = (SystemClock.Instance.GetCurrentInstant() - deadline).TotalMilliseconds;
+
 							if (timeoutMillis <= 0 || node.Channel.ShutdownAsync().Wait(TimeSpan.FromMilliseconds(timeoutMillis)))
-							{
 								throw new TimeoutException("Failed to properly shutdown all channels");
-							}
-							else
-							{
-								node.ChannelReset();
-							}
-						}
+							else node.ChannelReset();
+                        }
 					}
 
 					return null;
@@ -320,7 +316,7 @@ namespace Hiero.SDK.Networking
 				catch (Exception error)
 				{
 					foreach (var node in Nodes)
-						node.Channel.ShutdownAsync().GetAwaiter().GetResult();
+						node.Channel.ShutdownAsync().Wait();
 
 					HasShutDownNow = true;
 					return error;

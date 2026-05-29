@@ -24,6 +24,7 @@ namespace Hiero.Tests.SDK.Fees
             },
         };
 
+        [Fact]
         public virtual void FromProtobuf()
         {
             Verifier.Verify(CustomRoyaltyFee.FromProtobuf(fee).ToString());
@@ -43,6 +44,7 @@ namespace Hiero.Tests.SDK.Fees
             Assert.Equal(clonedCustomRoyaltyFee.AllCollectorsAreExempt, allCollectorsAreExempt);
         }
 
+        [Fact]
         public virtual void ToProtobuf()
         {
             Verifier.Verify(CustomRoyaltyFee.FromProtobuf(fee).ToProtobuf().ToString());

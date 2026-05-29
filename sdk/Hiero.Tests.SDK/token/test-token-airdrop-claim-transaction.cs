@@ -41,7 +41,8 @@ namespace Hiero.Tests.SDK.Token
             }.Freeze().Sign(privateKey);
         }
 
-        [Fact] public virtual void ShouldSerialize()
+        [Fact] 
+        public virtual void ShouldSerialize()
         {
             Verifier.Verify(SpawnTestTransaction().ToString());
         }
@@ -116,6 +117,7 @@ namespace Hiero.Tests.SDK.Token
             Assert.Equal(pendingAirdropId.ToProtobuf(), builder.PendingAirdrops[0]);
         }
 
+        [Fact]
         public virtual void TestGetMethodDescriptor()
         {
             //Assert.Equal(TokenServiceGrpc.ClaimAirdropMethod, transaction.GetMethodDescriptor());

@@ -13,30 +13,36 @@ namespace Hiero.Tests.SDK.Topic
     /// <include file="test-topic-id.cs.xml" path='docs/member[@name="T:Hiero.Tests.SDK.Topic.TopicIdTest"]' />
     public class TopicIdTest
     {
+        [Fact]
         public virtual void ShouldSerializeFromString()
         {
             Verifier.Verify(TopicId.FromString("0.0.5005").ToString());
         }
 
+        [Fact]
         public virtual void ToBytes()
         {
             Verifier.Verify(Hex.ToHexString(new TopicId(0, 0, 5005).ToBytes()));
         }
 
+        [Fact]
         public virtual void FromBytes()
         {
             Verifier.Verify(TopicId.FromBytes(new TopicId(0, 0, 5005).ToBytes()).ToString());
         }
 
+        [Fact]
         public virtual void FromSolidityAddress()
         {
             Verifier.Verify(TopicId.FromSolidityAddress("000000000000000000000000000000000000138D").ToString());
         }
 
+        [Fact]
         public virtual void ToSolidityAddress()
         {
             Verifier.Verify(new TokenId(0, 0, 5005).ToSolidityAddress());
         }
+
         [Fact]
         /// <include file="test-topic-id.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Topic.TopicIdTest.TestTopicIdFromEvmAddressIncorrectAddress"]' />
         public virtual void TestTopicIdFromEvmAddressIncorrectAddress()

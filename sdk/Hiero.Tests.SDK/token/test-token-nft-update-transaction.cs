@@ -25,7 +25,8 @@ namespace Hiero.Tests.SDK.Nfts
         private static readonly byte[] testMetadata = [1, 2, 3, 4, 5];
         private readonly NodaTime.Instant validStart = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
 
-        [Fact] public virtual void ShouldSerialize()
+        [Fact] 
+        public virtual void ShouldSerialize()
         {
             Verifier.Verify(SpawnTestTransaction().ToString());
         }

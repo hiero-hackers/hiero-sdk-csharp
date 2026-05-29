@@ -20,7 +20,7 @@ namespace Hiero.Tests.SDK.Transactions
         private static readonly PrivateKey privateKeyED25519 = KeyTestDataFactory.ED25519_TEST_KEY;
         private static readonly PrivateKey privateKeyECDSA = KeyTestDataFactory.ECDSA_TEST_KEY;
         private static readonly NodaTime.Instant validStart = NodaTime.Instant.FromUnixTimeSeconds(1554158542);
-        private static readonly List<ITransaction> INNER_TRANSACTIONS = [SpawnTestTransactionAccountCreate(), SpawnTestTransactionAccountCreate(), SpawnTestTransactionAccountCreate()];
+        private static readonly List<AccountCreateTransaction> INNER_TRANSACTIONS = [SpawnTestTransactionAccountCreate(), SpawnTestTransactionAccountCreate(), SpawnTestTransactionAccountCreate()];
 
         private static AccountCreateTransaction SpawnTestTransactionAccountCreate()
         {
@@ -41,7 +41,8 @@ namespace Hiero.Tests.SDK.Transactions
             .Sign(batchKey);
         }
 
-        [Fact] public virtual void ShouldSerialize()
+        [Fact] 
+        public virtual void ShouldSerialize()
         {
             Verifier.Verify(SpawnTestTransaction().ToString());
         }

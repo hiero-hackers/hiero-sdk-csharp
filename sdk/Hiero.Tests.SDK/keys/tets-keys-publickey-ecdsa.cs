@@ -14,6 +14,7 @@ namespace Hiero.Tests.SDK.Keys
     /// <include file="tets-keys-publickey-ecdsa.cs.xml" path='docs/member[@name="T:Hiero.Tests.SDK.Keys.ECDSAPublicKeyTest"]' />
     public class ECDSAPublicKeyTest
     {
+        [Fact]
         public virtual void VerifyTransaction()
         {
             var transaction = new TransferTransaction()

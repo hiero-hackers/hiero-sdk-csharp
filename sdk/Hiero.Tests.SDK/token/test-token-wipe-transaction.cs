@@ -23,6 +23,7 @@ namespace Hiero.Tests.SDK.Token
         private static readonly List<long> testSerialNumbers = [8, 9, 10];
         private readonly NodaTime.Instant validStart = NodaTime.Instant.FromUnixTimeMilliseconds(1554158542);
 
+        [Fact]
         public virtual void ShouldSerializeFungible()
         {
             Verifier.Verify(SpawnTestTransaction().ToString());
@@ -53,6 +54,7 @@ namespace Hiero.Tests.SDK.Token
             .Sign(unusedPrivateKey);
         }
 
+        [Fact]
         public virtual void ShouldSerializeNft()
         {
             Verifier.Verify(SpawnTestTransactionNft().ToString());
@@ -135,6 +137,7 @@ namespace Hiero.Tests.SDK.Token
             Assert.Equal(tokenWipeTransaction.TokenId, testTokenId);
         }
 
+        [Fact]
         public virtual void GetSetTokenIdFrozen()
         {
             var tx = SpawnTestTransaction();

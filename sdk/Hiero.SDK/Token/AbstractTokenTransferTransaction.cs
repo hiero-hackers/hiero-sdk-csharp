@@ -101,28 +101,21 @@ namespace Hiero.SDK.Token
 			RequireNotFrozen();
 
 			foreach (var transfer in tokenTransfers)
-			{
-				if (transfer.TokenId.Equals(tokenId))
-				{
-					if (transfer.ExpectedDecimals != null && !transfer.ExpectedDecimals.Equals(expectedDecimals))
+                if (transfer.TokenId.Equals(tokenId))
+                    if (transfer.ExpectedDecimals != null && !transfer.ExpectedDecimals.Equals(expectedDecimals))
                         throw new ArgumentException("expected decimals for a token cannot be changed once set");
-
-                    if (transfer.AccountId.Equals(accountId) && transfer.IsApproved == isApproved)
-					{
-						if (expectedDecimals != null)
-                            transfer.ExpectedDecimals = expectedDecimals;
-
+                    else if (transfer.AccountId.Equals(accountId) && transfer.IsApproved == isApproved)
+                    {
                         transfer.Amount += amount;
-						transfer.HookCall = hookCall;
+                        transfer.HookCall = hookCall;
+                        transfer.ExpectedDecimals = expectedDecimals;
 
-						// noinspection unchecked
-						return (T)this;
-					}
-				}
-			}
+                        // noinspection unchecked
+                        return (T)this;
+                    }
 
-			// Create new record
-			var tt = new TokenTransfer(tokenId, accountId, amount, expectedDecimals, isApproved, hookCall);
+            // Create new record
+            var tt = new TokenTransfer(tokenId, accountId, amount, expectedDecimals, isApproved, hookCall);
 
 			tokenTransfers.Add(tt);
 
