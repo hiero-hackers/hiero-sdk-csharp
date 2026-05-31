@@ -71,7 +71,7 @@ namespace Hiero.SDK.File
 				Deleted = IsDeleted,
 				Memo = FileMemo,
 				LedgerId = LedgerId.ToByteString(),
-                Keys = Keys.ToProtobuf(),
+                Keys = Keys?.ToProtobuf(),
 			};
         }
     }

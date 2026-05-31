@@ -13,7 +13,7 @@ namespace Hiero.Tests.SDK.Fees
     /// <include file="test-fees-custom-limit.cs.xml" path='docs/member[@name="T:Hiero.Tests.SDK.Fees.CustomFeeLimitTest"]' />
     public class CustomFeeLimitTest
     {
-        private static readonly AccountId TEST_PAYER_ID = new AccountId(0, 0, 1234);
+        private static readonly AccountId TEST_PAYER_ID = new (0, 0, 1234);
         // Creating a sample FixedFee protobuf for testing
         private static readonly Proto.Services.FixedFee TEST_FIXED_FEE_PROTO = new Proto.Services.FixedFee { Amount = 1000 };
         // Using fromProtobuf() to properly initialize CustomFixedFee

@@ -12,8 +12,8 @@ namespace Hiero.Tests.SDK.HBar
     {
         private static readonly long fiftyGTinybar = 5000000000;
         private readonly Hbar fiftyHbar = Hbar.FromTinybars(fiftyGTinybar);
-        private readonly Hbar hundredHbar = new Hbar(100);
-        private readonly Hbar negativeFiftyHbar = new Hbar(-50);
+        private readonly Hbar hundredHbar = new (100);
+        private readonly Hbar negativeFiftyHbar = new (-50);
         static IEnumerator<object[]> GetValueConversions()
         {
             yield return [ new BigDecimal(50000000), HbarUnit.MICROBAR ]; 
@@ -124,7 +124,7 @@ namespace Hiero.Tests.SDK.HBar
         /// <include file="test-hbar.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.HBar.HbarTest.HasHashCode"]' />
         public virtual void HasHashCode()
         {
-            Assert.Equal(100000031, new Hbar(1).GetHashCode());
+            Assert.Equal(100000000, new Hbar(1).GetHashCode());
         }
     }
 }

@@ -133,7 +133,8 @@ namespace Hiero.Tests.SDK.Node
         {
             var tx = new NodeCreateTransaction();
             string tooLong = string.Join(string.Empty, Enumerable.Repeat("a", 101));
-			Assert.Throws<InvalidOperationException>(() => tx.Description = tooLong);
+			
+			Assert.Throws<ArgumentException>(() => tx.Description = tooLong);
         }
 		[Fact]
         /// <include file="test-node-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeCreateTransactionTest.SetDescriptionAcceptsExactly100Utf8Bytes"]' />
@@ -191,7 +192,7 @@ namespace Hiero.Tests.SDK.Node
 				Port = 5000,
 			};
 
-            Assert.Throws<InvalidOperationException>(() => tx.GossipEndpoints = [invalid]);
+            Assert.Throws<ArgumentException>(() => tx.GossipEndpoints = [invalid]);
         }
 		[Fact]
         /// <include file="test-node-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeCreateTransactionTest.SetServiceEndpointsRejectsMoreThan8"]' />
@@ -233,12 +234,12 @@ namespace Hiero.Tests.SDK.Node
             var tx = new NodeCreateTransaction();
             var invalid = new Endpoint
 			{
-				Address = new byte[] { 5, 6, 7, 8 },
+				Address = [5, 6, 7, 8],
 				DomainName = "both.test",
 				Port = 6000
 			};
 
-            Assert.Throws<InvalidOperationException>(() => tx.ServiceEndpoints = [invalid]);
+            Assert.Throws<ArgumentException>(() => tx.ServiceEndpoints = [invalid]);
         }
 		[Fact]
         /// <include file="test-node-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeCreateTransactionTest.SetGossipCaCertificateRejectsEmpty"]' />
@@ -246,26 +247,20 @@ namespace Hiero.Tests.SDK.Node
         {
             var tx = new NodeCreateTransaction();
 
-            Assert.Throws<InvalidOperationException>(() => tx.GossipCaCertificate = new byte[] { });
+            Assert.Throws<ArgumentException>(() => tx.GossipCaCertificate = []);
         }
 		[Fact]
         /// <include file="test-node-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeCreateTransactionTest.BuildRewritesGossipFqdnWithServiceIpFallback"]' />
         public virtual void BuildRewritesGossipFqdnWithServiceIpFallback()
         {
-            byte[] serviceIp = new byte[]
-            {
-                10,
-                0,
-                0,
-                1
-            };
+            byte[] serviceIp = [10, 0, 0, 1];
             
-			Endpoint gossipFqdnOnly = new Endpoint
+			Endpoint gossipFqdnOnly = new ()
 			{
 				DomainName = "fqdn.example.com",
 				Port = 50211
 			};
-			Endpoint serviceFqdnOnly = new Endpoint
+			Endpoint serviceFqdnOnly = new ()
 			{
 				Address = serviceIp,
 				Port = 50211
@@ -275,10 +270,10 @@ namespace Hiero.Tests.SDK.Node
 				GossipEndpoints = [gossipFqdnOnly],
 				ServiceEndpoints = [serviceFqdnOnly],
 			};
-			var rewritten = tx.GossipEndpoints[0];
+			var rewritten = tx.ToProtobuf().GossipEndpoint[0];
 
 			// gossip endpoint should now carry IP and no domain
-			Assert.True(rewritten.Address.SequenceEqual(serviceIp));
+			Assert.True(rewritten.IpAddressV4.SequenceEqual(serviceIp));
             Assert.Empty(rewritten.DomainName);
             Assert.Equal(50211, rewritten.Port);
         }
@@ -286,20 +281,8 @@ namespace Hiero.Tests.SDK.Node
         /// <include file="test-node-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeCreateTransactionTest.BuildDoesNotRewriteGossipWhenIpPresent"]' />
         public virtual void BuildDoesNotRewriteGossipWhenIpPresent()
         {
-            byte[] originalIp = new byte[]
-            {
-                127,
-                0,
-                0,
-                1
-            };
-            byte[] serviceIp = new byte[]
-            {
-                10,
-                0,
-                0,
-                2
-            };
+            byte[] originalIp = [ 127, 0, 0, 1 ];
+            byte[] serviceIp = [ 10, 0, 0, 2 ];
 
 			Endpoint gossipIpOnly = new ()
 			{
@@ -342,7 +325,7 @@ namespace Hiero.Tests.SDK.Node
 			};
             var ge = tx.GossipEndpoints[0];
 
-            Assert.Empty(ge.Address);
+            Assert.Null(ge.Address);
             Assert.Equal("fqdn.example.com", ge.DomainName);
             Assert.Equal(50213, ge.Port);
         }
@@ -370,6 +353,7 @@ namespace Hiero.Tests.SDK.Node
 			{
 				NodeCreate = transactionBodyBuilder
 			});
+
             Assert.Equal(nodeCreateTransaction.AccountId, TEST_ACCOUNT_ID);
             Assert.Equal(nodeCreateTransaction.Description, TEST_DESCRIPTION);
             Assert.Equal(nodeCreateTransaction.GossipEndpoints.Count, TEST_GOSSIP_ENDPOINTS.Count);
@@ -386,6 +370,7 @@ namespace Hiero.Tests.SDK.Node
 			{
 				AccountId = TEST_ACCOUNT_ID
 			};
+
 			Assert.Equal(nodeCreateTransaction.AccountId, TEST_ACCOUNT_ID);
 		}
 		[Fact]
@@ -421,6 +406,7 @@ namespace Hiero.Tests.SDK.Node
 			{
 				GossipEndpoints = [.. TEST_GOSSIP_ENDPOINTS]
 			};
+
 			Assert.Equal(nodeCreateTransaction.GossipEndpoints, TEST_GOSSIP_ENDPOINTS);
 		}
 		[Fact]
@@ -438,6 +424,7 @@ namespace Hiero.Tests.SDK.Node
 			{
 				ServiceEndpoints = [..TEST_SERVICE_ENDPOINTS]
 			};
+
 			Assert.Equal(nodeCreateTransaction.ServiceEndpoints, TEST_SERVICE_ENDPOINTS);
 		}
 		[Fact]
@@ -455,6 +442,7 @@ namespace Hiero.Tests.SDK.Node
 			{
 				GossipCaCertificate = TEST_GOSSIP_CA_CERTIFICATE
 			};
+
 			Assert.Equal(nodeCreateTransaction.GossipCaCertificate, TEST_GOSSIP_CA_CERTIFICATE);
 		}
 		[Fact]
@@ -472,6 +460,7 @@ namespace Hiero.Tests.SDK.Node
 			{
 				GrpcCertificateHash = TEST_GRPC_CERTIFICATE_HASH
 			};
+
 			Assert.Equal(nodeCreateTransaction.GrpcCertificateHash, TEST_GRPC_CERTIFICATE_HASH);
 		}
 		[Fact]
@@ -489,6 +478,7 @@ namespace Hiero.Tests.SDK.Node
 			{
 				AdminKey = TEST_ADMIN_KEY
 			};
+
 			Assert.Equal(nodeCreateTransaction.AdminKey, TEST_ADMIN_KEY);
 		}
 		[Fact]
@@ -506,6 +496,7 @@ namespace Hiero.Tests.SDK.Node
 			{
 				DeclineReward = true
 			};
+
 			Assert.True(nodeCreateTransaction.DeclineReward);
 		}
 		[Fact]
@@ -523,6 +514,7 @@ namespace Hiero.Tests.SDK.Node
 			{
 				GrpcWebProxyEndpoint = TEST_GRPC_WEB_PROXY_ENDPOINT
 			};
+
 			Assert.Equal(nodeCreateTransaction.GrpcWebProxyEndpoint, TEST_GRPC_WEB_PROXY_ENDPOINT);
 		}
 		[Fact]

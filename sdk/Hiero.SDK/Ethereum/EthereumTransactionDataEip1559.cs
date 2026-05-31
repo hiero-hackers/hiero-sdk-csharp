@@ -98,7 +98,7 @@ namespace Hiero.SDK.Ethereum
 				RLP.EncodeElement(To),
 				RLP.EncodeElement(Value),
 				RLP.EncodeElement(CallData),
-				RLP.EncodeList(), // empty access list
+				RLP.EncodeList(AccessList), // empty access list
 				RLP.EncodeElement(RecoveryId),
 				RLP.EncodeElement(R),
 				RLP.EncodeElement(S)

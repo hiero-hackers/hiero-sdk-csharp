@@ -35,6 +35,7 @@ namespace Hiero.Tests.SDK.Contract
             "72616E646F6D2062797465730000000000000000000000000000000000000000";
         private static readonly byte[] callResult = Hex.Decode(CALL_RESULT_HEX);
         private static readonly byte[] stringArrayCallResult = Hex.Decode(STRING_ARRAY_RESULT_HEX);
+
         [Fact]
         /// <include file="test-contract-function-result.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Contract.ContractFunctionResultTest.ProvidesResultsCorrectly"]' />
         public virtual void ProvidesResultsCorrectly()
@@ -53,11 +54,11 @@ namespace Hiero.Tests.SDK.Contract
 
 			// interpretation varies based on width
 			Assert.True(result.GetBool(0));
-            Assert.Equal(result.GetInt32(0), -1);
-            Assert.Equal(result.GetInt64(0), (1 << 32) - 1);
-            Assert.Equal(result.GetInt256(0), BigInteger.One.ShiftLeft(32).Subtract(BigInteger.One).IntValue);
-            Assert.Equal(result.GetInt256(1), BigInteger.One.ShiftLeft(255).Subtract(BigInteger.One).IntValue);
-            Assert.Equal(result.GetAddress(2), "11223344556677889900aabbccddeeff00112233");
+            Assert.Equal(-1, result.GetInt32(0));
+            Assert.Equal((1 << 32) - 1, result.GetInt64(0));
+            Assert.Equal(BigInteger.One.ShiftLeft(32).Subtract(BigInteger.One).IntValue, result.GetInt256(0));
+            Assert.Equal(BigInteger.One.ShiftLeft(255).Subtract(BigInteger.One).IntValue, result.GetInt256(1));
+            Assert.Equal("11223344556677889900aabbccddeeff00112233", result.GetAddress(2));
 
             // unsigned integers (where applicable)
             // Assert.Equal(result.GetUint32(3), -1);
@@ -65,8 +66,8 @@ namespace Hiero.Tests.SDK.Contract
 
             // BigInteger can represent the full range and so should be 2^256 - 1
             Assert.Equal((int)result.GetUint256(3), BigInteger.One.ShiftLeft(256).Subtract(BigInteger.One).IntValue);
-            Assert.Equal(result.GetString(4), "Hello, world!");
-            Assert.Equal(result.GetString(5), "Hello, world, again!");
+            Assert.Equal("Hello, world!", result.GetString(4));
+            Assert.Equal("Hello, world, again!", result.GetString(5));
             Assert.Equal(result.SenderAccountId, AccountId.FromString("1.2.3"));
             Assert.Equal(result.ContractId, ContractId.FromString("1.2.3"));
             Assert.Equal(result.EvmAddress, ContractId.FromEvmAddress(1, 2, "98329e006610472e6B372C080833f6D79ED833cf"));
@@ -90,17 +91,14 @@ namespace Hiero.Tests.SDK.Contract
             {
                 ContractId = ContractId.FromString("1.2.3").ToProtobuf(),
                 EvmAddress = ByteString.CopyFrom(Hex.Decode("98329e006610472e6B372C080833f6D79ED833cf")),
-                SenderId = AccountId.FromString("1.2.3").ToProtobuf(),
-                
-                
+                SenderId = AccountId.FromString("1.2.3").ToProtobuf(),                                
                 ContractCallResult = ByteString.CopyFrom(stringArrayCallResult)
 			});
             var strings = result.GetStringArray(0);
 
-            Assert.Equal(strings[0], "random bytes");
-            Assert.Equal(strings[1], "random bytes");
+            Assert.Equal("random bytes", strings[0]);
+            Assert.Equal("random bytes", strings[1]);
         }
-
         [Fact]
         public virtual void CanToFromBytesStateChanges() { }
     }

@@ -30,7 +30,10 @@ namespace Hiero.SDK.Ethereum
             if (aliasBytes.Length == 20)
 				return new EvmAddress(aliasBytes.ToByteArray());
 
-			return null;
+            if (aliasBytes.Length == 40)
+                return new EvmAddress(Hex.Decode(aliasBytes.ToByteArray()));
+
+            return null;
         }
         /// <include file="EvmAddress.cs.xml" path='docs/member[@name="M:EvmAddress.FromBytes(System.Byte[])"]' />
         public new static EvmAddress FromBytes(byte[] bytes)

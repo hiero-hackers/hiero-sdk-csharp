@@ -91,6 +91,7 @@ namespace Hiero.SDK.Cryptocurrency
         { 
             get; 
             set { RequireNotFrozen(); field = value; } 
+
         } = new(0);
         /// <include file="AccountCreateTransaction.cs.xml" path='docs/member[@name="M:RequireNotFrozen_2"]' />
         public bool ReceiverSigRequired 
@@ -115,6 +116,7 @@ namespace Hiero.SDK.Cryptocurrency
         { 
             get; 
             set { RequireNotFrozen(); field = value; } 
+
         } = Transaction.DEFAULT_AUTO_RENEW_PERIOD;
 		/// <include file="AccountCreateTransaction.cs.xml" path='docs/member[@name="M:RequireNotFrozen_6"]' />
 		public int MaxAutomaticTokenAssociations 
@@ -127,6 +129,7 @@ namespace Hiero.SDK.Cryptocurrency
         { 
             get; 
             set { RequireNotFrozen(); field = value; } 
+
         } = string.Empty;
 		/// <include file="AccountCreateTransaction.cs.xml" path='docs/member[@name="M:RequireNotFrozen_8"]' />
 		public AccountId? StakedAccountId 
@@ -185,7 +188,7 @@ namespace Hiero.SDK.Cryptocurrency
 
             if (Alias != null)
             {
-                builder.Alias = ByteString.CopyFrom(Alias.ToBytes());
+                builder.Alias = ByteString.CopyFromUtf8(Alias.ToString());
             }
 
             if (StakedAccountId != null)
@@ -236,10 +239,10 @@ namespace Hiero.SDK.Cryptocurrency
             ReceiverSigRequired = body.ReceiverSigRequired;
             MaxAutomaticTokenAssociations = body.MaxAutomaticTokenAssociations;
             DeclineStakingReward = body.DeclineReward;
-            Alias = EvmAddress.FromAliasBytes(body.Alias);
+            Alias = EvmAddress.FromString(body.Alias.ToStringUtf8());
 
-			// Initialize hook creation details
-			HookCreationDetails.AddRange(body.HookCreationDetails.Select(_ => Hook.HookCreationDetails.FromProtobuf(_)));
+            // Initialize hook creation details
+            HookCreationDetails.AddRange(body.HookCreationDetails.Select(_ => Hook.HookCreationDetails.FromProtobuf(_)));
         }
 
 		public override MethodDescriptor GetMethodDescriptor()

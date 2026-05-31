@@ -46,7 +46,7 @@ namespace Hiero.SDK.Contract
 			{
 				RequireNotFrozen();
 				field = value;
-                if (ExpirationTimeDuration is not null)
+                if (field is not null && ExpirationTimeDuration is not null)
                     ExpirationTimeDuration = null;
             }
 		}
@@ -57,7 +57,7 @@ namespace Hiero.SDK.Contract
 			{
 				RequireNotFrozen();
 				field = value;
-                if (ExpirationTime is not null)
+                if (field is not null && ExpirationTime is not null)
                     ExpirationTime = null;
             }
 		}
@@ -212,8 +212,7 @@ namespace Hiero.SDK.Contract
 
             if (ExpirationTime != null)
 				builder.ExpirationTime = ExpirationTime.Value.ToProtoTimestamp();
-
-            if (ExpirationTimeDuration != null)
+            else if (ExpirationTimeDuration != null)
 				builder.ExpirationTime = ExpirationTimeDuration.Value.ToProtoTimestamp();
 
             if (AdminKey != null)

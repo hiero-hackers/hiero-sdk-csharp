@@ -22,7 +22,7 @@ namespace Hiero.Tests.SDK.File
 			Size = 2,
 			ExpirationTime = NodaTime.Instant.FromUnixTimeMilliseconds(3).ToProtoTimestamp(),
 			Deleted = true,
-			// Keys = [.. keys],
+			Keys = KeyList.Of(null, privateKey).ToProtobuf(),
 			LedgerId = LedgerId.MAINNET.ToByteString(),
 		};
 

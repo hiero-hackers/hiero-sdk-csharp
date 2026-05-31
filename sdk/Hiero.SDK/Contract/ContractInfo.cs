@@ -16,7 +16,7 @@ namespace Hiero.SDK.Contract
     public sealed class ContractInfo
     {
         /// <include file="ContractInfo.cs.xml" path='docs/member[@name="M:ContractInfo.#ctor(ContractId,AccountId,System.String,Key,NodaTime.Instant,System.NodaTime.Duration,AccountId,System.Int64,System.String,Hbar,System.Boolean,System.Collections.Generic.Dictionary{TokenId,TokenRelationship},LedgerId,StakingInfo)"]' />
-        private ContractInfo(ContractId contractId, AccountId accountId, string contractAccountId, Key? adminKey, NodaTime.Instant expirationTime, NodaTime.Duration autoRenewPeriod, AccountId autoRenewAccountId, long storage, string contractMemo, Hbar balance, bool isDeleted, Dictionary<TokenId, TokenRelationship> tokenRelationships, LedgerId ledgerId, StakingInfo stakingInfo)
+        private ContractInfo(ContractId contractId, AccountId accountId, string contractAccountId, Key? adminKey, NodaTime.Instant expirationTime, NodaTime.Duration autoRenewPeriod, AccountId? autoRenewAccountId, long storage, string contractMemo, Hbar balance, bool isDeleted, Dictionary<TokenId, TokenRelationship> tokenRelationships, LedgerId ledgerId, StakingInfo? stakingInfo)
         {
             ContractId = contractId;
             AccountId = accountId;
@@ -46,10 +46,10 @@ namespace Hiero.SDK.Contract
                 ContractId.FromProtobuf(contractInfo.ContractId), 
                 AccountId.FromProtobuf(contractInfo.AccountId), 
                 contractInfo.ContractAccountId,
-				Key.FromProtobufKey(contractInfo.AdminKey), 
+                contractInfo.AdminKey is null ? null : Key.FromProtobufKey(contractInfo.AdminKey), 
                 contractInfo.ExpirationTime.ToNodaTimeInstant(), 
                 contractInfo.AutoRenewPeriod.ToNodaDuration(), 
-                AccountId.FromProtobuf(contractInfo.AutoRenewAccountId), 
+                contractInfo.AutoRenewAccountId is null ? null : AccountId.FromProtobuf(contractInfo.AutoRenewAccountId), 
                 contractInfo.Storage, 
                 contractInfo.Memo, 
                 Hbar.FromTinybars((long)contractInfo.Balance), 
@@ -57,8 +57,8 @@ namespace Hiero.SDK.Contract
 				contractInfo.TokenRelationships.ToDictionary(
 				    _ => TokenId.FromProtobuf(_.TokenId),
 				    _ => TokenRelationship.FromProtobuf(_)), 
-                LedgerId.FromByteString(contractInfo.LedgerId), 
-                StakingInfo.FromProtobuf(contractInfo.StakingInfo));
+                LedgerId.FromByteString(contractInfo.LedgerId),
+                contractInfo.StakingInfo is null ? null : StakingInfo.FromProtobuf(contractInfo.StakingInfo));
         }
 
 		/// <include file="ContractInfo.cs.xml" path='docs/member[@name="F:ContractInfo.ContractId"]' />
@@ -74,7 +74,7 @@ namespace Hiero.SDK.Contract
 		/// <include file="ContractInfo.cs.xml" path='docs/member[@name="F:ContractInfo.AutoRenewPeriod"]' />
 		public NodaTime.Duration AutoRenewPeriod { get; }
 		/// <include file="ContractInfo.cs.xml" path='docs/member[@name="F:ContractInfo.AutoRenewAccountId"]' />
-		public AccountId AutoRenewAccountId { get; }
+		public AccountId? AutoRenewAccountId { get; }
 		/// <include file="ContractInfo.cs.xml" path='docs/member[@name="F:ContractInfo.Storage"]' />
 		public long Storage { get; }
 		/// <include file="ContractInfo.cs.xml" path='docs/member[@name="F:ContractInfo.ContractMemo"]' />
@@ -88,7 +88,7 @@ namespace Hiero.SDK.Contract
 		/// <include file="ContractInfo.cs.xml" path='docs/member[@name="F:ContractInfo.LedgerId"]' />
 		public LedgerId LedgerId { get; }
 		/// <include file="ContractInfo.cs.xml" path='docs/member[@name="F:ContractInfo.StakingInfo"]' />
-		public StakingInfo StakingInfo { get; }
+		public StakingInfo? StakingInfo { get; }
 
 		/// <include file="ContractInfo.cs.xml" path='docs/member[@name="M:ContractInfo.ToBytes"]' />
 		public byte[] ToBytes()

@@ -19,16 +19,16 @@ namespace Hiero.SDK.Core
         ResponseStatus status, 
         ExchangeRate exchangeRate, 
         ExchangeRate nextExchangeRate, 
-        AccountId accountId, 
-        FileId fileId, 
-        ContractId contractId, 
-        TopicId topicId, 
-        TokenId tokenId,
-        ulong topicSequenceNumber, 
+        AccountId? accountId, 
+        FileId? fileId, 
+        ContractId? contractId, 
+        TopicId? topicId, 
+        TokenId? tokenId,
+        ulong? topicSequenceNumber, 
         ByteString? topicRunningHash, 
         ulong totalSupply, 
-        ScheduleId scheduleId, 
-        TransactionId scheduledTransactionId, 
+        ScheduleId? scheduleId, 
+        TransactionId? scheduledTransactionId, 
         IEnumerable<long> serials, 
         ulong nodeId, 
         IEnumerable<TransactionReceipt> duplicates, 
@@ -43,25 +43,25 @@ namespace Hiero.SDK.Core
         /// <include file="TransactionReceipt.cs.xml" path='docs/member[@name="F:TransactionReceipt.NextExchangeRate"]' />
         public ExchangeRate NextExchangeRate { get; } = nextExchangeRate;
         /// <include file="TransactionReceipt.cs.xml" path='docs/member[@name="F:TransactionReceipt.AccountId"]' />
-        public AccountId AccountId { get; } = accountId;
+        public AccountId? AccountId { get; } = accountId;
         /// <include file="TransactionReceipt.cs.xml" path='docs/member[@name="F:TransactionReceipt.FileId"]' />
-        public FileId FileId { get; } = fileId;
+        public FileId? FileId { get; } = fileId;
         /// <include file="TransactionReceipt.cs.xml" path='docs/member[@name="F:TransactionReceipt.ContractId"]' />
-        public ContractId ContractId { get; } = contractId;
+        public ContractId? ContractId { get; } = contractId;
         /// <include file="TransactionReceipt.cs.xml" path='docs/member[@name="F:TransactionReceipt.TopicId"]' />
-        public TopicId TopicId { get; } = topicId;
+        public TopicId? TopicId { get; } = topicId;
         /// <include file="TransactionReceipt.cs.xml" path='docs/member[@name="F:TransactionReceipt.TokenId"]' />
-        public TokenId TokenId { get; } = tokenId;
+        public TokenId? TokenId { get; } = tokenId;
         /// <include file="TransactionReceipt.cs.xml" path='docs/member[@name="F:TransactionReceipt.TopicSequenceNumber"]' />
-        public ulong TopicSequenceNumber { get; } = topicSequenceNumber;
+        public ulong? TopicSequenceNumber { get; } = topicSequenceNumber;
         /// <include file="TransactionReceipt.cs.xml" path='docs/member[@name="F:TransactionReceipt.TopicRunningHash"]' />
         public ByteString? TopicRunningHash { get; } = topicRunningHash;
         /// <include file="TransactionReceipt.cs.xml" path='docs/member[@name="F:TransactionReceipt.TotalSupply"]' />
         public ulong TotalSupply { get; } = totalSupply;
         /// <include file="TransactionReceipt.cs.xml" path='docs/member[@name="F:TransactionReceipt.ScheduleId"]' />
-        public ScheduleId ScheduleId { get; } = scheduleId;
+        public ScheduleId? ScheduleId { get; } = scheduleId;
         /// <include file="TransactionReceipt.cs.xml" path='docs/member[@name="F:TransactionReceipt.ScheduledTransactionId"]' />
-        public TransactionId ScheduledTransactionId { get; } = scheduledTransactionId;
+        public TransactionId? ScheduledTransactionId { get; } = scheduledTransactionId;
         /// <include file="TransactionReceipt.cs.xml" path='docs/member[@name="F:TransactionReceipt.Serials"]' />
         public List<long> Serials { get; } = [.. serials];
         /// <include file="TransactionReceipt.cs.xml" path='docs/member[@name="F:TransactionReceipt.NodeId"]' />
@@ -92,16 +92,16 @@ namespace Hiero.SDK.Core
             var rate = transactionReceipt.ExchangeRate;
             var exchangeRate = ExchangeRate.FromProtobuf(rate.CurrentRate);
             var nextExchangeRate = ExchangeRate.FromProtobuf(rate.NextRate);
-            var accountId = AccountId.FromProtobuf(transactionReceipt.AccountId);
-            var fileId = FileId.FromProtobuf(transactionReceipt.FileId);
-            var contractId = ContractId.FromProtobuf(transactionReceipt.ContractId);
-            var topicId = TopicId.FromProtobuf(transactionReceipt.TopicId);
-            var tokenId = TokenId.FromProtobuf(transactionReceipt.TokenId);
+            var accountId = transactionReceipt.AccountId is null ? null : AccountId.FromProtobuf(transactionReceipt.AccountId);
+            var fileId = transactionReceipt.FileId is null ? null : FileId.FromProtobuf(transactionReceipt.FileId);
+            var contractId = transactionReceipt.ContractId is null ? null : ContractId.FromProtobuf(transactionReceipt.ContractId);
+            var topicId = transactionReceipt.TopicId is null ? null : TopicId.FromProtobuf(transactionReceipt.TopicId);
+            var tokenId = transactionReceipt.TokenId is null ? null : TokenId.FromProtobuf(transactionReceipt.TokenId);
             var topicSequenceNumber = transactionReceipt.TopicSequenceNumber;
             var topicRunningHash = transactionReceipt.TopicRunningHash.Length == 0 ? null : transactionReceipt.TopicRunningHash;
             var totalSupply = transactionReceipt.NewTotalSupply;
-            var scheduleId = ScheduleId.FromProtobuf(transactionReceipt.ScheduleId);
-            var scheduledTransactionId = TransactionId.FromProtobuf(transactionReceipt.ScheduledTransactionId);
+            var scheduleId = transactionReceipt.ScheduleId is null ? null : ScheduleId.FromProtobuf(transactionReceipt.ScheduleId);
+            var scheduledTransactionId = transactionReceipt.ScheduledTransactionId is null ? null : TransactionId.FromProtobuf(transactionReceipt.ScheduledTransactionId);
             var serials = transactionReceipt.SerialNumbers;
             var nodeId = transactionReceipt.NodeId;
 
@@ -121,7 +121,6 @@ namespace Hiero.SDK.Core
                 NodeId = NodeId,
                 NewTotalSupply = TotalSupply,
                 Status = (Proto.Services.ResponseCodeEnum)Status,
-                TopicSequenceNumber = TopicSequenceNumber,
                 ExchangeRate = new Proto.Services.ExchangeRateSet
                 {
                     CurrentRate = new Proto.Services.ExchangeRate
@@ -145,6 +144,7 @@ namespace Hiero.SDK.Core
                 }
             };
 
+            if (TopicSequenceNumber != null) proto.TopicSequenceNumber = TopicSequenceNumber.Value;
             if (AccountId != null) proto.AccountId = AccountId.ToProtobuf();
             if (FileId != null) proto.FileId = FileId.ToProtobuf();
             if (ContractId != null) proto.ContractId = ContractId.ToProtobuf();

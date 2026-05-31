@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Hiero.SDK;
+using Hiero.SDK.Core;
 using Hiero.SDK.Cryptography;
 using Hiero.SDK.Cryptocurrency;
 using Hiero.SDK.Networking;
@@ -12,7 +13,6 @@ using Hiero.SDK.Transactions;
 using Google.Protobuf;
 
 using VerifyXunit;
-using Hiero.SDK.Core;
 
 namespace Hiero.Tests.SDK.Node
 {
@@ -52,7 +52,7 @@ namespace Hiero.Tests.SDK.Node
         {
             return new Endpoint
             {
-				Address = new byte[] { 0x00, 0x01, 0x02, 0x03 },
+				Address = [0x00, 0x01, 0x02, 0x03],
 				Port = 42 + offset
 			};
         }
@@ -130,7 +130,7 @@ namespace Hiero.Tests.SDK.Node
             // But empty gossip CA certificate should throw
             var tx = new NodeUpdateTransaction
             {
-				GrpcCertificateHash = new byte[] { },
+				GrpcCertificateHash = [],
 				NodeId = 0,
 			};
             var tx2Bytes = tx.ToBytes();
@@ -397,7 +397,7 @@ namespace Hiero.Tests.SDK.Node
 
             var exception = Assert.Throws<InvalidOperationException>(() => transaction.FreezeWith(null));
             
-            Assert.Equal(exception.Message, "NodeUpdateTransaction: 'nodeId' must be explicitly set before calling freeze().");
+            Assert.Equal("NodeUpdateTransaction: 'nodeId' must be explicitly set before calling freeze().", exception.Message);
         }
         [Fact]
         /// <include file="test-node-update-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeUpdateTransactionTest.ShouldThrowErrorWhenFreezingWithZeroNodeId"]' />
@@ -410,7 +410,7 @@ namespace Hiero.Tests.SDK.Node
             };
             var exception = Assert.Throws<InvalidOperationException>(() => transaction.FreezeWith(null));
             
-            Assert.Equal(exception.Message, "NodeUpdateTransaction: 'nodeId' must be explicitly set before calling freeze().");
+            Assert.Equal("NodeUpdateTransaction: 'nodeId' must be explicitly set before calling freeze().", exception.Message);
         }
         [Fact]
         /// <include file="test-node-update-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeUpdateTransactionTest.ShouldFreezeSuccessfullyWithActualClientWhenNodeIdIsSet"]' />
@@ -480,7 +480,7 @@ namespace Hiero.Tests.SDK.Node
             var longDescription = string.Join(string.Empty, Enumerable.Range(0, 101).Select(_ => "a"));
             var exception = Assert.Throws<ArgumentException>(() => transaction.Description = longDescription);
 
-            Assert.Equal(exception.Message, "Description must not exceed 100 bytes when encoded as UTF-8");
+            Assert.Equal("Description must not exceed 100 bytes when encoded as UTF-8", exception.Message);
         }
         [Fact]
         /// <include file="test-node-update-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeUpdateTransactionTest.ShouldAllowDescriptionWith100Bytes"]' />
@@ -506,7 +506,7 @@ namespace Hiero.Tests.SDK.Node
             var transaction = new NodeUpdateTransaction();
             var exception = Assert.Throws<InvalidOperationException>(() => transaction.GossipEndpoints = []);
 
-            Assert.Equal(exception.Message, "Gossip endpoints list must not be empty");
+            Assert.Equal("Gossip endpoints list must not be empty", exception.Message);
         }
         [Fact]
         /// <include file="test-node-update-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeUpdateTransactionTest.ShouldThrowErrorWhenSettingMoreThan10GossipEndpoints"]' />
@@ -526,8 +526,8 @@ namespace Hiero.Tests.SDK.Node
                 SpawnTestEndpointIpOnly((byte)9), 
                 SpawnTestEndpointIpOnly((byte)10)];
 
-            var exception = Assert.Throws<ArgumentException>(() => transaction.GossipEndpoints = [..endpoints]);
-            Assert.Equal(exception.Message, "Gossip endpoints list must not contain more than 10 entries");
+            var exception = Assert.Throws<InvalidOperationException>(() => transaction.GossipEndpoints = [..endpoints]);
+            Assert.Equal("Gossip endpoints list must not contain more than 10 entries", exception.Message);
         }
         [Fact]
         /// <include file="test-node-update-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeUpdateTransactionTest.ShouldAllowExactly10GossipEndpoints"]' />
@@ -560,7 +560,7 @@ namespace Hiero.Tests.SDK.Node
 				Port = 50211,
 			};
             var exception = Assert.Throws<ArgumentException>(() => transaction.GossipEndpoints = [endpoint]);
-            Assert.Equal(exception.Message, "Endpoint must not contain both ipAddressV4 and domainName");
+            Assert.Equal("Endpoint must not contain both ipAddressV4 and domainName", exception.Message);
         }
         [Fact]
         /// <include file="test-node-update-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeUpdateTransactionTest.ShouldThrowErrorWhenSettingEmptyServiceEndpointsList"]' />
@@ -569,7 +569,7 @@ namespace Hiero.Tests.SDK.Node
             var transaction = new NodeUpdateTransaction();
             var exception = Assert.Throws<InvalidOperationException>(() => transaction.ServiceEndpoints = []);
             
-            Assert.Equal(exception.Message, "Service endpoints list must not be empty");
+            Assert.Equal("Service endpoints list must not be empty", exception.Message);
         }
         [Fact]
         /// <include file="test-node-update-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeUpdateTransactionTest.ShouldThrowErrorWhenSettingMoreThan8ServiceEndpoints"]' />
@@ -590,7 +590,7 @@ namespace Hiero.Tests.SDK.Node
 
             var exception = Assert.Throws<InvalidOperationException>(() => transaction.ServiceEndpoints = [..endpoints]);
             
-            Assert.Equal(exception.Message, "Service endpoints list must not contain more than 8 entries");
+            Assert.Equal("Service endpoints list must not contain more than 8 entries", exception.Message);
         }
         [Fact]
         /// <include file="test-node-update-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeUpdateTransactionTest.ShouldAllowExactly8ServiceEndpoints"]' />
@@ -649,14 +649,7 @@ namespace Hiero.Tests.SDK.Node
         public virtual void ShouldAllowValidGossipCaCertificate()
         {
             var transaction = new NodeUpdateTransaction();
-            var cert = new byte[]
-            {
-                1,
-                2,
-                3,
-                4,
-                5
-            };
+            var cert = new byte[] { 1, 2, 3, 4, 5 };
 
             transaction.GossipCaCertificate = cert;
 
@@ -670,7 +663,7 @@ namespace Hiero.Tests.SDK.Node
             var wrongSizeHash = new byte[32]; // SHA-256 size, but we need SHA-384 (48 bytes)
             var exception = Assert.Throws<ArgumentException>(() => transaction.GrpcCertificateHash = wrongSizeHash);
 
-            Assert.Equal(exception.Message, "gRPC certificate hash must be exactly 48 bytes (SHA-384)");
+            Assert.Equal("gRPC certificate hash must be exactly 48 bytes (SHA-384)", exception.Message);
         }
         [Fact]
         /// <include file="test-node-update-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Node.NodeUpdateTransactionTest.ShouldAllowGrpcCertificateHashWith48Bytes"]' />

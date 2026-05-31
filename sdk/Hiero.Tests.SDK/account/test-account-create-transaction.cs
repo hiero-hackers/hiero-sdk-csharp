@@ -40,7 +40,6 @@ namespace Hiero.Tests.SDK.Account
             .Freeze()
             .Sign(privateKeyED25519);
         }
-
         public virtual AccountCreateTransaction SpawnTestTransaction2()
         {
             return new AccountCreateTransaction
@@ -117,7 +116,7 @@ namespace Hiero.Tests.SDK.Account
             Assert.Equal("0.0.3", tx.StakedAccountId?.ToString());
             Assert.Null(tx.StakedNodeId);
             Assert.False(tx.DeclineStakingReward);
-            Assert.Equal(tx.Alias, EvmAddress.FromString(ALIAS));
+            Assert.Equal(EvmAddress.FromString(ALIAS), tx.Alias);
         }
         [Fact]
         /// <include file="test-account-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Account.AccountCreateTransactionTest.FromScheduledTransaction"]' />

@@ -52,19 +52,19 @@ namespace Hiero.SDK.Networking
 			}
 		}
 		/// <include file="NodeCreateTransaction.cs.xml" path='docs/member[@name="M:NodeCreateTransaction.RequireNotFrozen_3"]' />
-		public ListGuarded<Endpoint>? GossipEndpoints
+		public ListGuarded<Endpoint> GossipEndpoints
 		{
 			set => field = GenerateListGuarded(value, InitGossipEndpoints);
 			internal get => field ??= GenerateListGuarded<Endpoint>(null, InitGossipEndpoints);
-		}
-
+		
+		} private bool GossipEndpointsSet = false;
         /// <include file="NodeCreateTransaction.cs.xml" path='docs/member[@name="M:NodeCreateTransaction.RequireNotFrozen_4"]' />
-        public ListGuarded<Endpoint>? ServiceEndpoints
+        public ListGuarded<Endpoint> ServiceEndpoints
         {
             set => field = GenerateListGuarded(value, InitServiceEndpoints);
             internal get => field ??= GenerateListGuarded<Endpoint>(null, InitServiceEndpoints);
-        }
-
+        
+		} private bool ServiceEndpointsSet = false;
         /// <include file="NodeCreateTransaction.cs.xml" path='docs/member[@name="M:NodeCreateTransaction.RequireNotFrozen_5"]' />
         public byte[]? GossipCaCertificate
 		{
@@ -72,9 +72,9 @@ namespace Hiero.SDK.Networking
 			set
 			{
 				RequireNotFrozen();
-				if (value == null || value.Length == 0)
-				{
-					throw new ArgumentException("Gossip CA certificate must not be null or empty");
+                if (value is not null && value.Length == 0)
+                {
+                    throw new ArgumentException("Gossip CA certificate must not be null or empty");
 				}
 				field = value;
 			}
@@ -134,8 +134,13 @@ namespace Hiero.SDK.Networking
             Description = body.Description;
             DeclineReward = body.DeclineReward;
 
-            GossipEndpoints = [.. body.GossipEndpoint.Select(_ => Endpoint.FromProtobuf(_)) ];
-            ServiceEndpoints = [.. body.ServiceEndpoint.Select(_ => Endpoint.FromProtobuf(_)) ];
+			if (body.ServiceEndpoint is not null)
+				foreach (var serviceEndpoint in body.ServiceEndpoint)
+					ServiceEndpoints.Add(Endpoint.FromProtobuf(serviceEndpoint));
+
+            if (body.GossipEndpoint is not null)
+                foreach (var gossipEndpoint in body.GossipEndpoint)
+                    GossipEndpoints.Add(Endpoint.FromProtobuf(gossipEndpoint));
 
             if (body.AccountId is not null)
                 AccountId = AccountId.FromProtobuf(body.AccountId);
@@ -167,39 +172,42 @@ namespace Hiero.SDK.Networking
             // from service endpoints. We rewrite such gossip endpoints to use the first available service IP.
             byte[]? fallbackServiceIp = null;
 
-            foreach (Endpoint serviceEndpoint in ServiceEndpoints)
-            {
-                if (serviceEndpoint.Address != null)
+			if (ServiceEndpointsSet)
+			{
+                foreach (Endpoint serviceEndpoint in ServiceEndpoints)
                 {
-                    fallbackServiceIp = serviceEndpoint.Address.CopyArray();
-                    break;
-                }
-            }
-
-            foreach (Endpoint gossipEndpoint in GossipEndpoints)
-            {
-                bool hasFqdn = gossipEndpoint.DomainName != null && gossipEndpoint.DomainName.Length != 0;
-                bool hasIp = gossipEndpoint.Address != null;
-                if (!hasIp && hasFqdn && fallbackServiceIp != null)
-                {
-
-                    // rewrite to IP-only endpoint preserving the port
-                    Endpoint rewritten = new ()
+                    if (serviceEndpoint.Address != null)
                     {
-						Port = gossipEndpoint.Port,
-						Address = fallbackServiceIp.CopyArray(),
-					};
-
-                    builder.GossipEndpoint.Add(rewritten.ToProtobuf());
+                        fallbackServiceIp = serviceEndpoint.Address.CopyArray();
+                        break;
+                    }
                 }
-                else
-                {
-                    builder.GossipEndpoint.Add(gossipEndpoint.ToProtobuf());
-				}
-            }
 
-            foreach (Endpoint serviceEndpoint in ServiceEndpoints)
-				builder.ServiceEndpoint.Add(serviceEndpoint.ToProtobuf());
+                foreach (Endpoint serviceEndpoint in ServiceEndpoints)
+                    builder.ServiceEndpoint.Add(serviceEndpoint.ToProtobuf());
+            }
+			if (GossipEndpointsSet)
+				foreach (Endpoint gossipEndpoint in GossipEndpoints)
+				{
+					bool hasFqdn = gossipEndpoint.DomainName != null && gossipEndpoint.DomainName.Length != 0;
+					bool hasIp = gossipEndpoint.Address != null;
+
+					if (!hasIp && hasFqdn && fallbackServiceIp != null)
+					{
+						// rewrite to IP-only endpoint preserving the port
+						Endpoint rewritten = new ()
+						{
+							Port = gossipEndpoint.Port,
+							Address = fallbackServiceIp.CopyArray(),
+						};
+
+						builder.GossipEndpoint.Add(rewritten.ToProtobuf());
+					}
+					else
+					{
+						builder.GossipEndpoint.Add(gossipEndpoint.ToProtobuf());
+					}
+				}
 
             if (GossipCaCertificate != null)
 				builder.GossipCaCertificate = ByteString.CopyFrom(GossipCaCertificate);
@@ -249,6 +257,8 @@ namespace Hiero.SDK.Networking
                 if (_.Count > 10)
                     throw new InvalidOperationException("Gossip endpoints list must not contain more than 10 entries");
             };
+
+			GossipEndpointsSet = true;
         }
 		private void InitServiceEndpoints(ListGuarded<Endpoint> list)
 		{
@@ -261,6 +271,8 @@ namespace Hiero.SDK.Networking
                 if (list.Count > 8)
                     throw new InvalidOperationException("Service endpoints list must not contain more than 8 entries");
             };
+
+            ServiceEndpointsSet = true;
         }
     }
 }

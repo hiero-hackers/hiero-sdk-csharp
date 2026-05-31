@@ -20,11 +20,11 @@ namespace Hiero.SDK.Contract
 	public sealed partial class ContractFunctionParameters
 	{
 		/// <summary>
-		/// The length of a Solidity Address in bytes.
+		/// The length of a Solidity address in bytes.
 		/// </summary>
 		public static readonly int ADDRESS_LEN = Utils.EntityIdHelper.SOLIDITY_ADDRESS_LEN;
 		/// <summary>
-		/// The length of a hexadecimal-encoded Solidity Address, in ASCII characters (bytes).
+		/// The length of a hexadecimal-encoded Solidity address, in ASCII characters (bytes).
 		/// </summary>
 		public static readonly int ADDRESS_LEN_HEX = Utils.EntityIdHelper.SOLIDITY_ADDRESS_LEN_HEX;
 		/// <summary>
@@ -42,13 +42,13 @@ namespace Hiero.SDK.Contract
 
 		private readonly List<Argument> args = [];
 
-		internal static byte[] DecodeAddress(string address)
+		internal static byte[] Decodeaddress(string address)
 		{
 			address = address.StartsWith("0x") ? address.Substring(2) : address;
 
 			if (address.Length != ADDRESS_LEN_HEX)
 			{
-				throw new ArgumentException("Solidity Addresses must be 40 hex chars");
+				throw new ArgumentException("Solidity addresses must be 40 hex chars");
 			}
 
 			try
@@ -57,7 +57,7 @@ namespace Hiero.SDK.Contract
 			}
 			catch (Exception e)
 			{
-				throw new ArgumentException("failed to decode Solidity Address as hex", e);
+				throw new ArgumentException("failed to decode Solidity address as hex", e);
 			}
 		}
 		internal static byte[] GetTruncatedBytes(BigInteger bigInt, int bitWidth)
@@ -195,7 +195,7 @@ namespace Hiero.SDK.Contract
 
 		/// <summary>
 		/// Add a parameter of type <c>string</c>.
-		/// For Solidity Addresses, use <see cref="AddAddress(string)"/>.
+		/// For Solidity addresses, use <see cref="AddAddress(string)"/>.
 		/// </summary>
 		/// <param name="param">The string to be Added</param>
 		/// <returns>this</returns>
@@ -2050,29 +2050,29 @@ namespace Hiero.SDK.Contract
 			return this;
 		}
 		/// <summary>
-		/// Add a <see cref="ADDRESS_LEN_HEX"/>-character hex-encoded Solidity Address parameter with the type <c>Address</c>.
-		/// Note: Adding a <c>Address payable</c> or <c>contract</c> parameter must also use this function as the ABI does not support those types directly.
+		/// Add a <see cref="ADDRESS_LEN_HEX"/>-character hex-encoded Solidity address parameter with the type <c>address</c>.
+		/// Note: Adding a <c>address payable</c> or <c>contract</c> parameter must also use this function as the ABI does not support those types directly.
 		/// </summary>
-		/// <param name="address">The Address to be Added</param>
+		/// <param name="address">The address to be Added</param>
 		/// <returns>this</returns>
 		public ContractFunctionParameters AddAddress(string address)
 		{
-			byte[] addressBytes = DecodeAddress(address);
+			byte[] addressBytes = Decodeaddress(address);
 
 			args.Add(new Argument("address", LeftPad32(ByteString.CopyFrom(addressBytes)), false));
 
 			return this;
 		}
 		/// <summary>
-		/// Add an array of <see cref="ADDRESS_LEN_HEX"/>-character hex-encoded Solidity Addresses as a <c>Address[]</c> param.
+		/// Add an array of <see cref="ADDRESS_LEN_HEX"/>-character hex-encoded Solidity addresses as a <c>address[]</c> param.
 		/// </summary>
-		/// <param name="addresses">The array of Addresses to be Added</param>
+		/// <param name="addresses">The array of addresses to be Added</param>
 		/// <returns>this</returns>
 		public ContractFunctionParameters AddAddressArray(string[] addresses)
 		{
 			ByteString addressArray = EncodeArray(addresses.Select(_ =>
 			{
-				byte[] address = DecodeAddress(_);
+				byte[] address = Decodeaddress(_);
 
 				return LeftPad32(ByteString.CopyFrom(address));
 			}));
@@ -2082,25 +2082,25 @@ namespace Hiero.SDK.Contract
 			return this;
 		}
 		/// <summary>
-		/// Add a Solidity function reference as a <see cref="ADDRESS_LEN"/>-byte contract Address and a <see cref="SELECTOR_LEN"/>-byte function selector.
+		/// Add a Solidity function reference as a <see cref="ADDRESS_LEN"/>-byte contract address and a <see cref="SELECTOR_LEN"/>-byte function selector.
 		/// </summary>
-		/// <param name="address">a hex-encoded <see cref="ADDRESS_LEN_HEX"/>-character Solidity Address.</param>
+		/// <param name="address">a hex-encoded <see cref="ADDRESS_LEN_HEX"/>-character Solidity address.</param>
 		/// <param name="selector">a</param>
 		/// <returns>this</returns>
 		public ContractFunctionParameters AddFunction(string address, byte[] selector)
 		{
-			return AddFunction(DecodeAddress(address), selector);
+			return AddFunction(Decodeaddress(address), selector);
 		}
 		/// <summary>
-		/// Add a Solidity function reference as a <see cref="ADDRESS_LEN"/>-byte contract Address and a constructed <see cref="ContractFunctionSelector"/>. The <see cref="ContractFunctionSelector"/> may not be modified after this call.
+		/// Add a Solidity function reference as a <see cref="ADDRESS_LEN"/>-byte contract address and a constructed <see cref="ContractFunctionSelector"/>. The <see cref="ContractFunctionSelector"/> may not be modified after this call.
 		/// </summary>
-		/// <param name="address">The Address used in the function to be Added</param>
+		/// <param name="address">The address used in the function to be Added</param>
 		/// <param name="selector">The selector used in the function to be Added</param>
 		/// <returns>this</returns>
 		public ContractFunctionParameters AddFunction(string address, ContractFunctionSelector selector)
 		{
 			// allow the `FunctionSelector` to be reused multiple times
-			return AddFunction(DecodeAddress(address), selector.Finish());
+			return AddFunction(Decodeaddress(address), selector.Finish());
 		}
 		private ContractFunctionParameters AddFunction(byte[] address, byte[] selector)
 		{

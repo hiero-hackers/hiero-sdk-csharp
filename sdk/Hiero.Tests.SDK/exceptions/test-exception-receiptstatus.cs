@@ -18,7 +18,7 @@ namespace Hiero.Tests.SDK.Exceptions
             var txReceipt = TransactionReceipt.FromProtobuf(new Proto.Services.TransactionReceipt { Status = Proto.Services.ResponseCodeEnum.InsufficientTxFee });
             var e = new ReceiptStatusException(txId, txReceipt);
 
-            Assert.Equal(e.Message, "receipt for transaction 0.0.100@1554158542.000000000 raised status INSUFFICIENT_TX_FEE");
+            Assert.Equal("receipt for transaction 0.0.100@1554158542.000000000 raised status INSUFFICIENT_TX_FEE", e.Message);
         }
     }
 }

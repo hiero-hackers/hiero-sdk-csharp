@@ -54,7 +54,6 @@ namespace Hiero.Tests.SDK.Contract
             
             signature.Finish();
             Assert.Throws<InvalidOperationException>(() => signature.AddStringArray());
-			signature.Finish();
         }
     }
 }

@@ -46,7 +46,7 @@ namespace Hiero.SDK.Contract
             Match match = EVM_ADDRESS_REGEX.Match(id);
 
             if (match.Length > 0)
-                return new ContractId(long.Parse(match.Groups[0].Value), long.Parse(match.Groups[1].Value), Hex.Decode(match.Groups[2].Value));
+                return new ContractId(long.Parse(match.Groups[1].Value), long.Parse(match.Groups[2].Value), Hex.Decode(match.Groups[3].Value));
             else
                 return Utils.EntityIdHelper.FromString(id, (a, b, c, d) => new ContractId(a, b, c, d));
         }

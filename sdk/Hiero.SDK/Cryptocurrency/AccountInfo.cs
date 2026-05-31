@@ -119,10 +119,10 @@ namespace Hiero.SDK.Cryptocurrency
                 accountInfo.Memo,
                 accountInfo.OwnedNfts, 
                 accountInfo.MaxAutomaticTokenAssociations,
-				PublicKey.FromAliasBytes(accountInfo.Alias), 
+                accountInfo.Alias is null ? null : PublicKey.FromAliasBytes(accountInfo.Alias), 
                 LedgerId.FromByteString(accountInfo.LedgerId), 
-                accountInfo.EthereumNonce, 
-                StakingInfo.FromProtobuf(accountInfo.StakingInfo));
+                accountInfo.EthereumNonce,
+                accountInfo.StakingInfo is null ? null : StakingInfo.FromProtobuf(accountInfo.StakingInfo));
         }
 
 		/// <include file="AccountInfo.cs.xml" path='docs/member[@name="M:AccountInfo.ToBytes"]' />
