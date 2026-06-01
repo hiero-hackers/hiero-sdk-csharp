@@ -48,7 +48,9 @@ namespace Hiero.SDK.Transactions
 		/// <include file="BatchTransaction.cs.xml" path='docs/member[@name="M:BatchTransaction.InitFromTransactionBody_2"]' />
 		private void InitFromTransactionBody()
 		{
-			foreach (var atomicTransactionBytes in SourceTransactionBody.AtomicBatch.Transactions)
+            InnerTransactions.OnValidateItem = null;
+
+            foreach (var atomicTransactionBytes in SourceTransactionBody.AtomicBatch.Transactions)
 			{
 				ITransaction transaction = ITransaction.FromBytes(new Proto.Services.Transaction
 				{
@@ -58,6 +60,8 @@ namespace Hiero.SDK.Transactions
 
                 InnerTransactions.Add(transaction);
 			}
+
+            InnerTransactions.OnValidateItem = ValidateInnerTransaction;
         }
 		/// <include file="BatchTransaction.cs.xml" path='docs/member[@name="M:BatchTransaction.ValidateInnerTransaction(ITransaction)"]' />
 		private void ValidateInnerTransaction(ITransaction transaction) 

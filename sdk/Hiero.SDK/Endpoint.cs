@@ -29,8 +29,9 @@ namespace Hiero.SDK
         /// <include file="Endpoint.cs.xml" path='docs/member[@name="M:Endpoint.ValidateNoIpAndDomain(Endpoint)"]' />
         public static void ValidateNoIpAndDomain(Endpoint endpoint)
         {
-            if (endpoint.Address is not null && string.IsNullOrWhiteSpace(endpoint.DomainName) is false)
-                throw new ArgumentException("Endpoint must not contain both ipAddressV4 and domainName");
+            if (endpoint.Address is not null && endpoint.Address.Length > 0)
+                if (endpoint.DomainName is not null && endpoint.DomainName.IsWhiteSpace() is false)
+                    throw new ArgumentException("Endpoint must not contain both ipAddressV4 and domainName");
         }
 
         /// <include file="Endpoint.cs.xml" path='docs/member[@name="M:Endpoint.ToProtobuf"]' />
@@ -60,13 +61,14 @@ namespace Hiero.SDK
 		public override string ToString()
         {
             if (DomainName != null && DomainName.Length > 0)
-            {
-                return DomainName + ":" + Port;
-            }
-            else
-            {
-                return (Address?[0] & 0x000000FF) + "." + (Address?[1] & 0x000000FF) + "." + (Address?[2] & 0x000000FF) + "." + (Address?[3] & 0x000000FF) + ":" + Port;
-            }
+                return string.Format("{0}:{1}", DomainName, Port);
+            else return string.Format(
+                "{0}.{1}.{2}.{3}:{4}",
+                Address?[0] & 0x000000FF,
+                Address?[1] & 0x000000FF,
+                Address?[2] & 0x000000FF,
+                Address?[3] & 0x000000FF,
+                Port);
         }
     }
 }

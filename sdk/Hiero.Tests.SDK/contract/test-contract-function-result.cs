@@ -55,7 +55,7 @@ namespace Hiero.Tests.SDK.Contract
 			// interpretation varies based on width
 			Assert.True(result.GetBool(0));
             Assert.Equal(-1, result.GetInt32(0));
-            Assert.Equal((1 << 32) - 1, result.GetInt64(0));
+            Assert.Equal((1L << 32) - 1, result.GetInt64(0));
             Assert.Equal(BigInteger.One.ShiftLeft(32).Subtract(BigInteger.One).IntValue, result.GetInt256(0));
             Assert.Equal(BigInteger.One.ShiftLeft(255).Subtract(BigInteger.One).IntValue, result.GetInt256(1));
             Assert.Equal("11223344556677889900aabbccddeeff00112233", result.GetAddress(2));

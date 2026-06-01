@@ -81,8 +81,7 @@ namespace Hiero.SDK.Cryptography
 			byte[] mac = Hex.Decode(macString);
 			byte[] salt = Hex.Decode(saltStr);
 
-			KeyParameter cipherKey =
-				Crypto.DeriveKeySha256(passphrase, salt, count, dkLen);
+			KeyParameter cipherKey = Crypto.DeriveKeySha256(passphrase, salt, count, dkLen);
 
 			byte[] testHmac = Crypto.CalcHmacSha384(cipherKey, null, cipherBytes);
 
@@ -119,11 +118,9 @@ namespace Hiero.SDK.Cryptography
 			byte[] mac = Hex.Decode(macString);
 			byte[] salt = Hex.Decode(saltStr);
 
-			KeyParameter cipherKey =
-				Crypto.DeriveKeySha256(passphrase, salt, count, dkLen);
+			KeyParameter cipherKey = Crypto.DeriveKeySha256(passphrase, salt, count, dkLen);
 
-			byte[] testHmac =
-				Crypto.CalcHmacSha384(cipherKey, iv, cipherBytes);
+			byte[] testHmac = Crypto.CalcHmacSha384(cipherKey, iv, cipherBytes);
 
 			if (!CryptographicOperations.FixedTimeEquals(mac, testHmac))
 				throw new BadKeyException("HMAC mismatch; passphrase is incorrect");
@@ -179,7 +176,8 @@ namespace Hiero.SDK.Cryptography
 			});
 
 			WriteExportJson(writer, passphrase);
-			writer.Flush();
+
+            writer.Flush();
 		}
 		private void WriteExportJson(Utf8JsonWriter writer, string passphrase)
 		{
@@ -193,8 +191,7 @@ namespace Hiero.SDK.Cryptography
 			writer.WriteString("kdf", "pbkdf2");
 
 			byte[] salt = Crypto.RandomBytes(Crypto.SALT_LEN);
-			KeyParameter cipherKey =
-				Crypto.DeriveKeySha256(passphrase, salt, Crypto.ITERATIONS, Crypto.DK_LEN);
+			KeyParameter cipherKey = Crypto.DeriveKeySha256(passphrase, salt, Crypto.ITERATIONS, Crypto.DK_LEN);
 
 			byte[] iv = Crypto.RandomBytes(Crypto.IV_LEN);
 			byte[] cipherBytes = Crypto.EncryptAesCtr128(cipherKey, iv, KeyBytes);

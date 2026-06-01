@@ -127,7 +127,7 @@ namespace Hiero.SDK.Cryptography
             // On this curve, there are only two possible values for the recovery id.
             for (int i = 0; i < 2; i++)
             {
-                if (Crypto.RecoverPublicKeyECDSAFromSignature(i, new BigInteger(1, r), new BigInteger(1, s), hash) is byte[] k && Equals(k, publicKey))
+                if (Crypto.RecoverPublicKeyECDSAFromSignature(i, new BigInteger(1, r), new BigInteger(1, s), hash) is byte[] k && k.SequenceEqual(publicKey))
                 {
                     recId = i;
                     break;

@@ -8,8 +8,6 @@ using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Math.EC.Rfc8032;
 using Org.BouncyCastle.Utilities.Encoders;
 
-using System;
-
 namespace Hiero.SDK.Cryptography
 {
     /// <include file="PublicKey.cs.xml" path='docs/member[@name="T:PublicKey"]' />
@@ -33,7 +31,6 @@ namespace Hiero.SDK.Cryptography
                 // compress the 65 byte form
                 return PublicKeyECDSA.FromBytesInternal(ECDSA_SECP256K1_CURVE.Curve.DecodePoint(publicKey).GetEncoded(true));
             }
-
 
             // Assume a DER-encoded private key descriptor
             return FromBytesDER(publicKey);

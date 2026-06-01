@@ -28,12 +28,12 @@ namespace Hiero.SDK
 		{
 			try
 			{
-				PemReader reader = new (input, string.IsNullOrEmpty(passphrase) ? null : new PasswordFinder(passphrase));
+                PemReader reader = new (input, string.IsNullOrEmpty(passphrase) ? null : new PasswordFinder(passphrase));
 
 				if (reader.ReadObject() is not object obj)
-					throw new BadKeyException("PEM file did not contain a private key");
+                    throw new BadKeyException("PEM file did not contain a private key");
 
-				return obj switch
+                return reader.ReadObject() switch
 				{
 					// PKCS#8 unencrypted
 					PrivateKeyInfo pk => pk,
@@ -89,14 +89,9 @@ namespace Hiero.SDK
 		}
 
 		/// <include file="Pem.cs.xml" path='docs/member[@name="T:Pem.PasswordFinder"]' />
-		private sealed class PasswordFinder : IPasswordFinder
+		private sealed class PasswordFinder(string password) : IPasswordFinder
 		{
-			private readonly char[] _password;
-
-			public PasswordFinder(string password)
-			{
-				_password = password?.ToCharArray() ?? Array.Empty<char>();
-			}
+			private readonly char[] _password = password?.ToCharArray() ?? [];
 
 			public char[] GetPassword()
 			{

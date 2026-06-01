@@ -123,7 +123,7 @@ namespace Hiero.Tests.SDK.Contract
             
             var tx2 = Transaction.FromBytes<ContractUpdateTransaction>(tx.ToBytes());
 
-            //Assert.Equal(tx.ToString(), tx2.ToString());
+            Assert.Equal(tx.ToString(), tx2.ToString());
             Assert.Equal(tx2.ExpirationTime, Instant.FromUnixTimeMilliseconds(1234));
         }
         [Fact]

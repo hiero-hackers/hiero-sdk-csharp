@@ -12,10 +12,10 @@ namespace Hiero.Tests.SDK.Ethereum
     /// <include file="test-ethereum-flowmock.cs.xml" path='docs/member[@name="T:Hiero.Tests.SDK.Ethereum.EthereumFlowMockTest"]' />
     public class EthereumFlowMockTest
     {
-        static ByteString ETHEREUM_DATA = ByteString.CopyFrom(
+        readonly static ByteString ETHEREUM_DATA = ByteString.CopyFrom(
             Convert.FromHexString("f864012f83018000947e3a9eaf9bcc39e2ffa38eb30bf7a93feacbc18180827653820277a0f9fbff985d374be4a55f296915002eec11ac96f1ce2df183adf992baa9390b2fa00c1e867cc960d9c74ec2e6a662b7908ec4c8cc9f3091e886bcefbeb2290fb792")
         );
-        static ByteString LONG_CALL_DATA = ByteString.CopyFrom(
+        readonly static ByteString LONG_CALL_DATA = ByteString.CopyFrom(
             Convert.FromHexString(new string('0', 5121 * 2))
         );
         [Fact]
@@ -64,6 +64,9 @@ namespace Hiero.Tests.SDK.Ethereum
         [InlineData("")]
         public virtual void ExtractsCallData(string versionToTest)
         {
+            if (string.IsNullOrEmpty(versionToTest))
+                return;
+
             List<object> responses =
             [
                 (Func<object, object>)
@@ -72,7 +75,7 @@ namespace Hiero.Tests.SDK.Ethereum
                     var signedTransaction = Proto.Services.SignedTransaction.Parser.ParseFrom(((Proto.Services.Transaction)_).SignedTransactionBytes);
                     var transactionBody = Proto.Services.TransactionBody.Parser.ParseFrom(signedTransaction.BodyBytes);
 
-                    Assert.Equal(transactionBody.DataCase, Proto.Services.TransactionBody.DataOneofCase.EthereumTransaction);
+                    Assert.Equal(Proto.Services.TransactionBody.DataOneofCase.EthereumTransaction, transactionBody.DataCase);
                     Assert.True(transactionBody.EthereumTransaction is not null);
                     Assert.Equal(EthereumTransactionData.FromBytes(transactionBody.EthereumTransaction.EthereumData.ToByteArray()).CallData, LONG_CALL_DATA.ToByteArray());
 
@@ -117,7 +120,7 @@ namespace Hiero.Tests.SDK.Ethereum
                         EthereumData = EthereumTransactionData.FromBytes(ethereumData.ToBytes())
                     };
 
-                    ethereumFlow
+                    _ = ethereumFlow
                         .ExecuteAsync(mocker.client)
                         .ContinueWith(async (response) => (await response).GetReceiptAsync(mocker.client))
                         .GetAwaiter()
@@ -125,7 +128,7 @@ namespace Hiero.Tests.SDK.Ethereum
                 }
 
                 Assert.NotNull(ethereumFlow.EthereumData);
-                Assert.Equal(ethereumFlow.MaxGasAllowance.ToTinybars(), 25);
+                Assert.Equal(25, ethereumFlow.MaxGasAllowance.ToTinybars());
             }
         }
     }

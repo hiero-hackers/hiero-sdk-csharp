@@ -1,17 +1,17 @@
 ﻿// SPDX-License-Identifier: Apache-2.0
-using System;
-
-using Hiero.SDK.Cryptography;
-using Hiero.SDK.Transactions;
-using Hiero.SDK.Token;
-using Hiero.SDK.Cryptocurrency;
-using Hiero.SDK.Nfts;
-
 using Google.Protobuf;
 
-using VerifyXunit;
 using Hiero.SDK;
 using Hiero.SDK.Core;
+using Hiero.SDK.Cryptocurrency;
+using Hiero.SDK.Cryptography;
+using Hiero.SDK.Nfts;
+using Hiero.SDK.Token;
+using Hiero.SDK.Transactions;
+
+using System;
+
+using VerifyXunit;
 
 namespace Hiero.Tests.SDK.Transactions
 {
@@ -115,11 +115,15 @@ namespace Hiero.Tests.SDK.Transactions
         public virtual void CanGetDecimals()
         {
             var tx = new TransferTransaction();
+            
             Assert.False(tx.GetTokenIdDecimals().ContainsKey(TokenId.FromString(TestData.TOKEN_ID_1)));
             tx.AddTokenTransfer(TokenId.FromString(TestData.TOKEN_ID_1), AccountId.FromString("0.0.8"), 100);
+
             Assert.False(tx.GetTokenIdDecimals().ContainsKey(TokenId.FromString(TestData.TOKEN_ID_1)));
+            
             tx.AddTokenTransferWithDecimals(TokenId.FromString(TestData.TOKEN_ID_1), AccountId.FromString("0.0.7"), -100, 5);
-            Assert.Equal(tx.GetTokenIdDecimals()[TokenId.FromString(TestData.TOKEN_ID_1)], (uint)5);
+
+            Assert.Equal((uint)5, tx.GetTokenIdDecimals()[TokenId.FromString(TestData.TOKEN_ID_1)]);
         }
         [Fact]
         /// <include file="test-transactions-cryptotransfer.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Transactions.CryptoTransferTransactionTest.TransactionBodiesMustMatch"]' />
@@ -127,9 +131,10 @@ namespace Hiero.Tests.SDK.Transactions
         {
             Proto.Services.Transaction tx1 = Proto.SDK.TransactionList.Parser.ParseFrom(SpawnTestTransaction().ToBytes()).TransactionList_[0];
             Proto.Services.Transaction tx2 = Proto.SDK.TransactionList.Parser.ParseFrom(SpawnModifiedTestTransaction().ToBytes()).TransactionList_[1];
-            var brokenTxList = new Proto.SDK.TransactionList();
-            brokenTxList.TransactionList_.Add(tx1);
-            brokenTxList.TransactionList_.Add(tx2);
+            var brokenTxList = new Proto.SDK.TransactionList
+            {
+                TransactionList_ = { tx1, tx2 }
+            };
             var brokenTxBytes = brokenTxList.ToByteArray();
 
             Assert.Throws<ArgumentException>(() =>
@@ -146,6 +151,7 @@ namespace Hiero.Tests.SDK.Transactions
                 CryptoTransfer = new Proto.Services.CryptoTransferTransactionBody()
 			};
             var tx = Transaction.FromScheduledTransaction(transactionBody);
+
             Assert.IsType<TransferTransaction>(tx);
         }
     }

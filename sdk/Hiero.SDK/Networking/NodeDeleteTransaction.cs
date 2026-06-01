@@ -46,11 +46,13 @@ namespace Hiero.SDK.Networking
 		/// <include file="NodeDeleteTransaction.cs.xml" path='docs/member[@name="M:NodeDeleteTransaction.ToProtobuf"]' />
 		public virtual Proto.Services.NodeDeleteTransactionBody ToProtobuf()
 		{
-            return new Proto.Services.NodeDeleteTransactionBody
-            {
-                NodeId = NodeId ?? throw new InvalidOperationException("NodeDeleteTransaction: 'nodeId' has not been set")
-            };
-		}
+            Proto.Services.NodeDeleteTransactionBody proto = new();
+
+            if (NodeId is not null)
+                proto.NodeId = NodeId.Value;
+
+            return proto;
+        }
 
 		public override void ValidateChecksums(Client client) { /* No op */ }
 		public override void OnFreeze(Proto.Services.TransactionBody bodyBuilder)

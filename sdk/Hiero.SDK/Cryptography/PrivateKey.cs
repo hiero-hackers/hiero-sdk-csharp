@@ -56,6 +56,7 @@ namespace Hiero.SDK.Cryptography
             // we pre-derive most of the path as the mobile wallets don't expose more than the index
             // https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki
             // https://github.com/satoshilabs/slips/blob/master/slip-0044.md
+
             foreach (int index in new int[] { 44, 3030, 0, 0 })
                 derivedKey = derivedKey.Derive(index);
 

@@ -174,8 +174,10 @@ namespace Hiero.SDK.Networking
             var builder = new Proto.Services.NodeUpdateTransactionBody
 			{
 				DeclineReward = DeclineReward,
-				NodeId = NodeId ?? throw new InvalidOperationException("NodeUpdateTransaction: 'nodeId' has not been set")
-            };
+			};
+
+			if (NodeId != null)
+				builder.NodeId = NodeId.Value;
 
 			if (AccountId != null)
 				builder.AccountId = AccountId.ToProtobuf();

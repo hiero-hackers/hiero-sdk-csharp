@@ -133,15 +133,11 @@ namespace Hiero.SDK.Token
 		}
 
 		/// <include file="AbstractTokenTransferTransaction.cs.xml" path='docs/member[@name="M:GetTokenIdDecimals"]' />
-		public virtual Dictionary<TokenId, uint?> GetTokenIdDecimals()
+		public virtual Dictionary<TokenId, uint> GetTokenIdDecimals()
         {
-            Dictionary<TokenId, uint?> decimalsMap = [];
-            foreach (var transfer in tokenTransfers)
-            {
-                decimalsMap.Add(transfer.TokenId, transfer.ExpectedDecimals);
-            }
-
-            return decimalsMap;
+			return tokenTransfers
+				.Where(_ => _.ExpectedDecimals.HasValue)
+				.ToDictionary(_ => _.TokenId, _ => _.ExpectedDecimals!.Value);
         }
         /// <include file="AbstractTokenTransferTransaction.cs.xml" path='docs/member[@name="M:GetTokenTransfers"]' />
         public virtual Dictionary<TokenId, Dictionary<AccountId, long>> GetTokenTransfers()

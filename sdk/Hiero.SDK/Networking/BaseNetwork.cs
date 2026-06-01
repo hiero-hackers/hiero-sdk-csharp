@@ -316,7 +316,7 @@ namespace Hiero.SDK.Networking
 				catch (Exception error)
 				{
 					foreach (var node in Nodes)
-						node.Channel.ShutdownAsync().Wait();
+						node.Channel.ShutdownAsync().GetAwaiter().GetResult();
 
 					HasShutDownNow = true;
 					return error;

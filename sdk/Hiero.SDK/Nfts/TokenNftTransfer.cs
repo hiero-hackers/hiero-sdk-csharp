@@ -116,10 +116,10 @@ namespace Hiero.SDK.Nfts
             switch (SenderHookCall?.Type)
             {
                 case NftHookType.PreHookSender:
-                    proto.PreTxReceiverAllowanceHook = SenderHookCall.ToProtobuf();
+                    proto.PreTxSenderAllowanceHook = SenderHookCall.ToProtobuf();
                     break;
                 case NftHookType.PrePostHookSender:
-                    proto.PrePostTxReceiverAllowanceHook = SenderHookCall.ToProtobuf();
+                    proto.PrePostTxSenderAllowanceHook = SenderHookCall.ToProtobuf();
                     break;
 
                 default: break;

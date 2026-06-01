@@ -95,11 +95,11 @@ namespace Hiero.Tests.SDK.Token
             
             tx.AddTokenTransfer(TokenId.FromString("0.0.5"), AccountId.FromString("0.0.8"), 100);
 
-            Assert.Null(tx.GetTokenIdDecimals()[TokenId.FromString("0.0.5")]);
+            Assert.False(tx.GetTokenIdDecimals().ContainsKey(TokenId.FromString("0.0.5")));
             
             tx.AddTokenTransferWithDecimals(TokenId.FromString("0.0.5"), AccountId.FromString("0.0.7"), -100, 5);
             
-            Assert.Equal(tx.GetTokenIdDecimals()[TokenId.FromString("0.0.5")], (uint)5);
+            Assert.Equal((uint)5, tx.GetTokenIdDecimals()[TokenId.FromString("0.0.5")]);
         }
 
         [Fact]
@@ -198,7 +198,7 @@ namespace Hiero.Tests.SDK.Token
             long value = 1000;
             uint decimals = 8;
             transaction.AddTokenTransferWithDecimals(tokenId, accountId, value, decimals);
-            Dictionary<TokenId, uint?> decimalsMap = transaction.GetTokenIdDecimals();
+            Dictionary<TokenId, uint> decimalsMap = transaction.GetTokenIdDecimals();
             Assert.True(decimalsMap.ContainsKey(tokenId));
             Assert.Equal(decimals, decimalsMap[tokenId]);
         }

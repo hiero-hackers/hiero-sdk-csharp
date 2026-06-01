@@ -200,6 +200,7 @@ namespace System.Numerics
             string digits = BigInteger.Abs(UnscaledValue).ToString();
 
             string result;
+
             if (Scale <= 0)
             {
                 // No decimal point; append trailing zeros if scale is negative
@@ -210,10 +211,7 @@ namespace System.Numerics
                 // Scale exceeds available digits; pad with leading zeros after "0."
                 result = "0." + digits.PadLeft(Scale, '0');
             }
-            else
-            {
-                result = digits.Insert(digits.Length - Scale, ".");
-            }
+            else result = digits.Insert(digits.Length - Scale, ".");
 
             return negative ? "-" + result : result;
         }

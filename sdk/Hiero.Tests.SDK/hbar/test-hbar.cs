@@ -10,19 +10,10 @@ namespace Hiero.Tests.SDK.HBar
     /// <include file="test-hbar.cs.xml" path='docs/member[@name="T:Hiero.Tests.SDK.HBar.HbarTest"]' />
     public class HbarTest
     {
-        private static readonly long fiftyGTinybar = 5000000000;
+        private readonly Hbar hundredHbar = new(100);
+        private readonly Hbar negativeFiftyHbar = new(-50);
         private readonly Hbar fiftyHbar = Hbar.FromTinybars(fiftyGTinybar);
-        private readonly Hbar hundredHbar = new (100);
-        private readonly Hbar negativeFiftyHbar = new (-50);
-        static IEnumerator<object[]> GetValueConversions()
-        {
-            yield return [ new BigDecimal(50000000), HbarUnit.MICROBAR ]; 
-            yield return [ new BigDecimal(50000), HbarUnit.MILLIBAR ]; 
-            yield return [ new BigDecimal(50), HbarUnit.HBAR ]; 
-            yield return [ BigDecimal.Parse("0.05"), HbarUnit.KILOBAR ]; 
-            yield return [ BigDecimal.Parse("0.00005"), HbarUnit.MEGABAR ]; 
-            yield return [ BigDecimal.Parse("0.00000005"), HbarUnit.GIGABAR ];
-        }
+        private static readonly long fiftyGTinybar = 5000000000;
 
         [Fact]
         /// <include file="test-hbar.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.HBar.HbarTest.ShouldConstruct"]' />
@@ -50,13 +41,38 @@ namespace Hiero.Tests.SDK.HBar
             Assert.Equal("1000 tℏ", Hbar.FromTinybars(1000).ToString());
             Assert.Equal("-1000 tℏ", Hbar.FromTinybars(1000).Negated().ToString());
         }
-        [Theory]
-        [MemberData(nameof(ShouldConvert_Data))]
+        [Fact]
         /// <include file="test-hbar.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.HBar.HbarTest.ShouldConvert(BigDecimal,HbarUnit)"]' />
-        public virtual void ShouldConvert(BigDecimal value, HbarUnit unit)
+        public virtual void ShouldConvert()
         {
-            Assert.Equal(Hbar.From(value, unit), fiftyHbar);
-            Assert.Equal(fiftyHbar.To(unit), value);
+            BigDecimal 
+                value_microbar = new (50000000),
+                value_millibar = new (50000),
+                value_hbar = new (50),
+                value_kilobar = BigDecimal.Parse("0.05"),
+                value_megabar = BigDecimal.Parse("0.00005"),
+                value_gigabar = BigDecimal.Parse("0.00000005");
+            HbarUnit
+                unit_microbar = HbarUnit.MICROBAR,
+                unit_millibar = HbarUnit.MILLIBAR,
+                unit_hbar = HbarUnit.HBAR,
+                unit_kilobar = HbarUnit.KILOBAR,
+                unit_megabar = HbarUnit.MEGABAR,
+                unit_gigabar = HbarUnit.GIGABAR;
+
+            Assert.Equal(fiftyHbar, Hbar.From(value_microbar, HbarUnit.MICROBAR)); 
+            Assert.Equal(fiftyHbar, Hbar.From(value_millibar, HbarUnit.MILLIBAR)); 
+            Assert.Equal(fiftyHbar, Hbar.From(value_hbar, HbarUnit.HBAR)); 
+            Assert.Equal(fiftyHbar, Hbar.From(value_kilobar, HbarUnit.KILOBAR)); 
+            Assert.Equal(fiftyHbar, Hbar.From(value_megabar, HbarUnit.MEGABAR)); 
+            Assert.Equal(fiftyHbar, Hbar.From(value_gigabar, HbarUnit.GIGABAR));
+
+            Assert.Equal(fiftyHbar.To(unit_microbar), value_microbar);
+            Assert.Equal(fiftyHbar.To(unit_millibar), value_millibar);
+            Assert.Equal(fiftyHbar.To(unit_hbar), value_hbar);
+            Assert.Equal(fiftyHbar.To(unit_kilobar), value_kilobar);
+            Assert.Equal(fiftyHbar.To(unit_megabar), value_megabar);
+            Assert.Equal(fiftyHbar.To(unit_gigabar), value_gigabar);
         }
         public static IEnumerable<object?[]> ShouldConvert_Data() { yield return [BigDecimal.ValueOf(0), HbarUnit.HBAR]; }
 

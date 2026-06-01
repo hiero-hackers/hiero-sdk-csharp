@@ -47,7 +47,7 @@ namespace Hiero.Tests.SDK.Keys
         public virtual void CalculateRecoveryIdECDSA()
         {
 			var message = Encoding.UTF8.GetBytes("Hello, World");
-			var privateKey = PrivateKey.GenerateECDSA();
+			var privateKey = (PrivateKeyECDSA)PrivateKey.GenerateECDSA();
             var signature = privateKey.Sign(message);
 
             // wrap in signature object
@@ -55,7 +55,7 @@ namespace Hiero.Tests.SDK.Keys
             Array.Copy(signature, 0, r, 0, 32);
             byte[] s = new byte[32];
             Array.Copy(signature, 32, s, 0, 32);
-            var recId = ((PrivateKeyECDSA)privateKey).GetRecoveryId(r, s, message);
+            var recId = privateKey.GetRecoveryId(r, s, message);
             Assert.True(recId >= 0 && recId <= 1);
         }
         [Fact]
@@ -242,7 +242,8 @@ namespace Hiero.Tests.SDK.Keys
             var keyBytes = Hex.Decode("0011223344556677889900112233445566778899001122334455667788990011");
             var protoKey = new Proto.Services.Key { Ed25519 = ByteString.CopyFrom(keyBytes) };
             var bytes = protoKey.ToByteArray();
-            var cut = PublicKey.FromBytes(bytes);
+            var cut = Key.FromBytes(bytes);
+
             Assert.IsType<PublicKeyED25519>(cut);
             Assert.True(cut.ToBytes().SequenceEqual(keyBytes));
         }
@@ -251,7 +252,8 @@ namespace Hiero.Tests.SDK.Keys
         public virtual void FromBytesECDSA()
         {
             var keyBytes = Hex.Decode("3a21034e0441201f2bf9c7d9873c2a9dc3fd451f64b7c05e17e4d781d916e3a11dfd99");
-            var cut = PublicKey.FromBytes(keyBytes);
+            var cut = Key.FromBytes(keyBytes);
+
             Assert.IsType<PublicKeyECDSA>(cut);
             Assert.True(cut.ToProtobufKey().ToByteArray().SequenceEqual(keyBytes));
         }
@@ -274,9 +276,12 @@ namespace Hiero.Tests.SDK.Keys
             var protoKey = new Proto.Services.Key { KeyList = protoKeyList };
             var bytes = protoKey.ToByteArray();
             var cut = KeyList.FromBytes(bytes);
+            
             Assert.IsType<KeyList>(cut);
+
             var keyList = (KeyList)cut;
             var actual = keyList.ToProtobufKey().KeyList;
+
             Assert.Equal(2, actual.Keys.Count);
             Assert.True(actual.Keys[0].Ed25519.ToByteArray().SequenceEqual(keyBytes[0]));
             Assert.True(actual.Keys[1].Ed25519.ToByteArray().SequenceEqual(keyBytes[1]));

@@ -234,12 +234,14 @@ namespace Hiero.SDK.Cryptocurrency
             if (body.AutoRenewPeriod is not null)
                 AutoRenewPeriod = body.AutoRenewPeriod.ToNodaDuration();
 
+            if (body.Alias?.ToStringUtf8() is string alias && string.IsNullOrWhiteSpace(alias) is false)
+                Alias = EvmAddress.FromString(alias);
+
             InitialBalance = Hbar.FromTinybars((long)body.InitialBalance);
             AccountMemo = body.Memo;
             ReceiverSigRequired = body.ReceiverSigRequired;
             MaxAutomaticTokenAssociations = body.MaxAutomaticTokenAssociations;
             DeclineStakingReward = body.DeclineReward;
-            Alias = EvmAddress.FromString(body.Alias.ToStringUtf8());
 
             // Initialize hook creation details
             HookCreationDetails.AddRange(body.HookCreationDetails.Select(_ => Hook.HookCreationDetails.FromProtobuf(_)));

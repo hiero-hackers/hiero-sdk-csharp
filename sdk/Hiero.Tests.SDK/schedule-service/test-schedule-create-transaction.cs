@@ -78,16 +78,16 @@ namespace Hiero.Tests.SDK.Schedule
                     _.PayerAccountId = AccountId.FromString("0.0.222");
                     _.ScheduleMemo = "with-duration";
                     _.MaxTransactionFee = new Hbar(1);
-                    _.ExpirationTime = DateTimeOffset.UnixEpoch.AddSeconds(1234).ToInstant();
+                    _.ExpirationTimeDuration = Duration.FromSeconds(1234);
                 });
 
             // When expiration is set via Duration, NodaTime.Instant getter should be null
-            // TODO Assert.Null(tx.ExpirationTime);
+            Assert.Null(tx.ExpirationTime);
             
             var tx2 = Transaction.FromBytes<ScheduleCreateTransaction>(tx.ToBytes());
 
             Assert.Equal(tx.ToString(), tx2.ToString());
-            Assert.Equal(tx2.ExpirationTime, Instant.FromUnixTimeMilliseconds(1234));
+            Assert.Equal(tx2.ExpirationTime, Instant.FromUnixTimeSeconds(1234));
         }
         [Fact]
         /// <include file="test-schedule-create-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Schedule.ScheduleCreateTransactionTest.SetExpirationTimeDurationOnFrozenTransactionShouldThrow"]' />
