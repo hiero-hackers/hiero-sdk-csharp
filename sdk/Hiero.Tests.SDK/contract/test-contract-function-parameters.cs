@@ -60,7 +60,7 @@ namespace Hiero.Tests.SDK.Contract
         public virtual void IntTypes()
         {
             ContractFunctionParameters @params = new ContractFunctionParameters()
-                .AddUint8((byte)0x1)
+                .AddUint8(0x1)
                 .AddInt8(unchecked((byte)-0x2))
                 .AddUint32(0x3)
                 .AddInt32(-0x4)
@@ -68,14 +68,14 @@ namespace Hiero.Tests.SDK.Contract
                 .AddInt64(-0x5)
                 .AddUint256(new BigInteger(0x6))
                 .AddInt256(new BigInteger(-0x7))
-                .AddUint8Array(new byte[] { (byte)0x1, (byte)0x2, (byte)0x3, (byte)0x4 })
-                .AddInt8Array(new byte[] { unchecked((byte)-0x5), (byte)0x6, (byte)0x7, unchecked((byte)-0x8) })
-                .AddUint32Array(new uint[] { 0x9, 0xA, 0xB, 0xC })
-                .AddInt32Array(new int[] { -0xD, 0xE, 0xF, -0x10 })
-                .AddUint64Array(new ulong[] { 0x11, 0x12, 0x13, 0x14 })
-                .AddInt64Array(new long[] { -0x15, 0x16, 0x17, -0x18 })
-                .AddUint256Array(new BigInteger[] { new BigInteger(0x19) })
-                .AddInt256Array(new BigInteger[] { new BigInteger(-0x1A) });
+                .AddUint8Array([0x1, 0x2, 0x3, 0x4])
+                .AddInt8Array([unchecked((byte)-0x5), 0x6, 0x7, unchecked((byte)-0x8)])
+                .AddUint32Array([0x9, 0xA, 0xB, 0xC])
+                .AddInt32Array([-0xD, 0xE, 0xF, -0x10])
+                .AddUint64Array([0x11, 0x12, 0x13, 0x14])
+                .AddInt64Array([-0x15, 0x16, 0x17, -0x18])
+                .AddUint256Array([ new BigInteger(0x19) ])
+                .AddInt256Array([ new BigInteger(-0x1A) ]);
 
             Assert.Equal(
                 "11bcd903" + 
@@ -159,7 +159,7 @@ namespace Hiero.Tests.SDK.Contract
             var @params = new ContractFunctionParameters()
                 .AddAddress("1122334455667788990011223344556677889900")
                 .AddAddress("0x1122334455667788990011223344556677889900")
-                .AddAddressArray(new string[] { "1122334455667788990011223344556677889900", "1122334455667788990011223344556677889900" });
+                .AddAddressArray([ "1122334455667788990011223344556677889900", "1122334455667788990011223344556677889900" ]);
             Assert.Equal(
                 "7d48c86d" + 
                 "0000000000000000000000001122334455667788990011223344556677889900" + 
@@ -182,7 +182,7 @@ namespace Hiero.Tests.SDK.Contract
         public virtual void Functions()
         {
             var @params = new ContractFunctionParameters()
-                .AddFunction("1122334455667788990011223344556677889900", new byte[] { 1, 2, 3, 4 })
+                .AddFunction("1122334455667788990011223344556677889900", [ 1, 2, 3, 4 ])
                 .AddFunction("0x1122334455667788990011223344556677889900", new ContractFunctionSelector("randomFunction")
                 .AddBool());
             Assert.Equal(
@@ -195,17 +195,17 @@ namespace Hiero.Tests.SDK.Contract
         {
             Assert.Throws<ArgumentException>(() =>
             {
-                new ContractFunctionParameters().AddFunction("112233445566778899001122334455667788990011", new byte[] { 1, 2, 3, 4 });
+                new ContractFunctionParameters().AddFunction("112233445566778899001122334455667788990011", [ 1, 2, 3, 4 ]);
             });
             Assert.Throws<ArgumentException>(() =>
             {
-                new ContractFunctionParameters().AddFunction("1122334455667788990011223344556677889900", new byte[] { 1, 2, 3, 4, 5 });
+                new ContractFunctionParameters().AddFunction("1122334455667788990011223344556677889900", [ 1, 2, 3, 4, 5 ]);
             });
         }
         [Fact]
         public virtual void Bytes4Encoding()
         {
-            var @params = new ContractFunctionParameters().AddBytes4(new byte[] { 1, 2, 3, 4 });
+            var @params = new ContractFunctionParameters().AddBytes4([ 1, 2, 3, 4 ]);
             Assert.Equal(
                 "580526ee" + 
                 "0102030400000000000000000000000000000000000000000000000000000000", Hex.ToHexString(@params.ToBytes("foo").ToByteArray()));
@@ -215,7 +215,7 @@ namespace Hiero.Tests.SDK.Contract
         {
             Assert.Throws<ArgumentException>(() =>
             {
-                new ContractFunctionParameters().AddBytes4(new byte[] { 1, 2, 3, 4, 5 });
+                new ContractFunctionParameters().AddBytes4([ 1, 2, 3, 4, 5 ]);
             });
         }
         [Fact]
@@ -238,7 +238,7 @@ namespace Hiero.Tests.SDK.Contract
         public virtual void Bytes()
         {
             var @params = new ContractFunctionParameters()
-                .AddBytes32(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32 });
+                .AddBytes32([ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32 ]);
             Assert.Equal(
                 "11e814c1" + 
                 "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20", Hex.ToHexString(@params.ToBytes("foo").ToByteArray()));
@@ -249,7 +249,7 @@ namespace Hiero.Tests.SDK.Contract
             Assert.Throws<ArgumentException>(() =>
             {
                 new ContractFunctionParameters()
-                .AddBytes32(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33 });
+                .AddBytes32([ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33 ]);
             });
         }
         [Fact]
@@ -306,9 +306,9 @@ namespace Hiero.Tests.SDK.Contract
             ContractFunctionParameters @params = new ContractFunctionParameters()
                 .AddInt256(new BigInteger(0xdeadbeef) << 8)
                 .AddString("Hello, world!")
-                .AddBytes(new byte[] { 1, 18, 63, 127 })//.AddBytes(new byte[] { -1, -18, 63, 127 })
+                .AddBytes([ unchecked((byte)-1), unchecked((byte)-18), 63, 127 ])
                 .AddBool(true)
-                .AddUint8Array(new byte[] { 1, 127 });//.AddUint8Array(new byte[] { -1, 127 });
+                .AddUint8Array([ unchecked((byte)-1), 127 ]);
             string @paramsHex = Hex.ToHexString(@params.ToBytes("foo").ToByteArray());
             Assert.Equal(
                 "6a5bb8f2" + 
@@ -329,9 +329,9 @@ namespace Hiero.Tests.SDK.Contract
         public virtual void ArrayTypesEncoding()
         {
             ContractFunctionParameters @params = new ContractFunctionParameters()
-                .AddStringArray(new string[] { "hello", ",", "world!" })
-                .AddInt32Array(new int[] { 0x88, 0x99, 0xAA, 0xBB })
-                .AddInt256Array(new BigInteger[] { new BigInteger(0x1111) });
+                .AddStringArray(["hello", ",", "world!"])
+                .AddInt32Array([0x88, 0x99, 0xAA, 0xBB])
+                .AddInt256Array([new (0x1111)]);
             Assert.Equal(
                 "025838fc" + 
                 "0000000000000000000000000000000000000000000000000000000000000060" + 
@@ -359,7 +359,7 @@ namespace Hiero.Tests.SDK.Contract
         public virtual void FixedBytes4ArrayEncoding()
         {
             ContractFunctionParameters @params = new ContractFunctionParameters()
-                .AddBytes4Array(new byte[][] { [ 1, 2, 3, 4 ], [ 5, 6, 7, 8 ], [ 9, 10, 11, 12 ] });
+                .AddBytes4Array([ [ 1, 2, 3, 4 ], [ 5, 6, 7, 8 ], [ 9, 10, 11, 12 ] ]);
             Assert.Equal(
                 "0000000000000000000000000000000000000000000000000000000000000020" + 
                 "0000000000000000000000000000000000000000000000000000000000000003" + 
@@ -372,7 +372,7 @@ namespace Hiero.Tests.SDK.Contract
         {
             // each string should be padded to 32 bytes and have no length prefix
             ContractFunctionParameters @params = new ContractFunctionParameters()
-                .AddBytes32Array(new byte[][] { Encoding.UTF8.GetBytes("Hello"), Encoding.UTF8.GetBytes(","), Encoding.UTF8.GetBytes("world!") });
+                .AddBytes32Array([ Encoding.UTF8.GetBytes("Hello"), Encoding.UTF8.GetBytes(","), Encoding.UTF8.GetBytes("world!") ]);
             Assert.Equal(
                 "0000000000000000000000000000000000000000000000000000000000000020" + 
                 "0000000000000000000000000000000000000000000000000000000000000003" + 
@@ -386,7 +386,7 @@ namespace Hiero.Tests.SDK.Contract
 
             // result should be the exact same as the strings test below
             ContractFunctionParameters @params = new ContractFunctionParameters()
-                .AddBytesArray(new byte[][] { Encoding.UTF8.GetBytes("Hello"), Encoding.UTF8.GetBytes(","), Encoding.UTF8.GetBytes("world!") });
+                .AddBytesArray([ Encoding.UTF8.GetBytes("Hello"), Encoding.UTF8.GetBytes(","), Encoding.UTF8.GetBytes("world!") ]);
             Assert.Equal(
                 "0000000000000000000000000000000000000000000000000000000000000020" + 
                 "0000000000000000000000000000000000000000000000000000000000000003" + 

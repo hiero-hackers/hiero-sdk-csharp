@@ -87,29 +87,24 @@ namespace Hiero.SDK.Ethereum
 
         public override byte[] ToBytes()
 		{
-			// Java Code 'RLPEncoder.Sequence(byte.Parse("0x02"), [ChainId, Nonce, MaxPriorityGas, MaxGas, GasLimit, To, Value, CallData, new List<string>(), RecoveryId, R, S]);'
+            //Java Code 'RLPEncoder.Sequence(byte.Parse("0x02"), [ChainId, Nonce, MaxPriorityGas, MaxGas, GasLimit, To, Value, CallData, new List<string>(), RecoveryId, R, S]);'
 
-			var rlpList = RLP.EncodeList(
-				RLP.EncodeElement(ChainId),
-				RLP.EncodeElement(Nonce),
-				RLP.EncodeElement(MaxPriorityGas),
-				RLP.EncodeElement(MaxGas),
-				RLP.EncodeElement(GasLimit),
-				RLP.EncodeElement(To),
-				RLP.EncodeElement(Value),
-				RLP.EncodeElement(CallData),
-				RLP.EncodeList(AccessList), // empty access list
-				RLP.EncodeElement(RecoveryId),
-				RLP.EncodeElement(R),
-				RLP.EncodeElement(S)
-			);
+            var rlpList = RLP.EncodeList(
+                RLP.EncodeByte(0x02),
+                RLP.EncodeElement(ChainId),
+                RLP.EncodeElement(Nonce),
+                RLP.EncodeElement(MaxPriorityGas),
+                RLP.EncodeElement(MaxGas),
+                RLP.EncodeElement(GasLimit),
+                RLP.EncodeElement(To),
+                RLP.EncodeElement(Value),
+                RLP.EncodeElement(CallData),
+                RLP.EncodeList([]), // empty AccessList
+                RLP.EncodeElement(RecoveryId),
+                RLP.EncodeElement(R),
+                RLP.EncodeElement(S));
 
-			// Prefix with transaction type 0x02
-			var result = new byte[1 + rlpList.Length];
-			result[0] = 0x02;
-			Buffer.BlockCopy(rlpList, 0, result, 1, rlpList.Length);
-
-			return result;
+            return rlpList;
 		}
 		public override string ToString()
         {

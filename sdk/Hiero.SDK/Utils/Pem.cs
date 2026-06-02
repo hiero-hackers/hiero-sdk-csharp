@@ -33,16 +33,16 @@ namespace Hiero.SDK
 				if (reader.ReadObject() is not object obj)
                     throw new BadKeyException("PEM file did not contain a private key");
 
-                return reader.ReadObject() switch
+                return true switch
 				{
-					// PKCS#8 unencrypted
-					PrivateKeyInfo pk => pk,
+                    // PKCS#8 unencrypted
+                    true when obj is PrivateKeyInfo pk => pk,
 
-					// Traditional OpenSSL key pair
-					AsymmetricCipherKeyPair kp => PrivateKeyInfoFactory.CreatePrivateKeyInfo(kp.Private),
+                    // Traditional OpenSSL key pair
+                    true when obj is AsymmetricCipherKeyPair kp => PrivateKeyInfoFactory.CreatePrivateKeyInfo(kp.Private),
 
-					// Raw private key parameters
-					AsymmetricKeyParameter keyParam when keyParam.IsPrivate => PrivateKeyInfoFactory.CreatePrivateKeyInfo(keyParam),
+                    // Raw private key parameters
+                    true when obj is AsymmetricKeyParameter keyParamAsymmetric && keyParamAsymmetric.IsPrivate => PrivateKeyInfoFactory.CreatePrivateKeyInfo(keyParamAsymmetric),
 
 					_ => throw new BadKeyException($"PEM file contained unsupported object: {obj.GetType().Name}")
 				};
