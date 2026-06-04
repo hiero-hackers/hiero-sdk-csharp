@@ -10,11 +10,11 @@ using System.Diagnostics;
 namespace Hiero.SDK
 {
     /// <include file="Executable.GrpcRequest.cs.xml" path='docs/member[@name="T:Executable"]' />
-    public abstract partial class Executable<TSdkRequest, TProtoRequest, TProtoResponse, TTransactionResponse> 
+    public abstract partial class Executable<TProtoRequest, TProtoResponse, TTransactionResponse> 
 	{
 		public class GrpcRequest
 		{
-			public GrpcRequest(Executable<TSdkRequest, TProtoRequest, TProtoResponse, TTransactionResponse> parent, Network? network, int attempt, NodaTime.Duration grpcDeadline)
+			public GrpcRequest(Executable<TProtoRequest, TProtoResponse, TTransactionResponse> parent, Network? network, int attempt, NodaTime.Duration grpcDeadline)
 			{
 				Parent = parent;
 				Network = network;
@@ -28,7 +28,7 @@ namespace Hiero.SDK
 				Delay = NodaTime.Duration.FromMilliseconds((long)Math.Min(Parent.MinBackoff.TotalMilliseconds * Math.Pow(2, attempt - 1), Parent.MaxBackoff.TotalMilliseconds));
 			}
 
-			private readonly Executable<TSdkRequest, TProtoRequest, TProtoResponse, TTransactionResponse> Parent;
+			private readonly Executable<TProtoRequest, TProtoResponse, TTransactionResponse> Parent;
 			private readonly Network? Network;
 			private readonly int Attempt;
 			private readonly TProtoRequest Request;

@@ -53,12 +53,12 @@ namespace Hiero.Examples
             Console.WriteLine("Creating Registered Node...");
             TransactionResponse registeredNodeCreateTxResponse = registeredNodeCreateTx.Execute(client);
             TransactionReceipt registeredNodeCreateTxReceipt = registeredNodeCreateTxResponse.GetReceipt(client);
-            if (registeredNodeCreateTxReceipt.registeredNodeId <= 0)
+            if (registeredNodeCreateTxReceipt.RegisteredNodeId <= 0)
             {
                 throw new Exception("RegisteredNodeCreate transaction receipt was missing registeredNodeId. (Fail)");
             }
 
-            long registeredNodeId = registeredNodeCreateTxReceipt.registeredNodeId;
+            long registeredNodeId = registeredNodeCreateTxReceipt.RegisteredNodeId;
             /// <summary>
             /// Step 3:
             /// Execute a RegisteredNodeAddressBookQuery to verify the newly created
@@ -104,7 +104,7 @@ namespace Hiero.Examples
             /// Delete the Registered Node.
             /// </summary>
             Console.WriteLine("Deleting Registered Node...");
-            new RegisteredNodeDeleteTransaction().SetRegisteredNodeId(registeredNodeCreateTxReceipt.registeredNodeId).FreezeWith(client).Sign(adminKey).Execute(client).GetReceipt(client);
+            new RegisteredNodeDeleteTransaction().SetRegisteredNodeId(registeredNodeCreateTxReceipt.RegisteredNodeId).FreezeWith(client).Sign(adminKey).Execute(client).GetReceipt(client);
             client.Dispose();
             Console.WriteLine("Registered Node Lifecycle Example Complete!");
         }

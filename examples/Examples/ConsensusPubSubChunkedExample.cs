@@ -8,6 +8,7 @@ using Hiero.SDK.Cryptography;
 using Hiero.SDK.Transactions;
 
 using System;
+using System.IO;
 using System.Text;
 using System.Threading;
 
@@ -83,7 +84,7 @@ namespace Hiero.Examples
             /// </summary>
 
             // Get a large file to send.
-            string largeMessage = ReadResources("util/large_message.txt");
+            string largeMessage = ReadResources("Hiero.Examples.Util.large_message.txt");
 
             // Prepare a message send transaction that requires a submit key from "somewhere else".
             TopicMessageSubmitTransaction topicMessageSubmitTx = new TopicMessageSubmitTransaction 
@@ -132,23 +133,16 @@ namespace Hiero.Examples
 
         private static string ReadResources(string filename)
         {
-            InputStream inputStream = typeof(ConsensusPubSubChunkedExample).GetResourceAsStream(filename);
+            Stream stream = typeof(ConsensusPubSubChunkedExample).Assembly.GetManifestResourceStream(filename) ?? throw new FileNotFoundException(filename);
+            StreamReader streamreader = new(stream);
             StringBuilder bigContents = new ();
+
             try
             {
-                using (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream), UTF_8))
-                {
-                    string line;
-                    while ((line = reader.ReadLine()) != null)
-                    {
-                        bigContents.Append(line).Append("\n");
-                    }
-                }
+                while (streamreader.ReadLine() is string line)
+                    bigContents.Append(line);
             }
-            catch (IOException e)
-            {
-                throw new Exception(e);
-            }
+            catch (IOException e) { throw new Exception(e.Message, e); }
 
             return bigContents.ToString();
         }

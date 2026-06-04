@@ -21,7 +21,7 @@ using Hiero.SDK.Transactions;
 namespace Hiero.SDK.Core
 {	
 	/// <include file="Transaction.cs.xml" path='docs/member[@name="T:Transaction"]' />
-	public abstract partial class Transaction<T> : Executable<T, Proto.Services.Transaction, Proto.Services.TransactionResponse, TransactionResponse>, ITransaction where T : Transaction<T>
+	public abstract partial class Transaction<T> : Executable<Proto.Services.Transaction, Proto.Services.TransactionResponse, TransactionResponse>, ITransaction where T : Transaction<T>
     {		
 		/// <include file="Transaction.cs.xml" path='docs/member[@name="T:Transaction_2"]' />
 		internal Hbar DefaultMaxTransactionFee = new (2);

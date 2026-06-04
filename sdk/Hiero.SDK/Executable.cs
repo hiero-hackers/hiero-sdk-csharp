@@ -92,7 +92,7 @@ namespace Hiero.SDK
         public abstract Task OnExecuteAsync(Client client);
     }
 
-    public abstract partial class Executable<TSdkRequest, TProtoRequest, TProtoResponse, TTransactionResponse> : Executable, IExecutable<TProtoRequest, TProtoResponse> where TProtoRequest : class, IMessage where TProtoResponse : class, IMessage
+    public abstract partial class Executable<TProtoRequest, TProtoResponse, TTransactionResponse> : Executable, IExecutable<TProtoRequest, TProtoResponse> where TProtoRequest : class, IMessage where TProtoResponse : class, IMessage
     {
         protected static readonly Random random = new ();
 
