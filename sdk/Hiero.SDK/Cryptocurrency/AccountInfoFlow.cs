@@ -41,7 +41,7 @@ namespace Hiero.SDK.Cryptocurrency
             return GetAccountPublicKey(client, accountId).Verify(message, signature);
         }
         /// <include file="AccountInfoFlow.cs.xml" path='docs/member[@name="M:AccountInfoFlow.VerifyTransactionSignature``1(Client,AccountId,Transaction{``0})"]' />
-        public static bool VerifyTransactionSignature<T>(Client client, AccountId accountId, Transaction<T> transaction) where T : Transaction<T>
+        public static bool VerifyTransactionSignature<T>(Client client, AccountId accountId, T transaction) where T : Transaction<T>
 		{
             return GetAccountPublicKey(client, accountId).VerifyTransaction(transaction);
         }
@@ -53,7 +53,7 @@ namespace Hiero.SDK.Cryptocurrency
 			return publickey.Verify(message, signature);
         }
         /// <include file="AccountInfoFlow.cs.xml" path='docs/member[@name="M:AccountInfoFlow.VerifyTransactionSignatureAsync``1(Client,AccountId,Transaction{``0})"]' />
-        public static async Task<bool> VerifyTransactionSignatureAsync<T>(Client client, AccountId accountId, Transaction<T> transaction) where T : Transaction<T>
+        public static async Task<bool> VerifyTransactionSignatureAsync<T>(Client client, AccountId accountId, T transaction) where T : Transaction<T>
         {
 			PublicKey publickey = await GetAccountPublicKeyAsync(client, accountId);
 

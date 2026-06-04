@@ -176,7 +176,7 @@ namespace Hiero.Tests.SDK.Account
 
             // Serialize to bytes then deserialize back
             byte[] bytes = originalTx.ToBytes();
-            ITransaction parsed = ITransaction.FromBytes(bytes);
+            Transaction parsed = Transaction.FromBytes(bytes);
             Assert.True(parsed is AccountCreateTransaction);
             AccountCreateTransaction parsedTx = (AccountCreateTransaction)parsed;
 

@@ -19,7 +19,7 @@ namespace Hiero.SDK
         NodaTime.Duration MinBackoff { get; set; }
         int MaxAttempts { get; set; }
         int MaxRetry { get; set; }
-        ListGuarded<AccountId> NodeAccountIds { set; }
+        ListGuarded<AccountId> NodeAccountIds { get; set; }
 
         void OnExecute(Client client);
         Task OnExecuteAsync(Client client);

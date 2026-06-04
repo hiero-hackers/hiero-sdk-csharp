@@ -75,7 +75,7 @@ namespace Hiero.Examples
             var scheduleId = transfer.Schedule(_ =>
             {
                 _.WaitForExpiry = false;
-                _.ExpirationTime = DateTimeOffset.UtcNow.AddSeconds(oneDayInSecs);
+                _.ExpirationTime = NodaTime.Instant.FromDateTimeOffset(DateTimeOffset.UtcNow.AddSeconds(oneDayInSecs));
             })
             .Execute(client)
             .GetReceipt(client).ScheduleId;
@@ -117,7 +117,7 @@ namespace Hiero.Examples
             var scheduleId2 = transfer.Schedule(_ =>
             {
                 _.WaitForExpiry = true;
-                _.ExpirationTime = DateTimeOffset.UtcNow.AddSeconds(10);
+                _.ExpirationTime = NodaTime.Instant.FromDateTimeOffset(DateTimeOffset.UtcNow.AddSeconds(10));
             })
             .Execute(client)
             .GetReceipt(client).ScheduleId;

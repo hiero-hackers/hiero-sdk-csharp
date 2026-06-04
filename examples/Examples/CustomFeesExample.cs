@@ -109,7 +109,7 @@ namespace Hiero.Examples
                 FeeScheduleKey = alicePublicKey,
                 WipeKey = alicePublicKey,
                 TreasuryAccountId = aliceAccountId,
-                CustomFees = hbarFeeList,
+                CustomFees = [.. hbarFeeList],
                 InitialSupply = 100,
             }
             .FreezeWith(client)
@@ -215,7 +215,7 @@ namespace Hiero.Examples
             new TokenFeeScheduleUpdateTransaction
             {
                 TokenId = fungibleTokenId,
-                CustomFees = fractionalFeeList,
+                CustomFees = [.. fractionalFeeList],
 
             }.FreezeWith(client).Sign(alicePrivateKey).Execute(client).GetReceipt(client);
             TokenInfo tokenInfo2 = new TokenInfoQuery { TokenId = fungibleTokenId }.Execute(client);

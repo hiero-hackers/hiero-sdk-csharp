@@ -30,13 +30,13 @@ namespace Hiero.SDK.Transactions
         }
 
 		/// <include file="BatchTransaction.cs.xml" path='docs/member[@name="M:BatchTransaction.InitFromTransactionBody"]' />
-		public ListGuarded<ITransaction> InnerTransactions
+		public ListGuarded<Transaction> InnerTransactions
         {
             init => field = GenerateListGuarded_Transaction(value);
             internal get => field ??= GenerateListGuarded_Transaction(field);
         }
 
-        private ListGuarded<ITransaction> GenerateListGuarded_Transaction(ListGuarded<ITransaction>? list = null, Action<ListGuarded<ITransaction>>? init = null)
+        private ListGuarded<Transaction> GenerateListGuarded_Transaction(ListGuarded<Transaction>? list = null, Action<ListGuarded<Transaction>>? init = null)
         {
             list = GenerateListGuarded(list, init);
 			list.OnValidateItem = ValidateInnerTransaction;
@@ -52,7 +52,7 @@ namespace Hiero.SDK.Transactions
 
             foreach (var atomicTransactionBytes in SourceTransactionBody.AtomicBatch.Transactions)
 			{
-				ITransaction transaction = ITransaction.FromBytes(new Proto.Services.Transaction
+				Transaction transaction = Transaction.FromBytes(new Proto.Services.Transaction
 				{
 					SignedTransactionBytes = atomicTransactionBytes
 
@@ -63,8 +63,8 @@ namespace Hiero.SDK.Transactions
 
             InnerTransactions.OnValidateItem = ValidateInnerTransaction;
         }
-		/// <include file="BatchTransaction.cs.xml" path='docs/member[@name="M:BatchTransaction.ValidateInnerTransaction(ITransaction)"]' />
-		private void ValidateInnerTransaction(ITransaction transaction) 
+		/// <include file="BatchTransaction.cs.xml" path='docs/member[@name="M:BatchTransaction.ValidateInnerTransaction(Transaction)"]' />
+		private void ValidateInnerTransaction(Transaction transaction) 
 		{
 			if (BLACKLISTED_TRANSACTIONS.Contains(transaction.GetType()))
 				throw new InvalidOperationException("Transaction type " + transaction.GetType().Name + " is not allowed in a batch transaction");
@@ -91,7 +91,7 @@ namespace Hiero.SDK.Transactions
 
 		public override void ValidateChecksums(Client client)
 		{
-			foreach (ITransaction transaction in InnerTransactions)
+			foreach (Transaction transaction in InnerTransactions)
 				transaction.ValidateChecksums(client);
 		}
 		public override void OnFreeze(Proto.Services.TransactionBody bodyBuilder)

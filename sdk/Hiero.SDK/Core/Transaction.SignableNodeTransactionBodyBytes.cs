@@ -2,10 +2,10 @@
 using Hiero.SDK.Core;
 using Hiero.SDK.Cryptocurrency;
 
-namespace Hiero.SDK.Transactions
+namespace Hiero.SDK.Core
 {
     /// <include file="Transaction.SignableNodeTransactionBodyBytes.cs.xml" path='docs/member[@name="T:Transaction"]' />
-    public static partial class Transaction
+    public abstract partial class Transaction
     {
 		public class SignableNodeTransactionBodyBytes(AccountId nodeID, TransactionId transactionID, byte[] body)
         {

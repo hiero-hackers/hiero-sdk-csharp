@@ -80,7 +80,7 @@ namespace Hiero.Tests.SDK.Transactions
         public virtual void SetInnerTransactionsShouldUpdateTransactions()
         {
             var batchTransaction = new BatchTransaction();
-            List<ITransaction> newInnerTransactions = [ SpawnTestTransactionAccountCreate(), SpawnTestTransactionAccountCreate() ];
+            List<Transaction> newInnerTransactions = [ SpawnTestTransactionAccountCreate(), SpawnTestTransactionAccountCreate() ];
             batchTransaction.InnerTransactions.Set(newInnerTransactions);
             
 			Assert.Equal(batchTransaction.InnerTransactions.Count, 2);
@@ -229,7 +229,7 @@ namespace Hiero.Tests.SDK.Transactions
             var transaction2 = SpawnTestTransactionAccountCreate();
             var transaction3 = SpawnTestTransactionAccountCreate();
             
-            List<ITransaction> transactions = [transaction1, transaction2, transaction3];
+            List<Transaction> transactions = [transaction1, transaction2, transaction3];
             batchTransaction.InnerTransactions.Set(transactions);
             
             Assert.Equal(batchTransaction.InnerTransactions, [transaction1, transaction2, transaction3]);
@@ -239,7 +239,7 @@ namespace Hiero.Tests.SDK.Transactions
         public virtual void ShouldCreateDefensiveCopyOfTransactionList()
         {
             var batchTransaction = new BatchTransaction();
-            List<ITransaction> mutableList = [.. INNER_TRANSACTIONS];
+            List<Transaction> mutableList = [.. INNER_TRANSACTIONS];
             batchTransaction.InnerTransactions.Set(mutableList);
             mutableList.Clear();
 

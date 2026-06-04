@@ -46,7 +46,7 @@ namespace Hiero.Tests.SDK.Token
         public virtual void ShouldBytesNoSetters()
         {
             var tx = new TokenBurnTransaction();
-            var tx2 = ITransaction.FromBytes(tx.ToBytes());
+            var tx2 = Transaction.FromBytes(tx.ToBytes());
             Assert.Equal(tx.ToString(), tx2.ToString());
         }
 

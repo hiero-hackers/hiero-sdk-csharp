@@ -78,7 +78,7 @@ namespace Hiero.Examples
                 AdminKey = OPERATOR_KEY,
                 Gas = 400000,
                 BytecodeFileId = CreateBytecodeFile(client),
-                HookCreationDetails_ = hookDetails
+                HookCreationDetails = hookDetails
 
             }.Execute(client);
             var receipt = response.GetReceipt(client);
@@ -104,7 +104,7 @@ namespace Hiero.Examples
                 TransactionResponse contractUpdateResponse = new ContractUpdateTransaction 
                 {
                     ContractId = targetContractId,
-                    HookCreationDetails_ = hook3
+                    HookCreationDetails = hook3
 
                 }.FreezeWith(client).Sign(OPERATOR_KEY).Execute(client);
                 contractUpdateResponse.GetReceipt(client);

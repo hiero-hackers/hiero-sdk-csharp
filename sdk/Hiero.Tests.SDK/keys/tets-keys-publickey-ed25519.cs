@@ -103,7 +103,7 @@ namespace Hiero.Tests.SDK.Keys
             tx.FreezeWith(client);
             tx.SignWithOperator(client);
             var bytes = tx.ToBytes();
-            _ = ITransaction.FromBytes(bytes);
+            _ = Transaction.FromBytes(bytes);
             Assert.NotEmpty(tx.GetSignatures());
         }
         [Fact]

@@ -54,7 +54,7 @@ namespace Hiero.Tests.SDK.Topic
         public virtual void ShouldBytesNoSetters()
         {
             var tx = new TopicUpdateTransaction();
-            var tx2 = ITransaction.FromBytes(tx.ToBytes());
+            var tx2 = Transaction.FromBytes(tx.ToBytes());
             Assert.Equal(tx.ToString(), tx2.ToString());
         }
 

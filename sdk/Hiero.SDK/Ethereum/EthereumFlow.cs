@@ -19,7 +19,7 @@ namespace Hiero.SDK.Ethereum
         /// <include file="EthereumFlow.cs.xml" path='docs/member[@name="F:.MAX_ETHEREUM_DATA_SIZE"]' />
         static int MAX_ETHEREUM_DATA_SIZE = 128000;
 
-		private static FileId CreateFile<T>(byte[] callData, Client client, NodaTime.Duration timeoutPerTransaction, Transaction<T> ethereumTransaction) where T : Transaction<T>
+		private static FileId CreateFile<T>(byte[] callData, Client client, NodaTime.Duration timeoutPerTransaction, T ethereumTransaction) where T : Transaction
         {
             try
             {
@@ -47,7 +47,7 @@ namespace Hiero.SDK.Ethereum
 					.Execute(client, timeoutPerTransaction)
 					.GetReceipt(client);
 
-				ethereumTransaction.SetNodeAccountIds([transactionresponse.NodeId]);
+				ethereumTransaction.NodeAccountIds.Set(transactionresponse.NodeId);
                 
                 return transactionreceipt.FileId;
             }
@@ -56,8 +56,8 @@ namespace Hiero.SDK.Ethereum
                 throw new Exception(string.Empty, e);
             }
         }
-        private static async Task<FileId> CreateFileAsync<T>(byte[] callData, Client client, NodaTime.Duration timeoutPerTransaction, Transaction<T> ethereumTransaction) where T : Transaction<T>
-		{
+        private static async Task<FileId> CreateFileAsync<T>(byte[] callData, Client client, NodaTime.Duration timeoutPerTransaction, T ethereumTransaction) where T : Transaction
+        {
 			// Hex encode the call data
 			byte[] callDataHex = Hex.Encode(callData);
 
@@ -70,7 +70,7 @@ namespace Hiero.SDK.Ethereum
 			}.ExecuteAsync(client, timeoutPerTransaction);
 			TransactionReceipt transactionreceipt = await transactionresponse.GetReceiptAsync(client, timeoutPerTransaction);
 
-			ethereumTransaction.SetNodeAccountIds([transactionresponse.NodeId]);
+			ethereumTransaction.NodeAccountIds.Set([transactionresponse.NodeId]);
 
 			if (callDataHex.Length > FileAppendTransaction.DEFAULT_CHUNK_SIZE)
 			{

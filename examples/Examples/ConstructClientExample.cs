@@ -45,16 +45,18 @@ namespace Hiero.Examples
             Dictionary<string, AccountId> customNetwork = [];
             customNetwork.Add("2.testnet.hedera.com:50211", new AccountId(0, 0, 5));
             customNetwork.Add("3.testnet.hedera.com:50211", new AccountId(0, 0, 6));
-            Client customClient = Client.ForNetwork(customNetwork);
-            /// <summary>
-            /// Since our customClient's network is in this case a subset of testnet, we should set the
-            /// network's name to testnet. If we don't do this, checksum validation won't work.
-            /// See ValidateChecksumExample. You can use customClient.getNetworkName()
-            /// to check the network name. If not set, it will return null.
-            /// If you attempt to validate a checksum against a client whose networkName is not set,
-            /// an IllegalStateException will be thrown.
-            /// </summary>
-            customClient.SetNetworkName(NetworkName.TESTNET);
+            Client customClient = Client.ForNetwork(customNetwork, client =>
+            {
+                /// <summary>
+                /// Since our customClient's network is in this case a subset of testnet, we should set the
+                /// network's name to testnet. If we don't do this, checksum validation won't work.
+                /// See ValidateChecksumExample. You can use customClient.getNetworkName()
+                /// to check the network name. If not set, it will return null.
+                /// If you attempt to validate a checksum against a client whose networkName is not set,
+                /// an IllegalStateException will be thrown.
+                /// </summary>
+                client.SetNetworkName(NetworkName.TESTNET);
+            });
             /// <summary>
             /// Let's generate a client from a config.json file.
             /// A config file may specify a network by name, or it may provide a custom network

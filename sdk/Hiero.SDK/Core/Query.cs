@@ -25,7 +25,7 @@ namespace Hiero.SDK
 	 * @param <O> The output type of the query.
 	 * @param <T> The type of the query itself. Used to enable chaining.
 	 */
-	public abstract partial class Query<O, T> : Executable<T, Proto.Services.Query, Proto.Services.Response, O> where T : Query<O, T>
+	public abstract partial class Query<O, T> : Executable<Proto.Services.Query, Proto.Services.Response, O> where T : Query<O, T>
 	{
 		private readonly Proto.Services.Query _ProtoQuery = new ();
 		private readonly Proto.Services.QueryHeader _ProtoQueryHeader = new ();

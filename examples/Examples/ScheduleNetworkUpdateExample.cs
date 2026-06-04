@@ -29,13 +29,13 @@ namespace Hiero.Examples
             /// </summary>
             Client client = ClientHelper.ForName("testnet");
             client.OperatorSet(OPERATOR_ID, OPERATOR_KEY);
-            TimeSpan? networkUpdateDuration = client.NetworkUpdatePeriod;
+            NodaTime.Duration? networkUpdateDuration = client.NetworkUpdatePeriod;
             Console.WriteLine("The current default network update period is: " + networkUpdateDuration?.TotalMinutes + " minutes or " + networkUpdateDuration?.TotalHours + " hour.");
             /// <summary>
             /// Step 2: Change network update period to 1 hour
             /// </summary>
             Console.WriteLine("Changing network update period to 1 hour...");
-            client.NetworkUpdatePeriod = TimeSpan.FromHours(1);
+            client.NetworkUpdatePeriod = NodaTime.Duration.FromHours(1);
             networkUpdateDuration = client.NetworkUpdatePeriod;
             Console.WriteLine("The current network update period is: " + networkUpdateDuration?.TotalMinutes + " minutes or " + networkUpdateDuration?.TotalHours + " hours.");
             /// <summary>
@@ -59,7 +59,7 @@ namespace Hiero.Examples
             // network schedule update is not set for custom network
             Client clientWithoutScheduling = Client.ForNetwork(network);
             clientWithoutScheduling.OperatorSet(OPERATOR_ID, OPERATOR_KEY);
-            TimeSpan? newUpdateDuration = clientWithoutScheduling.NetworkUpdatePeriod;
+            NodaTime.Duration? newUpdateDuration = clientWithoutScheduling.NetworkUpdatePeriod;
             if (newUpdateDuration == null)
             {
                 Console.WriteLine("Network updates are disabled for this client.");

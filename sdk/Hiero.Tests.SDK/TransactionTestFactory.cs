@@ -27,10 +27,11 @@ namespace Hiero.Tests.SDK
             return new ListGuarded<AccountId>(DefaultNodeAccountId, SecondaryNodeAccountId);
         }
 
-        public static T ApplyDefaultTransactionProperties<T>(T transaction, PrivateKey signingKey) where T : ITransaction
+        public static T ApplyDefaultTransactionProperties<T>(T transaction, PrivateKey signingKey) where T : Transaction<T>
         {
-            transaction.NodeAccountIds = CreateDefaultNodeAccountIds();
             transaction.TransactionId = CreateDefaultTransactionId();
+            transaction.NodeAccountIds.Set(CreateDefaultNodeAccountIds());
+
             return transaction;
         }
 

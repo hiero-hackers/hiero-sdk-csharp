@@ -72,7 +72,7 @@ namespace Hiero.Tests.SDK.Transactions
             var tokenAssociateTransactionBodyProto = new Proto.Services.TokenAssociateTransactionBody { };
             var transactionBodyProto = new Proto.Services.TransactionBody { TokenAssociate = tokenAssociateTransactionBodyProto };
             TokenAssociateTransaction tokenAssociateTransaction = SpawnTestTransaction(transactionBodyProto);
-            var tokenAssociateTransactionFromBytes = ITransaction.FromBytes(tokenAssociateTransaction.ToBytes());
+            var tokenAssociateTransactionFromBytes = Transaction.FromBytes(tokenAssociateTransaction.ToBytes());
             Assert.IsType<TokenAssociateTransaction>(tokenAssociateTransactionFromBytes);
         }
         [Fact]
@@ -84,7 +84,7 @@ namespace Hiero.Tests.SDK.Transactions
             var signedTransactionProto = new Proto.Services.SignedTransaction { BodyBytes = transactionBodyProto.ToByteString() };
             var signedTransactionBodyProto = Proto.Services.TransactionBody.Parser.ParseFrom(signedTransactionProto.BodyBytes);
             TokenAssociateTransaction tokenAssociateTransaction = SpawnTestTransaction(signedTransactionBodyProto);
-            var tokenAssociateTransactionFromBytes = ITransaction.FromBytes(tokenAssociateTransaction.ToBytes());
+            var tokenAssociateTransactionFromBytes = Transaction.FromBytes(tokenAssociateTransaction.ToBytes());
             Assert.IsType<TokenAssociateTransaction>(tokenAssociateTransactionFromBytes);
         }
         [Fact]
@@ -108,7 +108,7 @@ namespace Hiero.Tests.SDK.Transactions
             };
             var transactionSignedBodyProto = Proto.Services.TransactionBody.Parser.ParseFrom(transactionSignedProto.SignedTransactionBytes);
             TokenAssociateTransaction tokenAssociateTransaction = SpawnTestTransaction(transactionSignedBodyProto);
-            var tokenAssociateTransactionFromBytes = ITransaction.FromBytes(tokenAssociateTransaction.ToBytes());
+            var tokenAssociateTransactionFromBytes = Transaction.FromBytes(tokenAssociateTransaction.ToBytes());
             Assert.IsType<TokenAssociateTransaction>(tokenAssociateTransactionFromBytes);
         }
 

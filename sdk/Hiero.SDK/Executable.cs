@@ -84,8 +84,7 @@ namespace Hiero.SDK
         /// <include file="Executable.cs.xml" path='docs/member[@name="T:Executable_6"]' />
         public ListGuarded<AccountId> NodeAccountIds
         {
-            internal get => field ??= [];
-			set;
+            get => field ??= []; set;
         }
 
         public abstract void OnExecute(Client client);

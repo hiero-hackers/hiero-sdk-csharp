@@ -3,9 +3,8 @@ using Hiero.SDK;
 using Hiero.SDK.Core;
 using Hiero.SDK.Cryptocurrency;
 using Hiero.SDK.Cryptography;
-using Hiero.SDK.Logging;
 using Hiero.SDK.Networking;
-using Hiero.SDK.Transactions;
+
 using System;
 using System.Threading;
 
@@ -44,19 +43,30 @@ namespace Hiero.Examples
             /// for use in the RegisterNodeTransaction.
             /// </summary>
             PrivateKey adminKey = PrivateKey.GenerateED25519();
-            BlockNodeServiceEndpoint initialEndpoint = new BlockNodeServiceEndpoint().SetIpAddress(new byte[] { 127, 0, 0, 1 }).SetPort(443).SetRequiresTls(true).SetEndpointApis(List.Of(BlockNodeApi.SUBSCRIBE_STREAM, BlockNodeApi.STATUS));
+            BlockNodeServiceEndpoint initialEndpoint = new BlockNodeServiceEndpoint
+            {
+                IpAddress = new byte[] { 127, 0, 0, 1 },
+                Port = 443,
+                RequiresTls = true,
+                EndpointApis = [BlockNodeApi.SUBSCRIBE_STREAM, BlockNodeApi.STATUS]
+            };
             /// <summary>
             /// Step 2:
             /// Create Registered Node.
             /// </summary>
-            RegisteredNodeCreateTransaction registeredNodeCreateTx = new RegisteredNodeCreateTransaction().SetDescription("My Block Node").SetAdminKey(adminKey).AddServiceEndpoint(initialEndpoint).FreezeWith(client).Sign(adminKey);
+            RegisteredNodeCreateTransaction registeredNodeCreateTx = new RegisteredNodeCreateTransaction
+            {
+                Description = "My Block Node",
+                AdminKey = adminKey,
+                ServiceEndpoints = [initialEndpoint]
+
+            }.FreezeWith(client).Sign(adminKey);
             Console.WriteLine("Creating Registered Node...");
             TransactionResponse registeredNodeCreateTxResponse = registeredNodeCreateTx.Execute(client);
             TransactionReceipt registeredNodeCreateTxReceipt = registeredNodeCreateTxResponse.GetReceipt(client);
+
             if (registeredNodeCreateTxReceipt.RegisteredNodeId <= 0)
-            {
                 throw new Exception("RegisteredNodeCreate transaction receipt was missing registeredNodeId. (Fail)");
-            }
 
             long registeredNodeId = registeredNodeCreateTxReceipt.RegisteredNodeId;
             /// <summary>
@@ -67,7 +77,7 @@ namespace Hiero.Examples
 
             // Wait for mirror node to update
             Thread.Sleep(5000);
-            RegisteredNodeAddressBookQuery addressBookQuery = new RegisteredNodeAddressBookQuery().SetRegisteredNodeId(registeredNodeId);
+            RegisteredNodeAddressBookQuery addressBookQuery = new RegisteredNodeAddressBookQuery { RegisteredNodeId = registeredNodeId };
             Console.WriteLine("Executing RegisteredNodeQuery....");
             RegisteredNodeAddressBook addressBook = addressBookQuery.Execute(client);
             RegisteredNode registeredNode = addressBook.registeredNodes.GetFirst();
@@ -76,8 +86,21 @@ namespace Hiero.Examples
             /// Step 4:
             /// Update the RegisteredNode with new Block Node endpoint.
             /// </summary>
-            BlockNodeServiceEndpoint updateEndpoint = new BlockNodeServiceEndpoint().SetDomainName("block-node.example.com").SetPort(443).SetRequiresTls(true).AddEndpointApi(BlockNodeApi.STATUS);
-            RegisteredNodeUpdateTransaction registeredNodeUpdateTx = new RegisteredNodeUpdateTransaction().SetRegisteredNodeId(registeredNodeId).SetDescription("My Updated Block Node").SetServiceEndpoints(List.Of(initialEndpoint, updateEndpoint)).FreezeWith(client).Sign(adminKey);
+            BlockNodeServiceEndpoint updateEndpoint = new BlockNodeServiceEndpoint
+            {
+                DomainName = "block-node.example.com",
+                Port = 443,
+                RequiresTls = true,
+            
+            }.AddEndpointApi(BlockNodeApi.STATUS);
+            RegisteredNodeUpdateTransaction registeredNodeUpdateTx = new RegisteredNodeUpdateTransaction
+            {
+                RegisteredNodeId = registeredNodeId) ,
+                Description = "My Updated Block Node",
+                ServiceEndpoints = [initialEndpoint, updateEndpoint],
+            }
+            .FreezeWith(client)
+            .Sign(adminKey);
             Console.WriteLine("Updating Registered Node...");
             TransactionResponse registeredNodeUpdateTxResponse = registeredNodeUpdateTx.Execute(client);
             registeredNodeUpdateTxResponse.GetReceipt(client);
@@ -87,7 +110,11 @@ namespace Hiero.Examples
             /// NOTE: This transaction must be signed by the consensus node's admin key.
             /// In this example, we assume the operator is the node admin.
             /// </summary>
-            NodeUpdateTransaction associateTx = new NodeUpdateTransaction { NodeId = 0 }.AddAssociatedRegisteredNode(registeredNodeId).FreezeWith(client);
+            NodeUpdateTransaction associateTx = new NodeUpdateTransaction
+            {
+                NodeId = 0 
+            
+            }.AddAssociatedRegisteredNode(registeredNodeId).FreezeWith(client);
             Console.WriteLine("Associating registered node " + registeredNodeId + " with consensus node...");
             TransactionResponse associateTxResponse = associateTx.Execute(client);
             associateTxResponse.GetReceipt(client);
@@ -104,7 +131,11 @@ namespace Hiero.Examples
             /// Delete the Registered Node.
             /// </summary>
             Console.WriteLine("Deleting Registered Node...");
-            new RegisteredNodeDeleteTransaction().SetRegisteredNodeId(registeredNodeCreateTxReceipt.RegisteredNodeId).FreezeWith(client).Sign(adminKey).Execute(client).GetReceipt(client);
+            new RegisteredNodeDeleteTransaction
+            {
+                RegisteredNodeId = registeredNodeCreateTxReceipt.RegisteredNodeId
+
+            }.FreezeWith(client).Sign(adminKey).Execute(client).GetReceipt(client);
             client.Dispose();
             Console.WriteLine("Registered Node Lifecycle Example Complete!");
         }

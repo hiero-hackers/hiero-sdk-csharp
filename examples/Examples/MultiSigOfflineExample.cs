@@ -80,14 +80,14 @@ namespace Hiero.Examples
             /// </summary>
             Console.WriteLine("Converting transaction to bytes to send to signatories...");
             byte[] transactionBytes = transferTx.ToBytes();
-            Transaction<> transactionToExecute = Transaction.FromBytes(transactionBytes);
+            TransferTransaction transactionToExecute = Transaction.FromBytes<TransferTransaction>(transactionBytes);
             /// <summary>
             /// Step 4:
             /// Ask users to sign and return signature.
             /// </summary>
-            byte[] alicesSignature = alicePrivateKey.SignTransaction(Transaction.FromBytes(transactionBytes));
+            byte[] alicesSignature = alicePrivateKey.SignTransaction(Transaction.FromBytes<TransferTransaction>(transactionBytes));
             Console.WriteLine("Alice signed the transaction. Signature: " + string.Format("; ", alicesSignature));
-            byte[] bobsSignature = bobPrivateKey.SignTransaction(Transaction.FromBytes(transactionBytes));
+            byte[] bobsSignature = bobPrivateKey.SignTransaction(Transaction.FromBytes<TransferTransaction>(transactionBytes));
             Console.WriteLine("Bob signed the transaction. Signature: " + string.Format("; ", bobsSignature));
             /// <summary>
             /// Step 5:

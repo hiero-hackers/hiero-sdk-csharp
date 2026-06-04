@@ -139,7 +139,7 @@ namespace Hiero.SDK.Cryptography
 		}
 		/// <include file="PublicKey.cs.xml" path='docs/member[@name="M:PublicKey.VerifyTransaction``1(Transaction{``0})"]' />
 		public virtual bool VerifyTransaction<T>(Transaction<T> transaction) where T : Transaction<T>
-		{
+        {
             if (!transaction.IsFrozen())
 				transaction.Freeze();
 

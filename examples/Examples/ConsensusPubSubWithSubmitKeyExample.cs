@@ -74,7 +74,7 @@ namespace Hiero.Examples
             new TopicMessageQuery
             {
                 TopicId = hederaTopicId,
-                StartTime = DateTimeOffset.FromUnixTimeMilliseconds(0)
+                StartTime = NodaTime.Instant.FromUnixTimeMilliseconds(0)
             }
             .Subscribe(client, (resp) =>
             {

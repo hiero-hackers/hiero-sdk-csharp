@@ -93,7 +93,7 @@ namespace Hiero.Examples
 
             // The exchange must sign the transaction in order for it to be accepted by the network
             // (assume this is some REST call to the exchange API server).
-            byte[] signedTransferTxBytes = ITransaction.FromBytes(transferTx.ToBytes()).Sign(exchangePrivateKey).ToBytes();
+            byte[] signedTransferTxBytes = Transaction.FromBytes<TransferTransaction>(transferTx.ToBytes()).Sign(exchangePrivateKey).ToBytes();
 
             // Parse the transaction bytes returned from the exchange.
             TransferTransaction signedTransferTx = Transaction.FromBytes<TransferTransaction>(signedTransferTxBytes);

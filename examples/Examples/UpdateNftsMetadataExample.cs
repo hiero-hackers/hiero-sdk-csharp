@@ -137,7 +137,7 @@ namespace Hiero.Examples
             var tokenUpdateNftsTx = new TokenUpdateNftsTransaction 
             {
                 TokenId = mutableNftId,
-                Serials = mutableNftSerials,
+                Serials = [.. mutableNftSerials],
                 Metadata = updatedMetadata,
             
             }.FreezeWith(client);
@@ -231,7 +231,7 @@ namespace Hiero.Examples
             var immutableNftUpdateNftsTx = new TokenUpdateNftsTransaction
             {
                 TokenId = immutableNftId,
-                Serials = immutableNftSerials,
+                Serials = [.. immutableNftSerials],
                 Metadata = updatedMetadata,
             
             }.FreezeWith(client);

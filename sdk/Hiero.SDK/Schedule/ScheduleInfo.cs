@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 using Google.Protobuf;
-using Grpc.Core.Logging;
+
 using Hiero.SDK.Core;
 using Hiero.SDK.Cryptocurrency;
 using Hiero.SDK.Cryptography;
 using Hiero.SDK.Networking;
 using Hiero.SDK.Transactions;
+
 using System;
 
 namespace Hiero.SDK.Schedule
@@ -129,7 +130,7 @@ namespace Hiero.SDK.Schedule
 		}
 
         /// <include file="ScheduleInfo.cs.xml" path='docs/member[@name="M:ScheduleInfo.GetScheduledTransaction"]' />
-        public object GetScheduledTransaction()
+        public Transaction GetScheduledTransaction()
         {
             return Transaction.FromScheduledTransaction(TransactionBody);
         }

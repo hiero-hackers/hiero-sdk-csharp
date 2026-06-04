@@ -144,7 +144,7 @@ namespace Hiero.Tests.SDK.Contract
 			};
 
             byte[] bytes = original.ToBytes();
-            ITransaction parsed = ITransaction.FromBytes(bytes);
+            Transaction parsed = Transaction.FromBytes(bytes);
             Assert.True(parsed is ContractCreateTransaction);
             var parsedTx = (ContractCreateTransaction)parsed;
             var parsedHooks = parsedTx.HookCreationDetails;
