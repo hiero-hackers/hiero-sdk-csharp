@@ -353,7 +353,8 @@ namespace Hiero.SDK
 		{
 			get { lock (this) return field; }
 			set { lock (this) field = value; }
-		}
+
+		} = DEFAULT_REQUEST_TIMEOUT;
 		/// <include file="Client.cs.xml" path='docs/member[@name="T:Client_7"]' />
 		public NodaTime.Duration CloseTimeout
 		{
@@ -364,7 +365,8 @@ namespace Hiero.SDK
 				Network_.CloseTimeout = value;
 				MirrorNetwork_.CloseTimeout = value;
 			}
-		}
+
+		} = DEFAULT_CLOSE_TIMEOUT;
 		/// <include file="Client.cs.xml" path='docs/member[@name="M:Client.Write(_GrpcDeadline_Ticks@,value.)"]' />
 		public NodaTime.Duration GrpcDeadline
 		{

@@ -23,7 +23,6 @@ namespace Hiero.Tests.Integration
         {
             using (var testEnv = new IntegrationTestEnv(1))
             {
-
                 // Deploy hook contract
                 var hookContractId = CreateContractId(testEnv);
 
@@ -73,7 +72,6 @@ namespace Hiero.Tests.Integration
         {
             using (var testEnv = new IntegrationTestEnv(1))
             {
-
                 // Deploy hook contract
                 var hookContractId = CreateContractId(testEnv);
 
@@ -127,7 +125,6 @@ namespace Hiero.Tests.Integration
         {
             using (var testEnv = new IntegrationTestEnv(1))
             {
-
                 // Create a signer account (no hook actually created)
                 var signerKey = PrivateKey.GenerateED25519();
                 var signerId = new AccountCreateTransaction

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 using Google.Protobuf;
 using Google.Protobuf.Reflection;
+
 using Grpc.Core;
 
 using Hiero.SDK.File;
@@ -128,8 +129,8 @@ namespace Hiero.SDK.Networking
 
 		private AsyncServerStreamingCall<Proto.Services.NodeAddress> BuildCall(Client client, DateTime deadline)
 		{
-			string methodname = string.Empty; // TODO: nameof(Proto.Services.NetworkService.NetworkServiceClient.getNodes);
-			MethodDescriptor methoddescriptor = Proto.Services.NetworkService.Descriptor.FindMethodByName(methodname);
+			string methodname = nameof(Proto.Mirror.NetworkService.NetworkServiceClient.getNodes);
+			MethodDescriptor methoddescriptor = Proto.Mirror.NetworkService.Descriptor.FindMethodByName(methodname);
 
 			IMessage input = (IMessage)Activator.CreateInstance(methoddescriptor.InputType.ClrType)!;
 			IMessage output = (IMessage)Activator.CreateInstance(methoddescriptor.OutputType.ClrType)!;

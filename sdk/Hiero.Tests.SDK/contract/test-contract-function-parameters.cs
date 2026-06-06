@@ -135,9 +135,8 @@ namespace Hiero.Tests.SDK.Contract
         {
             var @params = new ContractFunctionParameters()
                 .AddUint256(new BigInteger(2).Pow(255));
-            Assert.Equal(
-                "2fbebd38" + 
-                "8000000000000000000000000000000000000000000000000000000000000000", Hex.ToHexString(@params.ToBytes("foo").ToByteArray()));
+            
+            Assert.Equal("2fbebd38" + "8000000000000000000000000000000000000000000000000000000000000000", Hex.ToHexString(@params.ToBytes("foo").ToByteArray()));
         }
         [Fact]
         public virtual void Uint256Errors()
@@ -145,13 +144,8 @@ namespace Hiero.Tests.SDK.Contract
             Assert.Throws<ArgumentException>(() =>
             {
                 new ContractFunctionParameters()
-                .AddUint256(new BigInteger(-0x1));
-            }); /*
-        assertThrows(IllegalArgumentException.class, () -> {
-            new ContractFunctionParameters()
-                .addUint256(BigInteger.valueOf(2).pow(256));
-        });
-         */
+                    .AddUint256(new BigInteger(-0x1));
+            });
         }
         [Fact]
         public virtual void Addresses()
@@ -160,6 +154,7 @@ namespace Hiero.Tests.SDK.Contract
                 .AddAddress("1122334455667788990011223344556677889900")
                 .AddAddress("0x1122334455667788990011223344556677889900")
                 .AddAddressArray([ "1122334455667788990011223344556677889900", "1122334455667788990011223344556677889900" ]);
+
             Assert.Equal(
                 "7d48c86d" + 
                 "0000000000000000000000001122334455667788990011223344556677889900" + 
@@ -175,7 +170,7 @@ namespace Hiero.Tests.SDK.Contract
             Assert.Throws<ArgumentException>(() =>
             {
                 new ContractFunctionParameters()
-                .AddAddress("112233445566778899001122334455667788990011");
+                    .AddAddress("112233445566778899001122334455667788990011");
             });
         }
         [Fact]
@@ -206,6 +201,7 @@ namespace Hiero.Tests.SDK.Contract
         public virtual void Bytes4Encoding()
         {
             var @params = new ContractFunctionParameters().AddBytes4([ 1, 2, 3, 4 ]);
+
             Assert.Equal(
                 "580526ee" + 
                 "0102030400000000000000000000000000000000000000000000000000000000", Hex.ToHexString(@params.ToBytes("foo").ToByteArray()));
@@ -222,6 +218,7 @@ namespace Hiero.Tests.SDK.Contract
         public virtual void Bytes4UTF8Encoding()
         {
             var @params = new ContractFunctionParameters().AddBytes4(Encoding.UTF8.GetBytes("ABCD"));
+
             Assert.Equal(
                 "580526ee" + 
                 "4142434400000000000000000000000000000000000000000000000000000000", Hex.ToHexString(@params.ToBytes("foo").ToByteArray()));
@@ -429,6 +426,9 @@ namespace Hiero.Tests.SDK.Contract
 
             string rangeErr = "BigInteger out of range for Solidity integers";
             
+            BigInteger bi = BigInteger.One << 255;
+            BigInteger bin = BigInteger.One.Negate() << 256;
+
             ArgumentException exception1 = Assert.Throws<ArgumentException>(() => @params.AddInt256(BigInteger.One << 255));
             Assert.Equal(exception1.Message, rangeErr);
             
@@ -483,19 +483,19 @@ namespace Hiero.Tests.SDK.Contract
 
                     _ => typeof(BigInteger)
                 };
-                object argVal = true switch
+                object argValue = true switch
                 {
-                    true when bitWidth == 8 => (byte)(1 << (bitWidth - 1)),
-                    true when bitWidth <= 32 => (1 << (bitWidth - 1)),
-                    true when bitWidth <= 64 => (1 << (bitWidth - 1)),
+                    true when bitWidth == 08 => (byte)(1 << (bitWidth - 1)),
+                    true when bitWidth <= 32 => (int)(1 << (bitWidth - 1)),
+                    true when bitWidth <= 64 => (long)(1 << (bitWidth - 1)),
 
                     _ => BigInteger.One << bitWidth - 1
                 };
 
                 Array argArrayVal = Array.CreateInstance(argType, 2);
                 
-                argArrayVal.SetValue(argVal, 0);
-                argArrayVal.SetValue(argVal, 1);
+                argArrayVal.SetValue(argValue, 0);
+                argArrayVal.SetValue(argValue, 1);
                 
                 var argArrayType = argArrayVal.GetType();
                 var cl = typeof(ContractFunctionParameters);
@@ -505,10 +505,10 @@ namespace Hiero.Tests.SDK.Contract
                 var addUintArrayMethod = cl.GetMethod("addUint" + n + "Array", [ argArrayType] )!;
                 var @params = new ContractFunctionParameters();
                 
-                addIntMethod.Invoke(@params, [ argVal ]);
-                addUintMethod.Invoke(@params, [ argVal ]);
-                addIntArrayMethod.Invoke(@params, [ argArrayVal ]);
-                addUintArrayMethod.Invoke(@params, [ argArrayVal ]);
+                addIntMethod.Invoke(@params, [ argValue ]);
+                addUintMethod.Invoke(@params, [ argValue ]);
+                addIntArrayMethod.Invoke(@params, [ ..argArrayVal ]);
+                addUintArrayMethod.Invoke(@params, [ ..argArrayVal ]);
 
                 snapshotStrings.Add("bitWidth = " + bitWidth + ": " + Hex.ToHexString(@params.ToBytes(null).ToByteArray()));
             }

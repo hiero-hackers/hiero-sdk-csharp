@@ -240,7 +240,7 @@ namespace Hiero.SDK.Networking
 		{
 			lock (this)
 			{
-				var now = NodaTime.SystemClock.Instance.GetCurrentInstant();
+				var now = SystemClock.Instance.GetCurrentInstant();
 				if (now.ToUnixTimeSeconds() > EarliestReadmitTime.ToUnixTimeSeconds())
 				{
 					var nextEarliestReadmitTime = now.PlusSeconds(MaxNodeReadmitTime.Seconds);
@@ -380,7 +380,6 @@ namespace Hiero.SDK.Networking
 
 					newHealthyNodes.Add(node);
 				}
-
 
 				// Atomically set all the variables
 				Nodes = newNodes;

@@ -139,7 +139,7 @@ namespace Hiero.Tests.SDK.Transactions
 
             Assert.Throws<ArgumentException>(() =>
             {
-                Transaction.FromBytes(brokenTxBytes);
+                _ = Transaction.FromBytes(brokenTxBytes);
             });
         }
         [Fact]

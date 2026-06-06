@@ -205,13 +205,15 @@ namespace Hiero.SDK.Contract
 			var offset = GetInt32(index);
 			var count = GetIntValueAt(offset);
 			var strings = new List<string>();
+
 			for (int i = 0; i < count; i++)
 			{
 				var strOffset = GetIntValueAt(offset + 32 + (i * 32));
 				var len = GetIntValueAt(offset + strOffset + 32);
 				var str = GetByteString(offset + strOffset + 32 + 32, offset + strOffset + 32 + 32 + len).ToStringUtf8();
+
 				strings.Add(str);
-			}
+            }
 
 			return strings;
 		}

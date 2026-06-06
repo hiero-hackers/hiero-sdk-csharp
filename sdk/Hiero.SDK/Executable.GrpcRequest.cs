@@ -43,14 +43,14 @@ namespace Hiero.SDK
 
 			public NodaTime.Duration GrpcDeadline { get; set; }
 
-			public virtual CallOptions CallOptions 
+			public virtual CallOptions CallOptions
 			{
 				get 
 				{
-					double deadline = Math.Min(GrpcDeadline.TotalMilliseconds, GrpcDeadline.TotalMilliseconds);
+					double deadline = Math.Min(GrpcDeadline.TotalMilliseconds, Parent.GrpcDeadline.TotalMilliseconds);
 
-					return CallOptions.WithDeadline(DateTime.Now.AddMilliseconds(deadline));
-				}
+                    return new CallOptions().WithDeadline(DateTime.Now.AddMilliseconds(deadline));
+                }
 			}
 			public virtual CallInvoker CreateCall()
 			{

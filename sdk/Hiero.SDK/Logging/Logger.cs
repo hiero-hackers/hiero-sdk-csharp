@@ -14,7 +14,7 @@ namespace Hiero.SDK.Logging
         /// <include file="Logger.cs.xml" path='docs/member[@name="M:Logger.#ctor(LogLevel)"]' />
         public Logger(LogLevel level)
         {
-            //internalLogger = LoggerFactory.GetLogger(GetType());
+            internalLogger = new ConsoleLogger();
             currentLevel = level;
             previousLevel = level;
         }

@@ -31,6 +31,7 @@ namespace Hiero.SDK.Cryptography
 			try
 			{
 				using var document = JsonDocument.Parse(stream);
+
 				return FromJson(document.RootElement, passphrase);
 			}
 			catch (JsonException e)
@@ -50,6 +51,7 @@ namespace Hiero.SDK.Cryptography
 			{
 				1 => ParseKeystoreV1(ExpectObject(root, "crypto"), passphrase),
 				2 => ParseKeystoreV2(ExpectObject(root, "crypto"), passphrase),
+
 				_ => throw new BadKeyException("unsupported keystore version: " + version)
 			};
 		}
@@ -125,9 +127,7 @@ namespace Hiero.SDK.Cryptography
 			if (!CryptographicOperations.FixedTimeEquals(mac, testHmac))
 				throw new BadKeyException("HMAC mismatch; passphrase is incorrect");
 
-			return new Keystore(
-				Crypto.DecryptAesCtr128(cipherKey, iv, cipherBytes)
-			);
+			return new Keystore(Crypto.DecryptAesCtr128(cipherKey, iv, cipherBytes));
 		}
 
 		private static int ExpectInt(JsonElement obj, string key)
