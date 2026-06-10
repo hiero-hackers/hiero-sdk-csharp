@@ -194,9 +194,9 @@ namespace Hiero.Tests.Integration
                         .Execute(client)
                         .GetReceipt(client);
 
-                        //nodes.Remove(index);
-
                         outMap.Add(enumerator.Current.Key, enumerator.Current.Value);
+
+                        nodes.Remove(enumerator.Current.Key);
 
                         return;
                     }
@@ -205,7 +205,7 @@ namespace Hiero.Tests.Integration
                         Console.Error.WriteLine(err);
                     }
 
-                //throw new Exception("Failed to find working node in " + nodes + " for IntegrationTestEnv");
+                throw new Exception("Failed to find working node in " + nodes + " for IntegrationTestEnv");
             }
         }
     }

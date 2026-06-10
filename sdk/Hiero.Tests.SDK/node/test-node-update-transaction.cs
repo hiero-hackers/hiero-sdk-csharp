@@ -477,7 +477,7 @@ namespace Hiero.Tests.SDK.Node
             var transaction = new NodeUpdateTransaction();
 
             // Create a 101-byte UTF-8 string
-            var longDescription = string.Join(string.Empty, Enumerable.Range(0, 101).Select(_ => "a"));
+            var longDescription = string.Join(string.Empty, Enumerable.Repeat("a", 101));
             var exception = Assert.Throws<ArgumentException>(() => transaction.Description = longDescription);
 
             Assert.Equal("Description must not exceed 100 bytes when encoded as UTF-8", exception.Message);
@@ -487,7 +487,7 @@ namespace Hiero.Tests.SDK.Node
         public virtual void ShouldAllowDescriptionWith100Bytes()
         {
             var transaction = new NodeUpdateTransaction();
-            var description = string.Join(string.Empty, Enumerable.Range(0, 100).Select(_ => "a"));
+            var description = string.Join(string.Empty, Enumerable.Repeat("a", 100));
 			transaction.Description = description;
             
             Assert.Equal(transaction.Description, description);

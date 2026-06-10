@@ -3,6 +3,7 @@ using Google.Protobuf;
 using Google.Protobuf.Reflection;
 
 using Grpc.Core;
+
 using Hiero.SDK.Core;
 using Hiero.SDK.Cryptocurrency;
 using Hiero.SDK.Exceptions;
@@ -269,7 +270,6 @@ namespace Hiero.SDK
 
                 return;
 			}
-
 
 			// When multiple nodes are available the system retries with different node on each attempt
 			// instead of different proxy of the same node

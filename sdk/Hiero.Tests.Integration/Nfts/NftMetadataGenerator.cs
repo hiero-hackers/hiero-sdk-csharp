@@ -23,7 +23,7 @@ namespace Hiero.Tests.Integration.Nfts
 
         public static List<byte[]> Generate(byte[] metadata, int count)
         {
-            return [.. Enumerable.Range(0, count).Select(_ => metadata.CopyArray())];
+            return [.. Enumerable.Repeat(metadata.CopyArray(), count)];
         }
 
         public static List<byte[]> GenerateOneLarge()

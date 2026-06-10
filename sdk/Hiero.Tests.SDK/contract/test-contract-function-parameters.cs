@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: Apache-2.0
 using Google.Protobuf;
 
-using Hiero.SDK;
 using Hiero.SDK.Contract;
 
 using Org.BouncyCastle.Utilities.Encoders;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using System.Text;
 
@@ -288,7 +288,7 @@ namespace Hiero.Tests.SDK.Contract
             ContractFunctionParameters @params = new ContractFunctionParameters()
                 .AddInt32(0x11223344)
                 .AddInt32(-65536)
-                .AddUint64(65536)//.AddUint64(-65536)
+                .AddInt64(-65536)//.AddUint64(-65536)
                 .AddAddress("00112233445566778899aabbccddeeff00112233");
             string @paramsHex = Hex.ToHexString(@params.ToBytes(null).ToByteArray());
             Assert.Equal(
@@ -475,21 +475,14 @@ namespace Hiero.Tests.SDK.Contract
             for (int n = 8; n <= 256; n += 8)
             {
                 var bitWidth = n;
-                Type argType = true switch
-                {
-                    true when bitWidth == 8 => typeof(byte),
-                    true when bitWidth <= 32 => typeof(int),
-                    true when bitWidth <= 64 => typeof(long),
 
-                    _ => typeof(BigInteger)
-                };
-                object argValue = true switch
+                (Type argType, object argValue) = bitWidth switch
                 {
-                    true when bitWidth == 08 => (byte)(1 << (bitWidth - 1)),
-                    true when bitWidth <= 32 => (int)(1 << (bitWidth - 1)),
-                    true when bitWidth <= 64 => (long)(1 << (bitWidth - 1)),
+                    08 => (typeof(sbyte), (sbyte)(1 << (bitWidth - 1))),
+                    <= 32 => (typeof(int), (int)(1 << (bitWidth - 1))),
+                    <= 64 => (typeof(long), (long)(1L << (bitWidth - 1))),
 
-                    _ => BigInteger.One << bitWidth - 1
+                    _ => (typeof(BigInteger), BigInteger.One << bitWidth - 1)
                 };
 
                 Array argArrayVal = Array.CreateInstance(argType, 2);

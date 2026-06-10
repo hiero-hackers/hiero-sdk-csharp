@@ -4,6 +4,7 @@ using NodaTime;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Hiero.SDK.Networking
 {
@@ -241,33 +242,32 @@ namespace Hiero.SDK.Networking
 			lock (this)
 			{
 				var now = SystemClock.Instance.GetCurrentInstant();
+
 				if (now.ToUnixTimeSeconds() > EarliestReadmitTime.ToUnixTimeSeconds())
 				{
 					var nextEarliestReadmitTime = now.PlusSeconds(MaxNodeReadmitTime.Seconds);
-					foreach (var node in Nodes)
-					{
-						if (node.ReadmitTime.ToUnixTimeSeconds() > now.ToUnixTimeSeconds() && node.ReadmitTime.ToUnixTimeSeconds() < nextEarliestReadmitTime.ToUnixTimeSeconds())
-						{
-							nextEarliestReadmitTime = node.ReadmitTime;
-						}
-					}
 
-					EarliestReadmitTime = nextEarliestReadmitTime;
+					foreach (var node in Nodes)
+                        if (node.ReadmitTime.ToUnixTimeSeconds() > now.ToUnixTimeSeconds() && node.ReadmitTime.ToUnixTimeSeconds() < nextEarliestReadmitTime.ToUnixTimeSeconds())
+                            nextEarliestReadmitTime = node.ReadmitTime;
+
+                    EarliestReadmitTime = nextEarliestReadmitTime;
 
 					if (EarliestReadmitTime < now.Plus(MinNodeReadmitTime))
 						EarliestReadmitTime = now.Plus(MinNodeReadmitTime);
 
-					outer:
 					for (var i = 0; i < Nodes.Count; i++)
 					{
+                        bool present = false;
 
 						// Check if `healthyNodes` already contains this node
-						for (var j = 0; j < HealthyNodes.Count; j++)
-							if (Nodes[i] == HealthyNodes[j])
-								goto outer;
+						for (var j = 0; j < HealthyNodes.Count && present is false; j++)
+							present = Nodes[i] == HealthyNodes[j];
 
-						// If `healthyNodes` doesn't contain the node, check the `readmitTime` on the node
-						if (Nodes[i].ReadmitTime.ToUnixTimeSeconds() < now.ToUnixTimeSeconds())
+                        if (present) continue;
+
+                        // If `healthyNodes` doesn't contain the node, check the `readmitTime` on the node
+                        if (Nodes[i].ReadmitTime.ToUnixTimeSeconds() < now.ToUnixTimeSeconds())
 							HealthyNodes.Add(Nodes[i]);
 					}
 				}

@@ -210,7 +210,7 @@ namespace Hiero.Tests.Integration.Topic
                 Assert.Equal((Proto.Services.ResponseCodeEnum)exception2.Receipt.Status, Proto.Services.ResponseCodeEnum.InvalidKeyInFeeExemptKeyList);
 
                 // Create 11 keys (exceeding the limit of 10)
-                List<Key> feeExemptKeyListExceedingLimit = [.. Enumerable.Range(0, 11).Select(_ => PrivateKey.GenerateECDSA())];
+                List<Key> feeExemptKeyListExceedingLimit = [.. Enumerable.Repeat(PrivateKey.GenerateECDSA(), 11)];
 
                 Action exceedKeyListLimitExecutable = () => new TopicCreateTransaction
                 {

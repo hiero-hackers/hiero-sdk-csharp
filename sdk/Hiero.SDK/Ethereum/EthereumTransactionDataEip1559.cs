@@ -34,13 +34,7 @@ namespace Hiero.SDK.Ethereum
             if (typeByte != 0x02)
                 throw new ArgumentException($"rlp type byte {typeByte} is not supported");
 
-            // --- 2. Decode the RLP payload (after type byte) ---
-            var payload = new byte[bytes.Length - 1];
-            Buffer.BlockCopy(bytes, 1, payload, 0, payload.Length);
-
-            var decoded = RLP.Decode(payload);
-
-            if (decoded is not RLPCollection rlpList)
+            if (RLP.Decode(bytes[1..]) is not RLPCollection rlpList)
                 throw new ArgumentException("expected RLP element list");
 
             if (rlpList.Count != 12)

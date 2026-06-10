@@ -86,12 +86,12 @@ namespace Hiero.SDK
 			}
 			public virtual bool ShouldRetryExceptionally(Exception e)
 			{
-				Latency = (double)(Stopwatch.GetTimestamp() - StartAt) / 1000000000;
-				var retry = ShouldRetryExceptionally(e);
+				Latency = (double)(Stopwatch.GetTimestamp() - StartAt) / 1000000000D;
+				var retry = Parent.ShouldRetryExceptionally(e);
 				if (retry)
 				{
 					Network?.IncreaseBackoff(Node);
-					//Parent.Logger.Warn("Retrying in {} ms after failure with node {} during attempt #{}: {}", Node.GetRemainingTimeForBackoff(), Node.AccountId, Attempt, e != null ? e.Message : "NULL");
+					Parent.Logger?.Warn("Retrying in {0} ms after failure with node {1} during attempt #{2}: {3}", Node.GetRemainingTimeForBackoff(), Node.AccountId, Attempt, e != null ? e.Message : "NULL");
 					VerboseLog(Node);
 				}
 

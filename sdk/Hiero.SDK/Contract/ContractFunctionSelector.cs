@@ -181,6 +181,12 @@ namespace Hiero.SDK.Contract
 				digest.DoFinal(finished, 0);
 				digest = null;
 			}
+			//{
+			//    byte[] fullHash = new byte[digest.GetDigestSize()];
+			//    digest.DoFinal(fullHash, 0);
+			//    finished = fullHash[..4];  // ← Take only first 4 bytes
+			//    digest = null;
+			//}
 
 			return finished;
 		}

@@ -19,10 +19,13 @@ namespace Hiero.SDK.Contract
 	/// </summary>
 	public sealed partial class ContractFunctionParameters
 	{
-		/// <summary>
-		/// The length of a Solidity address in bytes.
-		/// </summary>
-		public static readonly int ADDRESS_LEN = Utils.EntityIdHelper.SOLIDITY_ADDRESS_LEN;
+        private static readonly BigInteger Int256Min = BigInteger.One.Negate() << 255;        // -2^255
+        private static readonly BigInteger Int256Max = (BigInteger.One << 255) - BigInteger.One; // 2^255 - 1
+
+        /// <summary>
+        /// The length of a Solidity address in bytes.
+        /// </summary>
+        public static readonly int ADDRESS_LEN = Utils.EntityIdHelper.SOLIDITY_ADDRESS_LEN;
 		/// <summary>
 		/// The length of a hexadecimal-encoded Solidity address, in ASCII characters (bytes).
 		/// </summary>
@@ -38,13 +41,13 @@ namespace Hiero.SDK.Contract
 
 		// padding that we can substring without new allocations
 		private static readonly ByteString padding = ByteString.CopyFrom(new byte[31]);
-		private static readonly ByteString? negativePadding;
+		private static readonly ByteString negativePadding = ByteString.CopyFrom([.. Enumerable.Repeat((byte)0xFF, 31)]);
 
 		private readonly List<Argument> args = [];
 
 		internal static byte[] Decodeaddress(string address)
 		{
-			address = address.StartsWith("0x") ? address.Substring(2) : address;
+			address = address.StartsWith("0x") ? address[2..] : address;
 
 			if (address.Length != ADDRESS_LEN_HEX)
 			{
@@ -133,26 +136,31 @@ namespace Hiero.SDK.Contract
 			return Int256(val, bitWidth, true);
 		}
 		internal static ByteString Int256(long val, int bitWidth, bool signed)
-		{
-			// don't try to Get wider than a `long` as it should just be filled with padding
-			bitWidth = Math.Min(bitWidth, 64);
-			byte[] output = new byte[bitWidth / 8];
+        {
+            // don't try to Get wider than a `long` as it should just be filled with padding
+            bitWidth = Math.Min(bitWidth, 64);
+            byte[] output = new byte[bitWidth / 8];
 
 			// write bytes in big-endian order
-			for (int i = bitWidth - 8; i >= 0; i -= 8)
+			for (int i = bitWidth - 8, j = 0; i >= 0; i -= 8, j++)
 			{
-				// widening conversion sign-extends so we don't have to do anything special when
-				// truncating a previously widened value
-				byte u8 = (byte)(val >> i);
-				output = [.. output, u8];
-			}
+                output[j] = (byte)(val >> i);
+
+                //// widening conversion sign-extends so we don't have to do anything special when
+                //// truncating a previously widened value
+                //byte u8 = (byte)(val >> i);
+                //output = [.. output, u8];
+            }
 
 			// byte padding will sign-extend appropriately
 			return LeftPad32(ByteString.CopyFrom(output), signed && val < 0);
 		}
 		internal static ByteString Int256(BigInteger bigInt, int bitWidth)
 		{
-			return LeftPad32(GetTruncatedBytes(bigInt, bitWidth), bigInt.Sign < 0);
+			if (bigInt < Int256Min || bigInt > Int256Max)
+				throw new ArgumentException("BigInteger out of range for Solidity integers");
+
+            return LeftPad32(GetTruncatedBytes(bigInt, bitWidth), bigInt.Sign < 0);
 		}
 		internal static ByteString Uint256(long val, int bitWidth)
 		{
@@ -177,10 +185,10 @@ namespace Hiero.SDK.Contract
 			if (rem == 32)
 				return input;
 
-			string text = (negative ? negativePadding ?? padding : padding).ToStringUtf8()[..rem];
-			ByteString bytestring = ByteString.CopyFromUtf8(text);
+            ByteString source = negative ? negativePadding : padding;
+            ByteString bytestring = ByteString.CopyFrom(source.Span[..rem].ToArray());
 
-			return bytestring.Concat(input);
+            return bytestring.Concat(input);
 		}
 		internal static ByteString LeftPad32(byte[] input, bool negative)
 		{
@@ -188,9 +196,14 @@ namespace Hiero.SDK.Contract
 		}
 		internal static ByteString RightPad32(ByteString input)
 		{
-			int rem = 32 - input.Length % 32;
-			ByteString bytestring = ByteString.CopyFromUtf8(padding.ToStringUtf8()[.. rem]);
-			return rem == 32 ? input : input.Concat(bytestring);
+            int rem = 32 - input.Length % 32;
+            
+			if (rem == 32) 
+				return input;
+            
+			ByteString bytestring = ByteString.CopyFromUtf8(padding.ToStringUtf8()[..rem]);
+            
+			return input.Concat(bytestring);
 		}
 
 		/// <summary>

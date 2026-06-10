@@ -18,7 +18,7 @@ namespace Hiero.Tests.Integration.Contract
         private static IntegrationTestEnv testEnv;
         private static FileId fileId;
         private static ContractId contractId;
-        public static void BeforeAll()
+        static ContractFunctionParametersIntegrationTest()
         {
             testEnv = new IntegrationTestEnv(1);
             var response = new FileCreateTransaction { Keys = [testEnv.OperatorKey], }.Execute(testEnv.Client);
