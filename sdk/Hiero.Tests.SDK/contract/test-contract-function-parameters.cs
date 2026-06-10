@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Reflection;
 using System.Text;
 
 namespace Hiero.Tests.SDK.Contract
@@ -288,7 +289,8 @@ namespace Hiero.Tests.SDK.Contract
             ContractFunctionParameters @params = new ContractFunctionParameters()
                 .AddInt32(0x11223344)
                 .AddInt32(-65536)
-                .AddInt64(-65536)//.AddUint64(-65536)
+                //.AddInt64(-65536)//.AddUint64(-65536)
+                .AddUint64(unchecked((ulong)-65536L))
                 .AddAddress("00112233445566778899aabbccddeeff00112233");
             string @paramsHex = Hex.ToHexString(@params.ToBytes(null).ToByteArray());
             Assert.Equal(
@@ -370,6 +372,7 @@ namespace Hiero.Tests.SDK.Contract
             // each string should be padded to 32 bytes and have no length prefix
             ContractFunctionParameters @params = new ContractFunctionParameters()
                 .AddBytes32Array([ Encoding.UTF8.GetBytes("Hello"), Encoding.UTF8.GetBytes(","), Encoding.UTF8.GetBytes("world!") ]);
+
             Assert.Equal(
                 "0000000000000000000000000000000000000000000000000000000000000020" + 
                 "0000000000000000000000000000000000000000000000000000000000000003" + 
@@ -380,7 +383,6 @@ namespace Hiero.Tests.SDK.Contract
         [Fact]
         public virtual void DynBytesArrayEncoding()
         {
-
             // result should be the exact same as the strings test below
             ContractFunctionParameters @params = new ContractFunctionParameters()
                 .AddBytesArray([ Encoding.UTF8.GetBytes("Hello"), Encoding.UTF8.GetBytes(","), Encoding.UTF8.GetBytes("world!") ]);
@@ -476,32 +478,54 @@ namespace Hiero.Tests.SDK.Contract
             {
                 var bitWidth = n;
 
-                (Type argType, object argValue) = bitWidth switch
+                Type argType; Type argTypeSigned; object argValue; Array argArrayVal; Array? argArrayValSigned = null;
+
+                switch (bitWidth)
                 {
-                    08 => (typeof(sbyte), (sbyte)(1 << (bitWidth - 1))),
-                    <= 32 => (typeof(int), (int)(1 << (bitWidth - 1))),
-                    <= 64 => (typeof(long), (long)(1L << (bitWidth - 1))),
+                    case 08:
+                        argType = typeof(byte);
+                        argTypeSigned = typeof(sbyte);
+                        argValue = (byte)(1 << (bitWidth - 1));
+                        argArrayVal = new byte[] { (byte)argValue, (byte)argValue };
+                        break;
 
-                    _ => (typeof(BigInteger), BigInteger.One << bitWidth - 1)
-                };
+                    case <= 32:
+                        argType = typeof(int);
+                        argTypeSigned = typeof(uint);
+                        argValue = 1 << (bitWidth - 1);
+                        argArrayVal = new int[] { (int)argValue, (int)argValue };
+                        argArrayValSigned = new uint[] { (uint)argValue, (uint)argValue };
+                        break;
 
-                Array argArrayVal = Array.CreateInstance(argType, 2);
-                
-                argArrayVal.SetValue(argValue, 0);
-                argArrayVal.SetValue(argValue, 1);
-                
-                var argArrayType = argArrayVal.GetType();
-                var cl = typeof(ContractFunctionParameters);
-                var addIntMethod = cl.GetMethod("addInt" + n, [ argType ])!;
-                var addUintMethod = cl.GetMethod("addUint" + n, [ argType ])!;
-                var addIntArrayMethod = cl.GetMethod("addInt" + n + "Array", [ argArrayType] )!;
-                var addUintArrayMethod = cl.GetMethod("addUint" + n + "Array", [ argArrayType] )!;
-                var @params = new ContractFunctionParameters();
+                    case <= 64:
+                        argType = typeof(long);
+                        argTypeSigned = typeof(ulong);
+                        argValue = 1L << (bitWidth - 1);
+                        argArrayVal = new long[] { (long)argValue, (long)argValue };
+                        argArrayValSigned = new ulong[] { (ulong)argValue, (ulong)argValue };
+                        break;
+
+                    default:
+                        argType = argTypeSigned = typeof(BigInteger);
+                        argValue = BigInteger.One << (bitWidth - 1);
+                        argArrayVal = argArrayValSigned = new BigInteger[] { (BigInteger)argValue, (BigInteger) argValue};
+                        break;
+                }
+
+                Type argArrayType = argArrayVal.GetType();
+                Type? argArrayTypeSigned = argArrayValSigned?.GetType();
+                Type cl = typeof(ContractFunctionParameters);
+                MethodInfo addIntMethod = cl.GetMethod("AddInt" + n, [ argType ])!;
+                MethodInfo addUintMethod = cl.GetMethod("AddUint" + n, [ argTypeSigned ])!;
+                MethodInfo addIntArrayMethod = cl.GetMethod("AddInt" + n + "Array", [ argArrayType ] )!;
+                MethodInfo addUintArrayMethod = cl.GetMethod("AddUint" + n + "Array", [ argArrayTypeSigned ?? argArrayType ] )!;
+
+                ContractFunctionParameters @params = new ();
                 
                 addIntMethod.Invoke(@params, [ argValue ]);
                 addUintMethod.Invoke(@params, [ argValue ]);
-                addIntArrayMethod.Invoke(@params, [ ..argArrayVal ]);
-                addUintArrayMethod.Invoke(@params, [ ..argArrayVal ]);
+                addIntArrayMethod.Invoke(@params, [ argArrayVal ]);
+                addUintArrayMethod.Invoke(@params, [ argArrayVal ]);
 
                 snapshotStrings.Add("bitWidth = " + bitWidth + ": " + Hex.ToHexString(@params.ToBytes(null).ToByteArray()));
             }

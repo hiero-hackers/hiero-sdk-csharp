@@ -66,7 +66,8 @@ namespace Hiero.SDK.Contract
 		internal static byte[] GetTruncatedBytes(BigInteger bigInt, int bitWidth)
 		{
 			byte[] bytes = bigInt.ToByteArray();
-			int expectedBytes = bitWidth / 8;
+            // Array.Reverse(bytes);
+            int expectedBytes = bitWidth / 8;
 			return bytes.Length <= expectedBytes
 					? bytes
 					: bytes[(bytes.Length - expectedBytes)..bytes.Length].CopyArray();
@@ -106,7 +107,7 @@ namespace Hiero.SDK.Contract
 		{
 			byte[] bytearray = [.. elements.SelectMany(_ => _.ToByteArray())];
 
-			return Int256(bytearray.Length, 32).Concat(ByteString.CopyFrom(bytearray));
+			return Int256(bytearray.Length / 32, 256).Concat(ByteString.CopyFrom(bytearray));
 		}
 		internal static ByteString EncodeDynArr(IEnumerable<ByteString> elements)
 		{
@@ -201,7 +202,7 @@ namespace Hiero.SDK.Contract
 			if (rem == 32) 
 				return input;
             
-			ByteString bytestring = ByteString.CopyFromUtf8(padding.ToStringUtf8()[..rem]);
+			ByteString bytestring = ByteString.CopyFrom(padding.Span[..rem].ToArray());
             
 			return input.Concat(bytestring);
 		}
@@ -299,7 +300,7 @@ namespace Hiero.SDK.Contract
 		{
 			// array of fixed-size elements
 
-			args.Add(new Argument("bytes32[]", EncodeArray(param.Select(_ => EncodeBytes32(_))), true));
+			args.Add(new Argument("bytes32[]", EncodeArray(param.Select(EncodeBytes32)), true));
 
 			return this;
 		}
@@ -2137,9 +2138,7 @@ namespace Hiero.SDK.Contract
 		{
 			// offset for dynamic-length data, immediately after value arguments
 			var dynamicOffset = args.Count * 32;
-
 			var paramsBytes = new List<ByteString>(args.Count + 1);
-
 			var dynamicArgs = new List<ByteString>();
 
 			ContractFunctionSelector? functionSelector = funcName != null ? new ContractFunctionSelector(funcName) : null;
@@ -2147,12 +2146,9 @@ namespace Hiero.SDK.Contract
 			// iterate the arguments and determine whether they are dynamic or not
 			foreach (Argument arg in args)
 			{
-				if (functionSelector != null)
-				{
-					functionSelector.AddParamType(arg.Type);
-				}
+                functionSelector?.AddParamType(arg.Type);
 
-				if (arg.IsDynamic)
+                if (arg.IsDynamic)
 				{
 					// dynamic arguments supply their offset in value position and append their data at
 					// that offset
@@ -2168,11 +2164,9 @@ namespace Hiero.SDK.Contract
 			}
 
 			if (functionSelector != null)
-			{
-				paramsBytes.Insert(0, ByteString.CopyFrom(functionSelector.Finish()));
-			}
+                paramsBytes.Insert(0, ByteString.CopyFrom(functionSelector.Finish()));
 
-			paramsBytes.AddRange(dynamicArgs);
+            paramsBytes.AddRange(dynamicArgs);
 
 			return ByteString.CopyFrom([.. paramsBytes.SelectMany(_ => _.ToByteArray())]);
 		}
