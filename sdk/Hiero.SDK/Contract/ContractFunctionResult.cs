@@ -175,7 +175,6 @@ namespace Hiero.SDK.Contract
         /// <include file="ContractFunctionResult.cs.xml" path='docs/member[@name="M:ContractFunctionResult.GetUint256(System.Int32)"]' />
         public BigInteger GetUint256(int valIndex)
         {
-
             // prepend a zero byte so that `BigInteger` finds a zero sign bit and treats it as positive
             // `ByteString -> byte[]` requires copying anyway so we can amortize these two operations
             byte[] bytes = new byte[33];
@@ -288,7 +287,7 @@ namespace Hiero.SDK.Contract
 			};
 
             if (EvmAddress != null)
-				proto.EvmAddress = ByteString.CopyFrom(EvmAddress.EvmAddress); // BytesValue.Parser.Par SetValue(.Build());
+				proto.EvmAddress = ByteString.CopyFrom(EvmAddress.EvmAddress); 
 
 			if (ErrorMessage != null)
 				proto.ErrorMessage = ErrorMessage;

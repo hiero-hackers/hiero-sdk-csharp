@@ -108,8 +108,9 @@ namespace Hiero.SDK.Utils
 
 			foreach (byte b in h)
 			{
-				// byte is signed in java, have to fake it to make bytes act like they're unsigned
-				sh = (w * sh + (b < 0 ? 256 + b : b)) % p5;
+                // byte is signed in java, have to fake it to make bytes act like they're unsigned
+                sh = (w * sh + b) % p5;
+                //sh = (w * sh + (b < 0 ? 256 + b : b)) % p5;
 			}
 
 			c = ((((addr.Length % 5) * 11 + s0) * 11 + s1) * p3 + s + sh) % p5;

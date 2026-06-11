@@ -478,42 +478,48 @@ namespace Hiero.Tests.SDK.Contract
             {
                 var bitWidth = n;
 
-                Type argType; Type argTypeSigned; object argValue; Array argArrayVal; Array? argArrayValSigned = null;
+                byte _byte() => (byte)(1 << (bitWidth - 1));
+                int _int() => 1 << (bitWidth - 1);
+                uint _uint() => (uint)(1 << (bitWidth - 1));
+                long _long() => 1L << (bitWidth - 1);
+                ulong _ulong() => (ulong)(1L << (bitWidth - 1));
+                BigInteger _biginteger() => BigInteger.One << (bitWidth - 1);
+
+                Type argType; Type argTypeSigned; 
+                object argValue; object argValueSigned; 
+                Array argArrayVal; Array argArrayValSigned;
 
                 switch (bitWidth)
                 {
                     case 08:
-                        argType = typeof(byte);
-                        argTypeSigned = typeof(sbyte);
-                        argValue = (byte)(1 << (bitWidth - 1));
-                        argArrayVal = new byte[] { (byte)argValue, (byte)argValue };
+                        argType = argTypeSigned = typeof(byte);
+                        argValue = argValueSigned = _byte();
+                        argArrayVal = argArrayValSigned = new byte[] { _byte(), _byte() };
                         break;
 
                     case <= 32:
-                        argType = typeof(int);
-                        argTypeSigned = typeof(uint);
-                        argValue = 1 << (bitWidth - 1);
-                        argArrayVal = new int[] { (int)argValue, (int)argValue };
-                        argArrayValSigned = new uint[] { (uint)argValue, (uint)argValue };
+                        argType = typeof(int); argTypeSigned = typeof(uint);
+                        argValue = _int();
+                        argValueSigned = _uint();
+                        argArrayVal = new int[] { _int(), _int() }; argArrayValSigned = new uint[] { _uint(), _uint() };
                         break;
 
                     case <= 64:
-                        argType = typeof(long);
-                        argTypeSigned = typeof(ulong);
-                        argValue = 1L << (bitWidth - 1);
-                        argArrayVal = new long[] { (long)argValue, (long)argValue };
-                        argArrayValSigned = new ulong[] { (ulong)argValue, (ulong)argValue };
+                        argType = typeof(long); argTypeSigned = typeof(ulong);
+                        argValue = _long();
+                        argValueSigned = _ulong();
+                        argArrayVal = new long[] { _long(), _long() }; argArrayValSigned = new ulong[] { _ulong(), _ulong() };
                         break;
 
                     default:
                         argType = argTypeSigned = typeof(BigInteger);
-                        argValue = BigInteger.One << (bitWidth - 1);
-                        argArrayVal = argArrayValSigned = new BigInteger[] { (BigInteger)argValue, (BigInteger) argValue};
+                        argValue = argValueSigned = _biginteger();
+                        argArrayVal = argArrayValSigned = new BigInteger[] { _biginteger(), _biginteger() };
                         break;
                 }
 
                 Type argArrayType = argArrayVal.GetType();
-                Type? argArrayTypeSigned = argArrayValSigned?.GetType();
+                Type argArrayTypeSigned = argArrayValSigned.GetType();
                 Type cl = typeof(ContractFunctionParameters);
                 MethodInfo addIntMethod = cl.GetMethod("AddInt" + n, [ argType ])!;
                 MethodInfo addUintMethod = cl.GetMethod("AddUint" + n, [ argTypeSigned ])!;
@@ -523,9 +529,9 @@ namespace Hiero.Tests.SDK.Contract
                 ContractFunctionParameters @params = new ();
                 
                 addIntMethod.Invoke(@params, [ argValue ]);
-                addUintMethod.Invoke(@params, [ argValue ]);
+                addUintMethod.Invoke(@params, [ argValueSigned ]);
                 addIntArrayMethod.Invoke(@params, [ argArrayVal ]);
-                addUintArrayMethod.Invoke(@params, [ argArrayVal ]);
+                addUintArrayMethod.Invoke(@params, [ argArrayValSigned ]);
 
                 snapshotStrings.Add("bitWidth = " + bitWidth + ": " + Hex.ToHexString(@params.ToBytes(null).ToByteArray()));
             }

@@ -85,5 +85,22 @@ namespace Hiero.SDK.Fee
         {
             return ToProtobuf().ToByteArray();
         }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj == this)
+                return true;
+
+            if (obj is not CustomFee that)
+                return false;
+
+            return 
+                AllCollectorsAreExempt == that.AllCollectorsAreExempt &&
+                (FeeCollectorAccountId?.Equals(that.FeeCollectorAccountId) ?? that.FeeCollectorAccountId is null);
+        }
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(AllCollectorsAreExempt.GetHashCode(), FeeCollectorAccountId?.GetHashCode());
+        }
     }
 }

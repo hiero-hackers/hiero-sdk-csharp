@@ -30,7 +30,8 @@ namespace Hiero.Tests.SDK.Ethereum
             Assert.Equal("7653", Hex.ToHexString(data.CallData));
             Assert.Equal("0277", Hex.ToHexString(data.V));
             Assert.Equal("f9fbff985d374be4a55f296915002eec11ac96f1ce2df183adf992baa9390b2f", Hex.ToHexString(data.R));
-            Assert.Equal("0c1e867cc960d9c74ec2e6a662b7908ec4c8cc9f3091e886bcefbeb2290fb792", Hex.ToHexString(data.S)); // We don't currently support a way to get the ethereum has, but we probably should
+            Assert.Equal("0c1e867cc960d9c74ec2e6a662b7908ec4c8cc9f3091e886bcefbeb2290fb792", Hex.ToHexString(data.S)); 
+            // We don't currently support a way to get the ethereum has, but we probably should
             // assertEquals("9ffbd69c44cf643ed8d1e756b505e545e3b5dd3a6b5ef9da1d8eca6679706594",
             //    Hex.toHexString(data.getEthereumHash()));
         }

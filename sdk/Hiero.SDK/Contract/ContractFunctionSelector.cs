@@ -161,7 +161,7 @@ namespace Hiero.SDK.Contract
 			if (finished is not null) throw new InvalidOperationException("FunctionSelector already finished");
 			if (needsComma) digest.Update((byte)',');
 
-			var typeNameBytes = Encoding.ASCII.GetBytes(typeName);
+			byte[] typeNameBytes = Encoding.ASCII.GetBytes(typeName);
 
 			digest.BlockUpdate(typeNameBytes, 0, typeNameBytes.Length);
 
@@ -176,7 +176,9 @@ namespace Hiero.SDK.Contract
 			if (digest is null) throw new InvalidOperationException("Finish() has been called");
 			if (finished is null)
 			{
-				byte[] fullHash = new byte[digest.GetDigestSize()];
+                digest.Update((byte)')');
+
+                byte[] fullHash = new byte[digest.GetDigestSize()];
 				digest.DoFinal(fullHash, 0);
 				finished = fullHash[..4];  // ← Take only first 4 bytes
 				digest = null;

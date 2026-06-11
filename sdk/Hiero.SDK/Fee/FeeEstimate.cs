@@ -45,7 +45,7 @@ namespace Hiero.SDK.Fee
                 return false;
             }
 
-            return Base == that.Base && Equals(Extras, that.Extras);
+            return Base == that.Base && Extras.SequenceEqual(that.Extras);
         }
         public override int GetHashCode()
         {

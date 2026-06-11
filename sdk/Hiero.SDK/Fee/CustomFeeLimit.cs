@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 using Hiero.SDK.Cryptocurrency;
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -28,6 +29,21 @@ namespace Hiero.SDK.Fee
                 AccountId = PayerId?.ToProtobuf(),
                 Fees = { CustomFees.Select(_ => _.ToFixedFeeProtobuf()) }
 			};
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (this == obj)
+                return true;
+
+            if (obj is not CustomFeeLimit that)
+                return false;
+
+            return CustomFees.SequenceEqual(that.CustomFees) && (PayerId?.Equals(that.PayerId) ?? that.PayerId is null);
+        }
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(PayerId?.GetHashCode(), CustomFees.GetHashCodeEnumerable());
         }
     }
 }
