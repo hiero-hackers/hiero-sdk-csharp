@@ -67,7 +67,7 @@ namespace Hiero.SDK.Networking
 						throw new NotSupportedException("InProcess channels not supported in Grpc.Core.");
 					}
 
-					channel = Address.IsTransportSecurity
+                    channel = Address.IsTransportSecurity
 						? new Channel(Address.ToString(), GetChannelCredentials())
 						: new Channel(Address.ToString(), ChannelCredentials.Insecure);
 

@@ -53,7 +53,7 @@ namespace Hiero.Tests.SDK.Topic
             };
         }
 
-        public virtual void Teardown()
+        public void Dispose()
         {
             consensusServiceStub.Verify();
 

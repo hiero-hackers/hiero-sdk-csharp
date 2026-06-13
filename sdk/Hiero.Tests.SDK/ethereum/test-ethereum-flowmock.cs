@@ -30,9 +30,9 @@ namespace Hiero.Tests.SDK.Ethereum
                     var signedTransaction = Proto.Services.SignedTransaction.Parser.ParseFrom(((Proto.Services.Transaction)_).SignedTransactionBytes);
                     var transactionBody = Proto.Services.TransactionBody.Parser.ParseFrom(signedTransaction.BodyBytes);
                     
-                    Assert.Equal(transactionBody.DataCase, Proto.Services.TransactionBody.DataOneofCase.EthereumTransaction);
-                    Assert.True(transactionBody.EthereumTransaction is not null);
-                    Assert.Equal(transactionBody.EthereumTransaction.EthereumData, ETHEREUM_DATA);
+                    Assert.Equal(Proto.Services.TransactionBody.DataOneofCase.EthereumTransaction, transactionBody.DataCase);
+                    Assert.NotNull(transactionBody.EthereumTransaction);
+                    Assert.Equal(ETHEREUM_DATA, transactionBody.EthereumTransaction.EthereumData);
                 
                     return new Proto.Services.TransactionResponse
                     {
@@ -76,8 +76,8 @@ namespace Hiero.Tests.SDK.Ethereum
                     var transactionBody = Proto.Services.TransactionBody.Parser.ParseFrom(signedTransaction.BodyBytes);
 
                     Assert.Equal(Proto.Services.TransactionBody.DataOneofCase.EthereumTransaction, transactionBody.DataCase);
-                    Assert.True(transactionBody.EthereumTransaction is not null);
-                    Assert.Equal(EthereumTransactionData.FromBytes(transactionBody.EthereumTransaction.EthereumData.ToByteArray()).CallData, LONG_CALL_DATA.ToByteArray());
+                    Assert.NotNull(transactionBody.EthereumTransaction);
+                    Assert.Equal(LONG_CALL_DATA.ToByteArray(), EthereumTransactionData.FromBytes(transactionBody.EthereumTransaction.EthereumData.ToByteArray()).CallData);
 
                     return new Proto.Services.TransactionResponse
                     {

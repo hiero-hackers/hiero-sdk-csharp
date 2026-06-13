@@ -42,7 +42,7 @@ namespace Hiero.SDK
             ScheduleNetworkUpdate(networkUpdateInitialDelay);
         }
 
-		//public Logger Logger_ { get; set; } = new(LogLevel.Silent);
+		public Logger Logger_ { get; set; } = new (LogLevel.Silent);
 		public Network Network_ { get; internal set; }
 		public MirrorNetwork MirrorNetwork_ { get; internal set; }
 
@@ -461,24 +461,24 @@ namespace Hiero.SDK
 				try
 				{
 					var fileId = FileId.GetAddressBookFileIdFor(Shard, Realm);
-					//logger.Debug("Fetching address book from file {}", fileId);
+					Logger_.Debug("Fetching address book from file {0}", fileId);
 
 					// Execute synchronously - no async complexity
 					var addressBook = new AddressBookQuery { FileId = fileId, }.Execute(this); // ← Synchronous!
-					//logger.Debug("Received address book with {} nodes", addressBook.NodeAddresses.Count);
+					Logger_.Debug("Received address book with {0} nodes", addressBook.NodeAddresses.Count);
 
 					// Update the Network
 					NetworkFromAddressBook = addressBook;
 
-					//logger.Info("Address book update completed successfully");
+                    Logger_.Info("Address book update completed successfully");
 				}
-				catch (TimeoutException)
+				catch (TimeoutException e)
 				{
-					//logger.Warn("Failed to fetch address book: {}", e.Message);
+					Logger_.Warn("Failed to fetch address book: {0}", e.Message);
 				}
-				catch (Exception)
+				catch (Exception e)
 				{
-					//logger.Warn("Failed to update address book", e);
+                    Logger_.Warn("Failed to update address book", e);
 				}
 
 				return this;
@@ -498,16 +498,16 @@ namespace Hiero.SDK
         {
             lock (this)
             {
-				var closeDeadline = timeout.ToInstant();
-                
-                NetworkUpdatePeriod = null;
+				NetworkUpdatePeriod = null;
                 CancelScheduledNetworkUpdate();
                 CancelAllSubscriptions();
                 Network_.BeginClose();
                 MirrorNetwork_.BeginClose();
 
-                var NetworkError = Network_.AwaitClose(closeDeadline, null);
-                var MirrorNetwork_Error = MirrorNetwork_.AwaitClose(closeDeadline, NetworkError);
+				var closeDeadline = timeout.ToInstant();
+
+                var NetworkError = Network_.AwaitClose(closeDeadline, null).GetAwaiter().GetResult();
+                var MirrorNetwork_Error = MirrorNetwork_.AwaitClose(closeDeadline, NetworkError).GetAwaiter().GetResult();
 
 				if (ShouldShutdownExecutor && Executor != null)
 				{
@@ -523,7 +523,7 @@ namespace Hiero.SDK
 
 							if (!Executor.WaitForTermination(waitTime))
 							{
-								//logger.LogWarning("Executor pool did not terminate in time");
+								Logger_.Warn("Executor pool did not terminate in time");
 							}
 						}
 					}

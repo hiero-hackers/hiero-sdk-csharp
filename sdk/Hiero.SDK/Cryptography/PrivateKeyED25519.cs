@@ -133,13 +133,13 @@ namespace Hiero.SDK.Cryptography
 			// https://github.com/satoshilabs/slips/blob/master/slip-0010.md#master-key-generation
 			var hmacSha512 = new HMac(new Sha512Digest());
 			hmacSha512.Init(ChainCode);
-			hmacSha512.Update((byte)0);
+			hmacSha512.Update(0);
 			hmacSha512.BlockUpdate(KeyData, 0, Ed25519.SecretKeySize);
 
 			// write the index in big-endian order, setting the 31st bit to mark it "hardened"
 			var indexBytes = new byte[4];
 			BinaryPrimitives.WriteInt32BigEndian(indexBytes, index);
-			indexBytes[0] |= (byte)0b10000000;
+			indexBytes[0] |= 0b10000000;
 			hmacSha512.BlockUpdate(indexBytes, 0, indexBytes.Length);
 			var output = new byte[64];
 			hmacSha512.DoFinal(output, 0);

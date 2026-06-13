@@ -65,7 +65,7 @@ namespace Hiero.SDK.Networking
         /// <include file="LedgerId.cs.xml" path='docs/member[@name="M:LedgerId.ToBytes"]' />
         public virtual byte[] ToBytes()
         {
-            return IdBytes.CopyArray(IdBytes.Length);
+            return IdBytes.CopyArray();
         }
         /// <include file="LedgerId.cs.xml" path='docs/member[@name="M:LedgerId.ToByteString"]' />
         public virtual ByteString ToByteString()

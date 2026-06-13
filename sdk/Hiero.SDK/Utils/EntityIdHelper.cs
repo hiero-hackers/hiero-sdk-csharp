@@ -63,7 +63,7 @@ namespace Hiero.SDK.Utils
         }
 
 		/// <include file="EntityIdHelper.cs.xml" path='docs/member[@name="M:EntityIdHelper.Checksum(LedgerId,System.String)"]' />
-		public static string Checksum(LedgerId ledgerId, string addr)
+        public static string Checksum(LedgerId ledgerId, string addr)
 		{
 			StringBuilder answer = new();
 			List<int> d = []; // Digits with 10 for ".", so if addr == "0.0.123" then d == [0, 10, 0, 10, 1, 2, 3]
@@ -109,15 +109,17 @@ namespace Hiero.SDK.Utils
 			foreach (byte b in h)
 			{
                 // byte is signed in java, have to fake it to make bytes act like they're unsigned
-                sh = (w * sh + b) % p5;
                 //sh = (w * sh + (b < 0 ? 256 + b : b)) % p5;
-			}
+            
+				sh = (w * sh + b) % p5;
+            }
 
-			c = ((((addr.Length % 5) * 11 + s0) * 11 + s1) * p3 + s + sh) % p5;
-			c = (c * m) % p5;
-			for (var i = 0; i < 5; i++)
+            c = ((((addr.Length % 5) * 11 + s0) * 11 + s1) * p3 + s + sh) % p5;
+            c = (c * m) % p5;
+
+            for (var i = 0; i < 5; i++)
 			{
-				answer.Append((char)(asciiA + (c % 26)));
+                answer.Append((char)(asciiA + (c % 26)));
 				c /= 26;
 			}
 

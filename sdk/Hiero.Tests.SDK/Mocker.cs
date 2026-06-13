@@ -5,7 +5,7 @@ using Grpc.Core;
 using Hiero.SDK;
 using Hiero.SDK.Cryptocurrency;
 using Hiero.SDK.Cryptography;
-
+using Hiero.SDK.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -107,7 +107,7 @@ namespace Hiero.Tests.SDK
                 _client.NodeMaxBackoff = NodaTime.Duration.FromMilliseconds(0);
                 _client.MinNodeReadmitTime = NodaTime.Duration.FromMilliseconds(0);
                 _client.MaxNodeReadmitTime = NodaTime.Duration.FromMilliseconds(0);
-                //_client.Logger = new Logger(LogLevel.SILENT));
+                _client.Logger_ = new Logger(LogLevel.Silent);
             });                
         }
 

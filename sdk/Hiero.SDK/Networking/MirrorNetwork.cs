@@ -17,7 +17,7 @@ namespace Hiero.SDK.Networking
             {
                 Network = [..addresses];
             }
-            catch (ThreadInterruptedException e) { }
+            catch (ThreadInterruptedException) { }
             catch (TimeoutException) { }
         }
 

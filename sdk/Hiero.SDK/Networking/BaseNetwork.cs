@@ -4,6 +4,8 @@ using NodaTime;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace Hiero.SDK.Networking
@@ -288,41 +290,52 @@ namespace Hiero.SDK.Networking
                 node.DecreaseBackoff();
             }
         }
-		public virtual Exception? AwaitClose(Instant deadline, Exception? previousError)
+		public virtual async Task<Exception?> AwaitClose(Instant deadline, Exception? previousError)
 		{
+            Task[] shutdownTasks;
+
 			lock (this)
 			{
-				try
+				if (previousError != null)
+					return previousError;
+
+                shutdownTasks = [.. Nodes.Where(_ => _.Channel.State is not Grpc.Core.ChannelState.Shutdown).Select(node => node.Channel.ShutdownAsync())];
+			}
+
+			try
+			{
+				var timeoutMillis = (deadline - SystemClock.Instance.GetCurrentInstant()).TotalMilliseconds;
+
+				if (timeoutMillis <= 0)
+					return new TimeoutException("Failed to properly shutdown all channels");
+
+				bool allCompleted = Task.WaitAll(shutdownTasks, TimeSpan.FromMilliseconds(timeoutMillis));
+
+                //bool allCompleted = await Task
+                //    .WhenAll(shutdownTasks)
+                //    .WaitAsync(TimeSpan.FromMilliseconds(timeoutMillis))
+                //    .ContinueWith(t => t.IsCompletedSuccessfully);
+
+                if (!allCompleted)
+					return new TimeoutException("Failed to properly shutdown all channels");
+
+				lock (this)
 				{
-					if (previousError != null)
-					{
-						throw previousError;
-					}
-
 					foreach (var node in Nodes)
-					{
-						if (node.Channel != null)
-						{
-							var timeoutMillis = (SystemClock.Instance.GetCurrentInstant() - deadline).TotalMilliseconds;
-
-							if (timeoutMillis <= 0 || node.Channel.ShutdownAsync().Wait(TimeSpan.FromMilliseconds(timeoutMillis)))
-								throw new TimeoutException("Failed to properly shutdown all channels");
-							else node.ChannelReset();
-                        }
-					}
-
-					return null;
+						node.ChannelReset();
 				}
-				catch (Exception error)
-				{
-					foreach (var node in Nodes)
-						node.Channel.ShutdownAsync().GetAwaiter().GetResult();
 
+				return null;
+			}
+			catch (Exception error)
+			{
+				return error;
+			}
+			finally
+			{
+				lock (this)
+				{
 					HasShutDownNow = true;
-					return error;
-				}
-				finally
-				{
 					Nodes.Clear();
 					Network.Clear();
 				}

@@ -43,14 +43,14 @@ namespace Hiero.SDK
 			return (KeyParameter)gen.GenerateDerivedParameters("AES256", dkLenBytes * 8);
 		}
 		/// <include file="Crypto.cs.xml" path='docs/member[@name="M:InitAesCtr128(KeyParameter,System.Byte[])"]' />
-		internal static BufferedBlockCipher InitAesCtr128(KeyParameter key, byte[] iv)
-		{
-			BufferedBlockCipher cipher = new (new SicBlockCipher(new AesEngine()));
-			cipher.Init(true, new ParametersWithIV(key, iv));
-			return cipher;
-		}
-		/// <include file="Crypto.cs.xml" path='docs/member[@name="M:InitAesCbc128Encrypt(KeyParameter,System.Byte[])"]' />
-		internal static BufferedBlockCipher InitAesCbc128Encrypt(KeyParameter key, byte[] iv)
+        internal static BufferedBlockCipher InitAesCtr128(KeyParameter key, byte[] iv)
+        {
+            BufferedBlockCipher cipher = new(new SicBlockCipher(new AesEngine()));
+            cipher.Init(true, new ParametersWithIV(new KeyParameter(key.GetKey(), 0, 16), iv));
+            return cipher;
+        }
+        /// <include file="Crypto.cs.xml" path='docs/member[@name="M:InitAesCbc128Encrypt(KeyParameter,System.Byte[])"]' />
+        internal static BufferedBlockCipher InitAesCbc128Encrypt(KeyParameter key, byte[] iv)
 		{
 			BufferedBlockCipher cipher = new (new CbcBlockCipher(new AesEngine()));
 			cipher.Init(true, new ParametersWithIV(key, iv));
