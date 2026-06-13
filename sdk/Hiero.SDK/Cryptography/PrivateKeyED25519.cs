@@ -195,7 +195,12 @@ namespace Hiero.SDK.Cryptography
         {
             try
             {
-                return new PrivateKeyInfo(new AlgorithmIdentifier(ID_ED25519), new DerOctetString(KeyData)).GetEncoded("DER");
+                return new PrivateKeyInfo(
+					new AlgorithmIdentifier(ID_ED25519), 
+					new DerOctetString(KeyData)
+					//,null,GetPublicKey().ToBytes()
+
+				).GetEncoded(Asn1Encodable.Der);
             }
             catch (IOException e)
             {

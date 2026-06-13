@@ -66,7 +66,7 @@ namespace Hiero.SDK.Contract
 		internal static byte[] GetTruncatedBytes(BigInteger bigInt, int bitWidth)
 		{
 			byte[] bytes = bigInt.ToByteArray();
-            // Array.Reverse(bytes);
+            Array.Reverse(bytes);
             int expectedBytes = bitWidth / 8;
 			return bytes.Length <= expectedBytes
 					? bytes
@@ -153,9 +153,14 @@ namespace Hiero.SDK.Contract
                 //output = [.. output, u8];
             }
 
-			// byte padding will sign-extend appropriately
-			return LeftPad32(ByteString.CopyFrom(output), signed && val < 0);
-		}
+            bool negative = signed && (val & (1L << (bitWidth - 1))) != 0;
+
+            return LeftPad32(ByteString.CopyFrom(output), negative);
+
+            // byte padding will sign-extend appropriately
+            //return LeftPad32(ByteString.CopyFrom(output), signed && val < 0);
+        }
+
 		internal static ByteString Int256(BigInteger bigInt, int bitWidth)
 		{
 			if (bigInt < Int256Min || bigInt > Int256Max)

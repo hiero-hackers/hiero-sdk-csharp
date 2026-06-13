@@ -271,7 +271,7 @@ namespace Hiero.SDK.Contract
 		}
 		private ByteString GetByteString(int startIndex, int endIndex)
         {
-            return ByteString.CopyFrom(RawResult.ToByteArray(), startIndex, endIndex);
+            return ByteString.CopyFrom(RawResult.ToByteArray()[startIndex..endIndex]);
         }
 
         /// <include file="ContractFunctionResult.cs.xml" path='docs/member[@name="M:ContractFunctionResult.ToProtobuf"]' />

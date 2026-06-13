@@ -14,6 +14,7 @@ using Org.BouncyCastle.Crypto.Signers;
 using Org.BouncyCastle.Math;
 
 using System;
+using System.Buffers.Binary;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -143,35 +144,46 @@ namespace Hiero.SDK.Cryptography
             return recId;
         }
 
+
         public override PrivateKey Derive(int index)
         {
             if (!IsDerivable())
-            {
                 throw new InvalidOperationException("this private key does not support derivation");
-            }
 
-            byte[] dataArray = new byte[37];
             bool isHardened = Bip32Utils.IsHardenedIndex(index);
 
+            // Write index as 4 bytes big-endian
+            var indexBytes = new byte[4];
+            BinaryPrimitives.WriteInt32BigEndian(indexBytes, index);
+
+            byte[] dataArray;
             if (isHardened)
             {
+                // 0x00 || ser256(key) || ser32(index)
                 byte[] bytes33 = new byte[33];
                 byte[] priv = ToBytesRaw();
                 Array.Copy(priv, 0, bytes33, 33 - priv.Length, priv.Length);
-                dataArray = [.. bytes33, (byte)index];
+                dataArray = [.. bytes33, .. indexBytes];
             }
-            else dataArray = [.. GetPublicKey().ToBytesRaw(), (byte)index];
+            else
+            {
+                // serP(point(key)) || ser32(index)
+                dataArray = [.. GetPublicKey().ToBytesRaw(), .. indexBytes];
+            }
 
             HMac hmacSha512 = new(new Sha512Digest());
-            hmacSha512.Init(new KeyParameter(ChainCode!.GetKey())); // IsDerivable above validates CshainCode
+            hmacSha512.Init(new KeyParameter(ChainCode!.GetKey()));
             hmacSha512.BlockUpdate(dataArray, 0, dataArray.Length);
-            byte[] i = new byte[64];
-            hmacSha512.DoFinal(i, 0);
-            var il = i.CopyArray(0, 32);
-            var ir = i.CopyArray(32, 64);
-            var ki = KeyData.Add(new BigInteger(1, il)).Mod(ECDSA_SECP256K1_CURVE.N);
+            byte[] I = new byte[64];
+            hmacSha512.DoFinal(I, 0);
+
+            var il = I.CopyArray(0, 32);
+            var ir = I.CopyArray(32, 64);
+            var ki = new BigInteger(1, il).Add(KeyData).Mod(ECDSA_SECP256K1_CURVE.N);
+
             return new PrivateKeyECDSA(ki, new KeyParameter(ir));
         }
+
         public override PublicKey GetPublicKey()
         {
             if (publicKey != null)

@@ -78,12 +78,12 @@ namespace Hiero.SDK.Cryptography
 			if (prf != "hmac-sha256")
 				throw new BadKeyException("unsupported KDF hash function: " + prf);
 
-			byte[] cipherBytes = Hex.Decode(ciphertext);
-			byte[] iv = Hex.Decode(ivString);
-			byte[] mac = Hex.Decode(macString);
-			byte[] salt = Hex.Decode(saltStr);
+            byte[] cipherBytes = Hex.Decode(ciphertext);
+            byte[] iv = Hex.Decode(ivString);
+            byte[] mac = Hex.Decode(macString);
+            byte[] salt = Hex.Decode(saltStr);
 
-			KeyParameter cipherKey = Crypto.DeriveKeySha256(passphrase, salt, count, dkLen);
+            KeyParameter cipherKey = Crypto.DeriveKeySha256(passphrase, salt, count, dkLen);
 
 			byte[] testHmac = Crypto.CalcHmacSha384(cipherKey, null, cipherBytes);
 

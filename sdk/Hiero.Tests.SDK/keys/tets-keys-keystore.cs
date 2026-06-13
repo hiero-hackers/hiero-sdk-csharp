@@ -31,7 +31,7 @@ namespace Hiero.Tests.SDK.Keys
             Keystore keystore = Keystore.FromStream(Resources.TestKeystore2_Stream, PASSPHRASE);
             PrivateKey privateKey = keystore.GetEd25519();
 
-            Assert.Equal(privateKey.ToString(), TEST_KEY_STR);
+            Assert.Equal(TEST_KEY_STR, privateKey.ToString());
         }
         [Fact]
         /// <include file="tets-keys-keystore.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Keys.KeystoreTest.KeystoreToStream"]' />
@@ -49,7 +49,7 @@ namespace Hiero.Tests.SDK.Keys
             Keystore keystore2 = Keystore.FromStream(dataStream, PASSPHRASE); // Passes
             PrivateKey privateKey2 = keystore2.GetEd25519();
 
-            Assert.Equal(privateKey2.ToString(), TEST_KEY_STR);
+            Assert.Equal(TEST_KEY_STR, privateKey2.ToString());
         }
     }
 }

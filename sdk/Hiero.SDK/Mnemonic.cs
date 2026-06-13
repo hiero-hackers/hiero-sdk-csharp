@@ -381,36 +381,39 @@ namespace Hiero.SDK
                 result[b] = data[b] ^ crc;
             }
 
-
-            // int to byte conversion
-            List<byte> byteBuffer = new (result.Length * 4);
-
-			// ------- (From java Port)
-			//IntBuffer intBuffer = byteBuffer.AsIntBuffer();
-			//intBuffer.Add(result);
-			// ------- 
-
-			var crc2 = Crc8(result);
+            var crc2 = Crc8(result);
             if (crc != crc2)
             {
                 throw new BadMnemonicException(this, BadMnemonicReason.ChecksumMismatch);
             }
 
+            // Convert each int to its 4 bytes (big-endian), then take only the last byte of each
+            // This replicates Java's IntBuffer.put() → ByteBuffer behaviour
+            List<byte> byteBuffer = new(result.Length * 4);
+            foreach (int val in result)
+            {
+                byteBuffer.Add((byte)((val >> 24) & 0xFF));
+                byteBuffer.Add((byte)((val >> 16) & 0xFF));
+                byteBuffer.Add((byte)((val >> 8) & 0xFF));
+                byteBuffer.Add((byte)(val & 0xFF));
+            }
+
             byte[] array = [.. byteBuffer];
+
+            // Take every 4th byte (index 3, 7, 11, …) — the least-significant byte of each int
+            byte[] array2 = new byte[data.Length - 1];
             var i = 0;
             var j = 3;
-            byte[] array2 = new byte[data.Length - 1];
-
-            // remove all the fill 0s
             while (j < array.Length)
             {
                 array2[i] = array[j];
                 i++;
-                j = j + 4;
+                j += 4;
             }
 
             return array2;
         }
+
         internal byte[] WordsToLegacyEntropy2()
         {
             var concatBitsLen = Words.Count * 11;
