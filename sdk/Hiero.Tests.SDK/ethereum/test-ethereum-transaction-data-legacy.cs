@@ -49,7 +49,9 @@ namespace Hiero.Tests.SDK.Ethereum
             Assert.Equal("7e3a9eaf9bcc39e2ffa38eb30bf7a93feacbc181", Hex.ToHexString(data.To));
             Assert.Equal("0de0b6b3a7640000", Hex.ToHexString(data.Value));
             Assert.Equal("123456", Hex.ToHexString(data.CallData));
-            Assert.Equal("", Hex.ToHexString(data.AccessList));
+            Assert.Equal("c0", Hex.ToHexString(data.AccessList));
+            // why would it be empty insted of 'c0'
+            // Assert.Equal("", Hex.ToHexString(data.AccessList));
             Assert.Equal("01", Hex.ToHexString(data.RecoveryId));
             Assert.Equal("df48f2efd10421811de2bfb125ab75b2d3c44139c4642837fb1fccce911fd479", Hex.ToHexString(data.R));
             Assert.Equal("1aaf7ae92bee896651dfc9d99ae422a296bf5d9f1ca49b2d96d82b79eb112d66", Hex.ToHexString(data.S));

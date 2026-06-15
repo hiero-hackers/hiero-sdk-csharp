@@ -144,7 +144,6 @@ namespace Hiero.SDK.Cryptography
             return recId;
         }
 
-
         public override PrivateKey Derive(int index)
         {
             if (!IsDerivable())

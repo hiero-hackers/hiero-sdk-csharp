@@ -28,8 +28,8 @@ namespace Hiero.SDK.Contract
             InitFromTransactionBody();
         }
 
-		/// <include file="ContractUpdateTransaction.cs.xml" path='docs/member[@name="M:ContractUpdateTransaction.RequireNotFrozen"]' />
-		public ContractId? ContractId
+        /// <include file="ContractUpdateTransaction.cs.xml" path='docs/member[@name="M:ContractUpdateTransaction.RequireNotFrozen"]' />
+        public ContractId? ContractId
 		{
 			get;
 			set
@@ -61,8 +61,13 @@ namespace Hiero.SDK.Contract
                     ExpirationTime = null;
             }
 		}
-		/// <include file="ContractUpdateTransaction.cs.xml" path='docs/member[@name="T:ContractUpdateTransaction_2"]' />
-		public Key? AdminKey
+		public NodaTime.Instant? ExpirationTimeDurationPoint
+		{
+			get; 
+			private set;
+		}
+        /// <include file="ContractUpdateTransaction.cs.xml" path='docs/member[@name="T:ContractUpdateTransaction_2"]' />
+        public Key? AdminKey
 		{
 			get;
 			set;
@@ -213,7 +218,7 @@ namespace Hiero.SDK.Contract
             if (ExpirationTime != null)
 				builder.ExpirationTime = ExpirationTime.Value.ToProtoTimestamp();
             else if (ExpirationTimeDuration != null)
-				builder.ExpirationTime = ExpirationTimeDuration.Value.ToProtoTimestamp();
+				builder.ExpirationTime = ExpirationTimeDuration.Value.ToProtoTimestamp(ExpirationTimeDurationPoint ??= NodaTime.SystemClock.Instance.GetCurrentInstant());
 
             if (AdminKey != null)
 				builder.AdminKey = AdminKey.ToProtobufKey();

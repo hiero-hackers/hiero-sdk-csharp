@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: Apache-2.0
-using Google.Protobuf;
 using Google.Protobuf.Reflection;
-using Google.Protobuf.WellKnownTypes;
+
 using Hiero.SDK.Core;
 using Hiero.SDK.Cryptocurrency;
 using Hiero.SDK.Cryptography;
+
+using NodaTime;
 
 using System;
 using System.Collections.Generic;
@@ -25,8 +26,8 @@ namespace Hiero.SDK.Schedule
             InitFromTransactionBody();
         }
 
-		/// <include file="ScheduleCreateTransaction.cs.xml" path='docs/member[@name="M:ScheduleCreateTransaction.RequireNotFrozen"]' />
-		public NodaTime.Instant? ExpirationTime 
+        /// <include file="ScheduleCreateTransaction.cs.xml" path='docs/member[@name="M:ScheduleCreateTransaction.RequireNotFrozen"]' />
+        public NodaTime.Instant? ExpirationTime 
         {
             get;
             set
@@ -49,8 +50,13 @@ namespace Hiero.SDK.Schedule
                     ExpirationTime = null;
             }
 		}
-		/// <include file="ScheduleCreateTransaction.cs.xml" path='docs/member[@name="P:ScheduleCreateTransaction.WaitForExpiry"]' />
-		public bool WaitForExpiry { get; set; }
+        public NodaTime.Instant? ExpirationTimeDurationPoint
+        {
+            get;
+            private set;
+        }
+        /// <include file="ScheduleCreateTransaction.cs.xml" path='docs/member[@name="P:ScheduleCreateTransaction.WaitForExpiry"]' />
+        public bool WaitForExpiry { get; set; }
 		/// <include file="ScheduleCreateTransaction.cs.xml" path='docs/member[@name="M:ScheduleCreateTransaction.RequireNotFrozen_3"]' />
 		public AccountId? PayerAccountId 
         {
@@ -109,7 +115,7 @@ namespace Hiero.SDK.Schedule
 			if (ExpirationTime != null)
 				builder.ExpirationTime = ExpirationTime.Value.ToProtoTimestamp();
 			else if (ExpirationTimeDuration != null)
-				builder.ExpirationTime = ExpirationTimeDuration.Value.ToProtoTimestamp();
+				builder.ExpirationTime = ExpirationTimeDuration.Value.ToProtoTimestamp(ExpirationTimeDurationPoint ??= SystemClock.Instance.GetCurrentInstant());
 
 			builder.Memo = ScheduleMemo;
             builder.WaitForExpiry = WaitForExpiry;

@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+
+using Hiero.Proto.Services;
 
 namespace Hiero.SDK
 {
@@ -732,5 +736,35 @@ namespace Hiero.SDK
         HookIdInUse = Proto.Services.ResponseCodeEnum.HookIdInUse,
         HookIdRepeatedInCreationDetails = Proto.Services.ResponseCodeEnum.HookIdRepeatedInCreationDetails,
         HookNotFound = Proto.Services.ResponseCodeEnum.HookNotFound,
+    }
+    public readonly struct ResponseStatusValue(ResponseStatus status) : IEquatable<ResponseStatusValue>
+    {
+        public ResponseStatus Status { get; } = status;
+
+        private static readonly Dictionary<ResponseStatus, string> _cache = [];
+
+        public override string ToString()
+        {
+            if (_cache.TryGetValue(Status, out var cached))
+                return cached;
+
+            var name = Status.ToString();
+            var result = Regex.Replace(name, @"(?<=[a-z0-9])(?=[A-Z])", "_").ToUpperInvariant();
+            _cache[Status] = result;
+            return result;
+        }
+
+        // Implicit conversions so it's nearly transparent to use
+        public static implicit operator ResponseStatusValue(ResponseStatus s) => new(s);
+        public static implicit operator ResponseStatusValue(ResponseCodeEnum s) => new((ResponseStatus)s);
+        public static implicit operator ResponseStatus(ResponseStatusValue s) => s.Status;
+        public static implicit operator ResponseCodeEnum(ResponseStatusValue s) => (ResponseCodeEnum)s.Status;
+
+        public bool Equals(ResponseStatusValue other) => Status == other.Status;
+        public override bool Equals(object? obj) => obj is ResponseStatusValue v && Equals(v);
+        public override int GetHashCode() => Status.GetHashCode();
+
+        public static bool operator ==(ResponseStatusValue a, ResponseStatusValue b) => a.Status == b.Status;
+        public static bool operator !=(ResponseStatusValue a, ResponseStatusValue b) => a.Status != b.Status;
     }
 }

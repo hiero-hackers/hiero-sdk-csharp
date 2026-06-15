@@ -37,7 +37,7 @@ namespace Hiero.SDK.Core
         /// <include file="TransactionReceipt.cs.xml" path='docs/member[@name="F:TransactionReceipt.TransactionId"]' />
         public TransactionId? TransactionId { get; } = transactionId;
         /// <include file="TransactionReceipt.cs.xml" path='docs/member[@name="P:TransactionReceipt.Status"]' />
-        public ResponseStatus Status { get; } = status;
+        public ResponseStatusValue Status { get; } = status;
         /// <include file="TransactionReceipt.cs.xml" path='docs/member[@name="F:TransactionReceipt.ExchangeRate"]' />
         public ExchangeRate ExchangeRate { get; } = exchangeRate;
         /// <include file="TransactionReceipt.cs.xml" path='docs/member[@name="F:TransactionReceipt.NextExchangeRate"]' />

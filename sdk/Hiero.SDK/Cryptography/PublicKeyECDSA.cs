@@ -78,7 +78,6 @@ namespace Hiero.SDK.Cryptography
 		}
 		public override EvmAddress ToEvmAddress()
         {
-
             // Calculate the Keccak-256 hash of the uncompressed key without "04" prefix
             byte[] uncompressed = ECDSA_SECP256K1_CURVE.Curve.DecodePoint(ToBytesRaw()).GetEncoded(false);
             byte[] keccakBytes = Crypto.CalcKeccak256(uncompressed[1..uncompressed.Length].CopyArray());

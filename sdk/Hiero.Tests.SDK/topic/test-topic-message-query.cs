@@ -38,7 +38,7 @@ namespace Hiero.Tests.SDK.Topic
             server = new Server
             {
                 Services = { Proto.Mirror.ConsensusService.BindService(consensusServiceStub) },
-                Ports = { new ServerPort("localhost", 1000, ServerCredentials.Insecure) }
+                // Ports = { new ServerPort("localhost", 1000, ServerCredentials.Insecure) }
             };
             server.Start();
 

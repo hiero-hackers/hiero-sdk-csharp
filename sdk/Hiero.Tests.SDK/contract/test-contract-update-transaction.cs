@@ -124,7 +124,10 @@ namespace Hiero.Tests.SDK.Contract
             var tx2 = Transaction.FromBytes<ContractUpdateTransaction>(tx.ToBytes());
 
             Assert.Equal(tx.ToString(), tx2.ToString());
-            Assert.Equal(tx2.ExpirationTime, Instant.FromUnixTimeMilliseconds(1234));
+            Assert.Equal(tx2.ExpirationTime, tx.ExpirationTimeDurationPoint?.PlusSeconds(1234));
+
+            // From java port. probbly wrong
+            // Assert.Equal(tx2.ExpirationTime, Instant.FromUnixTimeSeconds(1234));
         }
         [Fact]
         /// <include file="test-contract-update-transaction.ts.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Contract.ContractUpdateTransactionTest.SetExpirationTimeDurationOnFrozenTransactionShouldThrow"]' />

@@ -20,7 +20,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Hiero.SDK.Core;
+
 using Hiero.SDK.Transactions;
 
 namespace Hiero.SDK.Core
