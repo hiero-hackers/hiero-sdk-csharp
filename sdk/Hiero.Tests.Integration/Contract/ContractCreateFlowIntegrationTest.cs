@@ -35,7 +35,7 @@ namespace Hiero.Tests.Integration.Contract
                 .SetFunction("setMessage", new ContractFunctionParameters().AddString("new message"))
                 .Execute(testEnv.Client)
                 .GetReceipt(testEnv.Client);
-                Assert.Equal(receipt.Status, ResponseStatus.Success);
+                Assert.Equal(receipt.Status, (ResponseStatusValue)ResponseStatus.Success);
                 
                 new ContractDeleteTransaction
                 {
@@ -97,7 +97,7 @@ namespace Hiero.Tests.Integration.Contract
                 .Execute(testEnv.Client)
                 .GetReceipt(testEnv.Client);
 
-                Assert.Equal(receipt.Status, ResponseStatus.Success);
+                Assert.Equal(receipt.Status, (ResponseStatusValue)ResponseStatus.Success);
                 
                 new ContractDeleteTransaction
                 {
@@ -139,7 +139,7 @@ namespace Hiero.Tests.Integration.Contract
                 .Execute(testEnv.Client)
                 .GetReceipt(testEnv.Client);
 
-                Assert.Equal(receipt.Status, ResponseStatus.Success);
+                Assert.Equal(receipt.Status, (ResponseStatusValue)ResponseStatus.Success);
                 
                 new ContractDeleteTransaction
                 {

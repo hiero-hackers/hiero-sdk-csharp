@@ -103,7 +103,7 @@ namespace Hiero.Tests.Integration.Transactions
 					
                     }.Execute(testEnv.Client);
                     
-                    Assert.Equal(ResponseStatus.Success, receipt.Status);
+                    Assert.Equal((ResponseStatusValue)ResponseStatus.Success, receipt.Status);
                 }
             }
         }
@@ -296,7 +296,7 @@ namespace Hiero.Tests.Integration.Transactions
                 .Execute(testEnv.Client)
                 .GetReceipt(testEnv.Client);
 
-                Assert.Equal(receipt.Status, ResponseStatus.Success);
+                Assert.Equal(receipt.Status, (ResponseStatusValue)ResponseStatus.Success);
             }
         }
         [Fact]

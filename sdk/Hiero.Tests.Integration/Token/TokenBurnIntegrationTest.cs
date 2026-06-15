@@ -91,7 +91,7 @@ namespace Hiero.Tests.Integration.Token
 
 				}.Execute(testEnv.Client).GetReceipt(testEnv.Client);
 
-                Assert.Equal(receipt.Status, ResponseStatus.Success);
+                Assert.Equal(receipt.Status, (ResponseStatusValue)ResponseStatus.Success);
             }
         }
         [Fact]

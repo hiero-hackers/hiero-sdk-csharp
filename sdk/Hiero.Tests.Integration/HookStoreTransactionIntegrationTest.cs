@@ -1,5 +1,6 @@
 ﻿// SPDX-License-Identifier: Apache-2.0
 using System.Collections.Generic;
+using System.Linq;
 
 using Hiero.SDK.Cryptography;
 using Hiero.SDK.Cryptocurrency;
@@ -8,7 +9,6 @@ using Hiero.SDK;
 using Hiero.SDK.File;
 using Hiero.SDK.Contract;
 using Hiero.SDK.Exceptions;
-using System.Linq;
 
 namespace Hiero.Tests.Integration
 {
@@ -54,16 +54,16 @@ namespace Hiero.Tests.Integration
                 var hookId = new HookId(new HookEntityId(ownerId), 3);
 
                 // Prepare a storage update to set key=0x01 -> value=0x02
-                var update = new EvmHookStorageSlot(new byte[] { 0x01 }, new byte[] { 0x02 });
+                var update = new EvmHookStorageSlot([ 0x01 ], [ 0x02 ]);
                 var resp = new HookStoreTransaction
                 {
 					HookId = hookId,
-					NodeAccountIds = new (testEnv.Client.Network_.Nodes.Select(_ => _.AccountId)),
+					NodeAccountIds = [.. testEnv.Client.Network_.Nodes.Select(_ => _.AccountId)],
 					StorageUpdates = update
 
                 }.FreezeWith(testEnv.Client).Sign(adminKey).Execute(testEnv.Client);
                 var receipt = resp.GetReceipt(testEnv.Client);
-                Assert.Equal(receipt.Status, ResponseStatus.Success);
+                Assert.Equal(receipt.Status, (ResponseStatusValue)ResponseStatus.Success);
             }
         }
         [Fact]

@@ -234,7 +234,7 @@ namespace Hiero.Tests.Integration.File
                 var appendResponse = appendTransaction.Execute(testEnv.Client);
                 var appendReceipt = appendResponse.GetReceipt(testEnv.Client);
                 
-                Assert.Equal(appendReceipt.Status, ResponseStatus.Success);
+                Assert.Equal(appendReceipt.Status, (ResponseStatusValue)ResponseStatus.Success);
                 
                 var contents = new FileContentsQuery
                 {

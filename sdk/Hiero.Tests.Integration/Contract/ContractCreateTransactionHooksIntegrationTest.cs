@@ -40,7 +40,7 @@ namespace Hiero.Tests.Integration.Contract
                 }.Execute(testEnv.Client);
                 var receipt = response.GetReceipt(testEnv.Client);
 
-                Assert.Equal(receipt.Status, ResponseStatus.Success);
+                Assert.Equal(receipt.Status, (ResponseStatusValue)ResponseStatus.Success);
 				Assert.NotNull(receipt.ContractId);
 			}
 		}
@@ -65,7 +65,7 @@ namespace Hiero.Tests.Integration.Contract
                 
                 }.Execute(testEnv.Client);
                 var receipt = response.GetReceipt(testEnv.Client);
-                Assert.Equal(receipt.Status, ResponseStatus.Success);
+                Assert.Equal(receipt.Status, (ResponseStatusValue)ResponseStatus.Success);
                 Assert.NotNull(receipt.ContractId);
             }
         }
@@ -117,7 +117,7 @@ namespace Hiero.Tests.Integration.Contract
 
                 var receipt = tx.Execute(testEnv.Client).GetReceipt(testEnv.Client);
 
-                Assert.Equal(receipt.Status, ResponseStatus.Success);
+                Assert.Equal(receipt.Status, (ResponseStatusValue)ResponseStatus.Success);
 				Assert.NotNull(receipt.ContractId);
 			}
 		}

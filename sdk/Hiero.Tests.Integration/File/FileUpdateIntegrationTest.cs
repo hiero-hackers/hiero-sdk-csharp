@@ -135,7 +135,7 @@ namespace Hiero.Tests.Integration.File
 				
                 }.Execute(testEnv.Client).GetReceipt(testEnv.Client);
                 
-                Assert.Equal(receipt.Status, ResponseStatus.FeeScheduleFilePartUploaded);
+                Assert.Equal(receipt.Status, (ResponseStatusValue)ResponseStatus.FeeScheduleFilePartUploaded);
             }
         }
     }

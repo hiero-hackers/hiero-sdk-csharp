@@ -10,25 +10,26 @@
           ]
         },
         {
-          "src": "../sdk/Hedera.Hashgraph.SDK",
+          "src": "../sdk/Hiero.SDK",
           "files": [
             "**/*.csproj"
           ]
         },
         {
-          "src": "../sdk/Hedera.Hashgraph.Tests.SDK",
+          "src": "../sdk/Hiero.Tests.SDK",
           "files": [
             "**/*.csproj"
           ]
         },
         {
-          "src": "../sdk/Hedera.Hashgraph.Tests.Integration",
+          "src": "../sdk/Hiero.Tests.Integration",
           "files": [
             "**/*.csproj"
           ]
         }
       ],
-      "dest": "api"
+      "dest": "api",
+      "namespaceLayout": "nested"
     }
   ],
   "build": {
@@ -55,9 +56,13 @@
       "modern"
     ],
     "globalMetadata": {
-      "_appName": "Hedera Hashgraph C# SDK Documentation",
-      "_appTitle": "Hedera Hashgraph C# SDK Documentation",
+      "_appName": "Hiero C# SDK Documentation",
+      "_appTitle": "Hiero C# SDK Documentation",
       "_enableSearch": true,
+      "_gitContribute": {
+        "repo": "https://github.com/hiero-hackers/hiero-sdk-csharp",
+        "branch": "main"
+      },
       "pdf": true
     }
   }

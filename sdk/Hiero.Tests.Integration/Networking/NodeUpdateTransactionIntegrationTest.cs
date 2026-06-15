@@ -127,7 +127,7 @@ namespace Hiero.Tests.Integration.Networking
 
 				// Verify the transaction was successful by checking the receipt
 				var receipt = response.GetReceipt(client);
-				Assert.Equal(receipt.Status, ResponseStatus.Success);
+				Assert.Equal(receipt.Status, (ResponseStatusValue)ResponseStatus.Success);
 			}
         }
         [Fact]
@@ -167,7 +167,7 @@ namespace Hiero.Tests.Integration.Networking
                 resp.ValidateStatus = true;
                 var receipt = resp.GetReceipt(client);
 
-                Assert.Equal(receipt.Status, ResponseStatus.Success);
+                Assert.Equal(receipt.Status, (ResponseStatusValue)ResponseStatus.Success);
             }
         }
         [Fact]
@@ -212,7 +212,7 @@ namespace Hiero.Tests.Integration.Networking
                 resp.ValidateStatus = true;
                 var receipt = resp.GetReceipt(client);
 
-                Assert.Equal(receipt.Status, ResponseStatus.Success);
+                Assert.Equal(receipt.Status, (ResponseStatusValue)ResponseStatus.Success);
 
                 // Wait for mirror node to import data
                 Thread.Sleep(10000);
@@ -243,7 +243,7 @@ namespace Hiero.Tests.Integration.Networking
                 resp.ValidateStatus = true;
                 receipt = resp.GetReceipt(client);
 
-                Assert.Equal(receipt.Status, ResponseStatus.Success);
+                Assert.Equal(receipt.Status, (ResponseStatusValue)ResponseStatus.Success);
             }
         }
         [Fact]
@@ -293,7 +293,7 @@ namespace Hiero.Tests.Integration.Networking
 				});
 
 				Assert.Contains(exception.Message, "INVALID_SIGNATURE");
-				Assert.Equal(exception.Receipt.Status, ResponseStatus.InvalidSignature);
+				Assert.Equal(exception.Receipt.Status, (ResponseStatusValue)ResponseStatus.InvalidSignature);
             }
         }
         [Fact]
@@ -343,7 +343,7 @@ namespace Hiero.Tests.Integration.Networking
                 });
 
 				Assert.Contains(exception.Message, "INVALID_SIGNATURE");
-				Assert.Equal(exception.Receipt.Status, ResponseStatus.InvalidSignature);
+				Assert.Equal(exception.Receipt.Status, (ResponseStatusValue)ResponseStatus.InvalidSignature);
             }
         }
 
@@ -388,7 +388,7 @@ namespace Hiero.Tests.Integration.Networking
 
 				// Assert.Contains(exception.Message, "INVALID_ACCOUNT_ID");
 				// Assert.Contains(exception.Message, "INVALID_NODE_ACCOUNT_ID");
-				Assert.Equal(exception.Receipt.Status, ResponseStatus.InvalidAccountId | ResponseStatus.InvalidNodeAccountId);
+				Assert.Equal((ResponseStatus)exception.Receipt.Status, ResponseStatus.InvalidAccountId | ResponseStatus.InvalidNodeAccountId);
             }
         }
         [Fact]
@@ -427,7 +427,7 @@ namespace Hiero.Tests.Integration.Networking
                 .Sign(newAccountKey)
                 .Execute(client);
                 var deleteReceipt = deleteResponse.GetReceipt(client);
-                Assert.Equal(deleteReceipt.Status, ResponseStatus.Success);
+                Assert.Equal(deleteReceipt.Status, (ResponseStatusValue)ResponseStatus.Success);
 
                 // When: A NodeUpdateTransaction is submitted to change to the deleted account
                 var nodeUpdateTransaction = new NodeUpdateTransaction
@@ -448,7 +448,7 @@ namespace Hiero.Tests.Integration.Networking
 				});
 
 				Assert.Contains(exception.Message, "ACCOUNT_DELETED");
-				Assert.Equal(exception.Receipt.Status, ResponseStatus.AccountDeleted);
+				Assert.Equal(exception.Receipt.Status, (ResponseStatusValue)ResponseStatus.AccountDeleted);
             }
         }
         [Fact]
@@ -488,7 +488,7 @@ namespace Hiero.Tests.Integration.Networking
                 resp.ValidateStatus = true;
                 var receipt = resp.GetReceipt(client);
 
-                Assert.Equal(receipt.Status, ResponseStatus.Success);
+                Assert.Equal(receipt.Status, (ResponseStatusValue)ResponseStatus.Success);
 
                 // Wait for mirror node to import data
                 Thread.Sleep(10000);
@@ -513,7 +513,7 @@ namespace Hiero.Tests.Integration.Networking
                 resp.ValidateStatus = true;
                 receipt = resp.GetReceipt(client);
 
-                Assert.Equal(receipt.Status, ResponseStatus.Success);
+                Assert.Equal(receipt.Status, (ResponseStatusValue)ResponseStatus.Success);
             }
         }
         [Fact]
@@ -583,7 +583,7 @@ namespace Hiero.Tests.Integration.Networking
             resp.ValidateStatus = true;
             var receipt = resp.GetReceipt(client);
 
-            Assert.Equal(receipt.Status, ResponseStatus.Success);
+            Assert.Equal(receipt.Status, (ResponseStatusValue)ResponseStatus.Success);
         }
         public void ExecuteAccountCreate(Client client, IList<AccountId> nodeAccountIds)
         {
@@ -599,7 +599,7 @@ namespace Hiero.Tests.Integration.Networking
             resp.ValidateStatus = true;
             var receipt = resp.GetReceipt(client);
 
-            Assert.Equal(receipt.Status, ResponseStatus.Success);
+            Assert.Equal(receipt.Status, (ResponseStatusValue)ResponseStatus.Success);
         }
     }
 }

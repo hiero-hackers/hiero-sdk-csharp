@@ -659,7 +659,7 @@ namespace Hiero.Tests.Integration.Transactions
                 var createResponse = new AccountCreateTransaction
                 {
 					Key = newKey.GetPublicKey(),
-					NodeAccountIds = new (testEnv.Client.Network_.Network_Read.Keys)
+					NodeAccountIds = [.. testEnv.Client.Network_.Network_Read.Keys]
 				
                 }.Execute(testEnv.Client);
 
@@ -690,7 +690,7 @@ namespace Hiero.Tests.Integration.Transactions
                 var deleteResponse = deleteTransaction.Execute(testEnv.Client);
                 var deleteReceipt = deleteResponse.GetReceipt(testEnv.Client);
 
-                Assert.Equal(ResponseStatus.Success, deleteReceipt.Status);
+                Assert.Equal((ResponseStatusValue)ResponseStatus.Success, deleteReceipt.Status);
             }
         }
     }

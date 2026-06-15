@@ -141,7 +141,7 @@ namespace Hiero.Tests.Integration
                     transaction.Execute(testEnv.Client);
                 });
 
-                Assert.Equal(exception.Status, ResponseStatus.TransactionOversize);
+                Assert.Equal(exception.Status, (ResponseStatusValue)ResponseStatus.TransactionOversize);
             }
         }
 
@@ -183,7 +183,7 @@ namespace Hiero.Tests.Integration
                     transaction.FreezeWith(testEnv.Client);
                     transaction.Execute(testEnv.Client);
                 });
-                Assert.Equal(exception.Status, ResponseStatus.TransactionExpired);
+                Assert.Equal(exception.Status, (ResponseStatusValue)ResponseStatus.TransactionExpired);
             }
         }
 

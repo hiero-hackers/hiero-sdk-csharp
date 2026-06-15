@@ -678,7 +678,7 @@ namespace Hiero.Tests.Integration.Token
 				}
                 .Execute(testEnv.Client);
                 var receipt = response.GetReceipt(testEnv.Client);
-                Assert.Equal(receipt.Status, ResponseStatus.Success);
+                Assert.Equal(receipt.Status, (ResponseStatusValue)ResponseStatus.Success);
                 var tokenId = receipt.TokenId;
                 Assert.NotNull(tokenId);
                 var tokenInfo = new TokenInfoQuery

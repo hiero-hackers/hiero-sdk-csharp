@@ -43,7 +43,7 @@ namespace Hiero.Tests.Integration.Contract
                 .Execute(testEnv.Client);
                 var receipt = response.GetReceipt(testEnv.Client);
 
-                Assert.Equal(receipt.Status, ResponseStatus.Success);
+                Assert.Equal(receipt.Status, (ResponseStatusValue)ResponseStatus.Success);
             }
         }
         [Fact]
@@ -124,7 +124,7 @@ namespace Hiero.Tests.Integration.Contract
                     response.GetReceipt(testEnv.Client);
                 });
                 
-                Assert.Equal(exception.Receipt.Status, ResponseStatus.HookIdInUse);
+                Assert.Equal(exception.Receipt.Status, (ResponseStatusValue)ResponseStatus.HookIdInUse);
             }
         }
         [Fact]
@@ -159,7 +159,7 @@ namespace Hiero.Tests.Integration.Contract
 
                 var receipt = response.GetReceipt(testEnv.Client);
 
-                Assert.Equal(receipt.Status, ResponseStatus.Success);
+                Assert.Equal(receipt.Status, (ResponseStatusValue)ResponseStatus.Success);
             }
         }
         [Fact]
@@ -207,7 +207,7 @@ namespace Hiero.Tests.Integration.Contract
                     .GetReceipt(testEnv.Client);
 				});
                 
-                Assert.Equal(exception.Receipt.Status, ResponseStatus.HookIdInUse);
+                Assert.Equal(exception.Receipt.Status, (ResponseStatusValue)ResponseStatus.HookIdInUse);
             }
         }
         [Fact]
@@ -250,7 +250,7 @@ namespace Hiero.Tests.Integration.Contract
 
                 var receipt = response.GetReceipt(testEnv.Client);
 
-                Assert.Equal(receipt.Status, ResponseStatus.Success);
+                Assert.Equal(receipt.Status, (ResponseStatusValue)ResponseStatus.Success);
             }
         }
         [Fact]
@@ -295,7 +295,7 @@ namespace Hiero.Tests.Integration.Contract
                     response.GetReceipt(testEnv.Client);
                 });
                 
-                Assert.Equal(exception.Receipt.Status, ResponseStatus.HookNotFound);
+                Assert.Equal(exception.Receipt.Status, (ResponseStatusValue)ResponseStatus.HookNotFound);
             }
         }
         [Fact]
@@ -332,7 +332,7 @@ namespace Hiero.Tests.Integration.Contract
                     response.GetReceipt(testEnv.Client);
                 });
                 
-                Assert.Equal(exception.Receipt.Status, ResponseStatus.HookNotFound);
+                Assert.Equal(exception.Receipt.Status, (ResponseStatusValue)ResponseStatus.HookNotFound);
             }
         }
         [Fact]
@@ -377,7 +377,7 @@ namespace Hiero.Tests.Integration.Contract
                 
                 var firstDeleteReceipt = firstDeleteResponse.GetReceipt(testEnv.Client);
 
-                Assert.Equal(firstDeleteReceipt.Status, ResponseStatus.Success);
+                Assert.Equal(firstDeleteReceipt.Status, (ResponseStatusValue)ResponseStatus.Success);
 
                 // Second deletion - should fail with HOOK_DELETED
                 ReceiptStatusException exception = Assert.Throws<ReceiptStatusException>(() =>
@@ -393,7 +393,7 @@ namespace Hiero.Tests.Integration.Contract
                     response.GetReceipt(testEnv.Client);
                 });
                 
-                Assert.Equal(exception.Receipt.Status, ResponseStatus.HookNotFound);
+                Assert.Equal(exception.Receipt.Status, (ResponseStatusValue)ResponseStatus.HookNotFound);
             }
         }
 

@@ -48,7 +48,7 @@ namespace Hiero.Tests.Integration.Transactions
                     .AddHbarTransferWithHook(accountId, new Hbar(1), hookCall).Execute(testEnv.Client);
                 var transferReceipt = transferResponse.GetReceipt(testEnv.Client);
              
-                Assert.Equal(transferReceipt.Status, ResponseStatus.Success);
+                Assert.Equal(transferReceipt.Status, (ResponseStatusValue)ResponseStatus.Success);
             }
         }
         [Fact]
@@ -120,7 +120,7 @@ namespace Hiero.Tests.Integration.Transactions
                 .AddHbarTransferWithHook(acct2, new Hbar(1), hookCall2)
                 .Execute(testEnv.Client);
                 var receipt = resp.GetReceipt(testEnv.Client);
-                Assert.Equal(receipt.Status, ResponseStatus.Success);
+                Assert.Equal(receipt.Status, (ResponseStatusValue)ResponseStatus.Success);
             }
         }
         [Fact]
@@ -161,7 +161,7 @@ namespace Hiero.Tests.Integration.Transactions
                 .AddHbarTransferWithHook(accountId, new Hbar(1), hookCall)
                     .Execute(testEnv.Client);
                 var receipt = resp.GetReceipt(testEnv.Client);
-                Assert.Equal(receipt.Status, ResponseStatus.Success);
+                Assert.Equal(receipt.Status, (ResponseStatusValue)ResponseStatus.Success);
             }
         }
         [Fact]
@@ -258,7 +258,7 @@ namespace Hiero.Tests.Integration.Transactions
                     .Execute(testEnv.Client)
                     .GetReceipt(testEnv.Client);
                 
-                Assert.Equal(resp.Status, ResponseStatus.Success);
+                Assert.Equal(resp.Status, (ResponseStatusValue)ResponseStatus.Success);
             }
         }
         [Fact]
@@ -364,7 +364,7 @@ namespace Hiero.Tests.Integration.Transactions
                 
                 var receipt = resp.GetReceipt(testEnv.Client);
 
-                Assert.Equal(receipt.Status, ResponseStatus.Success);
+                Assert.Equal(receipt.Status, (ResponseStatusValue)ResponseStatus.Success);
             }
         }
         [Fact]
@@ -431,7 +431,7 @@ namespace Hiero.Tests.Integration.Transactions
 
                 var receipt = resp.GetReceipt(testEnv.Client);
 
-                Assert.Equal(receipt.Status, ResponseStatus.Success);
+                Assert.Equal(receipt.Status, (ResponseStatusValue)ResponseStatus.Success);
             }
         }
 

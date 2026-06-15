@@ -57,7 +57,7 @@ namespace Hiero.Tests.Integration.Contract
                 .Execute(testEnv.Client)
                 .GetReceipt(testEnv.Client);
                 
-                Assert.Equal(ResponseStatus.Success, receipt.Status);
+                Assert.Equal((ResponseStatusValue)ResponseStatus.Success, receipt.Status);
 
                 new ContractDeleteTransaction
                 {
