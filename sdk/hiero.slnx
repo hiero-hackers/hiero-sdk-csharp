@@ -4,5 +4,7 @@
   <Project Path="Hiero.SDK/Hiero.SDK.csproj" />
   <Project Path="Hiero.Tests.Integration/Hiero.Tests.Integration.csproj" />
   <Project Path="Hiero.Tests.SDK/Hiero.Tests.SDK.csproj" />
+  <Project Path="Hiero.Tests.Tools/Hiero.Tests.Tools.csproj" Id="1dfd0a55-1469-41b2-a07c-f96ff47dd970" />
+  <Project Path="Hiero.Tools/Hiero.Tools.csproj" Id="65865775-afe3-4ec0-92d1-1d1371234d97" />
   <Project Path="Hiero/Hiero.csproj" Id="36f754ee-b88a-4fe8-a2ec-c31cd4c73492" />
 </Solution>

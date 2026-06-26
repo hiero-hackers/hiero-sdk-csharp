@@ -17,6 +17,10 @@
 /sdk/Hiero.Tests.Integration/.env
 /sdk/Hiero.Tests.Integration/bin/
 /sdk/Hiero.Tests.Integration/obj/
+/sdk/Hiero.Tests.Tools/bin/
+/sdk/Hiero.Tests.Tools/obj/
+/sdk/Hiero.Tools/bin/
+/sdk/Hiero.Tools/obj/
 /tck/.vs
 /tck/forks.hiero-ledger.hiero-sdk-tck/bin/
 /tck/forks.hiero-ledger.hiero-sdk-tck/obj/
