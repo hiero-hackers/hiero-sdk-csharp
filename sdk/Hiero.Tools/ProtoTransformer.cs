@@ -9,9 +9,20 @@ namespace Hiero.Tools
 {
     public static partial class ProtoTransformer
     {
-        [GeneratedRegex(@"^\s*message\s+(?<Regex_Message>[A-Za-z_]\w*)\s*\{", RegexOptions.Multiline)] private static partial Regex Regex_Message();
-        [GeneratedRegex(@"^(\s*package\s+)(?<Regex_Package>[^;]*)(\s*;.*)$", RegexOptions.Singleline)] private static partial Regex Regex_Package();
-        [GeneratedRegex(@"^(\s*option\s+java_package\s*=\s*"")[^""]*("".*)$", RegexOptions.Singleline)] private static partial Regex Regex_JavaPackage();
+        private static readonly string Regex_Prefix = string.Empty;
+        private static readonly string Regex_Suffix = string.Empty;
+
+        [GeneratedRegex(@"^\s*message\s+(?<Regex_Message>[A-Za-z_]\w*)\s*\{", RegexOptions.Multiline)] 
+        private static partial Regex Regex_Message();
+        [GeneratedRegex(@"^(\s*package\s+)(?<Regex_Package>[^;]*)(\s*;.*)$", RegexOptions.Singleline)] 
+        private static partial Regex Regex_Package();
+        [GeneratedRegex(@"^(\s*option\s+java_package\s*=\s*"")[^""]*("".*)$", RegexOptions.Singleline)] 
+        private static partial Regex Regex_JavaPackage();
+        [GeneratedRegex(@"^(?<Regex_Prefix>\s*//\s*<<<pbj\.java_package\s*=\s*"")[^""]*(?<Regex_Suffix>"">>>.*)", RegexOptions.Singleline)]
+        private static partial Regex Regex_PbjJavaPackage();
+        [GeneratedRegex(@"^(?<Regex_Prefix>\s+(?:repeated|optional|required)\s+|(?<!\w)\s*)(?<Regex_FieldType>[A-Z][A-Za-z0-9_]*)(?<Regex_Suffix>\s+\w+\s*=\s*\d+\s*;.*)$", RegexOptions.Singleline)]
+        private static partial Regex Regex_FieldType();
+
 
         public static int Run(string[] args)
         {
@@ -57,7 +68,9 @@ namespace Hiero.Tools
                 return new ProtoFile
                 {
                     FilePath = filepath,
-                    Package = directory[directory.IndexOf(@"proto\") ..].Replace(@"\", "."),
+                    Package = Path
+                        .Combine(Path.GetFileName(sourceDir), directory)
+                        .Replace(Path.DirectorySeparatorChar, '.'),
                     Messages = [.. Regex_Message().Matches(text).Select(match =>
                     {
                         ProtoMessage protoMessage = new()
@@ -73,6 +86,10 @@ namespace Hiero.Tools
             })];
 
             Dictionary<string, ProtoFile> fileByPath = protoFiles.ToDictionary(f => f.FilePath);
+            Dictionary<string, string> packageByMessageName = protoFiles
+                .SelectMany(f => f.Messages.Select(m => (m.Name, f.Package)))
+                .GroupBy(x => x.Name)
+                .ToDictionary(g => g.Key, g => g.Count() == 1 ? g.First().Package : null!);
 
             // Pass Two: rewrite each file
             Console.WriteLine("Pass Two");
@@ -89,6 +106,8 @@ namespace Hiero.Tools
                 {
                     return string.Format("{0}{1}", char.ToUpper(_[0]), _[1..]);
                 })));
+
+                HashSet<string> localMessageNames = [.. protoFile.Messages.Select(m => m.Name)];
 
                 List<string> output = new(lines.Length + 2);
                 bool csharpInserted = false;
@@ -122,6 +141,33 @@ namespace Hiero.Tools
                         }
 
                         continue;
+                    }
+
+                    // 3. Qualify cross-file message type references so Google.Protobuf's C# codegen resolves them unambiguously.
+                    Match fieldMatch = Regex_FieldType().Match(line);
+
+                    if (fieldMatch.Success)
+                    {
+                        string typeName = fieldMatch.Groups[nameof(Regex_FieldType)].Value;
+
+                        // Only rewrite if it's an external reference we can unambiguously resolve
+                        if (!localMessageNames.Contains(typeName) && 
+                            packageByMessageName.TryGetValue(typeName, out string? externalPackage) && externalPackage is not null)
+                        {
+                            string qualified = string.Format(".{0}.{1}", externalPackage, typeName);
+
+                            line = string.Format("{0}{1}{2}", fieldMatch.Groups[nameof(Regex_Prefix)].Value, qualified, fieldMatch.Groups[nameof(Regex_Suffix)].Value);
+
+                            Console.WriteLine("  Qualified: {0} -> {1}", typeName, qualified);
+                        }
+                    }
+
+                    // 4. Rewrite pbj.java_package comment to match the rewritten package declaration
+                    Match pbjMatch = Regex_PbjJavaPackage().Match(line);
+
+                    if (pbjMatch.Success)
+                    {
+                        line = string.Format("{0}{1}{2}", pbjMatch.Groups[nameof(Regex_Prefix)].Value, javaPackage, pbjMatch.Groups[nameof(Regex_Suffix)].Value);
                     }
 
                     output.Add(line);

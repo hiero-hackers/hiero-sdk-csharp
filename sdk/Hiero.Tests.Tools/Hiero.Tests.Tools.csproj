@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -21,5 +21,9 @@
   <ItemGroup>
     <Using Include="Xunit" />
   </ItemGroup>
+
+  <Target Name="TransformProtos" BeforeTargets="BeforeBuild">
+	<Exec Command="dotnet run --project &quot;$(MSBuildThisFileDirectory)..\Hiero.Tools\Hiero.Tools.csproj&quot; -- transform-protos &quot;$(MSBuildThisFileDirectory)hapi&quot; &quot;$(MSBuildThisFileDirectory)hapi.generated&quot;" ConsoleToMSBuild="true" />
+  </Target>
 
 </Project>
