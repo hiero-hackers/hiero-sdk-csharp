@@ -21,6 +21,8 @@
 /sdk/Hiero.Tests.Tools/obj/
 /sdk/Hiero.Tools/bin/
 /sdk/Hiero.Tools/obj/
+/sdk/Hiero.Tools/hapi/
+/sdk/Hiero.Tools/hapi.generated/
 /tck/.vs
 /tck/forks.hiero-ledger.hiero-sdk-tck/bin/
 /tck/forks.hiero-ledger.hiero-sdk-tck/obj/

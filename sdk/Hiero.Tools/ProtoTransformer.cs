@@ -20,20 +20,49 @@ namespace Hiero.Tools
         private static partial Regex Regex_JavaPackage();
         [GeneratedRegex(@"^(?<Regex_Prefix>\s*//\s*<<<pbj\.java_package\s*=\s*"")[^""]*(?<Regex_Suffix>"">>>.*)", RegexOptions.Singleline)]
         private static partial Regex Regex_PbjJavaPackage();
-        [GeneratedRegex(@"^(?<Regex_Prefix>\s+(?:repeated|optional|required)\s+|(?<!\w)\s*)(?<Regex_FieldType>[A-Z][A-Za-z0-9_]*)(?<Regex_Suffix>\s+\w+\s*=\s*\d+\s*;.*)$", RegexOptions.Singleline)]
+        [GeneratedRegex(@"^(?<Regex_Prefix>\s+(?:repeated|optional|required)\s+|(?<!\w)\s*)(?<Regex_FieldType>[A-Za-z][A-Za-z0-9_.]*)(?<Regex_Suffix>\s+\w+\s*=\s*\d+\s*;.*)$", RegexOptions.Singleline)]
         private static partial Regex Regex_FieldType();
-
 
         public static int Run(string[] args)
         {
             if (args.Length < 2)
             {
-                Console.Error.WriteLine("Usage: transform-protos <sourceDir> <outputDir>");
+                Console.Error.WriteLine("Usage: transform-protos --src <sourceDir> --output <outputDir> --root <protoRoot> [--skip <file1> <file2> ...]");
                 return 1;
             }
 
-            string sourceDir = Path.GetFullPath(args[0]);
-            string outputDir = Path.GetFullPath(args[1]);
+            HashSet<string> skipFiles = [];
+            string? sourceDir = null, outputDir = null, protoRoot = null;
+
+            for (int i = 0; i < args.Length; i++)
+                if (args[i].Split(' ', 2) is string[] _args)
+                    switch (_args[0])
+                    {
+                        case "--src":
+                            sourceDir = Path.GetFullPath(_args[1]);
+                            break;
+                        case "--output":
+                            outputDir = Path.GetFullPath(_args[1]);
+                            break;
+                        case "--root":
+                            protoRoot = string.Format("{0}\\", _args[1].Trim('\\'));
+                            break;
+                        case "--skip":
+                            foreach (string _skip in _args[1].Split("\"", StringSplitOptions.RemoveEmptyEntries))
+                                skipFiles.Add(_skip.Trim());
+                            break;
+                        default:
+                            Console.Error.WriteLine($"Unknown argument: {args[i]}");
+                            return 1;
+                    }
+
+            outputDir ??= string.Format("{0}.generated", sourceDir);
+
+            if (sourceDir is null)
+            {
+                Console.Error.WriteLine("Missing required arguments. Usage: transform-protos --src <sourceDir>");
+                return 1;
+            }
 
             if (!Directory.Exists(sourceDir))
             {
@@ -46,6 +75,7 @@ namespace Hiero.Tools
 
             IList<string> files = [..Directory
                 .EnumerateFiles(sourceDir, "*.proto", SearchOption.AllDirectories)
+                .Where(_ => skipFiles.Any(__ => _.EndsWith(__)) is false)
                 .OrderBy(f => f)];
 
             if (files.Count == 0)
@@ -62,15 +92,17 @@ namespace Hiero.Tools
                 string filepath = Path.GetRelativePath(sourceDir, file);
                 string directory = Path.GetDirectoryName(filepath)!;
                 string text = File.ReadAllText(file, Encoding.UTF8);
+                string path = Path.Combine(Path.GetFileName(sourceDir), directory);
+                string package = protoRoot is not null && path.Contains(protoRoot) is false
+                    ? path
+                    : string.Format("{0}{1}", protoRoot, string.Join("", path.Split(protoRoot)[1..]));
 
                 Console.WriteLine("File: {0}", filepath);
-
+                
                 return new ProtoFile
                 {
                     FilePath = filepath,
-                    Package = Path
-                        .Combine(Path.GetFileName(sourceDir), directory)
-                        .Replace(Path.DirectorySeparatorChar, '.'),
+                    Package = package.Replace(Path.DirectorySeparatorChar, '.'),
                     Messages = [.. Regex_Message().Matches(text).Select(match =>
                     {
                         ProtoMessage protoMessage = new()
@@ -102,7 +134,7 @@ namespace Hiero.Tools
                 ProtoFile protoFile = fileByPath[filePath];
                  
                 string javaPackage = string.Format("com.hiero.{0}", protoFile.Package);
-                string csharpNamespace = string.Format("Hiero.{0}", string.Join(".", protoFile.Package.Split().Select(_ =>
+                string csharpNamespace = string.Format("Hiero.{0}", string.Join(".", protoFile.Package.Split('.').Select(_ =>
                 {
                     return string.Format("{0}{1}", char.ToUpper(_[0]), _[1..]);
                 })));
@@ -149,12 +181,14 @@ namespace Hiero.Tools
                     if (fieldMatch.Success)
                     {
                         string typeName = fieldMatch.Groups[nameof(Regex_FieldType)].Value;
+                        string simpleName = typeName.Split('.')[^1];
 
-                        // Only rewrite if it's an external reference we can unambiguously resolve
-                        if (!localMessageNames.Contains(typeName) && 
-                            packageByMessageName.TryGetValue(typeName, out string? externalPackage) && externalPackage is not null)
+                        // Only rewrite if the simple name resolves to a known ProtoMessage
+                        if (packageByMessageName.TryGetValue(simpleName, out string? externalPackage) 
+                            && externalPackage is not null
+                            && (!localMessageNames.Contains(simpleName) || typeName.Contains('.')))
                         {
-                            string qualified = string.Format(".{0}.{1}", externalPackage, typeName);
+                            string qualified = string.Format("{0}.{1}", externalPackage, simpleName);
 
                             line = string.Format("{0}{1}{2}", fieldMatch.Groups[nameof(Regex_Prefix)].Value, qualified, fieldMatch.Groups[nameof(Regex_Suffix)].Value);
 

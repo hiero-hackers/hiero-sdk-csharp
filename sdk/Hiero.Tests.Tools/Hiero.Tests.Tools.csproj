@@ -1,29 +1,48 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>disable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <IsPackable>false</IsPackable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<IsPackable>false</IsPackable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="coverlet.collector" Version="6.0.4" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
-    <PackageReference Include="xunit" Version="2.9.3" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="coverlet.collector" Version="6.0.4" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+		<PackageReference Include="xunit" Version="2.9.3" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Hiero.Tools\Hiero.Tools.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Hiero.Tools\Hiero.Tools.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Using Include="Xunit" />
-  </ItemGroup>
+	<ItemGroup>
+		<Using Include="Xunit" />
+	</ItemGroup>
 
-  <Target Name="TransformProtos" BeforeTargets="BeforeBuild">
-	<Exec Command="dotnet run --project &quot;$(MSBuildThisFileDirectory)..\Hiero.Tools\Hiero.Tools.csproj&quot; -- transform-protos &quot;$(MSBuildThisFileDirectory)hapi&quot; &quot;$(MSBuildThisFileDirectory)hapi.generated&quot;" ConsoleToMSBuild="true" />
-  </Target>
+	<PropertyGroup>
+		<HieroToolsProject>$(MSBuildThisFileDirectory)..\Hiero.Tools\Hiero.Tools.csproj</HieroToolsProject>
+		<ProtoInputDir>--src $(MSBuildThisFileDirectory)hapi</ProtoInputDir>
+		<ProtoOutputDir>--output $(MSBuildThisFileDirectory)hapi.generated</ProtoOutputDir>
+		<ProtoRoot>--root proto</ProtoRoot>
+		<ProtoSkip>--skip "publish_stream_request_bytes.proto"</ProtoSkip>
+		
+		<TransformProtoCommand>
+			dotnet run
+			--project "$(HieroToolsProject)"
+			--
+			transform-protos
+			"$(ProtoInputDir)"
+			"$(ProtoOutputDir)"
+			"$(ProtoRoot)"
+			"$(ProtoSkip)"
+		</TransformProtoCommand>
+	</PropertyGroup>
+
+	<Target Name="TransformProtos" BeforeTargets="BeforeBuild">
+		<Exec Command="$(TransformProtoCommand)" ConsoleToMSBuild="true" />
+	</Target>
 
 </Project>

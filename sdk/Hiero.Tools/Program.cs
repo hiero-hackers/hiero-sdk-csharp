@@ -8,8 +8,10 @@ namespace Hiero.Tools
         {
             //return ProtoTransformer.Run(
             //[
-            //    Path.Combine(Directory.GetCurrentDirectory().Split("bin")[0], "hapi"),
-            //    Path.Combine(Directory.GetCurrentDirectory().Split("bin")[0], "hapi.generated"),
+            //    string.Format("--src {0}", System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory().Split("bin")[0], "hapi")),
+            //    string.Format("--output {0}", System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory().Split("bin")[0], "hapi.generated")),
+            //    string.Format("--root {0}", "proto"),
+            //    string.Format("--skip {0}", "\"publish_stream_request_bytes.proto\""),
             //]);
 
             if (args.Length == 0)
