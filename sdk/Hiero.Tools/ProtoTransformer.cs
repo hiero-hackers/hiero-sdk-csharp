@@ -35,26 +35,29 @@ namespace Hiero.Tools
             string? sourceDir = null, outputDir = null, protoRoot = null;
 
             for (int i = 0; i < args.Length; i++)
-                if (args[i].Split(' ', 2) is string[] _args)
-                    switch (_args[0])
-                    {
-                        case "--src":
-                            sourceDir = Path.GetFullPath(_args[1]);
-                            break;
-                        case "--output":
-                            outputDir = Path.GetFullPath(_args[1]);
-                            break;
-                        case "--root":
-                            protoRoot = string.Format("{0}\\", _args[1].Trim('\\'));
-                            break;
-                        case "--skip":
-                            foreach (string _skip in _args[1].Split("\"", StringSplitOptions.RemoveEmptyEntries))
-                                skipFiles.Add(_skip.Trim());
-                            break;
-                        default:
-                            Console.Error.WriteLine($"Unknown argument: {args[i]}");
-                            return 1;
-                    }
+            {
+                switch (args[i])
+                {
+                    case "--src":
+                        sourceDir = Path.GetFullPath(args[i + 1]);
+                        break;
+                    case "--output":
+                        outputDir = Path.GetFullPath(args[i + 1]);
+                        break;
+                    case "--root":
+                        protoRoot = string.Format("{0}\\", args[i + 1].Trim('\\'));
+                        break;
+                    case "--skip":
+                        foreach (string _skip in args[i + 1].Split("\"", StringSplitOptions.RemoveEmptyEntries))
+                            skipFiles.Add(_skip.Trim());
+                        break;
+                    default:
+                        Console.Error.WriteLine($"Unknown argument: {args[i + 1]}");
+                        return 1;
+                }
+
+                i++;
+            }
 
             outputDir ??= string.Format("{0}.generated", sourceDir);
 
