@@ -58,8 +58,8 @@ namespace Hiero.SDK.Nfts
                 else if (transfer.PrePostTxReceiverAllowanceHook is not null)
                     receiverHookCall = TransferTransaction.ToNftHook(transfer.PrePostTxReceiverAllowanceHook, NftHookType.PrePostHookReceiver);
 
-				AccountId sender = AccountId.FromProtobuf(transfer.SenderAccountId);
-                AccountId receiver = AccountId.FromProtobuf(transfer.ReceiverAccountId);
+				AccountId sender = AccountId.FromProtobuf(transfer.SenderAccountID);
+                AccountId receiver = AccountId.FromProtobuf(transfer.ReceiverAccountID);
 
                 nftTransfers.Add(new TokenNftTransfer(token, sender, receiver, transfer.SerialNumber, transfer.IsApproval, senderHookCall, receiverHookCall));
             }
@@ -107,8 +107,8 @@ namespace Hiero.SDK.Nfts
         {
             Proto.Services.NftTransfer proto = new()
             {
-                SenderAccountId = Sender.ToProtobuf(),
-                ReceiverAccountId = Receiver.ToProtobuf(),
+                SenderAccountID = Sender.ToProtobuf(),
+                ReceiverAccountID = Receiver.ToProtobuf(),
                 SerialNumber = Serial,
                 IsApproval = IsApproved,
             };

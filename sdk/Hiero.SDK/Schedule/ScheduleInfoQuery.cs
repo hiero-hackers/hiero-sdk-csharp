@@ -28,7 +28,7 @@ namespace Hiero.SDK.Schedule
 
             if (ScheduleId != null)
             {
-                builder.ScheduleId = ScheduleId.ToProtobuf();
+                builder.ScheduleID = ScheduleId.ToProtobuf();
             }
 
             queryBuilder.ScheduleGetInfo = builder;

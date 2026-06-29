@@ -39,7 +39,7 @@ namespace Hiero.SDK.Cryptography
                 Proto.Services.Key.KeyOneofCase.ECDSASecp256K1 => PublicKeyECDSA.FromBytesInternal(key.ECDSASecp256K1.ToByteArray()),
                 Proto.Services.Key.KeyOneofCase.KeyList => KeyList.FromProtobuf(key.KeyList, null),
                 Proto.Services.Key.KeyOneofCase.ThresholdKey => KeyList.FromProtobuf(key.ThresholdKey.Keys, key.ThresholdKey.Threshold),
-                Proto.Services.Key.KeyOneofCase.ContractId => ContractId.FromProtobuf(key.ContractId),
+                Proto.Services.Key.KeyOneofCase.ContractID => ContractId.FromProtobuf(key.ContractID),
                 Proto.Services.Key.KeyOneofCase.DelegatableContractId => DelegateContractId.FromProtobuf(key.DelegatableContractId),
                 Proto.Services.Key.KeyOneofCase.None => null,
 

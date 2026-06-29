@@ -212,13 +212,13 @@ namespace Hiero.SDK.Contract
             var builder = new Proto.Services.ContractCreateTransactionBody();
             
             if (BytecodeFileId != null)
-				builder.FileId = BytecodeFileId.ToProtobuf();
+				builder.FileID = BytecodeFileId.ToProtobuf();
 
 			if (Bytecode != null)
 				builder.Initcode = ByteString.CopyFrom(Bytecode);
 
 			if (ProxyAccountId != null)
-				builder.ProxyAccountId = ProxyAccountId.ToProtobuf();
+				builder.ProxyAccountID = ProxyAccountId.ToProtobuf();
 
 			if (AdminKey != null)
 				builder.AdminKey = AdminKey.ToProtobufKey();
@@ -261,9 +261,9 @@ namespace Hiero.SDK.Contract
         {
             var body = SourceTransactionBody.ContractCreateInstance;
 
-			if (body.FileId is not null) BytecodeFileId = FileId.FromProtobuf(body.FileId);
+			if (body.FileID is not null) BytecodeFileId = FileId.FromProtobuf(body.FileID);
 			if (body.HasInitcode) Bytecode = body.Initcode.ToByteArray();
-            if (body.ProxyAccountId is not null) ProxyAccountId = AccountId.FromProtobuf(body.ProxyAccountId);
+            if (body.ProxyAccountID is not null) ProxyAccountId = AccountId.FromProtobuf(body.ProxyAccountID);
 			if (body.AdminKey is not null) AdminKey = Key.FromProtobufKey(body.AdminKey);
 
 			MaxAutomaticTokenAssociations = body.MaxAutomaticTokenAssociations;

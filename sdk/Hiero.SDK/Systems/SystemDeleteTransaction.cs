@@ -71,12 +71,12 @@ namespace Hiero.SDK.Systems
 
             if (FileId != null)
             {
-                builder.FileId = FileId.ToProtobuf();
+                builder.FileID = FileId.ToProtobuf();
             }
 
             if (ContractId != null)
             {
-                builder.ContractId = ContractId.ToProtobuf();
+                builder.ContractID = ContractId.ToProtobuf();
             }
 
             if (ExpirationTime != null)
@@ -92,8 +92,8 @@ namespace Hiero.SDK.Systems
         {
 			var body = SourceTransactionBody.SystemDelete;
 
-			FileId = body.FileId is null ? null : FileId.FromProtobuf(body.FileId);
-			ContractId = body.ContractId is null ? null : ContractId.FromProtobuf(body.ContractId);
+			FileId = body.FileID is null ? null : FileId.FromProtobuf(body.FileID);
+			ContractId = body.ContractID is null ? null : ContractId.FromProtobuf(body.ContractID);
 			ExpirationTime = body.ExpirationTime?.ToNodaTimeInstant();
 		}
 

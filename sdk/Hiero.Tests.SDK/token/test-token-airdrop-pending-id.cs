@@ -47,7 +47,7 @@ namespace Hiero.Tests.SDK.Airdrops
         public virtual void TestToProtobufWithTokenId()
         {
             PendingAirdropId pendingAirdropId = new (sender, receiver, tokenId);
-            Proto.Services.PendingAirdropID proto = pendingAirdropId.ToProtobuf();
+            Proto.Services.PendingAirdropId proto = pendingAirdropId.ToProtobuf();
             
             Assert.NotNull(proto);
             Assert.Equal(sender.ToProtobuf(), proto.SenderId);
@@ -59,7 +59,7 @@ namespace Hiero.Tests.SDK.Airdrops
         public virtual void TestToProtobufWithNftId()
         {
             PendingAirdropId pendingAirdropId = new (sender, receiver, nftId);
-            Proto.Services.PendingAirdropID proto = pendingAirdropId.ToProtobuf();
+            Proto.Services.PendingAirdropId proto = pendingAirdropId.ToProtobuf();
             
             Assert.NotNull(proto);
             Assert.Equal(sender.ToProtobuf(), proto.SenderId);
@@ -70,7 +70,7 @@ namespace Hiero.Tests.SDK.Airdrops
         /// <include file="test-token-airdrop-pending-id.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Airdrops.PendingAirdropIdTest.TestFromProtobufWithTokenId"]' />
         public virtual void TestFromProtobufWithTokenId()
         {
-            Proto.Services.PendingAirdropID proto = new()
+            Proto.Services.PendingAirdropId proto = new()
 			{
 				SenderId = sender.ToProtobuf(),
 				ReceiverId = receiver.ToProtobuf(),
@@ -89,7 +89,7 @@ namespace Hiero.Tests.SDK.Airdrops
         /// <include file="test-token-airdrop-pending-id.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Airdrops.PendingAirdropIdTest.TestFromProtobufWithNftId"]' />
         public virtual void TestFromProtobufWithNftId()
         {
-            Proto.Services.PendingAirdropID proto = new ()
+            Proto.Services.PendingAirdropId proto = new ()
             {
 				SenderId = sender.ToProtobuf(),
 				ReceiverId = receiver.ToProtobuf(),

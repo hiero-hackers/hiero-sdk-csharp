@@ -98,7 +98,7 @@ namespace Hiero.SDK.Core
 		/// <include file="TransactionId.cs.xml" path='docs/member[@name="M:TransactionId.FromProtobuf(Proto.Services.TransactionId)"]' />
 		public static TransactionId FromProtobuf(Proto.Services.TransactionID transactionId)
 		{
-			return new TransactionId(AccountId.FromProtobuf(transactionId.AccountId), transactionId.TransactionValidStart.ToNodaTimeInstant())
+			return new TransactionId(AccountId.FromProtobuf(transactionId.AccountID), transactionId.TransactionValidStart.ToNodaTimeInstant())
 			{
 				Scheduled = transactionId.Scheduled,
 				Nonce = transactionId.Nonce != 0 ? transactionId.Nonce : null
@@ -279,7 +279,7 @@ namespace Hiero.SDK.Core
             };
 
             if (AccountId is not null)
-                proto.AccountId = AccountId.ToProtobuf();
+                proto.AccountID = AccountId.ToProtobuf();
 
             if (ValidStart is not null)
                 proto.TransactionValidStart = ValidStart.Value.ToProtoTimestamp();

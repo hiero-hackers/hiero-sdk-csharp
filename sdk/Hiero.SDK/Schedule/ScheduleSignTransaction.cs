@@ -40,7 +40,7 @@ namespace Hiero.SDK.Schedule
             
             if (ScheduleId != null)
             {
-                builder.ScheduleId = ScheduleId.ToProtobuf();
+                builder.ScheduleID = ScheduleId.ToProtobuf();
             }
 
             return builder;
@@ -51,9 +51,9 @@ namespace Hiero.SDK.Schedule
         {
             var body = SourceTransactionBody.ScheduleSign;
 
-            if (body.ScheduleId is not null)
+            if (body.ScheduleID is not null)
             {
-                ScheduleId = ScheduleId.FromProtobuf(body.ScheduleId);
+                ScheduleId = ScheduleId.FromProtobuf(body.ScheduleID);
             }
         }
 

@@ -63,7 +63,7 @@ namespace Hiero.SDK.Contract
 			};
 
 			if (ContractId != null)
-                builder.ContractId = ContractId.ToProtobuf();
+                builder.ContractID = ContractId.ToProtobuf();
 
             if (SenderAccountId != null)
 				builder.SenderId = SenderAccountId.ToProtobuf();

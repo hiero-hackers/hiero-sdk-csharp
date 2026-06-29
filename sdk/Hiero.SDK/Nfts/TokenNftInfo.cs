@@ -31,8 +31,8 @@ namespace Hiero.SDK.Nfts
 		public static TokenNftInfo FromProtobuf(Proto.Services.TokenNftInfo info)
         {
             return new TokenNftInfo(
-                NftId.FromProtobuf(info.NftId), 
-                AccountId.FromProtobuf(info.AccountId), 
+                NftId.FromProtobuf(info.NftID), 
+                AccountId.FromProtobuf(info.AccountID), 
                 info.CreationTime.ToNodaTimeInstant(), 
                 info.Metadata.ToByteArray(), 
                 LedgerId.FromByteString(info.LedgerId),
@@ -62,8 +62,8 @@ namespace Hiero.SDK.Nfts
         {
             Proto.Services.TokenNftInfo proto = new()
             {
-				NftId = NftId.ToProtobuf(),
-				AccountId = AccountId.ToProtobuf(),
+				NftID = NftId.ToProtobuf(),
+				AccountID = AccountId.ToProtobuf(),
 				CreationTime = CreationTime.ToProtoTimestamp(),
 				Metadata = ByteString.CopyFrom(Metadata),
 				LedgerId = LedgerId.ToByteString(),

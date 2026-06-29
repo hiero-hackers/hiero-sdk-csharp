@@ -64,7 +64,7 @@ namespace Hiero.SDK.Nfts
 
             if (NftId != null)
             {
-                builder.NftId = NftId.ToProtobuf();
+                builder.NftID = NftId.ToProtobuf();
             }
 
             queryBuilder.TokenGetNftInfo = builder;

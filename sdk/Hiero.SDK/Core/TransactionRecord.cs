@@ -151,7 +151,7 @@ namespace Hiero.SDK.Core
                 TransactionReceipt.FromProtobuf(transactionRecord.Receipt, [], [], transactionId), 
                 transactionRecord.TransactionHash,
                 transactionRecord.ConsensusTimestamp.ToNodaTimeInstant(), 
-                TransactionId.FromProtobuf(transactionRecord.TransactionId), 
+                TransactionId.FromProtobuf(transactionRecord.TransactionID), 
                 transactionRecord.Memo, 
                 (long)transactionRecord.TransactionFee, 
                 contractFunctionResult, 
@@ -242,7 +242,7 @@ namespace Hiero.SDK.Core
 				Receipt = Receipt.ToProtobuf(),
                 TransactionHash = TransactionHash,
                 ConsensusTimestamp = ConsensusTimestamp.ToProtoTimestamp(),
-                TransactionId = TransactionId.ToProtobuf(),
+                TransactionID = TransactionId.ToProtobuf(),
                 Memo = TransactionMemo,
                 TransactionFee = (ulong)TransactionFee.ToTinybars(),
                 TransferList = new Proto.Services.TransferList { },
@@ -283,7 +283,7 @@ namespace Hiero.SDK.Core
                     {
                         tokenEntry.Value.Select(_ => new Proto.Services.AccountAmount
                         {
-                            AccountId = _.Key.ToProtobuf(),
+                            AccountID = _.Key.ToProtobuf(),
                             Amount = _.Value
                         })
                     }
@@ -323,8 +323,8 @@ namespace Hiero.SDK.Core
                 foreach (var aaEntry in nftEntry.Value)
 					nftTransferList.NftTransfers.Add(new Proto.Services.NftTransfer
 					{
-						SenderAccountId = aaEntry.Sender.ToProtobuf(),
-						ReceiverAccountId = aaEntry.Receiver.ToProtobuf(),
+						SenderAccountID = aaEntry.Sender.ToProtobuf(),
+						ReceiverAccountID = aaEntry.Receiver.ToProtobuf(),
 						SerialNumber = aaEntry.Serial,
 						IsApproval = aaEntry.IsApproved,
 					});

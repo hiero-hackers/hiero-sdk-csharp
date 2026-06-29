@@ -33,7 +33,7 @@ namespace Hiero.SDK.Contract
         /// <include file="ContractLogInfo.cs.xml" path='docs/member[@name="M:ContractLogInfo.FromProtobuf(Proto.Services.ContractLoginfo)"]' />
         public static ContractLogInfo FromProtobuf(Proto.Services.ContractLoginfo logInfo)
         {
-            return new ContractLogInfo(ContractId.FromProtobuf(logInfo.ContractId), logInfo.Bloom, logInfo.Topic, logInfo.Data);
+            return new ContractLogInfo(ContractId.FromProtobuf(logInfo.ContractID), logInfo.Bloom, logInfo.Topic, logInfo.Data);
         }
 
         /// <include file="ContractLogInfo.cs.xml" path='docs/member[@name="M:ContractLogInfo.ToBytes"]' />
@@ -46,7 +46,7 @@ namespace Hiero.SDK.Contract
         {
             Proto.Services.ContractLoginfo proto = new()
             {
-				ContractId = ContractId.ToProtobuf(),
+				ContractID = ContractId.ToProtobuf(),
 				Bloom = Bloom,
 			};
 

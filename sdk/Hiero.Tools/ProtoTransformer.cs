@@ -11,17 +11,24 @@ namespace Hiero.Tools
     {
         private static readonly string Regex_Prefix = string.Empty;
         private static readonly string Regex_Suffix = string.Empty;
+        private static readonly string Regex_RpcRequest = string.Empty;
+        private static readonly string Regex_RequestType = string.Empty;
+        private static readonly string Regex_ResponseType = string.Empty;
 
-        [GeneratedRegex(@"^\s*message\s+(?<Regex_Message>[A-Za-z_]\w*)\s*\{", RegexOptions.Multiline)] 
-        private static partial Regex Regex_Message();
-        [GeneratedRegex(@"^(\s*package\s+)(?<Regex_Package>[^;]*)(\s*;.*)$", RegexOptions.Singleline)] 
+        [GeneratedRegex(@"^\s*import\s+""(?<Regex_Import>[^""]+)""\s*;", RegexOptions.Multiline)] 
+        private static partial Regex Regex_Import();
+        [GeneratedRegex(@"^\s*(?:message|enum)\s+(?<Regex_Class>[A-Za-z_]\w*)\s*\{", RegexOptions.Multiline)]
+        private static partial Regex Regex_Class();
+        [GeneratedRegex(@"^(\s*package\s+)(?<Regex_Package>[^;]*)(\s*;.*)$", RegexOptions.Multiline)] 
         private static partial Regex Regex_Package();
-        [GeneratedRegex(@"^(\s*option\s+java_package\s*=\s*"")[^""]*("".*)$", RegexOptions.Singleline)] 
+        [GeneratedRegex(@"^(\s*option\s+java_package\s*=\s*"")[^""]*("".*)$", RegexOptions.Multiline)] 
         private static partial Regex Regex_JavaPackage();
-        [GeneratedRegex(@"^(?<Regex_Prefix>\s*//\s*<<<pbj\.java_package\s*=\s*"")[^""]*(?<Regex_Suffix>"">>>.*)", RegexOptions.Singleline)]
+        [GeneratedRegex(@"^(?<Regex_Prefix>\s*//\s*<<<pbj\.java_package\s*=\s*"")[^""]*(?<Regex_Suffix>"">>>.*)", RegexOptions.Multiline)]
         private static partial Regex Regex_PbjJavaPackage();
-        [GeneratedRegex(@"^(?<Regex_Prefix>\s+(?:repeated|optional|required)\s+|(?<!\w)\s*)(?<Regex_FieldType>[A-Za-z][A-Za-z0-9_.]*)(?<Regex_Suffix>\s+\w+\s*=\s*\d+\s*;.*)$", RegexOptions.Singleline)]
+        [GeneratedRegex(@"^(?<Regex_Prefix>\s+(?:repeated|optional|required)\s+|(?<!\w)\s*)(?<Regex_FieldType>\.?[A-Za-z][A-Za-z0-9_.]*)(?<Regex_Suffix>\s+\w+\s*=\s*\d+\s*;.*)$", RegexOptions.Multiline)]
         private static partial Regex Regex_FieldType();
+        [GeneratedRegex(@"^\s*rpc\s+\w+\s*\((?<Regex_RpcRequest>stream\s+)?(?<Regex_RequestType>\.?[A-Za-z][A-Za-z0-9_.]*)\s*\)\s*returns\s*\(\s*(?<Regex_RpcResponse>stream\s+)?(?<Regex_ResponseType>\.?[A-Za-z][A-Za-z0-9_.]*)\s*\)\s*;", RegexOptions.Multiline)]
+        private static partial Regex Regex_RpcMethod();
 
         public static int Run(string[] args)
         {
@@ -94,35 +101,39 @@ namespace Hiero.Tools
             {
                 string filepath = Path.GetRelativePath(sourceDir, file);
                 string directory = Path.GetDirectoryName(filepath)!;
-                string text = File.ReadAllText(file, Encoding.UTF8);
                 string path = Path.Combine(Path.GetFileName(sourceDir), directory);
                 string package = protoRoot is not null && path.Contains(protoRoot) is false
                     ? path
                     : string.Format("{0}{1}", protoRoot, string.Join("", path.Split(protoRoot)[1..]));
 
                 Console.WriteLine("File: {0}", filepath);
-                
+
+                if (filepath.Contains("consensus_service") || filepath.Contains("smart_contract_service"))
+                { }
+
+                string text = File.ReadAllText(file, Encoding.UTF8);
+
                 return new ProtoFile
                 {
                     FilePath = filepath,
                     Package = package.Replace(Path.DirectorySeparatorChar, '.'),
-                    Messages = [.. Regex_Message().Matches(text).Select(match =>
+                    Classes = [.. Regex_Class().Matches(text).Select(match =>
                     {
-                        ProtoMessage protoMessage = new()
+                        ProtoClass protoClass = new()
                         {
-                            Name = match.Groups[nameof(Regex_Message)].Value,
+                            Name = match.Groups[nameof(Regex_Class)].Value,
                         };
 
-                        Console.WriteLine("Message: {0}", protoMessage.Name);
+                        Console.WriteLine("Proto Class: {0}", protoClass.Name);
 
-                        return protoMessage;
+                        return protoClass;
                     })]
                 };
             })];
 
             Dictionary<string, ProtoFile> fileByPath = protoFiles.ToDictionary(f => f.FilePath);
             Dictionary<string, string> packageByMessageName = protoFiles
-                .SelectMany(f => f.Messages.Select(m => (m.Name, f.Package)))
+                .SelectMany(f => f.Classes.Select(m => (m.Name, f.Package)))
                 .GroupBy(x => x.Name)
                 .ToDictionary(g => g.Key, g => g.Count() == 1 ? g.First().Package : null!);
 
@@ -142,7 +153,7 @@ namespace Hiero.Tools
                     return string.Format("{0}{1}", char.ToUpper(_[0]), _[1..]);
                 })));
 
-                HashSet<string> localMessageNames = [.. protoFile.Messages.Select(m => m.Name)];
+                HashSet<string> localMessageNames = [.. protoFile.Classes.Select(m => m.Name)];
 
                 List<string> output = new(lines.Length + 2);
                 bool csharpInserted = false;
@@ -150,6 +161,30 @@ namespace Hiero.Tools
                 for (int i = 0; i < lines.Length; i++)
                 {
                     string line = lines[i];
+
+                    // 0. Rewrite import paths to use proto-root-relative forward-slash paths
+                    Match importMatch = Regex_Import().Match(line);
+
+                    if (importMatch.Success)
+                    {
+                        string rawImportPath = importMatch.Groups[nameof(Regex_Import)].Value;
+                        string importFileName = Path.GetFileName(rawImportPath);
+
+                        // Find the ProtoFile whose FilePath filename matches this import
+                        if (protoFiles.FirstOrDefault(f => f.FilePath.Replace(Path.DirectorySeparatorChar, '/').EndsWith(rawImportPath)) is ProtoFile matchedFile)
+                        {
+                            // Rebuild the import path using forward slashes (proto standard)
+                            string newImportPath = string.Format("{0}/{1}", matchedFile.Package["proto.".Length..].Replace('.', '/'), importFileName);
+                            output.Add($"import \"{newImportPath}\";");
+                        }
+                        else
+                        {
+                            // Unknown import — pass through unchanged
+                            output.Add(line);
+                        }
+
+                        continue;
+                    }
 
                     // 1. Rewrite package declaration to use the proto-relative directory path
                     Match packageMatch = Regex_Package().Match(line);
@@ -186,7 +221,7 @@ namespace Hiero.Tools
                         string typeName = fieldMatch.Groups[nameof(Regex_FieldType)].Value;
                         string simpleName = typeName.Split('.')[^1];
 
-                        // Only rewrite if the simple name resolves to a known ProtoMessage
+                        // Only rewrite if the simple name resolves to a known ProtoClass
                         if (packageByMessageName.TryGetValue(simpleName, out string? externalPackage) 
                             && externalPackage is not null
                             && (!localMessageNames.Contains(simpleName) || typeName.Contains('.')))
@@ -203,11 +238,35 @@ namespace Hiero.Tools
                     Match pbjMatch = Regex_PbjJavaPackage().Match(line);
 
                     if (pbjMatch.Success)
-                    {
                         line = string.Format("{0}{1}{2}", pbjMatch.Groups[nameof(Regex_Prefix)].Value, javaPackage, pbjMatch.Groups[nameof(Regex_Suffix)].Value);
+
+                    // 5. Qualify cross-file message type references in rpc declarations
+                    Match rpcMatch = Regex_RpcMethod().Match(line);
+
+                    if (rpcMatch.Success)
+                    {
+                        foreach (string groupName in new[] { nameof(Regex_RequestType), nameof(Regex_ResponseType) })
+                        {
+                            string typeName = rpcMatch.Groups[groupName].Value;
+                            string strippedTypeName = typeName.TrimStart('.');
+                            string simpleName = strippedTypeName.Split('.')[^1];
+
+                            if (packageByMessageName.TryGetValue(simpleName, out string? externalPackage)
+                                && externalPackage is not null
+                                && (!localMessageNames.Contains(simpleName) || strippedTypeName.Contains('.')))
+                            {
+                                string qualified = string.Format("{0}.{1}", externalPackage, simpleName);
+                                line = Regex.Replace(line, $@"(?<![A-Za-z0-9_.]){Regex.Escape(typeName)}(?![A-Za-z0-9_.])", qualified);
+
+                                Console.WriteLine("  Qualified RPC type: {0} -> {1}", typeName, qualified);
+                            }
+                        }
+
+                        output.Add(line);
+                        continue;
                     }
 
-                    output.Add(line);
+                    output.Add(line); 
                 }
 
                 // Write rewritten file to output directory, preserving subdirectory structure
@@ -222,15 +281,15 @@ namespace Hiero.Tools
         }
     }
 
-    public struct ProtoFile
+    public class ProtoFile
     {
-        public string FilePath { get; set; }
-        public List<ProtoMessage> Messages { get; set; }
-        public string Package { get; set; }
+        public required string FilePath { get; init; }
+        public required List<ProtoClass> Classes { get; init; }
+        public required string Package { get; init; }
     }
 
-    public struct ProtoMessage
+    public class ProtoClass
     {
-        public string Name { get; set; }
+        public required string Name { get; init; }
     }
 }

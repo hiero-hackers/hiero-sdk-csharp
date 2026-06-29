@@ -26,7 +26,7 @@ namespace Hiero.SDK.Consensus
 			};
 
 			if (TopicId != null)
-				queryBuilder.ConsensusGetTopicInfo.TopicId = TopicId.ToProtobuf();
+				queryBuilder.ConsensusGetTopicInfo.TopicID = TopicId.ToProtobuf();
 		}
 		public override ResponseStatus MapResponseStatus(Proto.Services.Response response)
 		{

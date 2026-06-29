@@ -21,7 +21,7 @@ namespace Hiero.SDK.Consensus
                 response.RunningHash.ToByteArray(), 
                 response.SequenceNumber, 
                 [new(response)], 
-                TransactionId.FromProtobuf(response.ChunkInfo.InitialTransactionId));
+                TransactionId.FromProtobuf(response.ChunkInfo.InitialTransactionID));
         }
         /// <include file="TopicMessage.cs.xml" path='docs/member[@name="M:TopicMessage.OfMany(System.Collections.Generic.IList{Proto.Mirror.ConsensusTopicResponse})"]' />
         public static TopicMessage OfMany(IList<Proto.Mirror.ConsensusTopicResponse> responses)
@@ -34,7 +34,7 @@ namespace Hiero.SDK.Consensus
 
             foreach (Proto.Mirror.ConsensusTopicResponse r in responses)
             {
-                transactionId ??= TransactionId.FromProtobuf(r.ChunkInfo.InitialTransactionId);
+                transactionId ??= TransactionId.FromProtobuf(r.ChunkInfo.InitialTransactionID);
 
 				int index = r.ChunkInfo.Number - 1;
                 chunks[index] = new TopicMessageChunk(r);

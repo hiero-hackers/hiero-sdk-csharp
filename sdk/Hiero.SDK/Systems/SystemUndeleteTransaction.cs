@@ -55,11 +55,11 @@ namespace Hiero.SDK.Systems
         {
             var body = SourceTransactionBody.SystemUndelete;
 
-            if (body.FileId is not null)
-                FileId = FileId.FromProtobuf(body.FileId);
+            if (body.FileID is not null)
+                FileId = FileId.FromProtobuf(body.FileID);
 
-            if (body.ContractId is not null)
-                ContractId = ContractId.FromProtobuf(body.ContractId);
+            if (body.ContractID is not null)
+                ContractId = ContractId.FromProtobuf(body.ContractID);
         }
 
         /// <include file="SystemUndeleteTransaction.cs.xml" path='docs/member[@name="M:ToProtobuf"]' />
@@ -67,8 +67,8 @@ namespace Hiero.SDK.Systems
         {
             var builder = new Proto.Services.SystemUndeleteTransactionBody();
 
-            if (FileId is not null) builder.FileId = FileId.ToProtobuf();
-            if (ContractId is not null) builder.ContractId = ContractId.ToProtobuf();
+            if (FileId is not null) builder.FileID = FileId.ToProtobuf();
+            if (ContractId is not null) builder.ContractID = ContractId.ToProtobuf();
 
             return builder;
         }

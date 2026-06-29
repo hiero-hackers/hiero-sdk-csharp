@@ -102,10 +102,10 @@ namespace Hiero.SDK.Cryptocurrency
 		public static AccountInfo FromProtobuf(Proto.Services.CryptoGetInfoResponse.Types.AccountInfo accountInfo)
         {
             return new AccountInfo(
-				AccountId.FromProtobuf(accountInfo.AccountId), 
-                accountInfo.ContractAccountId, 
+				AccountId.FromProtobuf(accountInfo.AccountID), 
+                accountInfo.ContractAccountID, 
                 accountInfo.Deleted,
-				accountInfo.ProxyAccountId.AccountNum > 0 ? AccountId.FromProtobuf(accountInfo.ProxyAccountId) : null, 
+				accountInfo.ProxyAccountID.AccountNum > 0 ? AccountId.FromProtobuf(accountInfo.ProxyAccountID) : null, 
                 accountInfo.ProxyReceived,
                 Key.FromProtobufKey(accountInfo.Key), 
                 (long)accountInfo.Balance,
@@ -135,7 +135,7 @@ namespace Hiero.SDK.Cryptocurrency
         {
 			Proto.Services.CryptoGetInfoResponse.Types.AccountInfo proto = new ()
             {
-				AccountId = AccountId.ToProtobuf(),
+				AccountID = AccountId.ToProtobuf(),
 				Deleted = IsDeleted,
 				ProxyReceived = ProxyReceived.ToTinybars(),
 				Key = Key.ToProtobufKey(),
@@ -155,10 +155,10 @@ namespace Hiero.SDK.Cryptocurrency
             proto.LiveHashes.AddRange(LiveHashes.Select(_ => _.ToProtobuf()));
             
             if (ContractAccountId != null)
-				proto.ContractAccountId = ContractAccountId;
+				proto.ContractAccountID = ContractAccountId;
 
 			if (ProxyAccountId != null)
-				proto.ProxyAccountId = ProxyAccountId.ToProtobuf();
+				proto.ProxyAccountID = ProxyAccountId.ToProtobuf();
 
             if (AliasKey != null)
 				proto.Alias = AliasKey.ToProtobufKey().ToByteString();

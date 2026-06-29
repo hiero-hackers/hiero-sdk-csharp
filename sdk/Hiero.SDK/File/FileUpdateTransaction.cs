@@ -101,7 +101,7 @@ namespace Hiero.SDK.File
 				builder.Contents = Contents;
 
             if (FileId != null)
-				builder.FileId = FileId.ToProtobuf();
+				builder.FileID = FileId.ToProtobuf();
 
 			if (Keys != null)
 				builder.Keys = Keys.ToProtobuf();
@@ -146,8 +146,8 @@ namespace Hiero.SDK.File
 		{
 			var body = SourceTransactionBody.FileUpdate;
 
-			if (body.FileId is not null)
-				FileId = FileId.FromProtobuf(body.FileId);
+			if (body.FileID is not null)
+				FileId = FileId.FromProtobuf(body.FileID);
 
 			if (body.Keys is not null)
 				Keys = KeyList.FromProtobuf(body.Keys, null);

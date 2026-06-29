@@ -104,7 +104,7 @@ namespace Hiero.SDK.Schedule
             var builder = new Proto.Services.ScheduleCreateTransactionBody();
 
             if (PayerAccountId != null)
-				builder.PayerAccountId = PayerAccountId.ToProtobuf();
+				builder.PayerAccountID = PayerAccountId.ToProtobuf();
 
 			if (ScheduledTransactionBody != null)
 				builder.ScheduledTransactionBody = ScheduledTransactionBody;
@@ -131,7 +131,7 @@ namespace Hiero.SDK.Schedule
 			ScheduleMemo = body.Memo;
 			AdminKey = body.AdminKey is null ? null : Key.FromProtobufKey(body.AdminKey);
 			ScheduledTransactionBody = body.ScheduledTransactionBody;
-			PayerAccountId = body.PayerAccountId is null ? null : AccountId.FromProtobuf(body.PayerAccountId);
+			PayerAccountId = body.PayerAccountID is null ? null : AccountId.FromProtobuf(body.PayerAccountID);
 			ExpirationTime = body.ExpirationTime?.ToNodaTimeInstant();
         }
 

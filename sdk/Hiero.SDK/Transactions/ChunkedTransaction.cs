@@ -184,7 +184,7 @@ namespace Hiero.SDK.Transactions
 						endIndex = Data.Length;
 					}
 
-					FrozenBodyBuilder!.TransactionId = TransactionIds[i].ToProtobuf();
+					FrozenBodyBuilder!.TransactionID = TransactionIds[i].ToProtobuf();
 
 					OnFreezeChunk(FrozenBodyBuilder, TransactionIds[0].ToProtobuf(), startIndex, endIndex, i, requiredChunks);
 				}
@@ -193,7 +193,7 @@ namespace Hiero.SDK.Transactions
 				foreach (var nodeId in NodeAccountIds)
 				{
 					SigPairLists.Add(new Proto.Services.SignatureMap());
-					FrozenBodyBuilder!.NodeAccountId = nodeId.ToProtobuf();
+					FrozenBodyBuilder!.NodeAccountID = nodeId.ToProtobuf();
 					FrozenBodyBuilder!.ToByteString();
 					OuterTransactions.Add(null);
 					InnerSignedTransactions.Add(new Proto.Services.SignedTransaction

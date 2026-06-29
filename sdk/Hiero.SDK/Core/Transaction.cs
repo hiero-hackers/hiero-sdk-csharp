@@ -162,7 +162,7 @@ namespace Hiero.SDK.Core
 
             FrozenBodyBuilder = SpawnBodyBuilder(client, builder =>
 			{
-				builder.TransactionId = TransactionIds[0].ToProtobuf();
+				builder.TransactionID = TransactionIds[0].ToProtobuf();
             });
 
 			OnFreeze(FrozenBodyBuilder);
@@ -330,10 +330,10 @@ namespace Hiero.SDK.Core
 			Proto.Services.TransactionBody body = SpawnBodyBuilder(null);
 			
 			if (TransactionIds.Count != 0)
-				body.TransactionId = TransactionIds[0].ToProtobuf();
+				body.TransactionID = TransactionIds[0].ToProtobuf();
 
 			if (NodeAccountIds.Count != 0)
-				body.NodeAccountId = NodeAccountIds[0].ToProtobuf();
+				body.NodeAccountID = NodeAccountIds[0].ToProtobuf();
 
 			OnFreeze(body);
 
@@ -367,8 +367,8 @@ namespace Hiero.SDK.Core
 		/// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.MatchesTargetTransactionAndNode(Proto.Services.TransactionBody,TransactionId,AccountId)"]' />
 		private bool MatchesTargetTransactionAndNode(Proto.Services.TransactionBody body, TransactionId targetTransactionID, AccountId targetNodeId)
         {
-            TransactionId bodyTxId = TransactionId.FromProtobuf(body.TransactionId);
-            AccountId bodyNodeId = AccountId.FromProtobuf(body.NodeAccountId);
+            TransactionId bodyTxId = TransactionId.FromProtobuf(body.TransactionID);
+            AccountId bodyNodeId = AccountId.FromProtobuf(body.NodeAccountID);
 
             return bodyTxId.ToString().Equals(targetTransactionID.ToString()) && bodyNodeId.ToString().Equals(targetNodeId.ToString());
         }

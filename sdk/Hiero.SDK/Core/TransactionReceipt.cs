@@ -92,16 +92,16 @@ namespace Hiero.SDK.Core
             var rate = transactionReceipt.ExchangeRate;
             var exchangeRate = ExchangeRate.FromProtobuf(rate.CurrentRate);
             var nextExchangeRate = ExchangeRate.FromProtobuf(rate.NextRate);
-            var accountId = transactionReceipt.AccountId is null ? null : AccountId.FromProtobuf(transactionReceipt.AccountId);
-            var fileId = transactionReceipt.FileId is null ? null : FileId.FromProtobuf(transactionReceipt.FileId);
-            var contractId = transactionReceipt.ContractId is null ? null : ContractId.FromProtobuf(transactionReceipt.ContractId);
-            var topicId = transactionReceipt.TopicId is null ? null : TopicId.FromProtobuf(transactionReceipt.TopicId);
-            var tokenId = transactionReceipt.TokenId is null ? null : TokenId.FromProtobuf(transactionReceipt.TokenId);
+            var accountId = transactionReceipt.AccountID is null ? null : AccountId.FromProtobuf(transactionReceipt.AccountID);
+            var fileId = transactionReceipt.FileID is null ? null : FileId.FromProtobuf(transactionReceipt.FileID);
+            var contractId = transactionReceipt.ContractID is null ? null : ContractId.FromProtobuf(transactionReceipt.ContractID);
+            var topicId = transactionReceipt.TopicID is null ? null : TopicId.FromProtobuf(transactionReceipt.TopicID);
+            var tokenId = transactionReceipt.TokenID is null ? null : TokenId.FromProtobuf(transactionReceipt.TokenID);
             var topicSequenceNumber = transactionReceipt.TopicSequenceNumber;
             var topicRunningHash = transactionReceipt.TopicRunningHash.Length == 0 ? null : transactionReceipt.TopicRunningHash;
             var totalSupply = transactionReceipt.NewTotalSupply;
-            var scheduleId = transactionReceipt.ScheduleId is null ? null : ScheduleId.FromProtobuf(transactionReceipt.ScheduleId);
-            var scheduledTransactionId = transactionReceipt.ScheduledTransactionId is null ? null : TransactionId.FromProtobuf(transactionReceipt.ScheduledTransactionId);
+            var scheduleId = transactionReceipt.ScheduleID is null ? null : ScheduleId.FromProtobuf(transactionReceipt.ScheduleID);
+            var scheduledTransactionId = transactionReceipt.ScheduledTransactionID is null ? null : TransactionId.FromProtobuf(transactionReceipt.ScheduledTransactionID);
             var serials = transactionReceipt.SerialNumbers;
             var nodeId = transactionReceipt.NodeId;
 
@@ -145,14 +145,14 @@ namespace Hiero.SDK.Core
             };
 
             if (TopicSequenceNumber != null) proto.TopicSequenceNumber = TopicSequenceNumber.Value;
-            if (AccountId != null) proto.AccountId = AccountId.ToProtobuf();
-            if (FileId != null) proto.FileId = FileId.ToProtobuf();
-            if (ContractId != null) proto.ContractId = ContractId.ToProtobuf();
-            if (TopicId != null) proto.TopicId = TopicId.ToProtobuf();
-            if (TokenId != null) proto.TokenId = TokenId.ToProtobuf();
+            if (AccountId != null) proto.AccountID = AccountId.ToProtobuf();
+            if (FileId != null) proto.FileID = FileId.ToProtobuf();
+            if (ContractId != null) proto.ContractID = ContractId.ToProtobuf();
+            if (TopicId != null) proto.TopicID = TopicId.ToProtobuf();
+            if (TokenId != null) proto.TokenID = TokenId.ToProtobuf();
             if (TopicRunningHash != null) proto.TopicRunningHash = TopicRunningHash;
-            if (ScheduleId != null) proto.ScheduleId = ScheduleId.ToProtobuf();
-            if (ScheduledTransactionId != null) proto.ScheduledTransactionId = ScheduledTransactionId.ToProtobuf();
+            if (ScheduleId != null) proto.ScheduleID = ScheduleId.ToProtobuf();
+            if (ScheduledTransactionId != null) proto.ScheduledTransactionID = ScheduledTransactionId.ToProtobuf();
 
             foreach (var serial in Serials)
                 proto.SerialNumbers.Add(serial);

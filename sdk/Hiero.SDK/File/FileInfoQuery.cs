@@ -26,7 +26,7 @@ namespace Hiero.SDK.File
             };
 
             if (FileId != null)
-                builder.FileId = FileId.ToProtobuf();
+                builder.FileID = FileId.ToProtobuf();
 
             queryBuilder.FileGetInfo = builder;
         }

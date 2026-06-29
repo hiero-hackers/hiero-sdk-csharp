@@ -35,7 +35,7 @@ namespace Hiero.SDK.LiveHashes
 
             if (AccountId != null)
             {
-                builder.AccountId = AccountId.ToProtobuf();
+                builder.AccountID = AccountId.ToProtobuf();
             }
 
             builder.Hash = ByteString.CopyFrom(Hash);

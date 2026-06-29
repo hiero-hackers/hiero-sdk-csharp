@@ -178,7 +178,7 @@ namespace Hiero.SDK.Cryptocurrency
 
             if (ProxyAccountId != null)
             {
-                builder.ProxyAccountId = ProxyAccountId.ToProtobuf();
+                builder.ProxyAccountID = ProxyAccountId.ToProtobuf();
             }
 
             if (Key != null)
@@ -225,8 +225,8 @@ namespace Hiero.SDK.Cryptocurrency
             if (body.HasStakedNodeId)
                 StakedNodeId = body.StakedNodeId;
 
-            if (body.ProxyAccountId is not null)
-                ProxyAccountId = AccountId.FromProtobuf(body.ProxyAccountId);
+            if (body.ProxyAccountID is not null)
+                ProxyAccountId = AccountId.FromProtobuf(body.ProxyAccountID);
 
             if (body.Key is not null)
                 Key = Key.FromProtobufKey(body.Key);

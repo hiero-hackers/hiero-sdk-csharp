@@ -37,9 +37,9 @@ namespace Hiero.SDK.File
         {
             var body = SourceTransactionBody.FileDelete;
 
-            if (body.FileId is not null)
+            if (body.FileID is not null)
             {
-                FileId = FileId.FromProtobuf(body.FileId);
+                FileId = FileId.FromProtobuf(body.FileID);
             }
         }
 
@@ -49,7 +49,7 @@ namespace Hiero.SDK.File
             var builder = new Proto.Services.FileDeleteTransactionBody();
 
             if (FileId != null)
-				builder.FileId = FileId.ToProtobuf();
+				builder.FileID = FileId.ToProtobuf();
 
 			return builder;
         }

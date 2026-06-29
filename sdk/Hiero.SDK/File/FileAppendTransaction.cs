@@ -64,9 +64,9 @@ namespace Hiero.SDK.File
 		private void InitFromTransactionBody()
 		{
 			var body = SourceTransactionBody.FileAppend;
-			if (body.FileId is not null)
+			if (body.FileID is not null)
 			{
-				FileId = FileId.FromProtobuf(body.FileId);
+				FileId = FileId.FromProtobuf(body.FileID);
 			}
 
 			if (InnerSignedTransactions.Count > 0)
@@ -98,7 +98,7 @@ namespace Hiero.SDK.File
 			};
 
             if (FileId != null)
-				builder.FileId = FileId.ToProtobuf();
+				builder.FileID = FileId.ToProtobuf();
 
             return builder;
         }

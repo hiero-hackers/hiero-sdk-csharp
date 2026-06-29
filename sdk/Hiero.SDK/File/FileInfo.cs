@@ -26,7 +26,7 @@ namespace Hiero.SDK.File
         public static FileInfo FromProtobuf(Proto.Services.FileGetInfoResponse.Types.FileInfo fileInfo)
         {
             return new FileInfo(
-				FileId.FromProtobuf(fileInfo.FileId), 
+				FileId.FromProtobuf(fileInfo.FileID), 
 				fileInfo.Size, 
 				fileInfo.ExpirationTime.ToNodaTimeInstant(), 
 				fileInfo.Deleted,
@@ -65,7 +65,7 @@ namespace Hiero.SDK.File
         {
             return new Proto.Services.FileGetInfoResponse.Types.FileInfo
 			{
-				FileId = FileId.ToProtobuf(),
+				FileID = FileId.ToProtobuf(),
 				Size = Size,
 				ExpirationTime = ExpirationTime.ToProtoTimestamp(),
 				Deleted = IsDeleted,

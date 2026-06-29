@@ -403,8 +403,8 @@ namespace Hiero.SDK.Core
                 Proto.Services.SignedTransaction signableNodeTransactionBodyBytes = InnerSignedTransactions[i];
                 Proto.Services.TransactionBody body = Transaction.ParseTransactionBody(signableNodeTransactionBodyBytes.BodyBytes);
 
-                AccountId nodeId = AccountId.FromProtobuf(body.NodeAccountId);
-                TransactionId transactionId = TransactionId.FromProtobuf(body.TransactionId);
+                AccountId nodeId = AccountId.FromProtobuf(body.NodeAccountID);
+                TransactionId transactionId = TransactionId.FromProtobuf(body.TransactionID);
 
                 signableNodeTransactionBodyBytesList.Add(new SignableNodeTransactionBodyBytes(nodeId, transactionId, signableNodeTransactionBodyBytes.BodyBytes.ToByteArray()));
             }
@@ -545,7 +545,7 @@ namespace Hiero.SDK.Core
         /// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.ToBytes"]' />
         public virtual byte[] ToBytes()
         {
-            var list = new Proto.SDK.TransactionList();
+            var list = new Proto.Sdk.TransactionList();
 
             // If no nodes have been selected yet,
             // the new TransactionBody can be used to build a Transaction protobuf object.
@@ -554,7 +554,7 @@ namespace Hiero.SDK.Core
                 var bodyBuilder = SpawnBodyBuilder(null);
                 if (TransactionIds.Count != 0)
                 {
-                    bodyBuilder.TransactionId = TransactionIds[0].ToProtobuf();
+                    bodyBuilder.TransactionID = TransactionIds[0].ToProtobuf();
                 }
 
                 OnFreeze(bodyBuilder);
@@ -576,7 +576,7 @@ namespace Hiero.SDK.Core
                     FrozenBodyBuilder = SpawnBodyBuilder(null);
                     if (TransactionIds.Count != 0)
                     {
-                        FrozenBodyBuilder.TransactionId = TransactionIds[0].ToProtobuf();
+                        FrozenBodyBuilder.TransactionID = TransactionIds[0].ToProtobuf();
                     }
 
                     OnFreeze(FrozenBodyBuilder);
@@ -603,7 +603,7 @@ namespace Hiero.SDK.Core
         public virtual void WipeTransactionLists(int requiredChunks)
         {
             if (TransactionIds.Count != 0)
-                FrozenBodyBuilder.TransactionId = TransactionIdInternal.ToProtobuf();
+                FrozenBodyBuilder.TransactionID = TransactionIdInternal.ToProtobuf();
 
             OuterTransactions = new List<Proto.Services.Transaction>(NodeAccountIds.Count);
             SigPairLists = new List<Proto.Services.SignatureMap>(NodeAccountIds.Count);
@@ -611,7 +611,7 @@ namespace Hiero.SDK.Core
 
             foreach (AccountId nodeId in NodeAccountIds)
             {
-                FrozenBodyBuilder.NodeAccountId = nodeId.ToProtobuf();
+                FrozenBodyBuilder.NodeAccountID = nodeId.ToProtobuf();
 
                 SigPairLists.Add(new Proto.Services.SignatureMap());
                 OuterTransactions.Add(null);
@@ -671,10 +671,10 @@ namespace Hiero.SDK.Core
             Proto.Services.TransactionBody body = SpawnBodyBuilder(null);
 
             if (TransactionIds.Count != 0)
-                body.TransactionId = TransactionIds[0].ToProtobuf();
+                body.TransactionID = TransactionIds[0].ToProtobuf();
 
             if (NodeAccountIds.Count != 0)
-                body.NodeAccountId = NodeAccountIds[0].ToProtobuf();
+                body.NodeAccountID = NodeAccountIds[0].ToProtobuf();
 
             OnFreeze(body);
 
@@ -711,8 +711,8 @@ namespace Hiero.SDK.Core
         /// <include file="Transaction.cs.xml" path='docs/member[@name="M:Transaction.MatchesTargetTransactionAndNode(Proto.Services.TransactionBody,TransactionId,AccountId)"]' />
         private bool MatchesTargetTransactionAndNode(Proto.Services.TransactionBody body, TransactionId targetTransactionID, AccountId targetNodeId)
         {
-            TransactionId bodyTxId = TransactionId.FromProtobuf(body.TransactionId);
-            AccountId bodyNodeId = AccountId.FromProtobuf(body.NodeAccountId);
+            TransactionId bodyTxId = TransactionId.FromProtobuf(body.TransactionID);
+            AccountId bodyNodeId = AccountId.FromProtobuf(body.NodeAccountID);
 
             return bodyTxId.ToString().Equals(targetTransactionID.ToString()) && bodyNodeId.ToString().Equals(targetNodeId.ToString());
         }

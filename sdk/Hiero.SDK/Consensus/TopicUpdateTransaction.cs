@@ -113,8 +113,9 @@ namespace Hiero.SDK.Consensus
         void InitFromTransactionBody()
         {
             var body = SourceTransactionBody.ConsensusUpdateTopic;
-            if (body.TopicId is not null)
-                TopicId = TopicId.FromProtobuf(body.TopicId);
+            
+            if (body.TopicID is not null)
+                TopicId = TopicId.FromProtobuf(body.TopicID);
 
             if (body.AdminKey is not null)
                 AdminKey = Key.FromProtobufKey(body.AdminKey);
@@ -150,7 +151,7 @@ namespace Hiero.SDK.Consensus
             var builder = new Proto.Services.ConsensusUpdateTopicTransactionBody();
 
             if (TopicId != null)
-                builder.TopicId = TopicId.ToProtobuf();
+                builder.TopicID = TopicId.ToProtobuf();
 
             if (AutoRenewAccountId != null)
                 builder.AutoRenewAccount = AutoRenewAccountId.ToProtobuf();

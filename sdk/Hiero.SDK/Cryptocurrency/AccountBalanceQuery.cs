@@ -31,10 +31,10 @@ namespace Hiero.SDK.Cryptocurrency
             };
 
             if (AccountId != null)
-                builder.AccountId = AccountId.ToProtobuf();
+                builder.AccountID = AccountId.ToProtobuf();
 
             if (ContractId != null)
-                builder.ContractId = ContractId.ToProtobuf();
+                builder.ContractID = ContractId.ToProtobuf();
 
             queryBuilder.CryptogetAccountBalance = builder;
         }

@@ -34,11 +34,11 @@ namespace Hiero.SDK.Cryptocurrency
 		{
 			var body = SourceTransactionBody.CryptoDelete;
 
-			if (body.DeleteAccountId is not null)
-				AccountId = AccountId.FromProtobuf(body.DeleteAccountId);
+			if (body.DeleteAccountID is not null)
+				AccountId = AccountId.FromProtobuf(body.DeleteAccountID);
 
-			if (body.TransferAccountId is not null)
-				TransferAccountId = AccountId.FromProtobuf(body.TransferAccountId);
+			if (body.TransferAccountID is not null)
+				TransferAccountId = AccountId.FromProtobuf(body.TransferAccountID);
 		}
 
 		/// <include file="AccountDeleteTransaction.cs.xml" path='docs/member[@name="M:AccountDeleteTransaction.ToProtobuf"]' />
@@ -47,10 +47,10 @@ namespace Hiero.SDK.Cryptocurrency
             var builder = new Proto.Services.CryptoDeleteTransactionBody();
 
             if (AccountId != null)
-                builder.DeleteAccountId = AccountId.ToProtobuf();
+                builder.DeleteAccountID = AccountId.ToProtobuf();
 
             if (TransferAccountId != null)
-                builder.TransferAccountId = TransferAccountId.ToProtobuf();
+                builder.TransferAccountID = TransferAccountId.ToProtobuf();
 
             return builder;
         }

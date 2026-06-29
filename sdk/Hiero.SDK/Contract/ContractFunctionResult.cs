@@ -50,7 +50,7 @@ namespace Hiero.SDK.Contract
 		/// <include file="ContractFunctionResult.cs.xml" path='docs/member[@name="M:ContractFunctionResult.#ctor(Proto.Services.ContractFunctionResult)"]' />
 		internal ContractFunctionResult(Proto.Services.ContractFunctionResult inner)
 		{
-			ContractId = ContractId.FromProtobuf(inner.ContractId);
+			ContractId = ContractId.FromProtobuf(inner.ContractID);
 			EvmAddress = new ContractId(ContractId.Shard, ContractId.Realm, inner.EvmAddress.ToByteArray());
 			string errMsg = inner.ErrorMessage;
 			ErrorMessage = errMsg.Length > 0 ? errMsg : null;
@@ -279,7 +279,7 @@ namespace Hiero.SDK.Contract
         {
 			Proto.Services.ContractFunctionResult proto = new()
             {
-				ContractId = ContractId.ToProtobuf(),
+				ContractID = ContractId.ToProtobuf(),
 				ContractCallResult = RawResult,
 				Bloom = Bloom,
 				GasUsed = GasUsed,

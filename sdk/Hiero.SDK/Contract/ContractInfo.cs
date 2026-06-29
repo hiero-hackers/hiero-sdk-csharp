@@ -43,9 +43,9 @@ namespace Hiero.SDK.Contract
 		public static ContractInfo FromProtobuf(Proto.Services.ContractGetInfoResponse.Types.ContractInfo contractInfo)
         {
             return new ContractInfo(
-                ContractId.FromProtobuf(contractInfo.ContractId), 
-                AccountId.FromProtobuf(contractInfo.AccountId), 
-                contractInfo.ContractAccountId,
+                ContractId.FromProtobuf(contractInfo.ContractID), 
+                AccountId.FromProtobuf(contractInfo.AccountID), 
+                contractInfo.ContractAccountID,
                 contractInfo.AdminKey is null ? null : Key.FromProtobufKey(contractInfo.AdminKey), 
                 contractInfo.ExpirationTime.ToNodaTimeInstant(), 
                 contractInfo.AutoRenewPeriod.ToNodaDuration(), 
@@ -100,9 +100,9 @@ namespace Hiero.SDK.Contract
 		{
 			Proto.Services.ContractGetInfoResponse.Types.ContractInfo proto = new()
 			{
-				ContractId = ContractId.ToProtobuf(),
-				AccountId = AccountId.ToProtobuf(),
-				ContractAccountId = ContractAccountId,
+				ContractID = ContractId.ToProtobuf(),
+				AccountID = AccountId.ToProtobuf(),
+				ContractAccountID = ContractAccountId,
 				ExpirationTime = ExpirationTime.ToProtoTimestamp(),
 				AutoRenewPeriod = AutoRenewPeriod.ToProtoDuration(),
 				Storage = Storage,

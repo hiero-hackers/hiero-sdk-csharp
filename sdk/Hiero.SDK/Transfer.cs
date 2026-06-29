@@ -9,7 +9,7 @@ namespace Hiero.SDK
         /// <include file="Transfer.cs.xml" path='docs/member[@name="M:Transfer.FromProtobuf(Proto.Services.AccountAmount)"]' />
         public static Transfer FromProtobuf(Proto.Services.AccountAmount accountAmount)
 		{
-			return new Transfer(AccountId.FromProtobuf(accountAmount.AccountId), Hbar.FromTinybars(accountAmount.Amount));
+			return new Transfer(AccountId.FromProtobuf(accountAmount.AccountID), Hbar.FromTinybars(accountAmount.Amount));
 		}
 
         /// <include file="Transfer.cs.xml" path='docs/member[@name="P:Transfer.Amount"]' />
@@ -23,7 +23,7 @@ namespace Hiero.SDK
             return new Proto.Services.AccountAmount
             {
 				Amount = Amount.ToTinybars(),
-				AccountId = AccountId.ToProtobuf(),
+				AccountID = AccountId.ToProtobuf(),
 			};
         }
     }

@@ -9,19 +9,19 @@ namespace Hiero.SDK.Hook
         public long HookId_ { get; } = hookId;
 
         /// <include file="HookId.cs.xml" path='docs/member[@name="M:HookId.ToProtobuf"]' />
-        public virtual Proto.Services.HookID ToProtobuf()
+        public virtual Proto.Services.HookId ToProtobuf()
         {
-            return new Proto.Services.HookID
+            return new Proto.Services.HookId
             {
-				HookId = HookId_,
+				HookId_ = HookId_,
                 EntityId = EntityId.ToProtobuf()
             };
         }
 
         /// <include file="HookId.cs.xml" path='docs/member[@name="M:HookId.FromProtobuf(Proto.Services.HookId)"]' />
-        public static HookId FromProtobuf(Proto.Services.HookID proto)
+        public static HookId FromProtobuf(Proto.Services.HookId proto)
         {
-            return new HookId(HookEntityId.FromProtobuf(proto.EntityId), proto.HookId);
+            return new HookId(HookEntityId.FromProtobuf(proto.EntityId), proto.HookId_);
         }
 
         public override bool Equals(object? o)

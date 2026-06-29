@@ -50,8 +50,8 @@ namespace Hiero.SDK.Consensus
         {
             var body = SourceTransactionBody.ConsensusSubmitMessage;
 
-            if (body.TopicId is not null)
-				TopicId = TopicId.FromProtobuf(body.TopicId);
+            if (body.TopicID is not null)
+				TopicId = TopicId.FromProtobuf(body.TopicID);
 
 			if (InnerSignedTransactions.Count != 0)
             {
@@ -79,7 +79,7 @@ namespace Hiero.SDK.Consensus
             var builder = new Proto.Services.ConsensusSubmitMessageTransactionBody();
 
             if (TopicId != null)
-				builder.TopicId = TopicId.ToProtobuf();
+				builder.TopicID = TopicId.ToProtobuf();
 
 			builder.Message = Data;
             return builder;
@@ -111,7 +111,7 @@ namespace Hiero.SDK.Consensus
 				body.ConsensusSubmitMessage.Message = Data.Copy(startIndex, endIndex);
                 body.ConsensusSubmitMessage.ChunkInfo = new Proto.Services.ConsensusMessageChunkInfo
                 {
-					InitialTransactionId = initialTransactionId,
+					InitialTransactionID = initialTransactionId,
 					Number = chunk + 1,
 					Total = total,
 				};

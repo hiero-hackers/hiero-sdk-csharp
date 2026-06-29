@@ -43,7 +43,7 @@ namespace Hiero.SDK.Cryptocurrency
 
 			if (AccountId != null)
 			{
-				builder.AccountId = AccountId.ToProtobuf();
+				builder.AccountID = AccountId.ToProtobuf();
 			}
 
 			queryBuilder.CryptoGetInfo = builder;

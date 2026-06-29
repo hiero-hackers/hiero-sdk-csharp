@@ -52,7 +52,7 @@ namespace Hiero.SDK.Token
 				{
 					tokenTransfers.Add(new TokenTransfer(
 						token,
-						AccountId.FromProtobuf(transfer.AccountId),
+						AccountId.FromProtobuf(transfer.AccountID),
 						transfer.Amount,
 						tokenTransferList.ExpectedDecimals,
 						transfer.IsApproval));
@@ -62,8 +62,8 @@ namespace Hiero.SDK.Token
 				{
 					nftTransfers.Add(new TokenNftTransfer(
 						token,
-						AccountId.FromProtobuf(transfer.SenderAccountId),
-						AccountId.FromProtobuf(transfer.ReceiverAccountId),
+						AccountId.FromProtobuf(transfer.SenderAccountID),
+						AccountId.FromProtobuf(transfer.ReceiverAccountID),
 						transfer.SerialNumber,
 						transfer.IsApproval,
 						null,

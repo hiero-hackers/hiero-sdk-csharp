@@ -157,7 +157,7 @@ namespace Hiero.SDK.Contract
         {
             return new Proto.Services.Key 
             {
-                ContractId = ToProtobuf(),
+                ContractID = ToProtobuf(),
             };
         }
 

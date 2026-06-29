@@ -35,8 +35,8 @@ namespace Hiero.SDK.Consensus
         {
             var body = SourceTransactionBody.ConsensusDeleteTopic;
 
-            if (body.TopicId is not null)
-			    TopicId = TopicId.FromProtobuf(body.TopicId);
+            if (body.TopicID is not null)
+			    TopicId = TopicId.FromProtobuf(body.TopicID);
 		}
 
         /// <include file="TopicDeleteTransaction.cs.xml" path='docs/member[@name="M:TopicDeleteTransaction.ToProtobuf"]' />
@@ -45,7 +45,7 @@ namespace Hiero.SDK.Consensus
             var builder = new Proto.Services.ConsensusDeleteTopicTransactionBody();
 
             if (TopicId != null)
-				builder.TopicId = TopicId.ToProtobuf();
+				builder.TopicID = TopicId.ToProtobuf();
 
 			return builder;
         }

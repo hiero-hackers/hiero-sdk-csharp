@@ -41,7 +41,7 @@ namespace Hiero.SDK.Consensus
 		public static TopicInfo FromProtobuf(Proto.Services.ConsensusGetTopicInfoResponse topicInfoResponse)
         {
             return new TopicInfo(
-				TopicId.FromProtobuf(topicInfoResponse.TopicId),
+				TopicId.FromProtobuf(topicInfoResponse.TopicID),
 				topicInfoResponse.TopicInfo.Memo, 
                 topicInfoResponse.TopicInfo.RunningHash, 
                 topicInfoResponse.TopicInfo.SequenceNumber,
@@ -90,7 +90,7 @@ namespace Hiero.SDK.Consensus
 		{
 			Proto.Services.ConsensusGetTopicInfoResponse proto = new()
 			{
-				TopicId = TopicId.ToProtobuf(),
+				TopicID = TopicId.ToProtobuf(),
 				TopicInfo = new Proto.Services.ConsensusTopicInfo
 				{
 					Memo = TopicMemo,

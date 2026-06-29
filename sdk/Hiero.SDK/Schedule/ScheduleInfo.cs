@@ -54,13 +54,13 @@ namespace Hiero.SDK.Schedule
 		public static ScheduleInfo FromProtobuf(Proto.Services.ScheduleInfo info)
         {
             return new ScheduleInfo(
-				ScheduleId.FromProtobuf(info.ScheduleId), 
-                AccountId.FromProtobuf(info.CreatorAccountId), 
-                AccountId.FromProtobuf(info.PayerAccountId), 
+				ScheduleId.FromProtobuf(info.ScheduleID), 
+                AccountId.FromProtobuf(info.CreatorAccountID), 
+                AccountId.FromProtobuf(info.PayerAccountID), 
                 info.ScheduledTransactionBody,
                 KeyList.FromProtobuf(info.Signers, null),
                 info.AdminKey is null ? null : Key.FromProtobufKey(info.AdminKey),
-				TransactionId.FromProtobuf(info.ScheduledTransactionId), 
+				TransactionId.FromProtobuf(info.ScheduledTransactionID), 
                 info.Memo, 
                 info.ExpirationTime?.ToNodaTimeInstant(),
                 info.ExecutionTime?.ToNodaTimeInstant(), 
@@ -101,10 +101,10 @@ namespace Hiero.SDK.Schedule
         {
 			Proto.Services.ScheduleInfo proto = new ()
             {
-				ScheduleId = ScheduleId.ToProtobuf(),
-				CreatorAccountId = CreatorAccountId.ToProtobuf(),
+				ScheduleID = ScheduleId.ToProtobuf(),
+				CreatorAccountID = CreatorAccountId.ToProtobuf(),
 				ScheduledTransactionBody = TransactionBody,
-				PayerAccountId = PayerAccountId.ToProtobuf(),
+				PayerAccountID = PayerAccountId.ToProtobuf(),
 				Signers = Signatories.ToProtobuf(),
 				Memo = Memo,
 				LedgerId = LedgerId.ToByteString(),
@@ -115,7 +115,7 @@ namespace Hiero.SDK.Schedule
                 proto.AdminKey = AdminKey.ToProtobufKey();
 
             if (ScheduledTransactionId != null)
-                proto.ScheduledTransactionId = ScheduledTransactionId.ToProtobuf();
+                proto.ScheduledTransactionID = ScheduledTransactionId.ToProtobuf();
 
             if (ExpirationTime != null)
                 proto.ExpirationTime = ExpirationTime.Value.ToProtoTimestamp();

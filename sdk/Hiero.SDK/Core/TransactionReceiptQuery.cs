@@ -47,7 +47,7 @@ namespace Hiero.SDK.Core
 
             if (TransactionId != null)
             {
-                builder.TransactionId = TransactionId.ToProtobuf();
+                builder.TransactionID = TransactionId.ToProtobuf();
             }
 
             queryBuilder.TransactionGetReceipt = builder;

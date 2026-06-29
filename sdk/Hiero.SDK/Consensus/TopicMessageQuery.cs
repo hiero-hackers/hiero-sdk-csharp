@@ -23,7 +23,7 @@ namespace Hiero.SDK.Consensus
         
         public TopicId TopicId 
         {
-            set => _Proto.TopicId = value.ToProtobuf(); 
+            set => _Proto.TopicID = value.ToProtobuf(); 
         }
 		public NodaTime.Instant StartTime 
         {
@@ -42,7 +42,7 @@ namespace Hiero.SDK.Consensus
             set;
             internal get => field ??= () =>
             {
-				LOGGER.Info("Subscription to topic {} complete", TopicId.FromProtobuf(_Proto.TopicId));
+				LOGGER.Info("Subscription to topic {} complete", TopicId.FromProtobuf(_Proto.TopicID));
 			};
         } 
         public Action<Exception, TopicMessage?> ErrorHandler
@@ -50,7 +50,7 @@ namespace Hiero.SDK.Consensus
             set;
             internal get => field ??= ((exception, topicmessage) =>
             {
-                var topicId = TopicId.FromProtobuf(_Proto.TopicId);
+                var topicId = TopicId.FromProtobuf(_Proto.TopicID);
 
                 if (exception is RpcException rpcexception && rpcexception.Status.Equals(Status.DefaultCancelled))
                     LOGGER.Warn("Call is cancelled for topic {}.", topicId);
@@ -198,7 +198,7 @@ namespace Hiero.SDK.Consensus
                             continue;
                         }
 
-                        var initialTransactionId = call.ResponseStream.Current.ChunkInfo.InitialTransactionId;
+                        var initialTransactionId = call.ResponseStream.Current.ChunkInfo.InitialTransactionID;
 
                         if (!pendingMessages.ContainsKey(initialTransactionId))
                         {
@@ -241,7 +241,7 @@ namespace Hiero.SDK.Consensus
 
                     var delay = Math.Min(500L * (long)Math.Pow(2, attempt), (long)MaxBackoff.TotalMilliseconds);
 
-                    var topicId = TopicId.FromProtobuf(_Proto.TopicId);
+                    var topicId = TopicId.FromProtobuf(_Proto.TopicID);
 
                     LOGGER.Warn(
                         $"Error subscribing to topic {topicId} during attempt #{attempt}. " +

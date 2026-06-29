@@ -41,8 +41,8 @@ namespace Hiero.SDK.Schedule
         /// <include file="ScheduleDeleteTransaction.cs.xml" path='docs/member[@name="M:ScheduleDeleteTransaction.InitFromTransactionBody"]' />
         private void InitFromTransactionBody()
         {
-            if (SourceTransactionBody.ScheduleDelete.ScheduleId is not null)
-				ScheduleId = ScheduleId.FromProtobuf(SourceTransactionBody.ScheduleDelete.ScheduleId);
+            if (SourceTransactionBody.ScheduleDelete.ScheduleID is not null)
+				ScheduleId = ScheduleId.FromProtobuf(SourceTransactionBody.ScheduleDelete.ScheduleID);
 		}
 
         /// <include file="ScheduleDeleteTransaction.cs.xml" path='docs/member[@name="M:ScheduleDeleteTransaction.ToProtobuf"]' />
@@ -51,7 +51,7 @@ namespace Hiero.SDK.Schedule
 			Proto.Services.ScheduleDeleteTransactionBody proto =  new ();
             
             if (ScheduleId != null)
-                proto.ScheduleId = ScheduleId.ToProtobuf();
+                proto.ScheduleID = ScheduleId.ToProtobuf();
 
 			return proto;
         }

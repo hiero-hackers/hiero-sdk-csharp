@@ -40,7 +40,7 @@ namespace Hiero.SDK.Core
 		/// <include file="Transaction.Statics.cs.xml" path='docs/member[@name="M:FromBytes``1(System.Byte[])"]' />
 		public static T FromBytes<T>(byte[] bytes) where T : Transaction<T>
 		{
-			var list = Proto.SDK.TransactionList.Parser.ParseFrom(bytes);
+			var list = Proto.Sdk.TransactionList.Parser.ParseFrom(bytes);
 			var txsMap = new DictionaryLinked<TransactionId, DictionaryLinked<AccountId, Proto.Services.Transaction>>();
 
 			Proto.Services.TransactionBody.DataOneofCase dataCase;
@@ -62,7 +62,7 @@ namespace Hiero.SDK.Core
 		}
         public static Transaction FromBytes(byte[] bytes)
         {
-            var list = Proto.SDK.TransactionList.Parser.ParseFrom(bytes);
+            var list = Proto.Sdk.TransactionList.Parser.ParseFrom(bytes);
             var txsMap = new DictionaryLinked<TransactionId, DictionaryLinked<AccountId, Proto.Services.Transaction>>();
 
             Proto.Services.TransactionBody.DataOneofCase dataCase;
@@ -133,8 +133,8 @@ namespace Hiero.SDK.Core
         /// <include file="Transaction.Statics.cs.xml" path='docs/member[@name="M:AddTransactionToMap(Proto.Services.Transaction,Proto.Services.TransactionBody,DictionaryLinked{TransactionId,DictionaryLinked{AccountId,Proto.Services.Transaction}})"]' />
         internal static void AddTransactionToMap(Proto.Services.Transaction transaction, Proto.Services.TransactionBody txBody, DictionaryLinked<TransactionId, DictionaryLinked<AccountId, Proto.Services.Transaction>> txsMap)
 		{
-			var account = txBody.NodeAccountId is not null ? AccountId.FromProtobuf(txBody.NodeAccountId) : DUMMY_ACCOUNT_ID;
-			var transactionId = txBody.TransactionId is not null ? TransactionId.FromProtobuf(txBody.TransactionId) : DUMMY_TRANSACTION_ID;
+			var account = txBody.NodeAccountID is not null ? AccountId.FromProtobuf(txBody.NodeAccountID) : DUMMY_ACCOUNT_ID;
+			var transactionId = txBody.TransactionID is not null ? TransactionId.FromProtobuf(txBody.TransactionID) : DUMMY_TRANSACTION_ID;
 			var linked = txsMap.TryGetValue(transactionId, out DictionaryLinked<AccountId, Proto.Services.Transaction>? value) ? value : [];
 
 			linked.AddOrReplace(account, transaction);

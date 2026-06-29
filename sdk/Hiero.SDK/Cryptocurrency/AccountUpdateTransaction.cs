@@ -155,8 +155,8 @@ namespace Hiero.SDK.Cryptocurrency
             if (body.AccountIDToUpdate is not null)
                 AccountId = AccountId.FromProtobuf(body.AccountIDToUpdate);
 
-            if (body.ProxyAccountId is not null)
-                ProxyAccountId = AccountId.FromProtobuf(body.ProxyAccountId);
+            if (body.ProxyAccountID is not null)
+                ProxyAccountId = AccountId.FromProtobuf(body.ProxyAccountID);
 
             if (body.Key is not null)
                 Key = Key.FromProtobufKey(body.Key);
@@ -201,7 +201,7 @@ namespace Hiero.SDK.Cryptocurrency
                 proto.AccountIDToUpdate = AccountId.ToProtobuf();
 
             if (ProxyAccountId != null)
-                proto.ProxyAccountId = ProxyAccountId.ToProtobuf();
+                proto.ProxyAccountID = ProxyAccountId.ToProtobuf();
 
             if (Key != null)
                 proto.Key = Key.ToProtobufKey();

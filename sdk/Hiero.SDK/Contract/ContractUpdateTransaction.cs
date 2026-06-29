@@ -182,8 +182,8 @@ namespace Hiero.SDK.Contract
         {
             var body = SourceTransactionBody.ContractUpdateInstance;
 
-            ContractId = body.ContractId is null? null : ContractId.FromProtobuf(body.ContractId);
-            ProxyAccountId = body.ProxyAccountId is null ? null : AccountId.FromProtobuf(body.ProxyAccountId);
+            ContractId = body.ContractID is null? null : ContractId.FromProtobuf(body.ContractID);
+            ProxyAccountId = body.ProxyAccountID is null ? null : AccountId.FromProtobuf(body.ProxyAccountID);
             StakedAccountId = body.StakedAccountId is null ? null : AccountId.FromProtobuf(body.StakedAccountId);
             AutoRenewAccountId = body.AutoRenewAccountId is null ? null : AccountId.FromProtobuf(body.AutoRenewAccountId);
 
@@ -210,10 +210,10 @@ namespace Hiero.SDK.Contract
             var builder = new Proto.Services.ContractUpdateTransactionBody { };
 
             if (ContractId != null)
-				builder.ContractId = ContractId.ToProtobuf();
+				builder.ContractID = ContractId.ToProtobuf();
 
             if (ProxyAccountId != null)
-				builder.ProxyAccountId = ProxyAccountId.ToProtobuf();
+				builder.ProxyAccountID = ProxyAccountId.ToProtobuf();
 
             if (ExpirationTime != null)
 				builder.ExpirationTime = ExpirationTime.Value.ToProtoTimestamp();

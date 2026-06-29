@@ -40,7 +40,7 @@ namespace Hiero.SDK.Nfts
 		/// <include file="NftId.cs.xml" path='docs/member[@name="M:NftId.FromProtobuf(Proto.Services.NftId)"]' />
 		public static NftId FromProtobuf(Proto.Services.NftID nftId)
         {
-            return new NftId(TokenId.FromProtobuf(nftId.TokenId), nftId.SerialNumber);
+            return new NftId(TokenId.FromProtobuf(nftId.TokenID), nftId.SerialNumber);
         }
 
         /// <include file="NftId.cs.xml" path='docs/member[@name="M:NftId.ToProtobuf"]' />
@@ -48,7 +48,7 @@ namespace Hiero.SDK.Nfts
         {
             return new Proto.Services.NftID
             {
-                TokenId = TokenId.ToProtobuf(),
+                TokenID = TokenId.ToProtobuf(),
                 SerialNumber = Serial,
             };
         }

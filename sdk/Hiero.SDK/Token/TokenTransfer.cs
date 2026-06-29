@@ -60,7 +60,7 @@ namespace Hiero.SDK.Token
 
                 tokenTransfers.Add(new TokenTransfer(
                     token,
-					AccountId.FromProtobuf(transfer.AccountId), 
+					AccountId.FromProtobuf(transfer.AccountID), 
                     transfer.Amount, 
                     tokenTransferList.ExpectedDecimals, 
                     transfer.IsApproval, 
@@ -77,7 +77,7 @@ namespace Hiero.SDK.Token
             {
 				Amount = Amount,
 				IsApproval = IsApproved,
-				AccountId = AccountId.ToProtobuf(),
+				AccountID = AccountId.ToProtobuf(),
 			};
 
 			switch (HookCall?.Type)

@@ -22,7 +22,7 @@ namespace Hiero.SDK.Transactions
 				else if (transfer.PrePostTxAllowanceHook is not null)
                     typedHook = ToFungibleHook(transfer.PrePostTxAllowanceHook, FungibleHookType.PrePostTxAllowanceHook);
 
-                return new HbarTransfer(AccountId.FromProtobuf(transfer.AccountId), Hbar.FromTinybars(transfer.Amount), transfer.IsApproval, typedHook);
+                return new HbarTransfer(AccountId.FromProtobuf(transfer.AccountID), Hbar.FromTinybars(transfer.Amount), transfer.IsApproval, typedHook);
 			}
 
 			public virtual Proto.Services.AccountAmount ToProtobuf()
@@ -31,7 +31,7 @@ namespace Hiero.SDK.Transactions
                 {
 					IsApproval = IsApproved,
 					Amount = Amount.ToTinybars(),
-					AccountId = AccountId.ToProtobuf(),
+					AccountID = AccountId.ToProtobuf(),
 				};
 
 				switch (HookCall?.Type)
