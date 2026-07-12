@@ -9,7 +9,7 @@ namespace Hiero.Tests.SDK.HBar
     {
         private static readonly Proto.Services.ProxyStaker proxyStaker = new Proto.Services.ProxyStaker 
         { 
-            AccountId = new AccountId(0, 0, 100).ToProtobuf(),
+            AccountID = new AccountId(0, 0, 100).ToProtobuf(),
             Amount = 10
         };
 

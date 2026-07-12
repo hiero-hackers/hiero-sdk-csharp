@@ -39,7 +39,7 @@ namespace Hiero.Tests.SDK.Topic
                 Message = ByteString.CopyFrom(testContents),
                 RunningHash = ByteString.CopyFrom(testRunningHash),
                 SequenceNumber = testSequenceNumber,
-                ChunkInfo = new Proto.Services.ConsensusMessageChunkInfo { InitialTransactionId = testTransactionId.ToProtobuf() },
+                ChunkInfo = new Proto.Services.ConsensusMessageChunkInfo { InitialTransactionID = testTransactionId.ToProtobuf() },
                 ConsensusTimestamp = new Proto.Services.Timestamp
                 {
                     Seconds = testTimestamp.ToUnixTimeSeconds(),
@@ -81,7 +81,7 @@ namespace Hiero.Tests.SDK.Topic
                 Message = ByteString.CopyFrom(testContents),
                 RunningHash = ByteString.CopyFrom(testRunningHash),
                 SequenceNumber = testSequenceNumber,
-                ChunkInfo = new Proto.Services.ConsensusMessageChunkInfo { InitialTransactionId = testTransactionId.ToProtobuf() },
+                ChunkInfo = new Proto.Services.ConsensusMessageChunkInfo { InitialTransactionID = testTransactionId.ToProtobuf() },
                 ConsensusTimestamp = new Proto.Services.Timestamp
                 {
                     Seconds = testTimestamp.ToUnixTimeSeconds(),
@@ -109,7 +109,7 @@ namespace Hiero.Tests.SDK.Topic
                 SequenceNumber = testSequenceNumber,
                 ChunkInfo = new Proto.Services.ConsensusMessageChunkInfo 
                 {
-                    InitialTransactionId = testTransactionId.ToProtobuf(),
+                    InitialTransactionID = testTransactionId.ToProtobuf(),
                     Number = 1,
                     Total = 2,
                 },
@@ -126,7 +126,7 @@ namespace Hiero.Tests.SDK.Topic
                 SequenceNumber = testSequenceNumber + 1,
                 ChunkInfo = new Proto.Services.ConsensusMessageChunkInfo 
                 {
-                    InitialTransactionId = testTransactionId.ToProtobuf(),
+                    InitialTransactionID = testTransactionId.ToProtobuf(),
                     Number = 2,
                     Total = 2,
                 },

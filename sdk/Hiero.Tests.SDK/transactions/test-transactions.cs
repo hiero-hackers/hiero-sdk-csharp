@@ -510,8 +510,8 @@ namespace Hiero.Tests.SDK.Transactions
             List<Transaction.SignableNodeTransactionBodyBytes> list = tx.GetSignableNodeBodyBytesList();
             Proto.Services.TransactionBody body = Proto.Services.TransactionBody.Parser.ParseFrom(list[0].Body);
             Assert.NotNull(body.CryptoTransfer);
-            Assert.Equal(AccountId.FromProtobuf(body.NodeAccountId).ToString(), nodeAccountID1.ToString());
-            Assert.Equal(TransactionId.FromProtobuf(body.TransactionId).ToString(), testTransactionID.ToString());
+            Assert.Equal(AccountId.FromProtobuf(body.NodeAccountID).ToString(), nodeAccountID1.ToString());
+            Assert.Equal(TransactionId.FromProtobuf(body.TransactionID).ToString(), testTransactionID.ToString());
         }
         [Fact]
         /// <include file="test-transactions.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Transactions.TransactionTest.TestGetSignableNodeBodyBytesListMultipleNodeIDs"]' />
@@ -539,7 +539,7 @@ namespace Hiero.Tests.SDK.Transactions
                 Proto.Services.TransactionBody body = Proto.Services.TransactionBody.Parser.ParseFrom(list[i].Body);
 
                 Assert.NotNull(body.CryptoTransfer);
-                Assert.Equal(AccountId.FromProtobuf(body.NodeAccountId).ToString(), nodeID.ToString());
+                Assert.Equal(AccountId.FromProtobuf(body.NodeAccountID).ToString(), nodeID.ToString());
             }
         }
         [Fact]
@@ -582,7 +582,7 @@ namespace Hiero.Tests.SDK.Transactions
 
                 Proto.Services.TransactionBody body = Proto.Services.TransactionBody.Parser.ParseFrom(list[i].Body);
                 Assert.NotNull(body.FileAppend);
-                Assert.Equal(AccountId.FromProtobuf(body.NodeAccountId).ToString(), list[i].NodeID.ToString());
+                Assert.Equal(AccountId.FromProtobuf(body.NodeAccountID).ToString(), list[i].NodeID.ToString());
             }
 
             // Verify each node has the same number of unique transaction IDs

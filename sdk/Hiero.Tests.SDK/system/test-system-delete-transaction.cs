@@ -104,12 +104,12 @@ namespace Hiero.Tests.SDK.System
         {
             var transactionBodyWithFileId = new Proto.Services.SystemDeleteTransactionBody
             {
-                FileId = testFileId.ToProtobuf(),
+                FileID = testFileId.ToProtobuf(),
                 ExpirationTime = new Proto.Services.TimestampSeconds { Seconds = validStart.ToUnixTimeSeconds() }
             };
             var transactionBodyWithContractId = new Proto.Services.SystemDeleteTransactionBody
             {
-                ContractId = testContractId.ToProtobuf(),
+                ContractID = testContractId.ToProtobuf(),
                 ExpirationTime = new Proto.Services.TimestampSeconds { Seconds = validStart.ToUnixTimeSeconds() }
             };
             var txWithFileId = new Proto.Services.TransactionBody

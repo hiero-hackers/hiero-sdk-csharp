@@ -62,7 +62,7 @@ namespace Hiero.Tests.SDK.Account
             {
                 CryptoDelete = new Proto.Services.CryptoDeleteTransactionBody
                 {
-                    DeleteAccountId = AccountId.FromString("6.6.6").ToProtobuf()
+                    DeleteAccountID = AccountId.FromString("6.6.6").ToProtobuf()
                 }
             };
             

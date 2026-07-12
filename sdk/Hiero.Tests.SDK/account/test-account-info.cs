@@ -26,7 +26,7 @@ namespace Hiero.Tests.SDK.Account
 
         private static readonly Proto.Services.CryptoGetInfoResponse.Types.AccountInfo info = new()
         {
-            AccountId = new AccountId(0, 0, 1).ToProtobuf(),
+            AccountID = new AccountId(0, 0, 1).ToProtobuf(),
             Deleted = true,
             ProxyReceived = 2,
             Key = privateKey.GetPublicKey().ToProtobufKey(),
@@ -36,7 +36,7 @@ namespace Hiero.Tests.SDK.Account
             ReceiverSigRequired = true,
             ExpirationTime = NodaTime.Instant.FromUnixTimeMilliseconds(6).ToProtoTimestamp(),
             AutoRenewPeriod = NodaTime.Duration.FromDays(7).ToProtoDuration(),
-            ProxyAccountId = new AccountId(0, 0, 8).ToProtobuf(),
+            ProxyAccountID = new AccountId(0, 0, 8).ToProtobuf(),
             LedgerId = LedgerId.PREVIEWNET.ToByteString(),
             EthereumNonce = 1001,
             LiveHashes = { liveHash }

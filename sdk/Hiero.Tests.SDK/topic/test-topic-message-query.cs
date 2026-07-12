@@ -94,7 +94,7 @@ namespace Hiero.Tests.SDK.Topic
             Assert.Single(received);
             var first = received[0];
             Assert.Equal(response2.ConsensusTimestamp.ToNodaTimeInstant(), first.ConsensusTimestamp);
-            Assert.Equal(response2.ChunkInfo.InitialTransactionId, first.TransactionId.ToProtobuf());
+            Assert.Equal(response2.ChunkInfo.InitialTransactionID, first.TransactionId.ToProtobuf());
             Assert.Equal(message, first.Contents);
             Assert.Equal(response2.RunningHash.ToByteArray(), first.RunningHash);
             Assert.Equal(response2.SequenceNumber, first.SequenceNumber);
@@ -335,7 +335,7 @@ namespace Hiero.Tests.SDK.Topic
             {
                 ConsensusEndTime = START_TIME.PlusSeconds(100).ToProtoTimestamp(),
                 ConsensusStartTime = START_TIME.ToProtoTimestamp(),
-                TopicId = new Proto.Services.TopicID { TopicNum = 1000 }
+                TopicID = new Proto.Services.TopicID { TopicNum = 1000 }
             };
         }
         private static Proto.Mirror.ConsensusTopicResponse Response(long sequenceNumber)
@@ -352,9 +352,9 @@ namespace Hiero.Tests.SDK.Topic
                 {
                     Number = (int)sequenceNumber,
                     Total = total,
-                    InitialTransactionId = new Proto.Services.TransactionID
+                    InitialTransactionID = new Proto.Services.TransactionID
                     {
-                        AccountId = new Proto.Services.AccountID { AccountNum = 3 },
+                        AccountID = new Proto.Services.AccountID { AccountNum = 3 },
                         TransactionValidStart = START_TIME.ToProtoTimestamp(),
                     },
                 };

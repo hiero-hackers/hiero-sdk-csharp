@@ -129,9 +129,9 @@ namespace Hiero.Tests.SDK.Transactions
         /// <include file="test-transactions-cryptotransfer.cs.xml" path='docs/member[@name="M:Hiero.Tests.SDK.Transactions.CryptoTransferTransactionTest.TransactionBodiesMustMatch"]' />
         public virtual void TransactionBodiesMustMatch()
         {
-            Proto.Services.Transaction tx1 = Proto.SDK.TransactionList.Parser.ParseFrom(SpawnTestTransaction().ToBytes()).TransactionList_[0];
-            Proto.Services.Transaction tx2 = Proto.SDK.TransactionList.Parser.ParseFrom(SpawnModifiedTestTransaction().ToBytes()).TransactionList_[1];
-            var brokenTxList = new Proto.SDK.TransactionList
+            Proto.Services.Transaction tx1 = Proto.Sdk.TransactionList.Parser.ParseFrom(SpawnTestTransaction().ToBytes()).TransactionList_[0];
+            Proto.Services.Transaction tx2 = Proto.Sdk.TransactionList.Parser.ParseFrom(SpawnModifiedTestTransaction().ToBytes()).TransactionList_[1];
+            var brokenTxList = new Proto.Sdk.TransactionList
             {
                 TransactionList_ = { tx1, tx2 }
             };

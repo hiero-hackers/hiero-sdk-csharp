@@ -17,9 +17,9 @@ namespace Hiero.Tests.SDK.Contract
     {
         private readonly Proto.Services.ContractGetInfoResponse.Types.ContractInfo info = new Proto.Services.ContractGetInfoResponse.Types.ContractInfo
         {
-			ContractId = new ContractId(0, 0, 1).ToProtobuf(),
-			AccountId = new AccountId(0, 0, 2).ToProtobuf(),
-			ContractAccountId = "3",
+			ContractID = new ContractId(0, 0, 1).ToProtobuf(),
+			AccountID = new AccountId(0, 0, 2).ToProtobuf(),
+			ContractAccountID = "3",
 			ExpirationTime = NodaTime.Instant.FromUnixTimeMilliseconds(4).ToProtoTimestamp(),
 			AutoRenewPeriod = NodaTime.Duration.FromDays(5).ToProtoDuration(),
 			Storage = 6,

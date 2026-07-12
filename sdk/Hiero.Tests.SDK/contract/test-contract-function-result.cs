@@ -42,7 +42,7 @@ namespace Hiero.Tests.SDK.Contract
         {
             var proto = new Proto.Services.ContractFunctionResult
             {
-                ContractId = ContractId.FromString("1.2.3").ToProtobuf(),
+                ContractID = ContractId.FromString("1.2.3").ToProtobuf(),
                 ContractCallResult = ByteString.CopyFrom(callResult),
                 EvmAddress = ByteString.CopyFrom(Hex.Decode("98329e006610472e6B372C080833f6D79ED833cf")),
                 SenderId = AccountId.FromString("1.2.3").ToProtobuf(),
@@ -89,7 +89,7 @@ namespace Hiero.Tests.SDK.Contract
         {
             var result = new ContractFunctionResult(new Proto.Services.ContractFunctionResult
             {
-                ContractId = ContractId.FromString("1.2.3").ToProtobuf(),
+                ContractID = ContractId.FromString("1.2.3").ToProtobuf(),
                 EvmAddress = ByteString.CopyFrom(Hex.Decode("98329e006610472e6B372C080833f6D79ED833cf")),
                 SenderId = AccountId.FromString("1.2.3").ToProtobuf(),                                
                 ContractCallResult = ByteString.CopyFrom(stringArrayCallResult)

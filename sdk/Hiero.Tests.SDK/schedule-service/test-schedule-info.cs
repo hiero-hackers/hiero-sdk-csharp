@@ -28,7 +28,7 @@ namespace Hiero.Tests.SDK.Schedule
                 { 
                     CryptoDelete = new Proto.Services.CryptoDeleteTransactionBody 
                     { 
-                        DeleteAccountId = AccountId.FromString("6.6.6").ToProtobuf()
+                        DeleteAccountID = AccountId.FromString("6.6.6").ToProtobuf()
                     }
                 }, 
                 [ unusedPublicKey ], 
@@ -51,7 +51,7 @@ namespace Hiero.Tests.SDK.Schedule
                 {
                     CryptoDelete = new Proto.Services.CryptoDeleteTransactionBody
                     {
-                        DeleteAccountId = AccountId.FromString("6.6.6").ToProtobuf()
+                        DeleteAccountID = AccountId.FromString("6.6.6").ToProtobuf()
                     }
                 }, 
                 [ unusedPublicKey ], 

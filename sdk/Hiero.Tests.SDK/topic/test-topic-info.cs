@@ -38,8 +38,8 @@ namespace Hiero.Tests.SDK.Topic
         ];
         private static readonly Proto.Services.ConsensusGetTopicInfoResponse info = new Proto.Services.ConsensusGetTopicInfoResponse
         {
-            TopicId = new Proto.Services.TopicID { },
-            //TopicId = new Proto.Services.TopicID { RealmNum = 0, ShardNum = 0, TopicNum = 0 },
+            TopicID = new Proto.Services.TopicID { },
+            //TopicID = new Proto.Services.TopicID { RealmNum = 0, ShardNum = 0, TopicNum = 0 },
             TopicInfo = new Proto.Services.ConsensusTopicInfo
             {
                 Memo = "1",

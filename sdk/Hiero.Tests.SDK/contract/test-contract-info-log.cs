@@ -13,7 +13,7 @@ namespace Hiero.Tests.SDK.Contract
     {
         private static readonly Proto.Services.ContractLoginfo info = new Proto.Services.ContractLoginfo
         {
-			ContractId = new ContractId(0, 0, 10).ToProtobuf(),
+			ContractID = new ContractId(0, 0, 10).ToProtobuf(),
 			Bloom = ByteString.CopyFromUtf8("bloom"),
 			//Topic = [ByteString.CopyFromUtf8("bloom")],
 			Data = ByteString.CopyFromUtf8("data"),

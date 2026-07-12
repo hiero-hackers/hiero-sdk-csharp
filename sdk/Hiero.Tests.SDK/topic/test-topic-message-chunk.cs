@@ -37,7 +37,7 @@ namespace Hiero.Tests.SDK.Topic
                 Message = ByteString.CopyFrom(testContents),
                 RunningHash = ByteString.CopyFrom(testRunningHash),
                 SequenceNumber = testSequenceNumber,
-                ChunkInfo = new Proto.Services.ConsensusMessageChunkInfo { InitialTransactionId = testTransactionId.ToProtobuf() },
+                ChunkInfo = new Proto.Services.ConsensusMessageChunkInfo { InitialTransactionID = testTransactionId.ToProtobuf() },
             };
 
             TopicMessageChunk topicMessageChunk = new (consensusTopicResponse);

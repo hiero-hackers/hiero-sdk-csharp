@@ -99,7 +99,7 @@ namespace Hiero.Tests.SDK.Topic
         {
             var transactionBody = new Proto.Services.ConsensusUpdateTopicTransactionBody
             {
-                TopicId = testTopicId.ToProtobuf(),
+                TopicID = testTopicId.ToProtobuf(),
                 Memo = testTopicMemo,
                 ExpirationTime = new Proto.Services.Timestamp { Seconds = testExpirationTime.ToUnixTimeSeconds() },
                 AdminKey = testAdminKey.ToProtobufKey(),

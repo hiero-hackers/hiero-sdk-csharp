@@ -74,7 +74,7 @@ namespace Hiero.Tests.SDK.Topic
         {
             var transactionBody = new Proto.Services.ConsensusSubmitMessageTransactionBody
             {
-                TopicId = testTopicId.ToProtobuf(),
+                TopicID = testTopicId.ToProtobuf(),
                 Message = ByteString.CopyFrom(testMessageBytes),
             };
             var tx = new Proto.Services.TransactionBody
